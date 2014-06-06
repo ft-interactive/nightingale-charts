@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF8">
+	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script type="text/javascript" src="bower_components/zepto/zepto.js" charset="utf-8"></script>
+	<script type="text/javascript" src="js/chart/ft-date-axis.js"></script>
+	<link rel="stylesheet" type="text/css" href="style/axes.css">
+	<title>Date Axes</title>
+</head>
+<body>
+<h1>Date axes</h1>
+<div id="views">
+</div>
+</body>
+<script type="text/javascript">
+var margin = {
+	top:50, left:50, bottom:20, right:50
+}
+var axesDefinitions = [
+	{
+		title:'A day or less',
+		scale:d3.time.scale()
+			.range([0,400])
+			.domain([new Date("October 13, 1975 11:13:00"), new Date("October 13, 1975 22:00:00")])
+	},
+	{
+		title:'A couple of weeks',
+		scale:d3.time.scale()
+			.range([0,400])
+			.domain([new Date("October 13, 1975 11:13:00"), new Date("November 7, 1975 22:00:00")])
+	},
+	{
+		title:'less than a year',
+		scale:d3.time.scale()
+			.range([0,400])
+			.domain([new Date(2001,3,20), new Date(2001,11,20)])
+	},
+	{
+		title:'up to 3 years',
+		scale:d3.time.scale()
+			.range([0,400])
+			.domain([new Date(2012,2,1), new Date()])
+	},
+	{
+		title:'more than 3 years',
+		scale:d3.time.scale()
+			.range([0,400])
+			.domain([new Date(2001,10,1), new Date()])
+	},
+	{
+		title:'hundreds of years',
+		scale:d3.time.scale()
+			.range([0,400])
+			.domain([new Date(1500,0,1), new Date()])
+	}];
+
+
+var divs = d3.select('#views')
+	.selectAll('div')
+	.data(axesDefinitions)
+		.enter().append('div')
+			.attr('class','axis-test');
+
+divs.append('h2')
+	.text(function(d){ return d.title });
+
+divs.append('svg')
+	.attr('width', function(d){ 
+		var r = d.scale.range(); 
+		return (r[1] - r[0]) + margin.left + margin.right; 
+	})
+	.attr('class','ft-chart')
+	.attr('height', margin.top + margin.bottom)
+	.each(function(d,i){
+		var axis = ft.charts.dateAxis()
+			.scale(d.scale);
+
+		var g = d3.select(this)
+			.append('g').attr('class','x axis');
+
+		g.call(axis);
+
+	}); //should return an SVG scale function
+
+</script>

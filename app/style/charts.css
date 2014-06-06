@@ -1,0 +1,15 @@
+.ft-chart{
+	font-family: sans-serif;
+}
+
+
+path.subject{
+	fill:none;
+	stroke:#000;
+}
+
+path.context{
+	fill:none;
+	stroke:#BBB;	
+}
+

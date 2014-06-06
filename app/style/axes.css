@@ -1,0 +1,32 @@
+.axis{
+	font-family: sans-serif;
+}
+
+.y.axis, 
+.x.axis{
+	fill:none;
+	stroke:#BBB;
+}
+
+.y.axis text, 
+.x.axis text{
+	fill:#bbb;
+	stroke:none;
+}
+
+.y.axis .domain{
+	stroke:none;
+}
+
+.secondary .domain, 
+.secondary .tick{
+	stroke:none;
+}
+
+.secondary .tick text{
+	text-anchor:start;
+}
+
+.y.axis text{
+	text-anchor:end;
+}
