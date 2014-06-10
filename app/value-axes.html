@@ -2,11 +2,13 @@
 <html>
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF8">
+	 <meta name="signet:authors" content="Michael Barry, Brian Card">
+  <meta name="signet:links" content="http://github.com/mbtaviz, http://github.com/msbarry, http://github.com/bcard, http://twitter.com/msb5014">
 	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	<script type="text/javascript" src="bower_components/zepto/zepto.js" charset="utf-8"></script>
-	<script type="text/javascript" src="js/chart/ft-date-axis.js"></script>
+	<script type="text/javascript" src="js/chart/ft-value-axis.js"></script>
 	<link rel="stylesheet" type="text/css" href="style/axes.css">
-	<title>Date Axes</title>
+	<title>Value Axes</title>
 	<style>
 
 		body.ft{
@@ -15,8 +17,9 @@
 	</style>
 </head>
 <body class="ft">
-<h1>Date axes</h1>
+<h1>Value axes</h1>
 <div id="views">
+	
 </div>
 </body>
 <script type="text/javascript">
@@ -25,49 +28,37 @@ var margin = {
 }
 var axesDefinitions = [
 	{
-		title:'A day or less',
-		scale:d3.time.scale()
+		title:'smallest',
+		scale:d3.scale.linear()
 			.range([0,400])
-			.domain([new Date("October 13, 1975 11:13:00"), new Date("October 13, 1975 22:00:00")])
+			.domain([-0.1, 0.36])
 	},
 	{
-		title:'A few weeks',
-		scale:d3.time.scale()
+		title:'smaller',
+		scale:d3.scale.linear()
 			.range([0,400])
-			.domain([new Date("October 13, 1975 11:13:00"), new Date("November 7, 1975 22:00:00")])
+			.domain([0,33])
 	},
 	{
-		title:'less than a year',
-		scale:d3.time.scale()
+		title:'medium',
+		scale:d3.scale.linear()
 			.range([0,400])
-			.domain([new Date(2001,3,20), new Date(2001,11,20)])
+			.domain([-100,100])
 	},
 	{
-		title:'up to 3 years',
-		scale:d3.time.scale()
+		title:'bigger',
+		scale:d3.scale.linear()
 			.range([0,400])
-			.domain([new Date(2012,2,1), new Date()])
+			.domain([0, 1000])
 	},
 	{
-		title:'more than 3 years',
-		scale:d3.time.scale()
+		title:'MASSIVE(ish)',
+		scale:d3.scale.linear()
 			.range([0,400])
-			.domain([new Date(2001,10,1), new Date()])
-	},
-	{
-		title:'50 years or so',
-		scale:d3.time.scale()
-			.range([0,400])
-			.domain([new Date(1966,10,1), new Date()])
-	},
-	{
-		title:'hundreds of years',
-		scale:d3.time.scale()
-			.range([0,400])
-			.domain([new Date(1500,0,1), new Date()])
+			.domain([-1000, 3000000])
 	}];
 
-
+d3.select('#views').append('h2').text('Horizontal')
 var divs = d3.select('#views')
 	.selectAll('div')
 	.data(axesDefinitions)
@@ -85,16 +76,12 @@ divs.append('svg')
 	.attr('class','ft-chart')
 	.attr('height', margin.top + margin.bottom)
 	.each(function(d,i){
-		//create the axis, giving it a scale
-		var axis = ft.charts.dateAxis()
+		var axis = ft.charts.valueAxis()
 			.scale(d.scale);
 
-		//create a plain 'g' node to add it to (offset to the margin)
 		var g = d3.select(this).append('g').attr('transform','translate(' + margin.left + ',0)');
-
-		//render the axis
+		
 		g.call(axis);
-
 
 	});
 

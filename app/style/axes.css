@@ -5,13 +5,14 @@
 .y.axis, 
 .x.axis{
 	fill:none;
-	stroke:#BBB;
+	stroke:rgba(0,0,0,0.5);
 }
 
 .y.axis text, 
 .x.axis text{
-	fill:#bbb;
+	fill:rgba(0,0,0,0.5);
 	stroke:none;
+	text-anchor: start;
 }
 
 .y.axis .domain{
@@ -23,8 +24,12 @@
 	stroke:none;
 }
 
+.primary .tick text{
+	font-size: 0.9rem;
+}
+
 .secondary .tick text{
-	text-anchor:start;
+	font-size: 0.7rem;
 }
 
 .y.axis text{

@@ -72,7 +72,6 @@ ft.charts.dateAxis = function(){
 	function unitGenerator(domain){	//which units are most appropriate
 		var u = [];
 		var timeDif = domain[1].getTime() - domain[0].getTime();
-		console.log(timeDif);
 		var dayLength = 86400000;
 		if(timeDif < dayLength*2){
 			return ['hours','days','months'];
@@ -98,7 +97,7 @@ ft.charts.dateAxis = function(){
 	}
 
 	function axis(g){
-		g.each(function(){
+		g.append('g').attr('class','x axis').each(function(){
 			var g = d3.select(this);
 			axes.forEach(function(a,i){
 				g.append('g')
@@ -132,9 +131,7 @@ ft.charts.dateAxis = function(){
 	axis.scale = function(x, u){
 		if (!arguments.length) return axes[0].scale();
 		if (!u){
-			//u = ['multi']; //create a units array based on the scale domain
 			u = unitGenerator( x.domain() );
-			console.log(u);
 		}
 		scale = x;
 		scale.nice( (scale.range()[1] - scale.range()[0])/100 );
