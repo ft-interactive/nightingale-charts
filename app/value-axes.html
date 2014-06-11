@@ -2,8 +2,6 @@
 <html>
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF8">
-	 <meta name="signet:authors" content="Michael Barry, Brian Card">
-  <meta name="signet:links" content="http://github.com/mbtaviz, http://github.com/msbarry, http://github.com/bcard, http://twitter.com/msb5014">
 	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	<script type="text/javascript" src="bower_components/zepto/zepto.js" charset="utf-8"></script>
 	<script type="text/javascript" src="js/chart/ft-value-axis.js"></script>
@@ -94,10 +92,14 @@ divs.append('svg')
 	})
 	.each(function(d,i){
 		//vertical axes require a reversed scale domain
+		console.log(d.scale.domain())
+		
 		var vScale = d.scale.copy();
 		vScale.domain( vScale.domain().reverse() )
 		var axis = ft.charts.valueAxis()
 			.scale( vScale );
+		
+		console.log(d.scale.domain())
 
 		var g = d3.select(this).append('g').attr('transform','translate(' + margin.left + ',' + margin.top + ')');
 		
