@@ -41,14 +41,17 @@ ft.charts.valueAxis = function(){
 		g.selectAll('*').attr('style',null); //clear the styles D3 sets so everything's coming from the css
 		if (isVertical()){
 			g.selectAll('text').attr('transform','translate( 0, ' + -(lineHeight/2) + ' )');
-			g.select('.y.axis').append('line').attr('class','origin tick')
-				.attr({
-					x1:0,
-					y1:a.scale()(0),
-					x2:a.scale().range()[1],
-					y2:a.scale()(0)
-				});
-			console.log(a.scale()(0))
+			var scale = a.scale();
+			if( Math.abs(scale.domain()[0] - scale.domain()[1]) >= scale.domain()[1]){ //if the axis crosses zero
+				//add a stronger line
+				g.select('.y.axis').append('line').attr('class','origin tick')
+					.attr({
+						x1:0,
+						y1:scale(0),
+						x2:scale.range()[1],
+						y2:scale(0)
+					});
+			}
 		} 
 	}
 
