@@ -92,14 +92,10 @@ divs.append('svg')
 	})
 	.each(function(d,i){
 		//vertical axes require a reversed scale domain
-		console.log(d.scale.domain())
-		
 		var vScale = d.scale.copy();
 		vScale.domain( [d.scale.domain()[1], d.scale.domain()[0]]  )
 		var axis = ft.charts.valueAxis()
 			.scale( vScale );
-		
-		console.log(d.scale.domain())
 
 		var g = d3.select(this).append('g').attr('transform','translate(' + margin.left + ',' + margin.top + ')');
 		
