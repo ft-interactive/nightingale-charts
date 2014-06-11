@@ -13,29 +13,56 @@ if(!ft.charts){
 ft.charts.valueAxis = function(){
 
 	var ticksize = 5,
-		a = d3.svg.axis().orient('bottom').tickSize(ticksize , 0);
+		a = d3.svg.axis().orient('left').tickSize(ticksize , 0),
+		lineHeight = 16;
 			
+	function isVertical(){
+		return (a.orient() == 'left' || a.orient() == 'right')
+	}
 
 	function axis(g){
-		
+		if(isVertical()){
+			a.tickSize( -a.scale().range()[1], 0);
+		}
+
 		g.append('g')
-			.attr('class', 'x axis')
+			.attr('class', function(){
+				if(isVertical()){
+					return 'y axis';
+				}else{
+					return 'x axis';
+				}
+			})
 			.append('g')
 				.attr('class', 'primary')
 				.call(a);
-		//if zero is in the middle of the scale it gets a special long tick
+		//if zero is in scale it gets a heavy tick
 		//remove text-anchor attribute from year positions
 		g.selectAll('*').attr('style',null); //clear the styles D3 sets so everything's coming from the css
+		if (isVertical()){
+			g.selectAll('text').attr('transform','translate( 0, ' + -(lineHeight/2) + ' )');
+			g.select('.y.axis').append('line').attr('class','origin tick')
+				.attr({
+					x1:0,
+					y1:a.scale()(0),
+					x2:a.scale().range()[1],
+					y2:a.scale()(0)
+				});
+			console.log(a.scale()(0))
+		} 
 	}
 
 	axis.orient = function(x){
 		if (!arguments.length) return a.orient();
-		return a.orient(x);
+		a.orient(x);
+		return axis;
 	};
 
 	axis.scale = function(x){
 		if (!arguments.length) return a.scale();
 		a.scale(x);
+		var tickNum = Math.round( (a.scale().range()[1] - a.scale().range()[0])/100 );
+		a.ticks( tickNum )
 		return(axis);
 	};
 

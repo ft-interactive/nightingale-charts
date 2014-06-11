@@ -8,11 +8,11 @@
 	stroke:rgba(0,0,0,0.5);
 }
 
+
 .y.axis text, 
 .x.axis text{
 	fill:rgba(0,0,0,0.5);
 	stroke:none;
-	text-anchor: start;
 }
 
 .y.axis .domain{
@@ -30,6 +30,14 @@
 
 .secondary .tick text{
 	font-size: 0.7rem;
+}
+
+.y.axis .tick line{
+	stroke:rgba(0,0,0,0.1);
+}
+
+line.origin{
+	stroke:rgba(0,0,0,0.5);
 }
 
 .y.axis text{

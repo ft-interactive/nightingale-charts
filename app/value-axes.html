@@ -14,17 +14,22 @@
 		body.ft{
 			background-color: #fff1e0;
 		}
+
+		svg{
+			-webkit-box-shadow: 5px 5px 11px 0px rgba(0,0,0,0.2);
+			-moz-box-shadow: 5px 5px 11px 0px rgba(0,0,0,0.2);
+			box-shadow: 5px 5px 11px 0px rgba(0,0,0,0.2);
+		}
 	</style>
 </head>
 <body class="ft">
 <h1>Value axes</h1>
-<div id="views">
-	
-</div>
+<div id="v-views"></div>
+<div id="h-views"></div>
 </body>
 <script type="text/javascript">
 var margin = {
-	top:50, left:50, bottom:20, right:50
+	top:50, left:50, bottom:50, right:50
 }
 var axesDefinitions = [
 	{
@@ -58,8 +63,45 @@ var axesDefinitions = [
 			.domain([-1000, 3000000])
 	}];
 
-d3.select('#views').append('h2').text('Horizontal')
-var divs = d3.select('#views')
+
+//vertical axes
+d3.select('#v-views').append('h2').text('Veritcal')
+var divs = d3.select('#v-views')
+	.selectAll('div')
+	.data(axesDefinitions)
+		.enter().append('div')
+			.attr('class','axis-test');
+
+divs.append('h2')
+	.text(function(d){ return d.title });
+
+divs.append('svg')
+	.attr('width', function(d){ 
+		var r = d.scale.range(); 
+		return (r[1] - r[0]) + margin.left + margin.right; 
+	})
+	.attr('class','ft-chart')
+	.attr('height', function(d){
+		var r = d.scale.range(); 
+		return (r[1] - r[0]) + margin.top + margin.bottom;
+	})
+	.each(function(d,i){
+		//vertical axes require a reversed scale domain
+		var vScale = d.scale.copy();
+		vScale.domain( vScale.domain().reverse() )
+		var axis = ft.charts.valueAxis()
+			.scale( vScale );
+
+		var g = d3.select(this).append('g').attr('transform','translate(' + margin.left + ',' + margin.top + ')');
+		
+		g.call(axis);
+
+	});
+
+
+//horizontal axes
+d3.select('#h-views').append('h2').text('Horizontal')
+var divs = d3.select('#h-views')
 	.selectAll('div')
 	.data(axesDefinitions)
 		.enter().append('div')
@@ -77,9 +119,10 @@ divs.append('svg')
 	.attr('height', margin.top + margin.bottom)
 	.each(function(d,i){
 		var axis = ft.charts.valueAxis()
-			.scale(d.scale);
+			.scale(d.scale)
+			.orient('bottom');
 
-		var g = d3.select(this).append('g').attr('transform','translate(' + margin.left + ',0)');
+		var g = d3.select(this).append('g').attr('transform','translate(' + margin.left + ',' + margin.top + ')');
 		
 		g.call(axis);
 
