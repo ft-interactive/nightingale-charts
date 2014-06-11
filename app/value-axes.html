@@ -95,7 +95,7 @@ divs.append('svg')
 		console.log(d.scale.domain())
 		
 		var vScale = d.scale.copy();
-		vScale.domain( vScale.domain().reverse() )
+		vScale.domain( [d.scale.domain()[1], d.scale.domain()[0]]  )
 		var axis = ft.charts.valueAxis()
 			.scale( vScale );
 		
