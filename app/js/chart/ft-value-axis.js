@@ -14,17 +14,14 @@ ft.charts.valueAxis = function(){
 
 	var ticksize = 5,
 		a = d3.svg.axis().orient('left').tickSize(ticksize , 0),
-		lineHeight = 16;
+		lineHeight = 16
+		userTicks = [];
 			
 	function isVertical(){
 		return (a.orient() == 'left' || a.orient() == 'right')
 	}
 
 	function axis(g){
-		if(isVertical()){
-			a.tickSize( -a.scale().range()[1], 0);
-		}
-
 		g.append('g')
 			.attr('class', function(){
 				if(isVertical()){
@@ -48,11 +45,25 @@ ft.charts.valueAxis = function(){
 					.attr({
 						x1:0,
 						y1:scale(0),
-						x2:scale.range()[1],
+						x2:-a.tickSize(),
 						y2:scale(0)
 					});
 			}
 		} 
+	}
+
+	axis.tickSize = function(x){
+		if (!arguments.length) return ticksize;
+		a.tickSize(-x);
+		return axis;
+	}
+
+	axis.ticks = function(x){
+		if (!arguments.length) return a.ticks();
+		if(x.length>0){
+			userTicks = x;	
+		}
+		return axis;
 	}
 
 	axis.orient = function(x){
@@ -64,8 +75,11 @@ ft.charts.valueAxis = function(){
 	axis.scale = function(x){
 		if (!arguments.length) return a.scale();
 		a.scale(x);
-		var tickNum = Math.round( (a.scale().range()[1] - a.scale().range()[0])/100 );
-		a.ticks( tickNum )
+		if(userTicks.length > 0){
+			a.tickValues( userTicks );
+		}else{
+			a.ticks( Math.round( (a.scale().range()[1] - a.scale().range()[0])/100 ) );
+		}
 		return(axis);
 	};
 

@@ -11,9 +11,12 @@ ft.charts.dateAxis = function(){
 	var axes = [ d3.svg.axis().orient('bottom') ],
 		scale,
 		lineheight = 20, 
-		ticksize = 5,
+		ticksize = -5,
 		formatter = {},
-		units = ['multi'];
+		units = ['multi']
+		unitOverride = false,
+		yOffset = 0,
+		xOffset = 0;
 
 
 	formatter = {
@@ -35,6 +38,9 @@ ft.charts.dateAxis = function(){
 			}
 			return d3.time.format("%y")(d);
 		},
+		fullyears: function(d,i){
+			return d3.time.format("%Y")(d)
+		},
 		months: function(d,i){
 			return d3.time.format("%b")(d);
 		},
@@ -53,6 +59,7 @@ ft.charts.dateAxis = function(){
 		centuries: d3.time.year,
 		decades: d3.time.year, 
 		years: d3.time.year,
+		fullyears: d3.time.year,
 		months: d3.time.month,
 		weeks: d3.time.week,
 		days: d3.time.day,
@@ -63,6 +70,7 @@ ft.charts.dateAxis = function(){
 		centuries: 100,
 		decades: 10,
 		years: 1,
+		fullyears: 1,
 		months: 1,
 		weeks: 1,
 		days: 1,
@@ -107,10 +115,17 @@ ft.charts.dateAxis = function(){
 						}
 						return 'secondary';
 					})
-					.attr('transform','translate(0,' + (i * lineheight) + ')')
+					.attr('transform','translate(' + xOffset + ',' + (yOffset + (i * lineheight)) + ')')
 					.call(a);
 			})
 			//remove text-anchor attribute from year positions
+			var v = g.selectAll('.primary')
+				.selectAll('text').attr({
+					'x':null,
+					'y':null,
+					'dy':15
+				});
+			//console.log(v);
 			g.selectAll('*').attr('style',null); //clear the styles D3 sets so everything's coming from the css
 		});
 	}
@@ -165,11 +180,11 @@ ft.charts.dateAxis = function(){
 		return axis;
 	};
 
-	axis.units = function(unitArray){
-		if (!arguments.length) return a.scale();
-		//for each string in the unit array if there's aformatter then
+	axis.yOffset = function(x){
+		if (!arguments.length) return yOffset;
+		yOffset = x;
 		return axis;
-	}
+	};
 
 	return axis;
 }

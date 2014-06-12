@@ -16,3 +16,6 @@ For drawing line charts
 
 data is provided in arrays of JS objects 
 the objects have `value` and `category` or `index` (time or other)
+
+## TODO
+value axis, add a width function to set the width of the chart ...
