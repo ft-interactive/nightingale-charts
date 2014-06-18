@@ -27,7 +27,7 @@ ft.charts.valueAxis = function(){
 
 	function axis(g){
 		
-		//g = g.append('g').attr('transform','translate('+xOffset+','+yOffset+')');
+		g = g.append('g').attr('transform','translate('+xOffset+','+yOffset+')');
 
 		g.append('g')
 			.attr('class', function(){
@@ -37,7 +37,6 @@ ft.charts.valueAxis = function(){
 					return 'x axis';
 				}
 			})
-			.attr('transform','translate('+xOffset+','+yOffset+')')
 			.append('g')
 				.attr('class', 'primary')
 				.call(a);

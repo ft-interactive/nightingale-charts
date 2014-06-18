@@ -186,7 +186,6 @@ ft.charts.dateAxis = function(){
 
 	axis.yOffset = function(x){
 		if (!arguments.length) return yOffset;
-		console.log("SETTING DATE OFFSET");
 		yOffset = x;
 		return axis;
 	};
