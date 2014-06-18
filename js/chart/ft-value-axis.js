@@ -24,6 +24,9 @@ ft.charts.valueAxis = function(){
 	}
 
 	function axis(g){
+		
+		g = g.append('g').attr('transform','translate('+xOffset+','+yOffset+')');
+
 		g.append('g')
 			.attr('class', function(){
 				if(isVertical()){
@@ -34,7 +37,6 @@ ft.charts.valueAxis = function(){
 			})
 			.append('g')
 				.attr('class', 'primary')
-				.attr('transform','translate('+xOffset+','+yOffset+')')
 				.call(a);
 
 		//if zero is in scale it gets a heavy tick
@@ -46,7 +48,6 @@ ft.charts.valueAxis = function(){
 			if( Math.abs(scale.domain()[0] - scale.domain()[1]) >= scale.domain()[1]){ //if the axis crosses zero
 				//add a stronger line
 				g.select('.y.axis').append('line').attr('class','origin tick')
-					.attr('transform','translate('+xOffset+','+yOffset+')')
 					.attr({
 						x1:0,
 						y1:scale(0),
