@@ -93,7 +93,6 @@ ft.charts.valueAxis = function(){
 
 	axis.yOffset = function(x){
 		if (!arguments.length) return yOffset;
-		console.log("VALUE OFFSET");
 		yOffset = x;
 		return axis;
 	};
