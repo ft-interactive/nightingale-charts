@@ -40,7 +40,7 @@ ft.charts.valueAxis = function(){
 		//remove text-anchor attribute from year positions
 		g.selectAll('*').attr('style',null); //clear the styles D3 sets so everything's coming from the css
 		if (isVertical()){
-			g.selectAll('text').attr('transform','translate( 0, ' + -(lineHeight/2) + ' )');
+			g.selectAll('text').attr('transform','translate( 0, ' + -(lineHeight/2 + yOffset) + ' )');
 			var scale = a.scale();
 			if( Math.abs(scale.domain()[0] - scale.domain()[1]) >= scale.domain()[1]){ //if the axis crosses zero
 				//add a stronger line
@@ -91,12 +91,15 @@ ft.charts.valueAxis = function(){
 		yOffset = x;
 		return axis;
 	};
+<<<<<<< .merge_file_nPMm8y
 
 	axis.xOffset = function(x){
 		if (!arguments.length) return yOffset;
 		xOffset = x;
 		return axis;
 	};
+=======
+>>>>>>> .merge_file_RixrBU
 
 	return axis;
 };
