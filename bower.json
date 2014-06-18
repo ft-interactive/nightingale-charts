@@ -21,6 +21,10 @@
     "test",
     "tests"
   ],
+  "repository":{
+    "type":"git",
+    "url":"http://git.svc.ft.com:8080/scm/iglt/d3-chart-bits.git"
+  }
   "dependencies": {
     "d3": "~3.4.6"
   }
