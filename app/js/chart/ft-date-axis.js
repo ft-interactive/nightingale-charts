@@ -125,7 +125,6 @@ ft.charts.dateAxis = function(){
 					'y':null,
 					'dy':15
 				});
-			//console.log(v);
 			g.selectAll('*').attr('style',null); //clear the styles D3 sets so everything's coming from the css
 		});
 	}
