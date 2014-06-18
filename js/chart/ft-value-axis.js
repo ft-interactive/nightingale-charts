@@ -36,6 +36,7 @@ ft.charts.valueAxis = function(){
 				.attr('class', 'primary')
 				.attr('transform','translate('+xOffset+','+yOffset+')')
 				.call(a);
+				
 		//if zero is in scale it gets a heavy tick
 		//remove text-anchor attribute from year positions
 		g.selectAll('*').attr('style',null); //clear the styles D3 sets so everything's coming from the css
@@ -91,15 +92,12 @@ ft.charts.valueAxis = function(){
 		yOffset = x;
 		return axis;
 	};
-<<<<<<< .merge_file_nPMm8y
 
 	axis.xOffset = function(x){
 		if (!arguments.length) return yOffset;
 		xOffset = x;
 		return axis;
 	};
-=======
->>>>>>> .merge_file_RixrBU
 
 	return axis;
 };
