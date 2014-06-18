@@ -36,16 +36,17 @@ ft.charts.valueAxis = function(){
 				.attr('class', 'primary')
 				.attr('transform','translate('+xOffset+','+yOffset+')')
 				.call(a);
-				
+
 		//if zero is in scale it gets a heavy tick
 		//remove text-anchor attribute from year positions
 		g.selectAll('*').attr('style',null); //clear the styles D3 sets so everything's coming from the css
 		if (isVertical()){
-			g.selectAll('text').attr('transform','translate( 0, ' + -(lineHeight/2 + yOffset) + ' )');
+			g.selectAll('text').attr('transform','translate( 0, ' + -(lineHeight/2) + ' )');
 			var scale = a.scale();
 			if( Math.abs(scale.domain()[0] - scale.domain()[1]) >= scale.domain()[1]){ //if the axis crosses zero
 				//add a stronger line
 				g.select('.y.axis').append('line').attr('class','origin tick')
+					.attr('transform','translate('+xOffset+','+yOffset+')')
 					.attr({
 						x1:0,
 						y1:scale(0),
