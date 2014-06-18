@@ -4,8 +4,11 @@
   "authors": [
     "tomgp <tom.g.pearson@gmail.com>"
   ],
-  "description": "make stupid charts",
-  "main": "index.html",
+  "description": "make modest charts",
+  "main": [
+    "js/ft-date-axis.js", "js/ft-value-axis.js",
+    "style/axes.css"
+  ],
   "moduleType": [
     "globals"
   ],
@@ -19,9 +22,6 @@
     "tests"
   ],
   "dependencies": {
-    "backbone": "~1.1.2",
-    "d3": "~3.4.6",
-    "zepto": "~1.1.3",
-    "queue-async": "https://github.com/mbostock/queue.git#~1.0.7"
+    "d3": "~3.4.6"
   }
 }
