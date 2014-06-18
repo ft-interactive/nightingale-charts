@@ -1,3 +1,5 @@
+'use strict'
+
 if(!ft){
 	var ft = {};
 }
@@ -13,10 +15,10 @@ ft.charts.dateAxis = function(){
 		lineheight = 20, 
 		ticksize = -5,
 		formatter = {},
-		units = ['multi']
+		units = ['multi'],
 		unitOverride = false,
 		yOffset = 0,
-		xOffset = 0;
+		xOffset = 0,
 
 
 	formatter = {
@@ -53,7 +55,7 @@ ft.charts.dateAxis = function(){
 		hours: function(d, i){
 			return parseInt(d3.time.format("%H")(d))+":00"
 		}
-	}
+	},
 
 	interval = {
 		centuries: d3.time.year,
@@ -64,7 +66,7 @@ ft.charts.dateAxis = function(){
 		weeks: d3.time.week,
 		days: d3.time.day,
 		hours: d3.time.hours
-	}
+	},
 
 	increment = {
 		centuries: 100,
@@ -75,7 +77,7 @@ ft.charts.dateAxis = function(){
 		weeks: 1,
 		days: 1,
 		hours: 6	
-	}
+	};
 
 	function unitGenerator(domain){	//which units are most appropriate
 		var u = [];
@@ -184,6 +186,7 @@ ft.charts.dateAxis = function(){
 
 	axis.yOffset = function(x){
 		if (!arguments.length) return yOffset;
+		console.log("SETTING DATE OFFSET");
 		yOffset = x;
 		return axis;
 	};

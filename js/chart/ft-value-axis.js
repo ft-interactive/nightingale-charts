@@ -1,3 +1,5 @@
+'use strict'
+
 if(!ft){
 	var ft = {};
 }
@@ -14,7 +16,7 @@ ft.charts.valueAxis = function(){
 
 	var ticksize = 5,
 		a = d3.svg.axis().orient('left').tickSize(ticksize , 0),
-		lineHeight = 16
+		lineHeight = 16,
 		userTicks = [],
 		yOffset = 0,
 		xOffset = 0;
@@ -25,7 +27,7 @@ ft.charts.valueAxis = function(){
 
 	function axis(g){
 		
-		g = g.append('g').attr('transform','translate('+xOffset+','+yOffset+')');
+		//g = g.append('g').attr('transform','translate('+xOffset+','+yOffset+')');
 
 		g.append('g')
 			.attr('class', function(){
@@ -35,6 +37,7 @@ ft.charts.valueAxis = function(){
 					return 'x axis';
 				}
 			})
+			.attr('transform','translate('+xOffset+','+yOffset+')')
 			.append('g')
 				.attr('class', 'primary')
 				.call(a);
@@ -91,6 +94,7 @@ ft.charts.valueAxis = function(){
 
 	axis.yOffset = function(x){
 		if (!arguments.length) return yOffset;
+		console.log("VALUE OFFSET");
 		yOffset = x;
 		return axis;
 	};
