@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF8">
+	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script type="text/javascript" src="js/chart/ft-line.js"></script>
+	<link rel="stylesheet" type="text/css" href="style/axes.css">
+	<title>Line</title>
+	<style>
+		body.ft{
+			background-color: #fff1e0;
+		}
+		svg{
+			-webkit-box-shadow: 5px 5px 11px 0px rgba(0,0,0,0.2);
+			-moz-box-shadow: 5px 5px 11px 0px rgba(0,0,0,0.2);
+			box-shadow: 5px 5px 11px 0px rgba(0,0,0,0.2);
+		}
+	</style>
+</head>
+<body class="ft">
+<h1>Line</h1>
+<div id="views">
+</div>
+</body>
+<script type="text/javascript">
+	d3.csv('app/bower_components/exampledatasets/stock1.csv', gotData);
+	var margin = {
+		top:20, left:50, bottom:70, right:50
+	}, 
+	width  = 500,
+	height = 500;
+
+	function gotData(data){
+		//console.log(data);
+		var svg = d3.select('#views').append('svg')
+			.attr({width:width,height:height})
+			.append('g')
+				.attr('transform','translate(' + margin.left + ',' + margin.top + ')');
+
+		var dateformat = d3.time.format("%Y-%m-%d")
+
+		var line = ft.charts.line()
+			.xProperty( 'Date' )
+			.xParser( dateformat.parse )
+			.yProperty( 'Close Price' )
+			.endLabel('SYMBOL ${Close}');
+
+		svg.datum(data).call( line )
+	}
+</script>
