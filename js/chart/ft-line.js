@@ -19,6 +19,7 @@ ft.charts.line = function(){
 		endLabelTemplate = '';
 
 	function linedraw(g){
+		var originalData = g.datum();
 
 		g.datum(
 			g.datum().map(
@@ -35,17 +36,23 @@ ft.charts.line = function(){
 
 		var line = d3.svg.line()
 			.x(function(d){ return d.x })
-			.y(function(d){ return d.y })
+			.y(function(d){ return d.y });
+
+		g.append('path').attr('d',line);
+
+		g.datum(originalData); //put everything back as it was
 	}
 
 
-	linedraw.yScale = function(x){
+	linedraw.yScale = function(scale){
 		if (!arguments.length) return yScale;
+		yScale = scale;
 		return linedraw;
 	};
 
-	linedraw.xScale = function(x){
+	linedraw.xScale = function(scale){
 		if (!arguments.length) return xScale;
+		xScale = scale;
 		return linedraw;
 	};
 

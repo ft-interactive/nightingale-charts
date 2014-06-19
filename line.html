@@ -39,10 +39,29 @@
 
 		var dateformat = d3.time.format("%Y-%m-%d")
 
+		var yProp = 'Close Price';
+		var xProp = 'Date'; 
+
+		var xScale = d3.time.scale()
+			.range([ 0, width - (margin.left + margin.right) ])
+			.domain( d3.extent(data, function(d){
+				return dateformat.parse( d[xProp] );
+			}) );
+
+		var yScale = d3.scale.linear()
+			.range([ 0, height - (margin.top + margin.bottom) ])
+			.domain( d3.extent(data, function(d){
+				return d[yProp];
+			}));
+
+		console.log(xScale.domain(), yScale.domain())
+
 		var line = ft.charts.line()
-			.xProperty( 'Date' )
+			.xProperty( xProp )
+			.yProperty( yProp )
 			.xParser( dateformat.parse )
-			.yProperty( 'Close Price' )
+			.xScale( xScale )
+			.yScale( yScale )
 			.endLabel('SYMBOL ${Close}');
 
 		svg.datum(data).call( line )
