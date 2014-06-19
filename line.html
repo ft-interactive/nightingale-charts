@@ -4,7 +4,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=UTF8">
 	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	<script type="text/javascript" src="js/chart/ft-line.js"></script>
-	<link rel="stylesheet" type="text/css" href="style/axes.css">
+	<link rel="stylesheet" type="text/css" href="style/lines.css">
 	<title>Line</title>
 	<style>
 		body.ft{
@@ -53,8 +53,6 @@
 			.domain( d3.extent(data, function(d){
 				return d[yProp];
 			}));
-
-		console.log(xScale.domain(), yScale.domain())
 
 		var line = ft.charts.line()
 			.xProperty( xProp )

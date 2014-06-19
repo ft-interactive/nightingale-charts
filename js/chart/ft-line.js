@@ -21,8 +21,9 @@ ft.charts.line = function(){
 	function linedraw(g){
 		var originalData = g.datum();
 
+		g = g.append('g').attr('class','chart-line');
 		g.datum(
-			g.datum().map(
+			originalData.map(
 				function(d){
 					return {
 						x:xScale( xParser( d[xProp] )),
