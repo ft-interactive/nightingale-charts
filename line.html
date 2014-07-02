@@ -23,14 +23,14 @@
 </div>
 </body>
 <script type="text/javascript">
-	d3.csv('app/bower_components/exampledatasets/stock1.csv', gotData);
+	d3.csv('app/bower_components/exampledatasets/stock1.csv', gotStockTimeline);
 	var margin = {
 		top:20, left:50, bottom:70, right:50
 	}, 
 	width  = 500,
 	height = 500;
 
-	function gotData(data){
+	function gotStockTimeline(data){
 		//console.log(data);
 		var svg = d3.select('#views').append('svg')
 			.attr({width:width,height:height})
