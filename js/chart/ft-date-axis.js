@@ -142,6 +142,16 @@ ft.charts.dateAxis = function(){
 		bounds = g.node().getBoundingClientRect();
 	}
 
+	axis.labelWidth = function(){
+		// return the width of the widest axis label
+		return labelWidth;
+	}
+
+	axis.bounds = function(){
+		return bounds;
+	}
+
+
 	axis.lineHeight = function(x){
 		if (!arguments.length) return lineheight;
 		lineheight = x;
