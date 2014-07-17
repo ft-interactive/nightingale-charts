@@ -19,7 +19,8 @@ ft.charts.valueAxis = function(){
 		lineHeight = 16,
 		userTicks = [],
 		yOffset = 0,
-		xOffset = 0;
+		xOffset = 0,
+		labelWidth, bounds;
 			
 	function isVertical(){
 		return (a.orient() == 'left' || a.orient() == 'right')
@@ -58,6 +59,22 @@ ft.charts.valueAxis = function(){
 					});
 			}
 		}
+		labelWidth = 0;
+		g.select('.tick text').each(function(d){ //calculate the widest label
+			labelWidth = Math.max( d3.select(this).node().getBoundingClientRect().width, labelWidth );
+		});
+
+		bounds = g.node().getBoundingClientRect();
+
+	}
+
+	axis.labelWidth = function(){
+		// return the width of the widest axis label
+		return labelWidth;
+	}
+
+	axis.bounds = function(){
+		return bounds;
 	}
 
 	axis.tickSize = function(x){

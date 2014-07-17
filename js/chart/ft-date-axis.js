@@ -19,6 +19,7 @@ ft.charts.dateAxis = function(){
 		unitOverride = false,
 		yOffset = 0,
 		xOffset = 0,
+		labelWidth, bounds,
 
 
 	formatter = {
@@ -132,6 +133,13 @@ ft.charts.dateAxis = function(){
 				});
 			g.selectAll('*').attr('style',null); //clear the styles D3 sets so everything's coming from the css
 		});
+
+		labelWidth = 0;
+		g.select('.tick text').each(function(d){ //calculate the widest label
+			labelWidth = Math.max( d3.select(this).node().getBoundingClientRect().width, labelWidth );
+		});
+
+		bounds = g.node().getBoundingClientRect();
 	}
 
 	axis.lineHeight = function(x){
