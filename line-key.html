@@ -3,9 +3,10 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF8">
 	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-	<script type="text/javascript" src="js/chart/ft-text-area.js"></script>
+	<script type="text/javascript" src="js/chart/ft-line-key.js"></script>
+	<link rel="stylesheet" type="text/css" href="style/lines.css">
 	<link rel="stylesheet" type="text/css" href="style/textarea.css">
-	<title>Text Area</title>
+	<title>LineKey</title>
 	<style>
 
 		body.ft{
@@ -19,7 +20,7 @@
 	</style>
 </head>
 <body class="ft">
-<h1>Text Areas</h1>
+<h1>Line Key</h1>
 <div id="views">
 	<svg>
 	</svg>
@@ -27,26 +28,23 @@
 </body>
 <script type="text/javascript">
 var data = [ 
-	{label:"Family in feud with Zuckerbergs"}, 
-	{label:"Committed 671 birthdays to memory"}, 
-	{label:"Ex is doing too well"}, 
-	{label:"High school friends all dead now"}, 
-	{label:"Discovered how to “like” things mentally"}, 
-	{label:"Not enough politics"} 
+	{style:"series1", label:"Family in feud with Zuckerbergs"}, 
+	{style:"series2", label:"Committed 671 birthdays to memory"}, 
+	{style:"series3", label:"Ex is doing too well"}, 
+	{style:"series4", label:"High school friends all dead now"}, 
+	{style:"series5", label:"Discovered how to “like” things mentally"}, 
+	{style:"series6", label:"Not enough politics"} 
 ];
 
-var text = ft.charts.textArea()
+var key = ft.charts.lineKey()
 	.width(100)
-	.lineHeight(16);
+	.lineHeight(19);
 
 d3.select('svg')
 	.attr('width',800)
 	.attr('height',800)
-	.selectAll('text')
-		.data(data)
-		.enter()
-			.append('g').attr('transform',function(d,i){ return 'translate(10,'+ (30 + i*100)+')'; })
-			.call(text, function(d){ return d.label });
+		.datum(data)
+		.call(key);
 			
 
 
