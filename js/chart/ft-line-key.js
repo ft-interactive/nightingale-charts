@@ -27,9 +27,8 @@ ft.charts.lineKey = function(){
 
 	function key(g){
 		console.log('key', g)
-		g = g.append('g');
-		var keyItems = g.attr('class','chart-linekey')
-			.selectAll('g').data( g.datum().filter( filter ) )
+		g = g.append('g').attr('class','chart-linekey');
+		var keyItems = g.selectAll('g').data( g.datum().filter( filter ) )
 				.enter()
 				.append('g').attr({
 					'class':'key-item',
@@ -48,7 +47,7 @@ ft.charts.lineKey = function(){
 
 		keyItems.append('text').attr({
 			'class':'key-label',
-			x:strokeLength + 3
+			x:strokeLength + 10
 		}).text(label);
 
 	}
