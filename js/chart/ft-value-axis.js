@@ -103,7 +103,10 @@ ft.charts.valueAxis = function(){
 		if(userTicks.length > 0){
 			a.tickValues( userTicks );
 		}else{
-			a.ticks( Math.round( (a.scale().range()[1] - a.scale().range()[0])/100 ) );
+			var count = Math.round( (a.scale().range()[1] - a.scale().range()[0])/100 );
+			var customTicks = a.scale().ticks(count);
+			customTicks = customTicks.concat( a.scale().domain() )
+			a.tickValues( customTicks );
 		}
 		return axis;
 	};
