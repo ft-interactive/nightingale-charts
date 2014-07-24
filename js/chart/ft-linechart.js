@@ -148,10 +148,11 @@ ft.charts.lineChart = function(p){
 
 			if(!model.keyPosition){
 				model.keyPosition = {top: totalHeight, left:0};	
-				totalHeight += (getHeight(key) + model.blockPadding);
+				totalHeight += (getHeight(key));
 			}
 			key.attr( 'transform',translate(model.keyPosition) );
 		}
+		totalHeight += blockPadding;
 
 		var chart = svg.append('g').attr('class','chart');
 
