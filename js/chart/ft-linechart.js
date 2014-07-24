@@ -152,7 +152,7 @@ ft.charts.lineChart = function(p){
 			}
 			key.attr( 'transform',translate(model.keyPosition) );
 		}
-		totalHeight += blockPadding;
+		totalHeight += model.blockPadding;
 
 		var chart = svg.append('g').attr('class','chart');
 
