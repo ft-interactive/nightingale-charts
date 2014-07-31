@@ -1,4 +1,4 @@
-!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.modestCharts=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.modestCharts=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/tom.pearson/repo/modest charts/node_modules/d3/d3.js":[function(require,module,exports){
 !function() {
   var d3 = {
     version: "3.4.11"
@@ -9232,7 +9232,7 @@
   if (typeof define === "function" && define.amd) define(d3); else if (typeof module === "object" && module.exports) module.exports = d3;
   this.d3 = d3;
 }();
-},{}],2:[function(require,module,exports){
+},{}],"/Users/tom.pearson/repo/modest charts/src/ft-category-axis.js":[function(require,module,exports){
 'use strict'
 
 var d3 = require('d3'),
@@ -9302,7 +9302,7 @@ categoryAxis = function(){
 };
 
 module.exports = categoryAxis;
-},{"d3":1}],3:[function(require,module,exports){
+},{"d3":"/Users/tom.pearson/repo/modest charts/node_modules/d3/d3.js"}],"/Users/tom.pearson/repo/modest charts/src/ft-date-axis.js":[function(require,module,exports){
 'use strict'
 
 var d3 = require('d3'),
@@ -9518,7 +9518,7 @@ dateAxis = function(){
 };
 
 module.exports = dateAxis;
-},{"d3":1}],4:[function(require,module,exports){
+},{"d3":"/Users/tom.pearson/repo/modest charts/node_modules/d3/d3.js"}],"/Users/tom.pearson/repo/modest charts/src/ft-line-chart.js":[function(require,module,exports){
 //reusable linechart 
 'use strict'
 
@@ -9770,7 +9770,7 @@ lineChart = function(p){
 };
 
 module.exports = lineChart;
-},{"./ft-date-axis.js":3,"./ft-line-key.js":5,"./ft-text-area.js":6,"./ft-value-axis.js":7,"d3":1}],5:[function(require,module,exports){
+},{"./ft-date-axis.js":"/Users/tom.pearson/repo/modest charts/src/ft-date-axis.js","./ft-line-key.js":"/Users/tom.pearson/repo/modest charts/src/ft-line-key.js","./ft-text-area.js":"/Users/tom.pearson/repo/modest charts/src/ft-text-area.js","./ft-value-axis.js":"/Users/tom.pearson/repo/modest charts/src/ft-value-axis.js","d3":"/Users/tom.pearson/repo/modest charts/node_modules/d3/d3.js"}],"/Users/tom.pearson/repo/modest charts/src/ft-line-key.js":[function(require,module,exports){
 'use strict'
 
 var d3 = require('d3'),
@@ -9848,7 +9848,73 @@ lineKey = function(){
 
 module.exports = lineKey;
 
-},{"d3":1}],6:[function(require,module,exports){
+},{"d3":"/Users/tom.pearson/repo/modest charts/node_modules/d3/d3.js"}],"/Users/tom.pearson/repo/modest charts/src/ft-null-chart.js":[function(require,module,exports){
+'use strict';
+var d3 = require('d3');
+
+var nullChart = function(){
+	
+	function buildModel(opts){
+		var m = {
+			//layout stuff
+			height:undefined,
+			width:300,
+			chartHeight:300,
+			chartWidth:300,
+			blockPadding:8,
+			data:[],
+			error:function(err){ console.log('ERROR: ', err) },
+		};
+
+		for(var key in opts){
+			m[key] = opts[key];
+		}
+
+		return m;
+	}
+
+	function getHeight(selection){
+		return Math.ceil(selection.node().getBoundingClientRect().height);
+	}
+
+	function getWidth(selection){
+		return Math.ceil(selection.node().getBoundingClientRect().width);	
+	}
+
+	function translate(position){
+		return 'translate(' + position.left + ',' + position.top + ')';
+	}
+
+
+	function chart(g){
+		var model = buildModel( g.data()[0] );
+		var	svg = g.append('svg')
+				.attr({
+					'class':'null-chart',
+					'height':500,
+					'width':500
+				});
+
+		console.log('a',g.data())
+
+		var title = svg.append('text').text(model.title + " - PLACE HOLDER CHART");
+		title.attr('transform',translate( {top:getHeight(title) ,left:0} ))
+		var subtitle = svg.append('text').text(model.subTitle);
+		subtitle.attr('transform',translate( {top:getHeight(title) + getHeight(subtitle) ,left:0} ))
+
+		svg.selectAll('text').attr({
+			fill:'#000',
+			stroke:'none'
+		});
+
+	}
+
+
+	return chart;
+}
+
+module.exports = nullChart;
+},{"d3":"/Users/tom.pearson/repo/modest charts/node_modules/d3/d3.js"}],"/Users/tom.pearson/repo/modest charts/src/ft-text-area.js":[function(require,module,exports){
 //text area provides a wrapping text block of a given type
 
 'use strict'
@@ -9946,7 +10012,7 @@ textArea = function(){
 };
 
 module.exports = textArea;
-},{"d3":1}],7:[function(require,module,exports){
+},{"d3":"/Users/tom.pearson/repo/modest charts/node_modules/d3/d3.js"}],"/Users/tom.pearson/repo/modest charts/src/ft-value-axis.js":[function(require,module,exports){
 'use strict'
 
 //this is wrapper for d3.svg.axis
@@ -10070,7 +10136,7 @@ valueAxis = function(){
 };
 
 module.exports = valueAxis;
-},{"d3":1}],8:[function(require,module,exports){
+},{"d3":"/Users/tom.pearson/repo/modest charts/node_modules/d3/d3.js"}],"/Users/tom.pearson/repo/modest charts/src/index.js":[function(require,module,exports){
 'use strict';
 var modestCharts = {
 	dateAxis: require('./ft-date-axis.js'),
@@ -10078,9 +10144,10 @@ var modestCharts = {
 	lineChart: require('./ft-line-chart.js'),
 	lineKey: require('./ft-line-key.js'),
 	textArea: require('./ft-text-area.js'),
-	valueAxis: require('./ft-value-axis.js')
+	valueAxis: require('./ft-value-axis.js'),
+	nullChart: require('./ft-null-chart.js')
 };
 
 module.exports = modestCharts;
-},{"./ft-category-axis.js":2,"./ft-date-axis.js":3,"./ft-line-chart.js":4,"./ft-line-key.js":5,"./ft-text-area.js":6,"./ft-value-axis.js":7}]},{},[8])(8)
+},{"./ft-category-axis.js":"/Users/tom.pearson/repo/modest charts/src/ft-category-axis.js","./ft-date-axis.js":"/Users/tom.pearson/repo/modest charts/src/ft-date-axis.js","./ft-line-chart.js":"/Users/tom.pearson/repo/modest charts/src/ft-line-chart.js","./ft-line-key.js":"/Users/tom.pearson/repo/modest charts/src/ft-line-key.js","./ft-null-chart.js":"/Users/tom.pearson/repo/modest charts/src/ft-null-chart.js","./ft-text-area.js":"/Users/tom.pearson/repo/modest charts/src/ft-text-area.js","./ft-value-axis.js":"/Users/tom.pearson/repo/modest charts/src/ft-value-axis.js"}]},{},["/Users/tom.pearson/repo/modest charts/src/index.js"])("/Users/tom.pearson/repo/modest charts/src/index.js")
 });

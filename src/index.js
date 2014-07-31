@@ -5,7 +5,8 @@ var modestCharts = {
 	lineChart: require('./ft-line-chart.js'),
 	lineKey: require('./ft-line-key.js'),
 	textArea: require('./ft-text-area.js'),
-	valueAxis: require('./ft-value-axis.js')
+	valueAxis: require('./ft-value-axis.js'),
+	nullChart: require('./ft-null-chart.js')
 };
 
 module.exports = modestCharts;
