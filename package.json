@@ -1,0 +1,18 @@
+{
+  "name": "modest-charts",
+  "version": "0.0.0",
+  "description": "bits and bobs for making FT style charts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://ßgit.svc.ft.com:8080/scm/iglt/d3-chart-bits.git"
+  },
+  "author": "tom pearson",
+  "license": "ISC",
+  "devDependencies": {
+    "d3": "^3.4.11"
+  }
+}
