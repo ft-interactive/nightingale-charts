@@ -1,15 +1,8 @@
 'use strict'
 
-if(!ft){
-	var ft = {};
-}
+var d3 = require('d3'),
 
-if(!ft.charts){
-	ft.charts = {};
-}
-
-
-ft.charts.categoryAxis = function(){
+categoryAxis = function(){
 
 	var ticksize = 5,
 		a = d3.svg.axis().orient('left').tickSize(ticksize , 0),
@@ -72,3 +65,5 @@ ft.charts.categoryAxis = function(){
 
 	return axis;
 };
+
+module.exports = categoryAxis;

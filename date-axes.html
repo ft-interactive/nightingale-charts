@@ -2,10 +2,11 @@
 <html>
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF8">
-	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-	<script type="text/javascript" src="bower_components/zepto/zepto.js" charset="utf-8"></script>
-	<script type="text/javascript" src="js/chart/ft-date-axis.js"></script>
+
+	
+
 	<link rel="stylesheet" type="text/css" href="style/axes.css">
+
 	<title>Date Axes</title>
 	<style>
 
@@ -24,6 +25,8 @@
 <div id="views">
 </div>
 </body>
+<script src="modest-charts.js"  charset="utf-8"></script>
+
 <script type="text/javascript">
 var margin = {
 	top:20, left:50, bottom:70, right:50
@@ -91,7 +94,7 @@ divs.append('svg')
 	.attr('height', margin.top + margin.bottom)
 	.each(function(d,i){
 		//create the axis, giving it a scale
-		var axis = ft.charts.dateAxis()
+		var axis = modestCharts.dateAxis()
 			.scale(d.scale);
 
 		//create a plain 'g' node to add it to (offset to the margin)

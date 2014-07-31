@@ -1,18 +1,12 @@
 'use strict'
 
-if(!ft){
-	var ft = {};
-}
-
-if(!ft.charts){
-	ft.charts = {};
-}
-
 //this is wrapper for d3.svg.axis
 //for a standard FT styled value axis
 //usually these are vertical
 
-ft.charts.valueAxis = function(){
+var d3 = require('d3'),
+
+valueAxis = function(){
 
 	var ticksize = 5,
 		a = d3.svg.axis().orient('left').tickSize(ticksize , 0),
@@ -125,3 +119,5 @@ ft.charts.valueAxis = function(){
 
 	return axis;
 };
+
+module.exports = valueAxis;

@@ -1,14 +1,8 @@
 'use strict'
 
-if(!ft){
-	var ft = {};
-}
+var d3 = require('d3'),
 
-if(!ft.charts){
-	ft.charts = {};
-}
-
-ft.charts.lineKey = function(){
+lineKey = function(){
 	var width = 300, 
 	strokeLength = 15,
 	lineHeight = 16,
@@ -77,4 +71,6 @@ ft.charts.lineKey = function(){
 	};
 
 	return key;
-}
+};
+
+module.exports = lineKey;

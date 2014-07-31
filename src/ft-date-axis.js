@@ -1,14 +1,8 @@
 'use strict'
 
-if(!ft){
-	var ft = {};
-}
+var d3 = require('d3'),
 
-if(!ft.charts){
-	ft.charts = {};
-}
-
-ft.charts.dateAxis = function(){
+dateAxis = function(){
 
 	var axes = [ d3.svg.axis().orient('bottom') ],
 		scale,
@@ -216,4 +210,6 @@ ft.charts.dateAxis = function(){
 
 
 	return axis;
-}
+};
+
+module.exports = dateAxis;

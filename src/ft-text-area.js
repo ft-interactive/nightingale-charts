@@ -2,15 +2,9 @@
 
 'use strict'
 
-if(!ft){
-	var ft = {};
-}
+var d3 = require('d3'),
 
-if(!ft.charts){
-	ft.charts = {};
-}
-
-ft.charts.textArea = function(){ 
+textArea = function(){ 
 	var xOffset = 0, 
 		yOffset = 0, 
 		width=1000, 
@@ -98,4 +92,6 @@ ft.charts.textArea = function(){
 	};
 
 	return textArea;
-}
+};
+
+module.exports = textArea;

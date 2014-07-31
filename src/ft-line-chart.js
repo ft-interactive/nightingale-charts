@@ -1,16 +1,13 @@
 //reusable linechart 
-
 'use strict'
 
-if(!ft){
-	var ft = {};
-}
+var d3 = require('d3'),
+	dateAxis = require('./ft-date-axis.js'),
+	valueAxis = require('./ft-value-axis.js'),
+	textArea = require('./ft-text-area.js'),
+	lineKey = require('./ft-line-key.js'),
 
-if(!ft.charts){
-	ft.charts = {};
-}
-
-ft.charts.lineChart = function(p){ 
+lineChart = function(p){ 
 
 	var lineClasses = ['series1','series2','series3','series4','series5','series6','series7','accent'],
 	complementaryLineCLasses = ['forecast']; //these classes can be used in addition to those above
@@ -114,8 +111,8 @@ ft.charts.lineChart = function(p){
 				}),	
 
 	//create title, subtitle, key, source, footnotes, logo, the chart itself
-			wrappedText = ft.charts.textArea().width( model.width ),
-			chartKey = ft.charts.lineKey()
+			wrappedText = textArea().width( model.width ),
+			chartKey = lineKey()
 				.style(function(d){
 					return d.value;
 				})
@@ -193,19 +190,19 @@ ft.charts.lineChart = function(p){
 			.range( [0, model.chartWidth] );
 
 		//first pass, create the axis at the entire chartWidth/Height
-		var valueAxis = ft.charts.valueAxis()
+		var vAxis = valueAxis()
 				.tickSize( model.chartWidth )	//make the ticks the width of the chart
 				.scale( valueScale ),
 
 
-			timeAxis = ft.charts.dateAxis()
+			timeAxis = dateAxis()
 				.yOffset( model.chartHeight )	//position the axis at the bottom of the chart
 				.scale( timeScale );
 
 			console.log(valueScale.ticks(), valueScale.domain());
 
 
-		chart.call(valueAxis);
+		chart.call(vAxis);
 		chart.call(timeAxis);
 
 		//measure chart
@@ -220,11 +217,11 @@ ft.charts.lineChart = function(p){
 		valueScale.range(newValueRange);
 		timeScale.range(newTimeRange);
 		timeAxis.yOffset(plotHeight);
-		valueAxis.tickSize(plotWidth);
+		vAxis.tickSize(plotWidth);
 
 		//replace provisional axes
 		chart.selectAll('*').remove();
-		chart.call(valueAxis);
+		chart.call(vAxis);
 		chart.call(timeAxis);
 
 		model.chartPosition.left += (getWidth(chart.select('.y.axis')) - plotWidth);
@@ -249,4 +246,6 @@ ft.charts.lineChart = function(p){
 	console.log('LC');
 
 	return chart;
-}
+};
+
+module.exports = lineChart;
