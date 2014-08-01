@@ -19,7 +19,9 @@
 </head>
 <body class="ft">
 <h1>null chart</h1>
-<div id="views">
+<div id="view1">
+</div>
+<div id="view2">
 </div>
 </body>
 <script src="modest-charts.js"  charset="utf-8"></script>
@@ -28,8 +30,12 @@
 
 var defaultChart = modestCharts.nullChart()
 
-d3.select('#views')
+d3.select('#view1')
 		.datum({title:"test",subTitle:"sub-testing"})
+			.call(defaultChart);
+
+d3.select('#view2')
+		.datum({title:"test 2",subTitle:"sub-testing the second",width:200, height:500})
 			.call(defaultChart);
 			
 

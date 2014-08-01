@@ -37,11 +37,14 @@ var nullChart = function(){
 
 	function chart(g){
 		var model = buildModel( g.data()[0] );
+		if(!model.height){
+			model.height = model.width;
+		}
 		var	svg = g.append('svg')
 				.attr({
 					'class':'null-chart',
-					'height':500,
-					'width':500
+					'height':model.height,
+					'width':model.width
 				});
 
 		console.log('a',g.data())
