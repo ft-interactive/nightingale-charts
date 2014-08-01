@@ -1,0 +1,42 @@
+<html>
+<head>
+	<title>Pie Chart</title>
+</head>
+<body>
+<div id="view1"></div>
+<div id="view2"></div>
+</body>
+<script src="vendor.js"  charset="utf-8"></script>
+<script src="modest-charts.js"  charset="utf-8"></script>
+<script type="text/javascript">
+
+var modestCharts = require('modestCharts');
+console.log(modestCharts);
+
+var pieData1 = {
+	title:'Cats vs dogs',
+	data:[
+		{ '&':'Cats', value:20 },
+		{ '&':'Dogs', value:35 }
+	]
+}
+
+var pieData2 = {
+	title:'Fruits of the world',
+	subtitle:'An ill advised pie',
+	data:[
+		{ '&':'Apple', value:20 },
+		{ '&':'Orange', value:35 },
+		{ '&':'Banana', value:50 },
+		{ '&':'Mango', value:12 }
+	]
+}
+
+d3.select('#view1').datum(pieData1).call( modestCharts.pieChart() );
+
+
+d3.select('#view2').datum(pieData2).call( modestCharts.pieChart() );
+
+
+</script>
+</html>

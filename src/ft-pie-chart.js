@@ -1,17 +1,18 @@
 'use strict';
 var d3 = require('d3');
 
-var nullChart = function(){
+var pieChart = function(){
 	
 	function buildModel(opts){
 		var m = {
 			//layout stuff
 			title:'chart title',
-			subtitle:'chart subtitle (letters)',
 			height:undefined,
 			width:300,
 			chartHeight:300,
 			chartWidth:300,
+			indexProperty:'&',
+			valueProperty:'value',
 			blockPadding:8,
 			data:[],
 			error:function(err){ console.log('ERROR: ', err) },
@@ -20,6 +21,7 @@ var nullChart = function(){
 		for(var key in opts){
 			m[key] = opts[key];
 		}
+
 
 		return m;
 	}
@@ -50,10 +52,23 @@ var nullChart = function(){
 				});
 
 		var title = svg.append('text').text(model.title + " - PLACE HOLDER CHART");
-		title.attr('transform',translate( {top:getHeight(title) ,left:0} ))
-		var subtitle = svg.append('text').text(model.subtitle);
-		subtitle.attr('transform',translate( {top:getHeight(title) + getHeight(subtitle) ,left:0} ))
+		title.attr('transform',translate( {top:getHeight(title) ,left:0} ));
 
+		var subtitle = svg.append('text').text(model.subtitle);
+		subtitle.attr('transform',translate( {top:getHeight(title) + getHeight(subtitle) ,left:0} ));
+
+		var chart = svg.append('g').attr('class','chart');
+		if(model.data.length > 3){
+			model.error('PIE warning: too many segments!');
+		}
+
+		var outerRadius = model.width / 2; 
+
+		chart.selectAll('.slice')
+			.data( model.data )
+				.enter()
+					.append(;path);
+		
 		svg.selectAll('text').attr({
 			fill:'#000',
 			stroke:'none'
@@ -64,4 +79,4 @@ var nullChart = function(){
 	return chart;
 }
 
-module.exports = nullChart;
+module.exports = pieChart;

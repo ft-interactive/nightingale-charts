@@ -4,7 +4,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=UTF8">
 
 	<link rel="stylesheet" type="text/css" href="style/textarea.css">
-	<title>Text Area</title>
+	<title>Null Chart</title>
 	<style>
 
 		body.ft{
@@ -24,21 +24,23 @@
 <div id="view2">
 </div>
 </body>
+<script src="vendor.js"  charset="utf-8"></script>
 <script src="modest-charts.js"  charset="utf-8"></script>
 
 <script type="text/javascript">
+var modestCharts = require('modestCharts');
+var defaultChart = modestCharts.nullChart();
 
-var defaultChart = modestCharts.nullChart()
 
 d3.select('#view1')
 		.datum({title:"test",subTitle:"sub-testing"})
 			.call(defaultChart);
 
-d3.select('#view2')
-		.datum({title:"test 2",subTitle:"sub-testing the second",width:200, height:500})
-			.call(defaultChart);
-			
+var chart = d3.select('#view2')
+		.datum({ title:"test 2", subTitle:"sub-testing the second", width:200, height:500 });
 
+
+chart.call(defaultChart);
 
 
 </script>

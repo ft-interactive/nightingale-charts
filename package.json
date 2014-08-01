@@ -5,12 +5,15 @@
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify -e src/index.js  -o modest-charts.js --s modestCharts",
-    "watch": "watchify -e src/index.js  -o modest-charts.js --s modestCharts"
+    "build": "browserify -e src/index.js -o modest-charts.js -r ./src/index.js:modestCharts -x d3",
+    "vendor": "browserify -e node_modules/d3/d3.js  -o vendor.js -r d3"
   },
   "repository": {
     "type": "git",
     "url": "http://git.svc.ft.com:8080/scm/iglt/d3-chart-bits.git"
+  },
+  "browser":{
+    "d3":"./node_modules/d3/d3.js"
   },
   "author": "tom pearson",
   "license": "ISC",
