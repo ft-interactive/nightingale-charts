@@ -55,7 +55,6 @@ var nullChart = function(){
 			fill:'#000',
 			stroke:'none'
 		});
-
 	}
 
 
