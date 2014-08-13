@@ -989,12 +989,10 @@ valueAxis = function(){
 				if(Math.min(r[0], r[1]) < 0 && Math.max(r[0], r[1]) > 0){
 					customTicks.push(0);
 				}
-				console.log('1 ', customTicks, ' ---> ' ,Math.min(r[0], r[1]), Math.max(r[0], r[1]));
 			}else{
 				customTicks = a.scale().ticks(count);				
 			}
 			customTicks = customTicks.concat( a.scale().domain() );
-			console.log('2 ' + customTicks);
 			a.tickValues( customTicks );
 		}
 		return axis;
