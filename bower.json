@@ -1,0 +1,21 @@
+{
+  "name": "modest-charts",
+  "version": "0.0.0",
+  "authors": [
+    "tomgp <tom.g.pearson@gmail.com>"
+  ],
+  "description": "simple chart bits, built on D3 for the FT",
+  "main": "modest-charts.js",
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
