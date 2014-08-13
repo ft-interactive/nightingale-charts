@@ -259,6 +259,10 @@ dateAxis = function(){
 					}
 					customTicks.sort(dateSort);
 				}else{
+					console.log(u[i]);
+					if(u[i] =='years' || u[i] =='decades' || u[i] =='centuries'){
+						u[i] = 'fullyears'; //simple axis always uses full years
+					}
 					customTicks = scale.domain();
 				}
 
