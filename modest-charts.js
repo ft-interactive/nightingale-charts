@@ -484,22 +484,22 @@ lineChart = function(p){
 		//the business of the actual chart
 		//make provisional scales
 		var valueScale = d3.scale.linear()
-			.simple( model.simpleValue )
 			.domain( model.valueDomain.reverse() )
 			.range( [0, model.chartHeight ] ).nice();
 
 		var timeScale = d3.time.scale()
-			.simple( model.simpleDate )
 			.domain( model.timeDomain )
 			.range( [0, model.chartWidth] );
 
 		//first pass, create the axis at the entire chartWidth/Height
 		var vAxis = valueAxis()
+				.simple( model.simpleValue )
 				.tickSize( model.chartWidth )	//make the ticks the width of the chart
 				.scale( valueScale ),
 
 
 			timeAxis = dateAxis()
+				.simple( model.simpleDate )
 				.yOffset( model.chartHeight )	//position the axis at the bottom of the chart
 				.scale( timeScale );
 
