@@ -38,6 +38,7 @@ var margin = {
 var axesDefinitions = [
 	{
 		title:'A day or less',
+		simple:false,
 		scale:d3.time.scale()
 			.range([0,400])
 			.domain([new Date("October 13, 1975 11:13:00"), new Date("October 13, 1975 22:00:00")])
@@ -99,6 +100,7 @@ divs.append('svg')
 	.each(function(d,i){
 		//create the axis, giving it a scale
 		var axis = modestCharts.dateAxis()
+			.simple(d.simple)
 			.scale(d.scale);
 
 		//create a plain 'g' node to add it to (offset to the margin)

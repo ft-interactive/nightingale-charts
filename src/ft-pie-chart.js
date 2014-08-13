@@ -67,7 +67,7 @@ var pieChart = function(){
 		chart.selectAll('.slice')
 			.data( model.data )
 				.enter()
-					.append(;path);
+					.append(path);
 		
 		svg.selectAll('text').attr({
 			fill:'#000',

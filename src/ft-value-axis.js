@@ -14,6 +14,7 @@ valueAxis = function(){
 		userTicks = [],
 		yOffset = 0,
 		xOffset = 0,
+		simple = false,
 		labelWidth, bounds;
 			
 	function isVertical(){
@@ -91,6 +92,12 @@ valueAxis = function(){
 		return axis;
 	};
 
+	axis.simple = function(x){
+		if (!arguments.length) return simnple;
+		simple = x;
+		return axis;
+	}
+
 	axis.scale = function(x){
 		if (!arguments.length) return a.scale();
 		a.scale(x);
@@ -98,8 +105,15 @@ valueAxis = function(){
 			a.tickValues( userTicks );
 		}else{
 			var count = Math.round( (a.scale().range()[1] - a.scale().range()[0])/100 );
-			var customTicks = a.scale().ticks(count);
-			customTicks = customTicks.concat( a.scale().domain() )
+			if(simple){
+				var customTicks = [], r = a.scale().domain();
+				if(Math.min(r[0], r[1]) < 0 && Math.max(r[0], r[1]) > 0){
+					customTicks.push(0);
+				}
+			}else{
+				customTicks = a.scale().ticks(count);				
+			}
+			customTicks = customTicks.concat( a.scale().domain() );
 			a.tickValues( customTicks );
 		}
 		return axis;

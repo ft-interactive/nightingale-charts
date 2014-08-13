@@ -99,6 +99,7 @@ divs.append('svg')
 		var vScale = d.scale.copy();
 		vScale.domain( [d.scale.domain()[1], d.scale.domain()[0]]  )
 		var axis = modestCharts.valueAxis()
+			.simple(true)
 			.scale( vScale );
 
 		var g = d3.select(this).append('g').attr('transform','translate(' + margin.left + ',' + margin.top + ')');
