@@ -20,6 +20,8 @@ lineChart = function(p){
 			chartHeight:300,
 			chartWidth:300,
 			blockPadding:8,
+			simpleDate:false,
+			simpleValue:false,
 			//data stuff
 			indexProperty:'&',
 			dateParser:d3.time.format('%d %b %Y').parse,
@@ -182,10 +184,12 @@ lineChart = function(p){
 		//the business of the actual chart
 		//make provisional scales
 		var valueScale = d3.scale.linear()
+			.simple( model.simpleValue )
 			.domain( model.valueDomain.reverse() )
 			.range( [0, model.chartHeight ] ).nice();
 
 		var timeScale = d3.time.scale()
+			.simple( model.simpleDate )
 			.domain( model.timeDomain )
 			.range( [0, model.chartWidth] );
 
