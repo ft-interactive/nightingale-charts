@@ -68,7 +68,7 @@ categoryAxis = function(){
 };
 
 module.exports = categoryAxis;
-},{"d3":undefined}],2:[function(require,module,exports){
+},{"d3":"d3"}],2:[function(require,module,exports){
 'use strict'
 
 var d3 = require('d3'),
@@ -259,7 +259,6 @@ dateAxis = function(){
 					}
 					customTicks.sort(dateSort);
 				}else{
-					console.log(u[i]);
 					if(u[i] =='years' || u[i] =='decades' || u[i] =='centuries'){
 						u[i] = 'fullyears'; //simple axis always uses full years
 					}
@@ -301,7 +300,7 @@ dateAxis = function(){
 };
 
 module.exports = dateAxis;
-},{"d3":undefined}],3:[function(require,module,exports){
+},{"d3":"d3"}],3:[function(require,module,exports){
 //reusable linechart 
 'use strict'
 
@@ -557,7 +556,7 @@ lineChart = function(p){
 };
 
 module.exports = lineChart;
-},{"./ft-date-axis.js":2,"./ft-line-key.js":4,"./ft-text-area.js":7,"./ft-value-axis.js":8,"d3":undefined}],4:[function(require,module,exports){
+},{"./ft-date-axis.js":2,"./ft-line-key.js":4,"./ft-text-area.js":7,"./ft-value-axis.js":8,"d3":"d3"}],4:[function(require,module,exports){
 'use strict'
 
 var d3 = require('d3'),
@@ -635,7 +634,7 @@ lineKey = function(){
 
 module.exports = lineKey;
 
-},{"d3":undefined}],5:[function(require,module,exports){
+},{"d3":"d3"}],5:[function(require,module,exports){
 'use strict';
 var d3 = require('d3');
 
@@ -703,7 +702,7 @@ var nullChart = function(){
 }
 
 module.exports = nullChart;
-},{"d3":undefined}],6:[function(require,module,exports){
+},{"d3":"d3"}],6:[function(require,module,exports){
 'use strict';
 var d3 = require('d3');
 
@@ -773,7 +772,7 @@ var pieChart = function(){
 		chart.selectAll('.slice')
 			.data( model.data )
 				.enter()
-					.append(path);
+					//.append(path);
 		
 		svg.selectAll('text').attr({
 			fill:'#000',
@@ -786,7 +785,7 @@ var pieChart = function(){
 }
 
 module.exports = pieChart;
-},{"d3":undefined}],7:[function(require,module,exports){
+},{"d3":"d3"}],7:[function(require,module,exports){
 //text area provides a wrapping text block of a given type
 
 'use strict'
@@ -884,7 +883,7 @@ textArea = function(){
 };
 
 module.exports = textArea;
-},{"d3":undefined}],8:[function(require,module,exports){
+},{"d3":"d3"}],8:[function(require,module,exports){
 'use strict'
 
 //this is wrapper for d3.svg.axis
@@ -1022,7 +1021,7 @@ valueAxis = function(){
 };
 
 module.exports = valueAxis;
-},{"d3":undefined}],"modestCharts":[function(require,module,exports){
+},{"d3":"d3"}],"modestCharts":[function(require,module,exports){
 'use strict';
 var modestCharts = {
 	dateAxis: require('./ft-date-axis.js'),
