@@ -105,18 +105,18 @@ function applyAttributes(){
 			},
 			//text
 			{
-				'selector':'text.chart-title',
+				'selector':'.chart-title text, .chart-title tspan',
 				'attributes':{
 					'font-size':20,
 					'fill':'#000'
 				}
 			},{
-				'selector':'text.chart-subtitle',
+				'selector':'.chart-subtitle text, .chart-subtitle tspan',
 				'attributes':{
 					'fill':'#000'
 				}
 			},{
-				'selector':'text.chart-subtitle',
+				'selector':'.chart-subtitle text, .chart-subtitle tspan',
 				'attributes':{
 					'fill':'#000'
 				}
