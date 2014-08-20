@@ -135,26 +135,6 @@ function applyAttributes(){
 		];
 
 
-/*
-
-.chart-footnote{
-	fill:rgba(0,0,0,0.3);
-	font-size: 0.8rem;
-	font-style: italic;
-}
-
-.chart-source{
-	fill:rgba(0,0,0,0.5);
-	font-size: 0.8rem;
-	font-style: italic;
-}
-
-.key-label{
-	font-size: 13px;
-	fill:rgba(0,0,0,0.5);
-}
-*/
-
 	for(var s in styleList){
 		s = styleList[s];	
 		console.log(s, s.selector);
