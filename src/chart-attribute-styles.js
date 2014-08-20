@@ -20,6 +20,7 @@ function applyAttributes(){
 				'selector':'.axis path, .axis line',
 				'attributes':{
 					'shape-rendering':'crispEdges',
+					'fill':'none'
 				}
 			},{
 				'selector':'.y.axis path.domain, .secondary path.domain, .secondary .tick line',
@@ -103,50 +104,6 @@ function applyAttributes(){
 				}
 			}
 		];
-
-/*
-	path.line{
-		fill:none;
-		stroke-width:1.5;
-		stroke-linejoin:round;
-		stroke-linecap:round;
-	}
-
-	.series1{
-		stroke:rgb(175,81,108);
-	}
-	.series2{
-		stroke:rgb(236,175,175);
-	}
-	.series3{
-		stroke:rgb(215,112,108);
-	}
-	.series4{
-		stroke:rgb(118,172,184);
-	}
-	.series5{
-		stroke:rgb(129,208,230);
-	}
-	.series6{
-		stroke:rgb(78,134,182);
-	}
-	.series7{
-		stroke:rgb(184,177,169);
-	}
-	.accent{
-		stroke:rgb(184,177,169);
-	}
-	.forecast{
-		stroke-dasharray:4,5;
-	}
-
-	line.key-line{
-		fill:none;
-		stroke-width:1.5;
-		stroke-linejoin:round;
-		stroke-linecap:round;
-	}
-*/
 
 
 	for(var s in styleList){
