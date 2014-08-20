@@ -38,7 +38,7 @@ function applyAttributes(){
 					'font-size':'10'
 				}
 			},{
-				'selector':'.y.axis tick line',
+				'selector':'.primary .tick line',
 				'attributes':{
 					'stroke':'#a7a59b'
 				}
@@ -102,9 +102,57 @@ function applyAttributes(){
 				'attributes':{
 					'stroke':'#9e2f00'
 				}
+			},
+			//text
+			{
+				'selector':'text.chart-title',
+				'attributes':{
+					'font-size':20,
+					'fill':'#000'
+				}
+			},{
+				'selector':'text.chart-subtitle',
+				'attributes':{
+					'fill':'#000'
+				}
+			},{
+				'selector':'text.chart-subtitle',
+				'attributes':{
+					'fill':'#000'
+				}
+			},{
+				'selector':'text.chart-source text.chart-footer',
+				'attributes':{
+					'fill':'#000'
+				}
+			},{
+				'selector':'text.key-label',
+				'attributes':{
+					'fill':'#000'
+				}
 			}
 		];
 
+
+/*
+
+.chart-footnote{
+	fill:rgba(0,0,0,0.3);
+	font-size: 0.8rem;
+	font-style: italic;
+}
+
+.chart-source{
+	fill:rgba(0,0,0,0.5);
+	font-size: 0.8rem;
+	font-style: italic;
+}
+
+.key-label{
+	font-size: 13px;
+	fill:rgba(0,0,0,0.5);
+}
+*/
 
 	for(var s in styleList){
 		s = styleList[s];	
