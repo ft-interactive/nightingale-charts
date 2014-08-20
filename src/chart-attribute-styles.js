@@ -55,7 +55,7 @@ function applyAttributes(){
 			},
 		//lines
 			{
-				'selector':'path.line',
+				'selector':'path.line, line.key-line',
 				'attributes':{
 					'fill':'none',
 					'stroke-width':'1.5',
@@ -70,32 +70,32 @@ function applyAttributes(){
 			},{
 				'selector':'path.series2',
 				'attributes':{
-					'stroke':'#af516c'
+					'stroke':'#ecafaf'
 				}
 			},{
 				'selector':'path.series3',
 				'attributes':{
-					'stroke':'#af516c'
+					'stroke':'#d7706c'
 				}
 			},{
 				'selector':'path.series4',
 				'attributes':{
-					'stroke':'#af516c'
+					'stroke':'#76acb8'
 				}
 			},{
 				'selector':'path.series5',
 				'attributes':{
-					'stroke':'#af516c'
+					'stroke':'#81d0e6'
 				}
 			},{
 				'selector':'path.series6',
 				'attributes':{
-					'stroke':'#af516c'
+					'stroke':'#4086b6'
 				}
 			},{
 				'selector':'path.series7',
 				'attributes':{
-					'stroke':'#af516c'
+					'stroke':'#b8b1a9'
 				}
 			},{
 				'selector':'path.accent',
