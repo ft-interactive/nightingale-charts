@@ -7,7 +7,8 @@ var modestCharts = {
 	valueAxis: require('./ft-value-axis.js'),
 	lineChart: require('./ft-line-chart.js'),
 	pieChart: require('./ft-pie-chart.js'),
-	nullChart: require('./ft-null-chart.js')
+	nullChart: require('./ft-null-chart.js'),
+	attributeStyler: require('./chart-attribute-styles.js')
 };
 
 module.exports = modestCharts;
