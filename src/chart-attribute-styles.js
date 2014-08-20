@@ -63,42 +63,42 @@ function applyAttributes(){
 					'stroke-linecap':'round'
 				}
 			},{
-				'selector':'path.series1',
+				'selector':'path.series1, line.series1',
 				'attributes':{
 					'stroke':'#af516c'
 				}
 			},{
-				'selector':'path.series2',
+				'selector':'path.series2, line.series2',
 				'attributes':{
 					'stroke':'#ecafaf'
 				}
 			},{
-				'selector':'path.series3',
+				'selector':'path.series3, line.series3',
 				'attributes':{
 					'stroke':'#d7706c'
 				}
 			},{
-				'selector':'path.series4',
+				'selector':'path.series4, line.series4',
 				'attributes':{
 					'stroke':'#76acb8'
 				}
 			},{
-				'selector':'path.series5',
+				'selector':'path.series5, line.series5',
 				'attributes':{
 					'stroke':'#81d0e6'
 				}
 			},{
-				'selector':'path.series6',
+				'selector':'path.series6, line.series6',
 				'attributes':{
 					'stroke':'#4086b6'
 				}
 			},{
-				'selector':'path.series7',
+				'selector':'path.series7, line.series7',
 				'attributes':{
 					'stroke':'#b8b1a9'
 				}
 			},{
-				'selector':'path.accent',
+				'selector':'path.accent, line.accent',
 				'attributes':{
 					'stroke':'#9e2f00'
 				}
