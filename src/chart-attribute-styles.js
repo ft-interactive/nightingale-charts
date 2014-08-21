@@ -30,7 +30,7 @@ function applyAttributes(){
 			},{
 				'selector':'.primary .tick text',
 				'attributes':{
-					'font-size':'14',
+					'font-size':'13',
 					'fill':'#757470'
 				}
 			},{
@@ -124,15 +124,15 @@ function applyAttributes(){
 					'fill':'#757470'
 				}
 			},{
-				'selector':'text.chart-source, text.chart-footer',
+				'selector':'.chart-source text, .chart-source tspan, .chart-footnote text, .chart-footnote tspan',
 				'attributes':{
-					'font-size':'15',
+					'font-size':'13',
 					'fill':'#757470'
 				}
 			},{
 				'selector':'text.key-label',
 				'attributes':{
-					'font-size':'14',
+					'font-size':'13',
 					'fill':'#757470'
 				}
 			}
