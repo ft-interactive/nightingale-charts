@@ -11,7 +11,7 @@ function applyAttributes(){
 			{
 				'selector':'svg text',
 				'attributes':{
-					'font-family':'sans-serif',
+					'font-family':'BentonSans, sans-serif',
 					'fill':'#a7a59b',
 					'stroke':'none'
 				}
@@ -31,12 +31,14 @@ function applyAttributes(){
 			},{
 				'selector':'.primary .tick text',
 				'attributes':{
-					'font-size':'12'
+					'font-size':'15',
+					'fill':'#757470'
 				}
 			},{
 				'selector':'.secondary .tick text',
 				'attributes':{
-					'font-size':'10'
+					'font-size':'12',
+					'fill':'#757470'
 				}
 			},{
 				'selector':'.primary .tick line',
@@ -109,27 +111,30 @@ function applyAttributes(){
 				'selector':'.chart-title text, .chart-title tspan',
 				'attributes':{
 					'font-size':20,
-					'fill':'#000'
+					'fill':'#43423e'
 				}
 			},{
 				'selector':'.chart-subtitle text, .chart-subtitle tspan',
 				'attributes':{
-					'fill':'#000'
+					'font-size':18,
+					'fill':'#757470'
 				}
 			},{
 				'selector':'.chart-subtitle text, .chart-subtitle tspan',
 				'attributes':{
-					'fill':'#000'
+					'fill':'#757470'
 				}
 			},{
-				'selector':'text.chart-source text.chart-footer',
+				'selector':'text.chart-source, text.chart-footer',
 				'attributes':{
-					'fill':'#000'
+					'font-size':'15',
+					'fill':'#757470'
 				}
 			},{
 				'selector':'text.key-label',
 				'attributes':{
-					'fill':'#000'
+					'font-size':'15',
+					'fill':'#757470'
 				}
 			}
 		];
