@@ -31,13 +31,13 @@ function applyAttributes(){
 			},{
 				'selector':'.primary .tick text',
 				'attributes':{
-					'font-size':'15',
+					'font-size':'14',
 					'fill':'#757470'
 				}
 			},{
 				'selector':'.secondary .tick text',
 				'attributes':{
-					'font-size':'12',
+					'font-size':'11',
 					'fill':'#757470'
 				}
 			},{
@@ -133,7 +133,7 @@ function applyAttributes(){
 			},{
 				'selector':'text.key-label',
 				'attributes':{
-					'font-size':'15',
+					'font-size':'14',
 					'fill':'#757470'
 				}
 			}
