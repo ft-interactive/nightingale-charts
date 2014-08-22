@@ -492,7 +492,8 @@ lineChart = function(p){
 			dateParser:d3.time.format('%d %b %Y').parse,
 			falseorigin:false, //TODO, find out if there's a standard 'pipeline' temr for this
 			error:function(err){ console.log('ERROR: ', err) },
-			lineClasses:{}
+			lineClasses:{},
+			niceValue:true
 		};
 
 		for(var key in opts){
@@ -544,7 +545,7 @@ lineChart = function(p){
 			return d[m.indexProperty];
 		});
 
-		//work out the value domain		
+		//work out the value domain
 		if(!m.valueDomain){
 			m.valueDomain = d3.extent( extents );
 			if(!m.falseorigin && m.valueDomain[0] > 0){ // unless a false origin has been specified
@@ -651,8 +652,11 @@ lineChart = function(p){
 		//make provisional scales
 		var valueScale = d3.scale.linear()
 			.domain( model.valueDomain.reverse() )
-			.range( [0, model.chartHeight ] ).nice();
-
+			.range( [0, model.chartHeight ] );
+		
+		if( model.niceValue ){
+			valueScale.nice();
+		}
 		var timeScale = d3.time.scale()
 			.domain( model.timeDomain )
 			.range( [0, model.chartWidth] );
