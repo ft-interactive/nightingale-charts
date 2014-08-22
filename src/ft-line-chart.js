@@ -82,9 +82,9 @@ lineChart = function(p){
 		//work out the value domain		
 		if(!m.valueDomain){
 			m.valueDomain = d3.extent( extents );
-		}
-		if(!m.falseorigin && m.valueDomain[0] > 0){ // unless a false origin has been specified
-			m.valueDomain[0] = 0;
+			if(!m.falseorigin && m.valueDomain[0] > 0){ // unless a false origin has been specified
+				m.valueDomain[0] = 0;
+			}
 		}
 
 		return m;
