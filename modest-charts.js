@@ -154,7 +154,6 @@ function applyAttributes(){
 
 	for(var s in styleList){
 		s = styleList[s];	
-		console.log(s, s.selector);
 		d3.selectAll(s.selector).attr(s.attributes);
 	}
 	return true;
@@ -669,8 +668,6 @@ lineChart = function(p){
 				.yOffset( model.chartHeight )	//position the axis at the bottom of the chart
 				.scale( timeScale );
 
-			console.log(valueScale.ticks(), valueScale.domain());
-
 
 		chart.call(vAxis);
 		chart.call(timeAxis);
@@ -713,7 +710,7 @@ lineChart = function(p){
 		});
 	}
 
-	console.log('LC');
+	//console.log('LC');
 
 	return chart;
 };
@@ -742,7 +739,6 @@ lineKey = function(){
 	};
 
 	function key(g){
-		console.log('key', g)
 		g = g.append('g').attr('class','chart-linekey');
 		var keyItems = g.selectAll('g').data( g.datum().filter( filter ) )
 				.enter()

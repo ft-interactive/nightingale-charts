@@ -153,7 +153,6 @@ function applyAttributes(){
 
 	for(var s in styleList){
 		s = styleList[s];	
-		console.log(s, s.selector);
 		d3.selectAll(s.selector).attr(s.attributes);
 	}
 	return true;

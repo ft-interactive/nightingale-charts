@@ -203,8 +203,6 @@ lineChart = function(p){
 				.yOffset( model.chartHeight )	//position the axis at the bottom of the chart
 				.scale( timeScale );
 
-			console.log(valueScale.ticks(), valueScale.domain());
-
 
 		chart.call(vAxis);
 		chart.call(timeAxis);
@@ -247,7 +245,7 @@ lineChart = function(p){
 		});
 	}
 
-	console.log('LC');
+	//console.log('LC');
 
 	return chart;
 };

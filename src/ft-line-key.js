@@ -20,7 +20,6 @@ lineKey = function(){
 	};
 
 	function key(g){
-		console.log('key', g)
 		g = g.append('g').attr('class','chart-linekey');
 		var keyItems = g.selectAll('g').data( g.datum().filter( filter ) )
 				.enter()
