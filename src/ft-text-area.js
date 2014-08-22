@@ -50,7 +50,6 @@ textArea = function(){
 				return d;
 			}
 		}
-		console.log('text!')
 		g = g.append('g').attr('transform','translate(' + xOffset + ',' + yOffset + ')')
 		g.append('text').text(accessor).call(wrap, width);
 		bounds = g.node().getBoundingClientRect();

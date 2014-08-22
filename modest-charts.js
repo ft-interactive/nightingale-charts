@@ -545,8 +545,9 @@ lineChart = function(p){
 		});
 
 		//work out the value domain		
-		m.valueDomain = d3.extent( extents );
-
+		if(!m.valueDomain){
+			m.valueDomain = d3.extent( extents );
+		}
 		if(!m.falseorigin && m.valueDomain[0] > 0){ // unless a false origin has been specified
 			m.valueDomain[0] = 0;
 		}
@@ -997,7 +998,6 @@ textArea = function(){
 				return d;
 			}
 		}
-		console.log('text!')
 		g = g.append('g').attr('transform','translate(' + xOffset + ',' + yOffset + ')')
 		g.append('text').text(accessor).call(wrap, width);
 		bounds = g.node().getBoundingClientRect();
