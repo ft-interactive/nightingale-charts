@@ -62,6 +62,11 @@ function applyAttributes(){
 				'attributes':{
 					'text-anchor':'end'
 				}
+			},{
+				'selector':'.x.axis .primary path.domain',
+				'attributes':{
+					'stroke':'#757470'
+				}
 			},
 		//lines
 			{
