@@ -39,10 +39,12 @@
 
 .y.axis .tick line{
 	stroke:rgba(0,0,0,0.1);
+	stroke-dasharray:2 2;
 }
 
 line.origin{
 	stroke:rgba(0,0,0,0.5);
+	stroke-dasharray:2 2;
 }
 
 .y.axis text{

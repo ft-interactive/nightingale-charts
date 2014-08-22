@@ -27,7 +27,14 @@ function applyAttributes(){
 				'attributes':{
 					'stroke':'none'
 				}
-			},{
+			},
+			{
+				'selector':'.y.axis .tick line',
+				'attributes':{
+					'stroke-dasharray':'2 2'
+				}
+			},
+			{
 				'selector':'.primary .tick text',
 				'attributes':{
 					'font-size':'13',
