@@ -13,13 +13,14 @@
     "type": "git",
     "url": "http://git.svc.ft.com:8080/scm/iglt/d3-chart-bits.git"
   },
-  "browser":{
-    "d3":"./node_modules/d3/d3.js"
+  "browser": {
+    "d3": "./node_modules/d3/d3.js"
   },
   "author": "tom pearson",
   "license": "ISC",
   "devDependencies": {},
   "dependencies": {
+    "browserify": "^5.11.0",
     "d3": "^3.4.11"
   }
 }
