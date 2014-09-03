@@ -23,7 +23,7 @@ lineChart = function(p){
 			simpleDate:false,
 			simpleValue:false,
 			//data stuff
-			indexProperty:'&',
+			//indexProperty:'&',
 			dateParser:d3.time.format('%d %b %Y').parse,
 			falseorigin:false, //TODO, find out if there's a standard 'pipeline' temr for this
 			error:function(err){ console.log('ERROR: ', err) },
@@ -33,6 +33,10 @@ lineChart = function(p){
 
 		for(var key in opts){
 			m[key] = opts[key];
+		}
+
+		if(!m.indexProperty){
+			m.indexProperty = m.headings[0];
 		}
 
 		m.chartLines = m.headings.filter(function(d){
@@ -104,8 +108,7 @@ lineChart = function(p){
 	}
 
 	function chart(g){
-		console.log('linechart called');
-
+		console.log('data', g.data()[0]);
 		var model = buildModel( g.data()[0] ),
 			svg = g.append('svg')
 				.attr({
