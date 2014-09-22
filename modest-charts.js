@@ -488,7 +488,6 @@ lineChart = function(p){
 			simpleDate:false,
 			simpleValue:false,
 			//data stuff
-			//indexProperty:'&',
 			dateParser:d3.time.format('%d %b %Y').parse,
 			falseorigin:false, //TODO, find out if there's a standard 'pipeline' temr for this
 			error:function(err){ console.log('ERROR: ', err) },
@@ -518,7 +517,9 @@ lineChart = function(p){
 			var s = d[m.indexProperty];
 			d[m.indexProperty] = m.dateParser( s );
 			if(d[m.indexProperty] === null){
-				m.error('unable to parse date "' + s + '"');
+				m.error({
+					node:null,
+					message:'unable to parse date "' + s + '"'})
 			}
 			return d;
 		});
@@ -545,9 +546,11 @@ lineChart = function(p){
 		});
 
 		//work out the time domain
-		m.timeDomain = d3.extent(m.data, function(d){
-			return d[m.indexProperty];
-		});
+		if(!m.timeDomain){
+			m.timeDomain = d3.extent(m.data, function(d){
+				return d[m.indexProperty];
+			});
+		}
 
 		//work out the value domain
 		if(!m.valueDomain){
@@ -642,7 +645,10 @@ lineChart = function(p){
 		}else{
 			model.chartHeight = model.height - totalHeight;
 			if(model.chartHeight < 0){
-				model.error('calculated plot height is less than zero');
+				model.error({
+					node:chart,
+					message:'calculated plot height is less than zero'
+				});
 			}
 		}
 		svg.attr('height',model.height);
