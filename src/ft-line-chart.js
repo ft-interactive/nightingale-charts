@@ -111,8 +111,7 @@ lineChart = function(p){
 	}
 
 	function chart(g){
-		console.log('data', g.data()[0]);
-		var model = buildModel( g.data()[0] ),
+		var model = buildModel( Object.create( g.data()[0] ) ), //the model is built froma  copy of the data
 			svg = g.append('svg')
 				.attr({
 					'class':'line-chart',
