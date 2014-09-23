@@ -12,6 +12,7 @@ valueAxis = function(){
 		a = d3.svg.axis().orient('left').tickSize(ticksize , 0),
 		lineHeight = 16,
 		userTicks = [],
+		hardRules = [0],
 		yOffset = 0,
 		xOffset = 0,
 		simple = false,
@@ -42,17 +43,9 @@ valueAxis = function(){
 		g.selectAll('*').attr('style',null); //clear the styles D3 sets so everything's coming from the css
 		if (isVertical()){
 			g.selectAll('text').attr('transform','translate( 0, ' + -(lineHeight/2) + ' )');
-			var scale = a.scale();
-			if( Math.abs(scale.domain()[0] - scale.domain()[1]) >= scale.domain()[1]){ //if the axis crosses zero
-				//add a stronger line
-				g.select('.y.axis').append('line').attr('class','origin tick')
-					.attr({
-						x1:0,
-						y1:scale(0),
-						x2:-a.tickSize(),
-						y2:scale(0)
-					});
-			}
+			g.selectAll('.tick').classed('origin', function(d,i){ //'origin' lines are 0, the lowest line (and any user specified special values)
+				return (hardRules.indexOf(d) > -1);
+			});
 		}
 		labelWidth = 0;
 		g.select('.tick text').each(function(d){ //calculate the widest label
@@ -119,6 +112,12 @@ valueAxis = function(){
 		return axis;
 	};
 
+	axis.hardRules = function(x){
+		if (!arguments.length) return hardRules;
+		hardRules = x;
+		return axis;
+
+	}
 	axis.yOffset = function(x){
 		if (!arguments.length) return yOffset;
 		yOffset = x;
