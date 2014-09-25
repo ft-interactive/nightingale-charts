@@ -614,7 +614,7 @@ lineChart = function(p){
 		subtitle.attr('transform',translate(model.subtitlePosition) );
 
 		var keyData = d3.entries( model.lineClasses );
-		console.log(model);
+
 		if(keyData.length > 1){ //only have keys for more than one item and 
 			var key = svg.append('g').attr('class','chart-key').datum( d3.entries(model.lineClasses) ).call(chartKey);
 
@@ -723,8 +723,6 @@ lineChart = function(p){
 			}
 		});
 	}
-
-	//console.log('LC');
 
 	return chart;
 };
