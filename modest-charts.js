@@ -1072,6 +1072,7 @@ valueAxis = function(){
 		yOffset = 0,
 		xOffset = 0,
 		simple = false,
+		pixelsPerTick = 100,
 		labelWidth, bounds;
 			
 	function isVertical(){
@@ -1142,8 +1143,14 @@ valueAxis = function(){
 	};
 
 	axis.simple = function(x){
-		if (!arguments.length) return simnple;
+		if (!arguments.length) return simple;
 		simple = x;
+		return axis;
+	}
+
+	axis.pixelsPerTick = function(x){
+		if (!arguments.length) return pixelsPerTick;
+		pixelsPerTick = x;
 		return axis;
 	}
 
@@ -1153,7 +1160,7 @@ valueAxis = function(){
 		if(userTicks.length > 0){
 			a.tickValues( userTicks );
 		}else{
-			var count = Math.round( (a.scale().range()[1] - a.scale().range()[0])/100 );
+			var count = Math.round( (a.scale().range()[1] - a.scale().range()[0])/pixelsPerTick );
 			if(simple){
 				var customTicks = [], r = a.scale().domain();
 				if(Math.min(r[0], r[1]) < 0 && Math.max(r[0], r[1]) > 0){
@@ -1162,7 +1169,7 @@ valueAxis = function(){
 			}else{
 				customTicks = a.scale().ticks(count);				
 			}
-			customTicks = customTicks.concat( a.scale().domain() );
+			//customTicks = customTicks.concat( a.scale().domain() );
 			a.tickValues( customTicks );
 		}
 		return axis;
