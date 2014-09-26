@@ -50,6 +50,9 @@ lineChart = function(p){
 
 		m.data = m.data.map(function(d){
 			var s = d[m.indexProperty];
+			if(s instanceof Date){ //if its a date already
+				return d;
+			}
 			d[m.indexProperty] = m.dateParser( s );
 			if(d[m.indexProperty] === null){
 				m.error({
