@@ -1,0 +1,123 @@
+.axis{
+	font-family: BentonSans, sans-serif;
+}
+
+.axis .tick,
+.axis .domain{
+	shape-rendering:crispEdges;
+}
+
+.y.axis, 
+.x.axis{
+	fill:none;
+	stroke:rgba(0,0,0,0.5);
+}
+
+
+.y.axis text, 
+.x.axis text{
+	fill:rgba(0,0,0,0.5);
+	stroke:none;
+}
+
+.y.axis .domain{
+	stroke:none;
+}
+
+.secondary .domain, 
+.secondary .tick{
+	stroke:none;
+}
+
+.primary .tick text{
+	font-size: 0.9rem;
+}
+
+.secondary .tick text{
+	font-size: 0.7rem;
+}
+
+.y.axis .tick line{
+	stroke:rgba(0,0,0,0.1);
+	stroke-dasharray:2 2;
+}
+
+
+.y.axis .origin.tick line{
+	stroke:rgba(0,0,0,0.3);
+	stroke-dasharray:none;
+}
+
+.y.axis text{
+	text-anchor:end;
+}path.line{
+	fill:none;
+	stroke-width:1.5;
+	stroke-linejoin:round;
+	stroke-linecap:round;
+}
+
+.series1{
+	stroke:rgb(175,81,108);
+}
+.series2{
+	stroke:rgb(236,175,175);
+}
+.series3{
+	stroke:rgb(215,112,108);
+}
+.series4{
+	stroke:rgb(118,172,184);
+}
+.series5{
+	stroke:rgb(129,208,230);
+}
+.series6{
+	stroke:rgb(78,134,182);
+}
+.series7{
+	stroke:rgb(184,177,169);
+}
+.accent{
+	stroke:rgb(184,177,169);
+}
+.forecast{
+	stroke-dasharray:4,5;
+}
+
+line.key-line{
+	fill:none;
+	stroke-width:1.5;
+	stroke-linejoin:round;
+	stroke-linecap:round;
+}.chart-title{
+	font-family: BentonSans, sans-serif;
+	font-size: 20px;
+	fill:rgba(0,0,0,0.8);
+}
+
+.chart-subtitle{
+	font-family: BentonSans, sans-serif;
+	fill:rgba(0,0,0,0.5);
+}
+
+
+.chart-footnote{
+	font-family: BentonSans, sans-serif;
+	fill:rgba(0,0,0,0.3);
+	font-size: 0.8rem;
+	font-style: italic;
+}
+
+.chart-source{
+	font-family: BentonSans, sans-serif;
+	fill:rgba(0,0,0,0.5);
+	font-size: 0.8rem;
+	font-style: italic;
+}
+
+.key-label{
+	font-family: BentonSans, sans-serif;
+	font-size: 13px;
+	fill:rgba(0,0,0,0.5);
+}
