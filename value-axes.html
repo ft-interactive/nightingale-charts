@@ -101,7 +101,8 @@ divs.append('svg')
 		var axis = modestCharts.valueAxis()
 			.tickSize(300)
 			//.simple(true)
-			.scale( vScale );
+			.scale( vScale )
+			.orient('right');
 
 		var g = d3.select(this).append('g').attr('transform','translate(' + margin.left + ',' + margin.top + ')');
 		

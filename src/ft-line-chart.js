@@ -28,7 +28,8 @@ lineChart = function(p){
 			error:function(err){ console.log('ERROR: ', err) },
 			lineClasses:{},
 			niceValue:true,
-			hideSource:false
+			hideSource:false,
+			valueAxisOrient:'left'
 		};
 
 		for(var key in opts){
@@ -216,6 +217,7 @@ lineChart = function(p){
 
 		//first pass, create the axis at the entire chartWidth/Height
 		var vAxis = valueAxis()
+				.orient( model.valueAxisOrient )
 				.simple( model.simpleValue )
 				.tickSize( model.chartWidth )	//make the ticks the width of the chart
 				.scale( valueScale ),
@@ -248,8 +250,10 @@ lineChart = function(p){
 		chart.selectAll('*').remove();
 		chart.call(vAxis);
 		chart.call(timeAxis);
-
-		model.chartPosition.left += (getWidth(chart.select('.y.axis')) - plotWidth);
+		if(model.valueAxisOrient!='right'){
+			model.chartPosition.left += (getWidth(chart.select('.y.axis')) - plotWidth);
+		}
+		
 		model.chartPosition.top += (getHeight(chart.select('.y.axis')) - plotHeight);
 		chart.attr('transform',translate(model.chartPosition));
 		var lines = chart.append('g').attr('class','plot');

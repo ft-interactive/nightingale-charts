@@ -493,7 +493,8 @@ lineChart = function(p){
 			error:function(err){ console.log('ERROR: ', err) },
 			lineClasses:{},
 			niceValue:true,
-			hideSource:false
+			hideSource:false,
+			valueAxisOrient:'left'
 		};
 
 		for(var key in opts){
@@ -681,6 +682,7 @@ lineChart = function(p){
 
 		//first pass, create the axis at the entire chartWidth/Height
 		var vAxis = valueAxis()
+				.orient( model.valueAxisOrient )
 				.simple( model.simpleValue )
 				.tickSize( model.chartWidth )	//make the ticks the width of the chart
 				.scale( valueScale ),
@@ -713,8 +715,10 @@ lineChart = function(p){
 		chart.selectAll('*').remove();
 		chart.call(vAxis);
 		chart.call(timeAxis);
-
-		model.chartPosition.left += (getWidth(chart.select('.y.axis')) - plotWidth);
+		if(model.valueAxisOrient!='right'){
+			model.chartPosition.left += (getWidth(chart.select('.y.axis')) - plotWidth);
+		}
+		
 		model.chartPosition.top += (getHeight(chart.select('.y.axis')) - plotHeight);
 		chart.attr('transform',translate(model.chartPosition));
 		var lines = chart.append('g').attr('class','plot');
@@ -1089,13 +1093,21 @@ valueAxis = function(){
 	}
 
 	function axis(g){
+		var orientOffset = 0;
+		if(a.orient() == 'right'){
+			orientOffset = -a.tickSize();
+			console.log('right!');
+		}
+		g = g.append('g').attr('transform','translate('+(xOffset + orientOffset )+','+yOffset+')');
+		console.log( g.attr('transform') );
 		
-		g = g.append('g').attr('transform','translate('+xOffset+','+yOffset+')');
-
 		g.append('g')
 			.attr('class', function(){
 				if(isVertical()){
-					return 'y axis';
+					if(a.orient() == 'right'){
+						return 'y axis right';
+					}
+					return 'y axis left';
 				}else{
 					return 'x axis';
 				}
@@ -1105,18 +1117,19 @@ valueAxis = function(){
 				.call(a);
 
 		//if zero is in scale it gets a heavy tick
-		//remove text-anchor attribute from year positions
+
 		g.selectAll('*').attr('style',null); //clear the styles D3 sets so everything's coming from the css
 		if (isVertical()){
-			g.selectAll('text').attr('transform','translate( 0, ' + -(lineHeight/2) + ' )');
+			g.selectAll('text').attr('transform','translate( 0, ' + -(lineHeight/2) + ' )'); //move the labels so they sit on the axis lines
 			g.selectAll('.tick').classed('origin', function(d,i){ //'origin' lines are 0, the lowest line (and any user specified special values)
 				return (hardRules.indexOf(d) > -1);
 			});
+
 		}
 		labelWidth = 0;
-		g.select('.tick text').each(function(d){ //calculate the widest label
+		/*g.select('.tick text').each(function(d){ //calculate the widest label
 			labelWidth = Math.max( d3.select(this).node().getBoundingClientRect().width, labelWidth );
-		});
+		});*/
 
 		bounds = g.node().getBoundingClientRect();
 

@@ -24,13 +24,21 @@ valueAxis = function(){
 	}
 
 	function axis(g){
+		var orientOffset = 0;
+		if(a.orient() == 'right'){
+			orientOffset = -a.tickSize();
+			console.log('right!');
+		}
+		g = g.append('g').attr('transform','translate('+(xOffset + orientOffset )+','+yOffset+')');
+		console.log( g.attr('transform') );
 		
-		g = g.append('g').attr('transform','translate('+xOffset+','+yOffset+')');
-
 		g.append('g')
 			.attr('class', function(){
 				if(isVertical()){
-					return 'y axis';
+					if(a.orient() == 'right'){
+						return 'y axis right';
+					}
+					return 'y axis left';
 				}else{
 					return 'x axis';
 				}
@@ -40,18 +48,19 @@ valueAxis = function(){
 				.call(a);
 
 		//if zero is in scale it gets a heavy tick
-		//remove text-anchor attribute from year positions
+
 		g.selectAll('*').attr('style',null); //clear the styles D3 sets so everything's coming from the css
 		if (isVertical()){
-			g.selectAll('text').attr('transform','translate( 0, ' + -(lineHeight/2) + ' )');
+			g.selectAll('text').attr('transform','translate( 0, ' + -(lineHeight/2) + ' )'); //move the labels so they sit on the axis lines
 			g.selectAll('.tick').classed('origin', function(d,i){ //'origin' lines are 0, the lowest line (and any user specified special values)
 				return (hardRules.indexOf(d) > -1);
 			});
+
 		}
 		labelWidth = 0;
-		g.select('.tick text').each(function(d){ //calculate the widest label
+		/*g.select('.tick text').each(function(d){ //calculate the widest label
 			labelWidth = Math.max( d3.select(this).node().getBoundingClientRect().width, labelWidth );
-		});
+		});*/
 
 		bounds = g.node().getBoundingClientRect();
 

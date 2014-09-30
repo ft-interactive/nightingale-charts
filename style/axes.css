@@ -51,3 +51,7 @@
 .y.axis text{
 	text-anchor:end;
 }
+
+.y.axis.right text{
+	text-anchor:start;
+}
