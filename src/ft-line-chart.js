@@ -27,7 +27,8 @@ lineChart = function(p){
 			falseorigin:false, //TODO, find out if there's a standard 'pipeline' temr for this
 			error:function(err){ console.log('ERROR: ', err) },
 			lineClasses:{},
-			niceValue:true
+			niceValue:true,
+			hideSource:false
 		};
 
 		for(var key in opts){
@@ -174,8 +175,15 @@ lineChart = function(p){
 		//then start from the bottom...		
 		var footnotes = svg.append('g').attr('class','chart-footnote').datum( model.footnote ).call( wrappedText );
 		var source = svg.append('g').attr('class','chart-source').datum( 'Source: ' + model.source ).call( wrappedText );
-		var footnotesHeight = getHeight(footnotes);
 		var sourceHeight = getHeight(source);
+		console.log(model.hideSource);
+		if(model.hideSource){
+			console.log('hide')
+			sourceHeight = 0;
+			source.remove();
+		}
+		var footnotesHeight = getHeight(footnotes);
+		
 		totalHeight += ( footnotesHeight + sourceHeight + model.blockPadding);		
 
 		if(!model.height){

@@ -492,7 +492,8 @@ lineChart = function(p){
 			falseorigin:false, //TODO, find out if there's a standard 'pipeline' temr for this
 			error:function(err){ console.log('ERROR: ', err) },
 			lineClasses:{},
-			niceValue:true
+			niceValue:true,
+			hideSource:false
 		};
 
 		for(var key in opts){
@@ -515,6 +516,9 @@ lineChart = function(p){
 
 		m.data = m.data.map(function(d){
 			var s = d[m.indexProperty];
+			if(s instanceof Date){ //if its a date already
+				return d;
+			}
 			d[m.indexProperty] = m.dateParser( s );
 			if(d[m.indexProperty] === null){
 				m.error({
@@ -636,8 +640,15 @@ lineChart = function(p){
 		//then start from the bottom...		
 		var footnotes = svg.append('g').attr('class','chart-footnote').datum( model.footnote ).call( wrappedText );
 		var source = svg.append('g').attr('class','chart-source').datum( 'Source: ' + model.source ).call( wrappedText );
-		var footnotesHeight = getHeight(footnotes);
 		var sourceHeight = getHeight(source);
+		console.log(model.hideSource);
+		if(model.hideSource){
+			console.log('hide')
+			sourceHeight = 0;
+			source.remove();
+		}
+		var footnotesHeight = getHeight(footnotes);
+		
 		totalHeight += ( footnotesHeight + sourceHeight + model.blockPadding);		
 
 		if(!model.height){
