@@ -682,7 +682,7 @@ lineChart = function(p){
 
 		//first pass, create the axis at the entire chartWidth/Height
 		var vAxis = valueAxis()
-				.orient( model.valueAxisOrient )
+//				.orient( model.valueAxisOrient )
 				.simple( model.simpleValue )
 				.tickSize( model.chartWidth )	//make the ticks the width of the chart
 				.scale( valueScale ),
@@ -693,6 +693,11 @@ lineChart = function(p){
 				.yOffset( model.chartHeight )	//position the axis at the bottom of the chart
 				.scale( timeScale );
 
+		if( model.valueAxisOrient !== 'right' && model.valueAxisOrient !== 'left' ){
+			vAxis.noLabels(true);
+		}else{
+			vAxis.orient(model.valueAxisOrient);
+		}
 
 		chart.call(vAxis);
 		chart.call(timeAxis);
@@ -718,7 +723,7 @@ lineChart = function(p){
 		if(model.valueAxisOrient!='right'){
 			model.chartPosition.left += (getWidth(chart.select('.y.axis')) - plotWidth);
 		}
-		
+
 		model.chartPosition.top += (getHeight(chart.select('.y.axis')) - plotHeight);
 		chart.attr('transform',translate(model.chartPosition));
 		var lines = chart.append('g').attr('class','plot');
@@ -1085,6 +1090,7 @@ valueAxis = function(){
 		yOffset = 0,
 		xOffset = 0,
 		simple = false,
+		noLabels = false,
 		pixelsPerTick = 100,
 		labelWidth, bounds;
 			
@@ -1126,13 +1132,15 @@ valueAxis = function(){
 			});
 
 		}
-		labelWidth = 0;
+		//labelWidth = 0;
 		/*g.select('.tick text').each(function(d){ //calculate the widest label
 			labelWidth = Math.max( d3.select(this).node().getBoundingClientRect().width, labelWidth );
 		});*/
 
-		bounds = g.node().getBoundingClientRect();
-
+		//bounds = g.node().getBoundingClientRect();
+		if(noLabels){
+			g.selectAll('text').remove();
+		}
 	}
 
 	axis.labelWidth = function(){
@@ -1214,6 +1222,12 @@ valueAxis = function(){
 		xOffset = x;
 		return axis;
 	};
+
+	axis.noLabels = function(x){
+		if (!arguments.length) return noLabels;
+		noLabels = x;
+		return axis;	
+	}
 
 	return axis;
 };

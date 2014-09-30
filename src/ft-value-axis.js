@@ -16,6 +16,7 @@ valueAxis = function(){
 		yOffset = 0,
 		xOffset = 0,
 		simple = false,
+		noLabels = false,
 		pixelsPerTick = 100,
 		labelWidth, bounds;
 			
@@ -57,13 +58,15 @@ valueAxis = function(){
 			});
 
 		}
-		labelWidth = 0;
+		//labelWidth = 0;
 		/*g.select('.tick text').each(function(d){ //calculate the widest label
 			labelWidth = Math.max( d3.select(this).node().getBoundingClientRect().width, labelWidth );
 		});*/
 
-		bounds = g.node().getBoundingClientRect();
-
+		//bounds = g.node().getBoundingClientRect();
+		if(noLabels){
+			g.selectAll('text').remove();
+		}
 	}
 
 	axis.labelWidth = function(){
@@ -145,6 +148,12 @@ valueAxis = function(){
 		xOffset = x;
 		return axis;
 	};
+
+	axis.noLabels = function(x){
+		if (!arguments.length) return noLabels;
+		noLabels = x;
+		return axis;	
+	}
 
 	return axis;
 };

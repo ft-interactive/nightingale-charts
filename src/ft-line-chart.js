@@ -217,7 +217,7 @@ lineChart = function(p){
 
 		//first pass, create the axis at the entire chartWidth/Height
 		var vAxis = valueAxis()
-				.orient( model.valueAxisOrient )
+//				.orient( model.valueAxisOrient )
 				.simple( model.simpleValue )
 				.tickSize( model.chartWidth )	//make the ticks the width of the chart
 				.scale( valueScale ),
@@ -228,6 +228,11 @@ lineChart = function(p){
 				.yOffset( model.chartHeight )	//position the axis at the bottom of the chart
 				.scale( timeScale );
 
+		if( model.valueAxisOrient !== 'right' && model.valueAxisOrient !== 'left' ){
+			vAxis.noLabels(true);
+		}else{
+			vAxis.orient(model.valueAxisOrient);
+		}
 
 		chart.call(vAxis);
 		chart.call(timeAxis);
@@ -253,7 +258,7 @@ lineChart = function(p){
 		if(model.valueAxisOrient!='right'){
 			model.chartPosition.left += (getWidth(chart.select('.y.axis')) - plotWidth);
 		}
-		
+
 		model.chartPosition.top += (getHeight(chart.select('.y.axis')) - plotHeight);
 		chart.attr('transform',translate(model.chartPosition));
 		var lines = chart.append('g').attr('class','plot');
