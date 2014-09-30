@@ -641,9 +641,7 @@ lineChart = function(p){
 		var footnotes = svg.append('g').attr('class','chart-footnote').datum( model.footnote ).call( wrappedText );
 		var source = svg.append('g').attr('class','chart-source').datum( 'Source: ' + model.source ).call( wrappedText );
 		var sourceHeight = getHeight(source);
-		console.log(model.hideSource);
 		if(model.hideSource){
-			console.log('hide')
 			sourceHeight = 0;
 			source.remove();
 		}
