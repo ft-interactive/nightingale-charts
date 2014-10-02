@@ -17,6 +17,7 @@ lineChart = function(p){
 			//layout stuff
 			height:undefined,
 			width:300,
+			chartHeight:300,
 			chartWidth:300,
 			blockPadding:8,
 			simpleDate:false,
@@ -33,10 +34,6 @@ lineChart = function(p){
 
 		for(var key in opts){
 			m[key] = opts[key];
-		}
-		
-		if(!m.chartWidth){
-			m.chartWidth = m.width;
 		}
 
 		if(!m.indexProperty){
