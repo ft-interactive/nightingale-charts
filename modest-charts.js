@@ -482,7 +482,6 @@ lineChart = function(p){
 			//layout stuff
 			height:undefined,
 			width:300,
-			chartHeight:300,
 			chartWidth:300,
 			blockPadding:8,
 			simpleDate:false,
@@ -499,6 +498,10 @@ lineChart = function(p){
 
 		for(var key in opts){
 			m[key] = opts[key];
+		}
+		
+		if(!m.chartWidth){
+			m.chartWidth = m.width;
 		}
 
 		if(!m.indexProperty){
@@ -1102,10 +1105,8 @@ valueAxis = function(){
 		var orientOffset = 0;
 		if(a.orient() == 'right'){
 			orientOffset = -a.tickSize();
-			console.log('right!');
 		}
 		g = g.append('g').attr('transform','translate('+(xOffset + orientOffset )+','+yOffset+')');
-		console.log( g.attr('transform') );
 		
 		g.append('g')
 			.attr('class', function(){
