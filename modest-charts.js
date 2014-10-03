@@ -597,7 +597,6 @@ lineChart = function(p){
 					return d.value;
 				})
 				.label(function(d){
-					console.log('label function ' , model.labelLookup, d.key	)
 					if(model.labelLookup !== null && model.labelLookup[d.key]){
 						return model.labelLookup[d.key];
 					}
