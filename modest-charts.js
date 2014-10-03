@@ -606,7 +606,9 @@ lineChart = function(p){
 		//start from the top...
 		var title = svg.append('g').attr('class','chart-title').datum( model.title ).call( wrappedText );
 		if(!model.titlePosition){
-			totalHeight += (getHeight(title) + model.blockPadding);
+			if(model.title != ''){
+				totalHeight += (getHeight(title) + model.blockPadding);
+			}
 			model.titlePosition = {top:totalHeight,left:0};
 		}
 		title.attr( 'transform',translate(model.titlePosition) );
@@ -1102,10 +1104,8 @@ valueAxis = function(){
 		var orientOffset = 0;
 		if(a.orient() == 'right'){
 			orientOffset = -a.tickSize();
-			console.log('right!');
 		}
 		g = g.append('g').attr('transform','translate('+(xOffset + orientOffset )+','+yOffset+')');
-		console.log( g.attr('transform') );
 		
 		g.append('g')
 			.attr('class', function(){
@@ -1222,6 +1222,12 @@ valueAxis = function(){
 		xOffset = x;
 		return axis;
 	};
+
+	axis.tickFormat = function(f){
+		if (!arguments.length) return a.tickFormat();
+		a.tickFormat(f);
+		return axis;
+	}
 
 	axis.noLabels = function(x){
 		if (!arguments.length) return noLabels;

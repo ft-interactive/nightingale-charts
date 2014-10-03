@@ -147,6 +147,12 @@ valueAxis = function(){
 		return axis;
 	};
 
+	axis.tickFormat = function(f){
+		if (!arguments.length) return a.tickFormat();
+		a.tickFormat(f);
+		return axis;
+	}
+
 	axis.noLabels = function(x){
 		if (!arguments.length) return noLabels;
 		noLabels = x;
