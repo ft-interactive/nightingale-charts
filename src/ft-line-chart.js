@@ -141,7 +141,9 @@ lineChart = function(p){
 		//start from the top...
 		var title = svg.append('g').attr('class','chart-title').datum( model.title ).call( wrappedText );
 		if(!model.titlePosition){
-			totalHeight += (getHeight(title) + model.blockPadding);
+			if(model.title != ''){
+				totalHeight += (getHeight(title) + model.blockPadding);
+			}
 			model.titlePosition = {top:totalHeight,left:0};
 		}
 		title.attr( 'transform',translate(model.titlePosition) );
