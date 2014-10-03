@@ -29,7 +29,8 @@ lineChart = function(p){
 			lineClasses:{},
 			niceValue:true,
 			hideSource:false,
-			valueAxisOrient:'left'
+			valueAxisOrient:'left',
+			valueAxisFormatter: function(v){ return v; }
 		};
 
 		for(var key in opts){
@@ -220,6 +221,7 @@ lineChart = function(p){
 		//first pass, create the axis at the entire chartWidth/Height
 		var vAxis = valueAxis()
 //				.orient( model.valueAxisOrient )
+				.tickFormat( model.valueAxisFormatter )
 				.simple( model.simpleValue )
 				.tickSize( model.chartWidth )	//make the ticks the width of the chart
 				.scale( valueScale ),
