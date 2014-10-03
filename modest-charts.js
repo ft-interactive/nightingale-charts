@@ -495,7 +495,7 @@ lineChart = function(p){
 			niceValue:true,
 			hideSource:false,
 			valueAxisOrient:'left',
-			valueAxisFormatter: function(v){ return v; }
+			valueAxisFormatter: null
 		};
 
 		for(var key in opts){
