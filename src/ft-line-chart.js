@@ -30,7 +30,7 @@ lineChart = function(p){
 			niceValue:true,
 			hideSource:false,
 			valueAxisOrient:'left',
-			valueAxisFormatter: null
+			labelLookup: null
 		};
 
 		for(var key in opts){
@@ -132,6 +132,10 @@ lineChart = function(p){
 					return d.value;
 				})
 				.label(function(d){
+					console.log('label function ' , model.labelLookup, d.key	)
+					if(model.labelLookup !== null && model.labelLookup[d.key]){
+						return model.labelLookup[d.key];
+					}
 					return d.key;
 				}),
 
@@ -159,7 +163,9 @@ lineChart = function(p){
 		var keyData = d3.entries( model.lineClasses );
 
 		if(keyData.length > 1){ //only have keys for more than one item and 
-			var key = svg.append('g').attr('class','chart-key').datum( d3.entries(model.lineClasses) ).call(chartKey);
+			var entries = d3.entries(model.lineClasses);
+
+			var key = svg.append('g').attr('class','chart-key').datum( entries ).call(chartKey);
 
 			if(!model.keyPosition){
 				model.keyPosition = {top: totalHeight, left:0};	
