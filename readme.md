@@ -1,4 +1,4 @@
-#reusable bits for making D3 charts in the ft style
+# o-charts
 
 examples...
 http://ft-interactive.github.io/ft-chart-examples/

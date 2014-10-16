@@ -1,6 +1,5 @@
 {
-  "name": "modest-charts",
-  "version": "0.0.0",
+  "name": "o-charts",
   "description": "bits and bobs for making FT style charts",
   "main": "src/index.js",
   "scripts": {
@@ -12,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://git.svc.ft.com:8080/scm/iglt/d3-chart-bits.git"
+    "url": "http://git.svc.ft.com:8080/scm/iglt/o-charts.git"
   },
   "browser": {
     "d3": "./node_modules/d3/d3.js"
