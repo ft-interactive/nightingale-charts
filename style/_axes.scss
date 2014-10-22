@@ -1,0 +1,57 @@
+.axis{
+	font-family: $chart-font-family;
+}
+
+.axis .tick,
+.axis .domain{
+	shape-rendering: crispEdges;
+}
+
+.y.axis, 
+.x.axis{
+	fill: none;
+	stroke: rgba(0, 0, 0, 0.5);
+}
+
+
+.y.axis text, 
+.x.axis text{
+	fill: rgba(0, 0, 0, 0.5);
+	stroke: none;
+}
+
+.y.axis .domain{
+	stroke: none;
+}
+
+.secondary .domain, 
+.secondary .tick{
+	stroke: none;
+}
+
+.primary .tick text{
+	font-size: 14px;
+}
+
+.secondary .tick text{
+	font-size: 11px;
+}
+
+.y.axis .tick line{
+	stroke: rgba(0, 0, 0, 0.1);
+	stroke-dasharray: 2 2;
+}
+
+
+.y.axis .origin.tick line{
+	stroke: rgba(0, 0, 0, 0.3);
+	stroke-dasharray: none;
+}
+
+.y.axis text{
+	text-anchor:end;
+}
+
+.y.axis.right text{
+	text-anchor:start;
+}

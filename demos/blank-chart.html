@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="main.css" />
+<link rel="stylesheet" href="demo.css" />
+<title>Noop Chart</title>
+</head>
+<body class="ft">
+<h1>null chart</h1>
+<div id="view1">
+</div>
+<div id="view2">
+</div>
+<script src="bundle.js"></script>
+<script>
+
+var lib = require('o-charts');
+var chart = lib.chart.blank();
+
+
+d3.select('#view1')
+		.datum({title:"test",subTitle:"sub-testing"})
+			.call(chart);
+
+var chart = d3.select('#view2')
+		.datum({ title:"test 2", subTitle:"sub-testing the second", width:200, height:500 });
+
+
+chart.call(chart);
+
+</script>
+</body>
+</html>

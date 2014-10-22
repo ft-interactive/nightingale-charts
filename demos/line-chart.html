@@ -1,0 +1,54 @@
+<html>
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="main.css" />
+<link rel="stylesheet" href="demo.css" />
+<title>lines</title>
+</head>
+<body class="ft">
+<script src="bundle.js"></script>
+<script>
+var lib = require('o-charts');
+var d3 = require('d3');
+
+function randomData(headings){
+	var dateInc = Math.random * 315569520; //seconds
+}
+
+
+for(var i=0;i<3;i++){
+	d3.select('body').append('div').attr('id','line-chart'+i);
+
+	var simpleData = {
+	  comment: "Line chart",
+	  footnote: "this is just for testing!",
+	  source: "tbc",
+	  title: "Some Simple Lines",
+	  subtitle: "Drawn for you",
+	  dateParser: d3.time.format('%Y').parse,
+	  valueAxisOrient:'left',
+	  labelLookup:{
+	  	'value':'the first value'
+	  },
+	  hideSource:true,
+	  headings: [
+	    'date',
+	    'value',
+	    'value2'
+	  ],
+	  data: [
+	    {date: '2000', value: Math.random() * 40, value2: Math.random() * 40},
+	    {date: '2001', value: Math.random() * 40, value2: Math.random() * 40},
+	    {date: '2002', value: Math.random() * 40, value2: Math.random() * 40},
+	    {date: '2003', value: Math.random() * 40, value2: Math.random() * 40}
+	  ]
+	};
+
+	var lineChart = lib.chart.line();
+
+
+	var c = d3.select('#line-chart'+i).data([simpleData]).call( lineChart );
+}
+</script>
+</body>
+</html>

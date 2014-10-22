@@ -1,0 +1,17 @@
+{
+  "supportStatus": "experimental",
+  "support": "tom.pearson@ft.com",
+  "browserFeatures": {
+    "required": [
+      "svg"
+    ]
+  },
+  "description": "FT style charts, axes, scales etc",
+  "origamiType": "module",
+  "origamiVersion": 1,
+  "ci": {
+    "travis": "https://api.travis-ci.org/repos/ft-interactive/o-charts/builds.json"
+  },
+  "demos": [
+  ]
+}

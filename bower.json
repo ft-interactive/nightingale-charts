@@ -1,9 +1,10 @@
 {
   "name": "o-charts",
   "authors": [
-    "tomgp <tom.g.pearson@gmail.com>"
+    "tomgp <tom.g.pearson@gmail.com>",
+    "kavanagh <ltkavanagh@gmail.com>"
   ],
-  "description": "simple chart bits, built on D3 for the FT",
+  "description": "FT style charts, axes, scales etc",
   "main": "src/index.js",
   "moduleType": [
     "node"
@@ -16,5 +17,8 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "d3": "~3.4.13"
+  }
 }

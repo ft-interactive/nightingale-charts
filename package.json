@@ -1,26 +1,46 @@
 {
   "name": "o-charts",
-  "description": "bits and bobs for making FT style charts",
+  "description": "FT style charts, axes, scales etc",
+  "private": true,
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify -e src/index.js -o modest-charts.js -r ./src/index.js:modestCharts -x d3",
-    "scss": "cat style/*.css > modest-charts.scss",
-    "watch": "watchify -e src/index.js -o modest-charts.js -r ./src/index.js:modestCharts -x d3",
-    "vendor": "browserify -e node_modules/d3/d3.js  -o vendor.js -r d3"
+    "test": "testling",
+    "bundle": "browserify -e src/index.js -o demos/bundle.js -r ./src/index.js:o-charts -r ./bower_components/d3/d3.js:d3",
+    "scss": "sass --style expanded style/main.scss demos/main.css",
+    "build": "npm run bundle && npm run scss",
+    "watch": "watchify -e src/index.js -o demos/bundle.js -r ./src/index.js:o-charts -r d3:d3 & sass --style expanded --watch style/main.scss:demos/main.css"
   },
   "repository": {
     "type": "git",
-    "url": "http://git.svc.ft.com:8080/scm/iglt/o-charts.git"
-  },
-  "browser": {
-    "d3": "./node_modules/d3/d3.js"
+    "url": "https://github.com/ft-interactive/o-charts.git"
   },
   "author": "tom pearson",
   "license": "ISC",
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "^1.9.2",
+    "tape": "^3.0.0",
+    "testling": "^1.7.1",
+    "watchify": "^2.0.0"
+  },
   "dependencies": {
-    "browserify": "^5.11.0",
-    "d3": "^3.4.11"
+    "browserify": "^5.13.1",
+    "debowerify": "^0.9.0"
+  },
+  "browser": {
+    "d3": "./bower_components/d3/d3.js"
+  },
+  "browserify": {
+    "transform": [
+      "debowerify"
+    ]
+  },
+  "testling": {
+    "files": [
+      "test/*.js"
+    ],
+    "browsers": [
+      "chrome/latest",
+      "firefox/latest"
+    ]
   }
 }
