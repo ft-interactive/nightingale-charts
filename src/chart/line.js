@@ -242,7 +242,7 @@ function lineChart(p) {
 			}
 			model.titlePosition = {top:totalHeight,left:0};
 		}
-		title.attr( 'transform',model.position(model.titlePosition) );
+		title.attr( 'transform',model.translate(model.titlePosition) );
 
 		var subtitle = svg.append('g').attr('class','chart-subtitle').datum(model.subtitle).call(wrappedText);
 
@@ -251,7 +251,7 @@ function lineChart(p) {
 			model.subtitlePosition = {top: totalHeight, left: 0};
 		}
 
-		subtitle.attr('transform', model.position(model.subtitlePosition));
+		subtitle.attr('transform', model.translate(model.subtitlePosition));
 
 		if (model.key) {
 			var entries = model.y.series.map(function (d) {
@@ -264,7 +264,7 @@ function lineChart(p) {
 				model.keyPosition = {top: totalHeight + model.blockPadding, left: 0};
 				totalHeight += (getHeight(key) + model.blockPadding);
 			}
-			key.attr( 'transform',model.position(model.keyPosition) );
+			key.attr( 'transform',model.translate(model.keyPosition) );
 		}
 
 		totalHeight += model.blockPadding;
@@ -274,7 +274,7 @@ function lineChart(p) {
 		if (!model.chartPosition) {
 			model.chartPosition = {top:totalHeight, left:0};
 		}
-		chart.attr( 'transform', model.position(model.chartPosition) );
+		chart.attr( 'transform', model.translate(model.chartPosition) );
 
 		//then start from the bottom...
 		var footnotes = svg.append('g').attr('class','chart-footnote').datum(model.footnote).call(wrappedText);
@@ -302,8 +302,8 @@ function lineChart(p) {
 		svg.attr('height',model.height);
 
 
-		footnotes.attr('transform', model.position({top: model.height}));
-		source.attr('transform', model.position({top: model.height - footnotesHeight}));
+		footnotes.attr('transform', model.translate({top: model.height}));
+		source.attr('transform', model.translate({top: model.height - footnotesHeight}));
 
 
 		//the business of the actual chart
@@ -366,7 +366,7 @@ function lineChart(p) {
 		}
 
 		model.chartPosition.top += (getHeight(chart.select('.y.axis')) - plotHeight);
-		chart.attr('transform',model.position(model.chartPosition));
+		chart.attr('transform',model.translate(model.chartPosition));
 
 		var plot = chart.append('g').attr('class', 'plot');
 
