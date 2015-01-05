@@ -11,6 +11,10 @@ function isDate(d) {
 	return d && d instanceof Date && !isNaN(+d);
 }
 
+function createDate(s) {
+	return new Date(s);
+}
+
 function isTruthy(value) {
 	return !!value;
 }
@@ -124,7 +128,7 @@ function lineChart(p) {
 							});
 
 		if (typeof m.dateParser === 'string') {
-			m.dateParser = d3.time.format(m.dateParser).parse;
+			m.dateParser = m.dateParser === 'ISO' || m.dateParser === 'JAVASCRIPT' ? createDate : d3.time.format(m.dateParser).parse;
 		}
 
 		if (!m.dateParser) {
@@ -376,7 +380,8 @@ function lineChart(p) {
 
 		function y(property) {
 			return function(d) {
-				return valueScale ( d[property] );
+				if (d[property] == null) return '';
+				return valueScale ( d[property]);
 			}
 		}
 
