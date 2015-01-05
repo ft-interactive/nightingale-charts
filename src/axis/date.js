@@ -11,6 +11,7 @@ function dateAxis() {
 	var formatter = {};
 	// a simple axis has only first and last points as ticks, i.e. the scale's domain extent
 	var simple = false;
+	var nice = false;
 	var units = ['multi'];
 	var unitOverride = false;
 	var yOffset = 0;
@@ -149,8 +150,14 @@ function dateAxis() {
 	}
 
 	axis.simple = function(x) {
-		if (!arguments.length) return simnple;
+		if (!arguments.length) return simple;
 		simple = x;
+		return axis;
+	}
+
+	axis.nice = function(x) {
+		if (!arguments.length) return nice;
+		nice = x;
 		return axis;
 	}
 
@@ -183,9 +190,10 @@ function dateAxis() {
 			u = unitGenerator(x.domain());
 		}
 		scale = x;
-		if (!simple) {
-			scale.nice((scale.range()[1] - scale.range()[0]) / 100);
+		if (nice) {
+		 	scale.nice((scale.range()[1] - scale.range()[0]) / 100);
 		}
+
 		//go through the units array
 
 		axes = [];
@@ -193,10 +201,8 @@ function dateAxis() {
 			if( formatter[u[i]] ){
 				if(!simple){
 					var customTicks = scale.ticks( interval[ u[i] ], increment[ u[i] ] );
-					customTicks.push(scale.domain()[0]);
-					if(null){
-						customTicks.push(scale.domain()[1]);
-					}
+					customTicks.push(scale.domain()[0]); //always include the first and last values
+					customTicks.push(scale.domain()[1]);
 					customTicks.sort(dateSort);
 				}else{
 					if (u[i] === 'years' || u[i] === 'decades' || u[i] === 'centuries') {
