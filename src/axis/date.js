@@ -191,7 +191,7 @@ function dateAxis() {
 		}
 		scale = x;
 		if (nice) {
-		 	scale.nice((scale.range()[1] - scale.range()[0]) / 100);
+		 	scale.nice((scale.range()[1] - scale.range()[0]) / 100); //specify the number of ticks should be about 1 every 100 pixels
 		}
 
 		//go through the units array
@@ -201,9 +201,17 @@ function dateAxis() {
 			if( formatter[u[i]] ){
 				if(!simple){
 					var customTicks = scale.ticks( interval[ u[i] ], increment[ u[i] ] );
-					customTicks.push(scale.domain()[0]); //always include the first and last values
+
+					customTicks.push(scale.domain()[0]); //always include the first and last values 
 					customTicks.push(scale.domain()[1]);
 					customTicks.sort(dateSort);
+
+					//if the last 2 values labels are the same, remove them
+					var labels = customTicks.map(formatter[u[i]]);
+					if(labels[labels.length-1] == labels[labels.length-2]){
+						customTicks.pop();
+					}
+					console.log('labels ', labels);
 				}else{
 					if (u[i] === 'years' || u[i] === 'decades' || u[i] === 'centuries') {
 						u[i] = 'fullyears'; //simple axis always uses full years
