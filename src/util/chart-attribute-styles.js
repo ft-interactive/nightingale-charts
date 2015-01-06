@@ -56,10 +56,10 @@ function applyAttributes(){
 				'attributes':{
 					'stroke':'#333'
 				}
-			},{
+			},{ 
 				'selector':'.y.axis text',
 				'attributes':{
-					'text-anchor':'end'
+					'text-anchor':'start' //TODO: this needs to be different depending on whether the axis is on the right or left
 				}
 			},{
 				'selector':'.x.axis .primary path.domain',
