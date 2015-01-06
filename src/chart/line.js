@@ -6,6 +6,7 @@ var dateAxis = require('../axis/date.js');
 var numberAxis = require('../axis/number.js');
 var textArea = require('../element/text-area.js');
 var lineKey = require('../element/line-key.js');
+var ftLogo = require('../element/logo.js');
 
 function isDate(d) {
 	return d && d instanceof Date && !isNaN(+d);
@@ -89,6 +90,7 @@ function lineChart(p) {
 			blockPadding: 10,
 			simpleDate: false,
 			simpleValue: false,
+			logoSize:32,
 			//data stuff
 			dateParser: defaultDateFormatter,
 			falseorigin: false, //TODO, find out if there's a standard 'pipeline' temr for this
@@ -379,6 +381,10 @@ function lineChart(p) {
 		chart.attr('transform',model.translate(model.chartPosition));
 
 		var plot = chart.append('g').attr('class', 'plot');
+
+		svg.append('g')
+			.attr('transform','translate('+ ( model.width-model.logoSize) +','+ ( model.height - model.logoSize ) +')')
+			.call(ftLogo,model.logoSize);
 
 		function x(d) {
 			return timeScale ( d[model.x.series.key] );
