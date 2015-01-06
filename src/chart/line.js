@@ -212,6 +212,8 @@ function lineChart(p) {
 	}
 
 	function chart(g){
+		var titleLineHeight = 25, footerLineHeight = 15;
+
 		var model = buildModel(Object.create(g.data()[0])), //the model is built froma  copy of the data
 			svg = g.append('svg')
 				.attr({
@@ -222,7 +224,9 @@ function lineChart(p) {
 				}),
 
 			//create title, subtitle, key, source, footnotes, logo, the chart itself
-			wrappedText = textArea().width(model.contentWidth),
+			titleTextWrapper = textArea().width(model.contentWidth).lineHeight(titleLineHeight),
+			footerTextWrapper = textArea().width(model.contentWidth).lineHeight(footerLineHeight),
+
 			chartKey = lineKey()
 				.style(function (d) {
 					return d.value;
@@ -239,16 +243,18 @@ function lineChart(p) {
 
 	//position stuff
 		//start from the top...
-		var title = svg.append('g').attr('class','chart-title').datum(model.title).call(wrappedText);
+		var title = svg.append('g').attr('class','chart-title').datum(model.title).call(titleTextWrapper);
 		if (!model.titlePosition) {
 			if (model.title != '') {
 				totalHeight += (getHeight(title) + model.blockPadding);
+				var positionHeight = titleLineHeight;
 			}
-			model.titlePosition = {top:totalHeight,left:0};
+			//if the title is multi line it's positon should only be the offset by the height of the first line...
+			model.titlePosition = {top:positionHeight,left:0};
 		}
 		title.attr( 'transform',model.translate(model.titlePosition) );
 
-		var subtitle = svg.append('g').attr('class','chart-subtitle').datum(model.subtitle).call(wrappedText);
+		var subtitle = svg.append('g').attr('class','chart-subtitle').datum(model.subtitle).call(titleTextWrapper);
 
 		if (!model.subtitlePosition) {
 			totalHeight += (getHeight(subtitle) + model.blockPadding);
@@ -281,8 +287,8 @@ function lineChart(p) {
 		chart.attr( 'transform', model.translate(model.chartPosition) );
 
 		//then start from the bottom...
-		var footnotes = svg.append('g').attr('class','chart-footnote').datum(model.footnote).call(wrappedText);
-		var source = svg.append('g').attr('class','chart-source').datum(model.sourcePrefix + model.source).call(wrappedText);
+		var footnotes = svg.append('g').attr('class','chart-footnote').datum(model.footnote).call(footerTextWrapper);
+		var source = svg.append('g').attr('class','chart-source').datum(model.sourcePrefix + model.source).call(footerTextWrapper);
 		var sourceHeight = getHeight(source);
 		if (model.hideSource) {
 			sourceHeight = 0;
