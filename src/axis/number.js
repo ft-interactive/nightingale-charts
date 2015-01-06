@@ -114,6 +114,7 @@ function numericAxis() {
 	axis.scale = function(x){
 		if (!arguments.length) return a.scale();
 		a.scale(x);
+
 		if (userTicks.length > 0) {
 			a.tickValues(userTicks);
 		}else{

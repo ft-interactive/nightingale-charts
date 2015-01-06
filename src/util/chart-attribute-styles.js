@@ -57,9 +57,14 @@ function applyAttributes(){
 					'stroke':'#333'
 				}
 			},{ 
-				'selector':'.y.axis text',
+				'selector':'.y.axis.right text',
 				'attributes':{
-					'text-anchor':'start' //TODO: this needs to be different depending on whether the axis is on the right or left
+					'text-anchor':'start'
+				}
+			},{ 
+				'selector':'.y.axis.left text',
+				'attributes':{
+					'text-anchor':'end'
 				}
 			},{
 				'selector':'.x.axis .primary path.domain',
