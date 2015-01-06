@@ -95,7 +95,7 @@ function dateAxis() {
 		if (timeDif < dayLength * 365.25) {
 			return ['months','years'];	
 		}
-		if (timeDif < dayLength * 365.25 * 10) {
+		if (timeDif < dayLength * 365.25 * 5) {
 			return ['years'];	
 		}
 		if (timeDif < dayLength * 365.25 * 100) {
@@ -210,7 +210,6 @@ function dateAxis() {
 					if(labels[labels.length-1] == labels[labels.length-2]){
 						customTicks.pop();
 					}
-					console.log('labels ', labels);
 				}else{
 					if (u[i] === 'years' || u[i] === 'decades' || u[i] === 'centuries') {
 						u[i] = 'fullyears'; //simple axis always uses full years
