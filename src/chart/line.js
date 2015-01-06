@@ -287,7 +287,6 @@ function lineChart(p) {
 		}
 		chart.attr( 'transform', model.translate(model.chartPosition) );
 
-		//then start from the bottom...
 		var footnotes = svg.append('g').attr('class','chart-footnote').datum(model.footnote).call(footerTextWrapper);
 		var source = svg.append('g').attr('class','chart-source').datum(model.sourcePrefix + model.source).call(footerTextWrapper);
 		var sourceHeight = getHeight(source);
@@ -296,7 +295,6 @@ function lineChart(p) {
 			source.remove();
 		}
 		var footnotesHeight = getHeight(footnotes);
-		var footnotesPosition = 
 		totalHeight += ( footnotesHeight + sourceHeight + model.blockPadding);
 
 		if (!model.height) {
@@ -310,11 +308,12 @@ function lineChart(p) {
 				});
 			}
 		}
+
 		svg.attr('height',model.height);
 
-
-		footnotes.attr('transform', model.translate({top: model.height}));
-		source.attr('transform', model.translate({top: model.height - footnotesHeight}));
+		var currentPosition = model.chartPosition.top + model.chartHeight; //the posiotn at the bottom of the 'chart'
+		footnotes.attr('transform', model.translate({top: currentPosition  + sourceHeight + footerLineHeight}));
+		source.attr('transform', model.translate({top: currentPosition  + footerLineHeight}));
 
 
 		//the business of the actual chart
