@@ -20,7 +20,6 @@ function dateAxis() {
 	var bounds;
 
 	var formatter = {
-
 		centuries: function(d, i) {
 			if(i == 0 || d.getYear() % 100 == 0) {
 				return d3.time.format('%Y')(d);
@@ -96,7 +95,7 @@ function dateAxis() {
 		if (timeDif < dayLength * 365.25) {
 			return ['months','years'];	
 		}
-		if (timeDif < dayLength * 365.25 * 3) {
+		if (timeDif < dayLength * 365.25 * 10) {
 			return ['years'];	
 		}
 		if (timeDif < dayLength * 365.25 * 100) {
