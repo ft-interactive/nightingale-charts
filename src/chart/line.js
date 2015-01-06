@@ -227,7 +227,7 @@ function lineChart(p) {
 
 			//create title, subtitle, key, source, footnotes, logo, the chart itself
 			titleTextWrapper = textArea().width(model.contentWidth).lineHeight(titleLineHeight),
-			footerTextWrapper = textArea().width(model.contentWidth).lineHeight(footerLineHeight),
+			footerTextWrapper = textArea().width(model.contentWidth - model.logoSize).lineHeight(footerLineHeight),
 
 			chartKey = lineKey()
 				.style(function (d) {
