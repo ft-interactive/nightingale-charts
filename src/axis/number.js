@@ -126,19 +126,19 @@ function numericAxis() {
 				}
 			}else{
 				customTicks = a.scale().ticks(count);
+				customTicks.push(a.scale().domain()[1]);
 			}
-			//customTicks = customTicks.concat( a.scale().domain() );
 			a.tickValues( customTicks );
 		}
 		return axis;
 	};
 
-	axis.hardRules = function(x){
+	axis.hardRules = function(x){ //this allows you to set which lines will be solid rather than dotted, by default it's just zero and the bottom of the chart
 		if (!arguments.length) return hardRules;
 		hardRules = x;
 		return axis;
-
 	}
+
 	axis.yOffset = function(x){
 		if (!arguments.length) return yOffset;
 		yOffset = x;
