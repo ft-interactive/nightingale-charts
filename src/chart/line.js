@@ -212,7 +212,7 @@ function lineChart(p) {
 	}
 
 	function chart(g){
-		var titleLineHeight = 25, footerLineHeight = 15;
+		var titleLineHeight = 25, footerLineHeight = 15; //TODO get these values from styles, possibly by creating dummy text elements and measuring?
 
 		var model = buildModel(Object.create(g.data()[0])), //the model is built froma  copy of the data
 			svg = g.append('svg')
@@ -257,8 +257,9 @@ function lineChart(p) {
 		var subtitle = svg.append('g').attr('class','chart-subtitle').datum(model.subtitle).call(titleTextWrapper);
 
 		if (!model.subtitlePosition) {
+			positionHeight = totalHeight + titleLineHeight;
 			totalHeight += (getHeight(subtitle) + model.blockPadding);
-			model.subtitlePosition = {top: totalHeight, left: 0};
+			model.subtitlePosition = {top: positionHeight, left: 0};
 		}
 
 		subtitle.attr('transform', model.translate(model.subtitlePosition));
@@ -295,7 +296,7 @@ function lineChart(p) {
 			source.remove();
 		}
 		var footnotesHeight = getHeight(footnotes);
-		
+		var footnotesPosition = 
 		totalHeight += ( footnotesHeight + sourceHeight + model.blockPadding);
 
 		if (!model.height) {
