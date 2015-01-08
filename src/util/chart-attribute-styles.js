@@ -162,7 +162,6 @@ function applyAttributes(){
 	for(var s in styleList){
 		s = styleList[s];	
 		var selected = d3.selectAll(s.selector).attr(s.attributes);
-		console.log(s.selector, selected);
 	}
 	return true;
 }
