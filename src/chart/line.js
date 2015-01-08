@@ -297,7 +297,9 @@ function lineChart(p) {
 			source.remove();
 		}
 		var footnotesHeight = getHeight(footnotes);
-		totalHeight += ( footnotesHeight + sourceHeight + model.blockPadding);
+		var footerHeight = Math.max((footnotesHeight + sourceHeight),model.logoSize);
+
+		totalHeight += ( footerHeight + model.blockPadding);
 
 		if (!model.height) {
 			model.height = totalHeight + model.chartHeight;
