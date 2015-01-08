@@ -18,8 +18,7 @@ function numericAxis() {
 	var simple = false;
 	var noLabels = false;
 	var pixelsPerTick = 100;
-	var labelWidth;
-	var bounds;
+	var extension = 0;
 
 	function isVertical() {
 		return a.orient() === 'left' || a.orient() === 'right';
@@ -59,24 +58,26 @@ function numericAxis() {
 			});
 
 		}
-		//labelWidth = 0;
-		/*g.select('.tick text').each(function(d){ //calculate the widest label
-			labelWidth = Math.max( d3.select(this).node().getBoundingClientRect().width, labelWidth );
-		});*/
 
-		//bounds = g.node().getBoundingClientRect();
+		//extend the axis rules to the right or left if we need to
+		var rules = g.selectAll('line');
+		if (isVertical()) {
+			if (a.orient() == 'right') {
+				rules.attr('x1',extension)
+			}else{
+				rules.attr('x1',-extension)
+			}
+		}
+
 		if (noLabels) {
 			g.selectAll('text').remove();
 		}
 	}
 
-	axis.labelWidth = function() {
-		// return the width of the widest axis label
-		return labelWidth;
-	}
-
-	axis.bounds = function() {
-		return bounds;
+	axis.tickExtension = function(x) { // extend the axis ticks to the right/ left a specified distance
+		if (!arguments.length) return extension;
+		extension = x;
+		return axis;
 	}
 
 	axis.tickSize = function(x) {
@@ -128,6 +129,7 @@ function numericAxis() {
 			}else{
 				customTicks = a.scale().ticks(count);
 				customTicks.push(a.scale().domain()[1]);
+				hardRules.push(a.scale().domain()[1]);
 			}
 			a.tickValues( customTicks );
 		}

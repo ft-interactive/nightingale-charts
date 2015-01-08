@@ -369,7 +369,7 @@ function lineChart(p) {
 		valueScale.range(newValueRange);
 		timeScale.range(newTimeRange);
 		timeAxis.yOffset(plotHeight);
-		vAxis.tickSize(plotWidth);
+		vAxis.tickSize(plotWidth).tickExtension(widthDifference);
 
 		//replace provisional axes
 		chart.selectAll('*').remove();
