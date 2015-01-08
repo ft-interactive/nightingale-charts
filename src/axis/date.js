@@ -7,7 +7,7 @@ function dateAxis() {
 	var axes = [ d3.svg.axis().orient('bottom') ];
 	var scale;
 	var lineheight = 20;
-	var ticksize = -5;
+	var ticksize = 5;
 	var formatter = {};
 	// a simple axis has only first and last points as ticks, i.e. the scale's domain extent
 	var simple = false;
@@ -126,7 +126,7 @@ function dateAxis() {
 						}
 						return 'secondary';
 					})
-					.attr('transform','translate(0,' + ((i * lineheight)) + ')')
+					.attr('transform','translate(0,' + (i * lineheight) + ')')
 					.call(a);
 			});
 			//remove text-anchor attribute from year positions
@@ -134,7 +134,7 @@ function dateAxis() {
 				.selectAll('text').attr({
 					x: null,
 					y: null,
-					dy: 15
+					dy: 15 + ticksize
 				});
 			//clear the styles D3 sets so everything's coming from the css
 			g.selectAll('*').attr('style', null);
