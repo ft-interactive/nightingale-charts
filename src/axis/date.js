@@ -17,7 +17,7 @@ function dateAxis() {
 	var yOffset = 0;
 	var xOffset = 0;
 	var labelWidth;
-	var bounds;
+	var showDomain = false;
 
 	var formatter = {
 		centuries: function(d, i) {
@@ -144,8 +144,9 @@ function dateAxis() {
 		g.select('.tick text').each(function (d) { //calculate the widest label
 			labelWidth = Math.max(d3.select(this).node().getBoundingClientRect().width, labelWidth);
 		});
-
-		bounds = g.node().getBoundingClientRect();
+		if(!showDomain){
+			g.select('path.domain').remove();
+		}
 	}
 
 	axis.simple = function(x) {
@@ -163,10 +164,6 @@ function dateAxis() {
 	axis.labelWidth = function() {
 		// return the width of the widest axis label
 		return labelWidth;
-	}
-
-	axis.bounds = function() {
-		return bounds;
 	}
 
 
@@ -189,9 +186,9 @@ function dateAxis() {
 			u = unitGenerator(x.domain());
 		}
 		scale = x;
-		if (nice) {
+		//if (nice) {
 		 	scale.nice((scale.range()[1] - scale.range()[0]) / 100); //specify the number of ticks should be about 1 every 100 pixels
-		}
+		//}
 
 		//go through the units array
 

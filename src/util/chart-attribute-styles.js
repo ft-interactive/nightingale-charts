@@ -28,10 +28,18 @@ function applyAttributes(){
 					'stroke':'none'
 				}
 			},
+
 			{
 				'selector':'.y.axis .tick line',
 				'attributes':{
 					'stroke-dasharray':'2 2'
+				}
+			},
+			{
+				'selector':'.y.axis .origin line',
+				'attributes':{
+					'stroke':'#333',
+					'stroke-dasharray':'none'
 				}
 			},
 			{
@@ -50,11 +58,6 @@ function applyAttributes(){
 				'selector':'.primary .tick line',
 				'attributes':{
 					'stroke':'#a7a59b'
-				}
-			},{
-				'selector':'line.origin',
-				'attributes':{
-					'stroke':'#333'
 				}
 			},{ 
 				'selector':'.y.axis.right text',
@@ -158,7 +161,8 @@ function applyAttributes(){
 
 	for(var s in styleList){
 		s = styleList[s];	
-		d3.selectAll(s.selector).attr(s.attributes);
+		var selected = d3.selectAll(s.selector).attr(s.attributes);
+		console.log(s.selector, selected);
 	}
 	return true;
 }
