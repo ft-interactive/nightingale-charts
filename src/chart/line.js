@@ -314,8 +314,8 @@ function lineChart(p) {
 		svg.attr('height',model.height);
 
 		var currentPosition = model.chartPosition.top + model.chartHeight; //the posiotn at the bottom of the 'chart'
-		footnotes.attr('transform', model.translate({top: currentPosition  + sourceHeight + footerLineHeight}));
-		source.attr('transform', model.translate({top: currentPosition  + footerLineHeight}));
+		footnotes.attr('transform', model.translate({top: currentPosition  + footerLineHeight}));
+		source.attr('transform', model.translate({top: currentPosition  + footnotesHeight + footerLineHeight}));
 
 
 		//the business of the actual chart
