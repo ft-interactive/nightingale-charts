@@ -1,7 +1,7 @@
 .chart-title{
 	&, text, tspan{
 		font-family: $chart-font-family;
-		font-size: 20px;
+		font-size: 18px;
 		fill: rgba(0, 0, 0, 0.8);
 	}
 }
@@ -9,6 +9,7 @@
 .chart-subtitle{
 	&, text, tspan{
 		font-family: $chart-font-family;
+		font-size: 14px;
 		fill: rgba(0, 0, 0, 0.5);
 	}
 }
@@ -25,14 +26,14 @@
 	&, text, tspan{
 		font-family: $chart-font-family;
 		fill:rgba(0, 0, 0, 0.5);
-		font-size: 12px;
+		font-size: 10px;
 	}
 }
 
 .key-label{
 	&, text, tspan{
 		font-family: $chart-font-family;
-		font-size: 13px;
+		font-size: 12px;
 		fill: rgba(0, 0, 0, 0.5);
 	}
 }
