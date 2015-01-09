@@ -260,7 +260,7 @@ function lineChart(p) {
 		if (!model.titlePosition) {
 			if (model.title) {
 				totalHeight += (getHeight(title) + model.blockPadding);
-				var positionHeight = titleLineHeightActual;
+				var positionHeight = titleFontSize;
 				//if the title is multi line it's positon should only be the offset by the height of the first line...
 				model.titlePosition = {top: positionHeight, left: 0};
 			} else {
@@ -274,7 +274,7 @@ function lineChart(p) {
 
 		if (!model.subtitlePosition) {
 			if (model.subtitle) {
-				positionHeight = totalHeight + subtitleLineHeightActual;
+				positionHeight = totalHeight + subtitleFontSize;
 				totalHeight += (getHeight(subtitle) + model.blockPadding);
 				model.subtitlePosition = {top: positionHeight, left: 0};
 			} else {
