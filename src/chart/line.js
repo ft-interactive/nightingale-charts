@@ -313,7 +313,7 @@ function lineChart(p) {
 			}
 		}
 
-		svg.attr('height',model.height);
+		svg.attr('height', Math.ceil(model.height));
 
 		var currentPosition = model.chartPosition.top + model.chartHeight; //the posiotn at the bottom of the 'chart'
 		footnotes.attr('transform', model.translate({top: currentPosition  + footerLineHeight}));
