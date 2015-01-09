@@ -90,7 +90,7 @@ function lineChart(p) {
 			blockPadding: 10,
 			simpleDate: false,
 			simpleValue: false,
-			logoSize:32,
+			logoSize: 24,
 			//data stuff
 			dateParser: defaultDateFormatter,
 			falseorigin: false, //TODO, find out if there's a standard 'pipeline' temr for this
