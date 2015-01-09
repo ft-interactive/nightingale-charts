@@ -126,10 +126,17 @@ function numericAxis() {
 				if (Math.min(r[0], r[1]) < 0 && Math.max(r[0], r[1]) > 0) {
 					customTicks.push(0);
 				}
+				customTicks.push(a.scale().domain()[1]);
+				customTicks.push(a.scale().domain()[0]);
 			}else{
 				customTicks = a.scale().ticks(count);
 				customTicks.push(a.scale().domain()[1]);
 				hardRules.push(a.scale().domain()[1]);
+				//if there's only one custom tick, add another
+				if(customTicks.length<2){
+					customTicks.push(a.scale().domain()[0]);
+					customTicks.push(a.scale().domain()[1]);
+				}
 			}
 			a.tickValues( customTicks );
 		}
