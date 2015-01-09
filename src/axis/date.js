@@ -32,7 +32,7 @@ function dateAxis() {
 				return d3.time.format('%Y')(d);
 			}
 			return d3.time.format('%y')(d);
-		}, 
+		},
 
 		years: function(d, i) {
 			if(i == 0 || d.getYear() % 100 == 0) {
@@ -65,7 +65,7 @@ function dateAxis() {
 
 	var interval = {
 		centuries: d3.time.year,
-		decades: d3.time.year, 
+		decades: d3.time.year,
 		years: d3.time.year,
 		fullyears: d3.time.year,
 		months: d3.time.month,
@@ -93,10 +93,10 @@ function dateAxis() {
 			return ['hours','days','months'];
 		}
 		if (timeDif < dayLength * 365.25) {
-			return ['months','years'];	
+			return ['months','years'];
 		}
 		if (timeDif < dayLength * 365.25 * 5) {
-			return ['years'];	
+			return ['years'];
 		}
 		if (timeDif < dayLength * 365.25 * 100) {
 			return ['decades'];
@@ -113,7 +113,7 @@ function dateAxis() {
 	}
 
 	function axis(g){
-		
+
 		g = g.append('g').attr('transform','translate(' + xOffset + ',' + yOffset + ')');
 
 		g.append('g').attr('class','x axis').each(function() {
@@ -147,6 +147,40 @@ function dateAxis() {
 		if(!showDomain){
 			g.select('path.domain').remove();
 		}
+
+//check for and remove overlaping labels
+		var bounds = [];
+		g.selectAll('.tick').each(function(d,i){
+			//check whether it overlaps any of the existing bounds
+			var rect = this.getBoundingClientRect();
+			var include = true;
+			var current = d3.select(this);
+			bounds.forEach(function(b,i){
+				console.log(d);
+				if(intersection(b,rect)){
+					//if it does, remove it
+					console.log('remove', current);
+					current.remove();
+					include = false;
+				}
+			});
+
+			if(include){
+				bounds.push(rect);
+				console.log('b' + bounds.length);
+			}
+
+
+		});
+	}
+
+	function intersection(a, b){
+		var overlap = (a.left <= b.right &&
+			b.left <= a.right &&
+			a.top <= b.bottom &&
+			b.top <= a.bottom);
+			console.log(overlap, a,b);
+		return overlap;
 	}
 
 	axis.simple = function(x) {
@@ -198,7 +232,7 @@ function dateAxis() {
 				if(!simple){
 					var customTicks = scale.ticks( interval[ u[i] ], increment[ u[i] ] );
 
-					customTicks.push(scale.domain()[0]); //always include the first and last values 
+					customTicks.push(scale.domain()[0]); //always include the first and last values
 					customTicks.push(scale.domain()[1]);
 					customTicks.sort(dateSort);
 
