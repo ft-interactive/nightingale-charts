@@ -116,7 +116,7 @@ function lineChart(p) {
 
 		m.contentWidth = m.width - (m.margin * 2);
 		m.chartWidth = m.contentWidth;
-		m.translate = translate(m.margin);
+		m.translate = translate(0);
 
 		m.x.series = normaliseSeriesOptions(m.x.series);
 		m.y.series = normaliseYAxisOptions(m.y.series)
@@ -214,7 +214,17 @@ function lineChart(p) {
 	}
 
 	function chart(g){
-		var titleLineHeight = 25, footerLineHeight = 15; //TODO get these values from styles, possibly by creating dummy text elements and measuring?
+		// TODO: don't hard-code the fontsize, get from CSS somehow.
+		var titleFontSize = 18;
+		// TODO: move calculation of lineheight to the textarea component;
+		var titleLineHeight = 1.2;
+		var titleLineHeightActual = Math.ceil(titleFontSize * titleLineHeight);
+		var footerLineHeight = 15;
+		var subtitleFontSize = 14;
+		var subtitleLineHeight = titleLineHeight;
+		var subtitleLineHeightActual = Math.ceil(subtitleFontSize * subtitleLineHeight);
+		var lineStrokeWidth = 4;
+		var halfLineWidth = lineStrokeWidth / 2;
 
 		var model = buildModel(Object.create(g.data()[0])), //the model is built froma  copy of the data
 			svg = g.append('svg')
@@ -226,7 +236,8 @@ function lineChart(p) {
 				}),
 
 			//create title, subtitle, key, source, footnotes, logo, the chart itself
-			titleTextWrapper = textArea().width(model.contentWidth).lineHeight(titleLineHeight),
+			titleTextWrapper = textArea().width(model.contentWidth).lineHeight(titleLineHeightActual),
+			subtitleTextWrapper = textArea().width(model.contentWidth).lineHeight(subtitleLineHeightActual),
 			footerTextWrapper = textArea().width(model.contentWidth - model.logoSize).lineHeight(footerLineHeight),
 
 			chartKey = lineKey()
@@ -243,25 +254,32 @@ function lineChart(p) {
 			elementPositions = [],
 			totalHeight = 0;
 
-	//position stuff
+		//position stuff
 		//start from the top...
 		var title = svg.append('g').attr('class','chart-title').datum(model.title).call(titleTextWrapper);
 		if (!model.titlePosition) {
-			if (model.title != '') {
+			if (model.title) {
 				totalHeight += (getHeight(title) + model.blockPadding);
-				var positionHeight = titleLineHeight;
+				var positionHeight = titleLineHeightActual;
+				//if the title is multi line it's positon should only be the offset by the height of the first line...
+				model.titlePosition = {top: positionHeight, left: 0};
+			} else {
+				model.titlePosition = {top: totalHeight, left: 0};
 			}
-			//if the title is multi line it's positon should only be the offset by the height of the first line...
-			model.titlePosition = {top:positionHeight,left:0};
 		}
-		title.attr( 'transform',model.translate(model.titlePosition) );
+
+		title.attr('transform', model.translate(model.titlePosition));
 
 		var subtitle = svg.append('g').attr('class','chart-subtitle').datum(model.subtitle).call(titleTextWrapper);
 
 		if (!model.subtitlePosition) {
-			positionHeight = totalHeight + titleLineHeight;
-			totalHeight += (getHeight(subtitle) + model.blockPadding);
-			model.subtitlePosition = {top: positionHeight, left: 0};
+			if (model.subtitle) {
+				positionHeight = totalHeight + subtitleLineHeightActual;
+				totalHeight += (getHeight(subtitle) + model.blockPadding);
+				model.subtitlePosition = {top: positionHeight, left: 0};
+			} else {
+				model.subtitlePosition = {top: totalHeight, left: 0};
+			}
 		}
 
 		subtitle.attr('transform', model.translate(model.subtitlePosition));
@@ -274,19 +292,21 @@ function lineChart(p) {
 			var key = svg.append('g').attr('class', 'chart-key').datum(entries).call(chartKey);
 
 			if(!model.keyPosition){
-				model.keyPosition = {top: totalHeight + model.blockPadding, left: 0};
+				model.keyPosition = {top: totalHeight, left: halfLineWidth};
 				totalHeight += (getHeight(key) + model.blockPadding);
 			}
 			key.attr( 'transform',model.translate(model.keyPosition) );
 		}
 
-		totalHeight += model.blockPadding;
-
 		var chart = svg.append('g').attr('class', 'chart');
 
 		if (!model.chartPosition) {
-			model.chartPosition = {top:totalHeight, left:0};
+			model.chartPosition = {
+				top:totalHeight + halfLineWidth,
+				left: (model.numberAxisOrient === 'left' ? 0 : halfLineWidth)
+			};
 		}
+
 		chart.attr( 'transform', model.translate(model.chartPosition) );
 
 		var footnotes = svg.append('g').attr('class','chart-footnote').datum(model.footnote).call(footerTextWrapper);
@@ -299,7 +319,7 @@ function lineChart(p) {
 		var footnotesHeight = getHeight(footnotes);
 		var footerHeight = Math.max((footnotesHeight + sourceHeight),model.logoSize);
 
-		totalHeight += ( footerHeight + model.blockPadding);
+		totalHeight += (footerHeight + model.blockPadding);
 
 		if (!model.height) {
 			model.height = totalHeight + model.chartHeight;
@@ -375,7 +395,7 @@ function lineChart(p) {
 		chart.selectAll('*').remove();
 		chart.call(vAxis);
 		chart.call(timeAxis);
-		if (model.numberAxisOrient != 'right') {
+		if (model.numberAxisOrient !== 'right') {
 			model.chartPosition.left += (getWidth(chart.select('.y.axis')) - plotWidth);
 		}
 
