@@ -219,7 +219,7 @@ function lineChart(p) {
 		var model = buildModel(Object.create(g.data()[0])), //the model is built froma  copy of the data
 			svg = g.append('svg')
 				.attr({
-					'class': 'line-chart',
+					'class': 'graphic line-chart',
 					//we don't necessarily know the height at the moment so may be undefiend...
 					height: model.height,
 					width: model.width
