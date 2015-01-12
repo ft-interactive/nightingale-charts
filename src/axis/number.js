@@ -150,11 +150,6 @@ function numericAxis() {
 				customTicks.push(a.scale().domain()[1]);
 				customTicks.push(a.scale().domain()[0]);
 				hardRules.push(a.scale().domain()[1]);
-				//if there's only one custom tick, add another
-				if(customTicks.length<2){
-					customTicks.push(a.scale().domain()[0]);
-					customTicks.push(a.scale().domain()[1]);
-				}
 			}
 			a.tickValues( customTicks );
 		}
