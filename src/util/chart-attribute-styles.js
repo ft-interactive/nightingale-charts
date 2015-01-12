@@ -41,17 +41,22 @@ function applyAttributes(){
 					'stroke':'#333',
 					'stroke-dasharray':'none'
 				}
-			},
-			{
+			},{
+				'selector':'.y.axis .origin.tick line',
+				'attributes':{
+					'stroke':'#333',
+					'stroke-dasharray':'none'
+				}
+			},{
 				'selector':'.primary .tick text',
 				'attributes':{
-					'font-size':'13',
+					'font-size':14,
 					'fill':'#757470'
 				}
 			},{
 				'selector':'.secondary .tick text',
 				'attributes':{
-					'font-size':'11',
+					'font-size':11,
 					'fill':'#757470'
 				}
 			},{
@@ -79,10 +84,10 @@ function applyAttributes(){
 			{
 				'selector':'path.line, line.key-line',
 				'attributes':{
-					'fill':'none',
-					'stroke-width':'1.5',
-					'stroke-linejoin':'round',
-					'stroke-linecap':'round'
+					'fill': 'none',
+					'stroke-width': 4,
+					'stroke-linejoin': 'round',
+					'stroke-linecap': 'round'
 				}
 			},{
 				'selector':'path.series1, line.series1',
@@ -122,38 +127,44 @@ function applyAttributes(){
 			},{
 				'selector':'path.accent, line.accent',
 				'attributes':{
-					'stroke':'#9e2f00'
+					'stroke':'rgb(184,177,169)'
 				}
 			},
 			//text
 			{
 				'selector':'.chart-title text, .chart-title tspan',
 				'attributes':{
-					'font-size':20,
-					'fill':'#43423e'
-				}
-			},{
-				'selector':'.chart-subtitle text, .chart-subtitle tspan',
-				'attributes':{
+					'font-family': 'BentonSans, sans-serif',
 					'font-size':18,
-					'fill':'#757470'
+					'fill':'rgba(0, 0, 0, 0.8)'
 				}
 			},{
 				'selector':'.chart-subtitle text, .chart-subtitle tspan',
 				'attributes':{
-					'fill':'#757470'
+					'font-family': 'BentonSans, sans-serif',
+					'font-size': 14,
+					'fill':'rgba(0, 0, 0, 0.5)'
 				}
 			},{
-				'selector':'.chart-source text, .chart-source tspan, .chart-footnote text, .chart-footnote tspan',
+				'selector':'.chart-source text, .chart-source tspan',
 				'attributes':{
-					'font-size':'13',
-					'fill':'#757470'
+					'font-family': 'BentonSans, sans-serif',
+					'font-size': 10,
+					'fill': 'rgba(0, 0, 0, 0.5)'
+				}
+			},{
+				'selector':'.chart-footnote text, .chart-footnote tspan',
+				'attributes':{
+					'font-family': 'BentonSans, sans-serif',
+					'font-size': 12,
+					'fill': 'rgba(0, 0, 0, 0.5)'
 				}
 			},{
 				'selector':'text.key-label',
 				'attributes':{
-					'font-size':'13',
-					'fill':'#757470'
+					'font-family': 'BentonSans, sans-serif',
+					'font-size': 12,
+					'fill': 'rgba(0, 0, 0, 0.5)'
 				}
 			}
 		];
