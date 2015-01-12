@@ -1,22 +1,26 @@
 'use strict'
 
 var d3 = require('d3');
+var lineThickness = require('../util/line-thickness.js');
 
-function lineKey() {
+function lineKey(options) {
 
-	var width = 300, 
-	strokeLength = 15,
-	lineHeight = 16,
+	options = options || {};
 
-	style  = function(d){
+	var width = 300;
+	var strokeLength = 15;
+	var lineHeight = 16;
+	var strokeWidth = lineThickness(options.lineThickness);
+
+	var style = function(d) {
 		return d.style;
-	},
+	};
 
-	label = function(d){
+	var label = function(d) {
 		return d.label;
-	},
+	};
 
-	filter = function(){
+	var filter = function(){
 		return true;
 	};
 
@@ -37,7 +41,9 @@ function lineKey() {
 			y1: -5,
 			x2: strokeLength,
 			y2: -5
-		}).classed('key-line',true);
+		})
+		.attr('stroke-width', strokeWidth)
+		.classed('key-line',true);
 
 		keyItems.append('text').attr({
 			'class':'key-label',

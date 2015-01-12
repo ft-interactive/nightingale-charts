@@ -1,6 +1,5 @@
 path.line{
 	fill:none;
-	stroke-width: $chart-line-stroke-width;
 	stroke-linejoin: round;
 	stroke-linecap: round;
 }
@@ -35,7 +34,6 @@ path.line{
 
 line.key-line{
 	fill:none;
-	stroke-width:$chart-line-stroke-width;
 	stroke-linejoin:round;
 	stroke-linecap:round;
 }

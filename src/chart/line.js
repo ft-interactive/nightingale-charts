@@ -7,6 +7,7 @@ var numberAxis = require('../axis/number.js');
 var textArea = require('../element/text-area.js');
 var lineKey = require('../element/line-key.js');
 var ftLogo = require('../element/logo.js');
+var lineThickness = require('../util/line-thickness.js');
 
 function isDate(d) {
 	return d && d instanceof Date && !isNaN(+d);
@@ -94,6 +95,7 @@ function lineChart(p) {
 			hideSource: false,
 			numberAxisOrient: 'left',
 			margin: 2,
+			lineThickness: 'medium',
 			x: {
 				series: '&'
 			},
@@ -115,6 +117,8 @@ function lineChart(p) {
 		if (m.logoSpace) {
 			m.chartWidth -= m.logoSize;
 		}
+
+		m.lineStrokeWidth = lineThickness(m.lineThickness);
 
 		m.x.series = normaliseSeriesOptions(m.x.series);
 		m.y.series = normaliseYAxisOptions(m.y.series)
@@ -207,6 +211,18 @@ function lineChart(p) {
 	}
 
 	function chart(g){
+
+		//the model is built froma  copy of the data
+		var model = buildModel(Object.create(g.data()[0]));
+
+		var svg = g.append('svg')
+				.attr({
+					'class': 'graphic line-chart',
+					//we don't necessarily know the height at the moment so may be undefiend...
+					height: model.height,
+					width: model.width
+				});
+
 		var defaultLineHeight = 1.2;
 		// TODO: don't hard-code the fontsize, get from CSS somehow.
 		var titleFontSize = 18;
@@ -222,25 +238,14 @@ function lineChart(p) {
 		var sourceFontSize = 10;
 		var sourceLineHeight = defaultLineHeight;
 		var sourceLineHeightActual = sourceFontSize * sourceLineHeight;
-		var lineStrokeWidth = 4;
-		var halfLineWidth = lineStrokeWidth / 2;
-
-
-		var model = buildModel(Object.create(g.data()[0])), //the model is built froma  copy of the data
-			svg = g.append('svg')
-				.attr({
-					'class': 'graphic line-chart',
-					//we don't necessarily know the height at the moment so may be undefiend...
-					height: model.height,
-					width: model.width
-				}),
+		var halfLineStrokeWidth = Math.ceil(model.lineStrokeWidth / 2);
 
 			//create title, subtitle, key, source, footnotes, logo, the chart itself
-			titleTextWrapper = textArea().width(model.contentWidth).lineHeight(titleLineHeightActual),
+			var titleTextWrapper = textArea().width(model.contentWidth).lineHeight(titleLineHeightActual),
 			subtitleTextWrapper = textArea().width(model.contentWidth).lineHeight(subtitleLineHeightActual),
 			footerTextWrapper = textArea().width(model.contentWidth - model.logoSize).lineHeight(footerLineHeight),
 
-			chartKey = lineKey()
+			chartKey = lineKey({lineThickness: model.lineStrokeWidth})
 				.style(function (d) {
 					return d.value;
 				})
@@ -290,18 +295,18 @@ function lineChart(p) {
 			var key = svg.append('g').attr('class', 'chart-key').datum(entries).call(chartKey);
 
 			if (!model.keyPosition) {
-				model.keyPosition = {top: totalHeight, left: halfLineWidth};
+				model.keyPosition = {top: totalHeight, left: halfLineStrokeWidth};
 				totalHeight += (getHeight(key) + model.blockPadding);
 			}
-			key.attr('transform',model.translate(model.keyPosition));
+			key.attr('transform', model.translate(model.keyPosition));
 		}
 
 		var chart = svg.append('g').attr('class', 'chart');
 
 		if (!model.chartPosition) {
 			model.chartPosition = {
-				top: totalHeight + halfLineWidth,
-				left: (model.numberAxisOrient === 'left' ? 0 : halfLineWidth)
+				top: totalHeight + halfLineStrokeWidth,
+				left: (model.numberAxisOrient === 'left' ? 0 : halfLineStrokeWidth)
 			};
 		}
 
@@ -435,6 +440,7 @@ function lineChart(p) {
 			g.append('path')
 				.datum(model.data)
 				.attr('class', cssClass)
+				.attr('stroke-width', model.lineStrokeWidth)
 				.attr('d', line);
 		}
 
