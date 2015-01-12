@@ -90,11 +90,12 @@ function lineChart(p) {
 			blockPadding: 10,
 			simpleDate: false,
 			simpleValue: false,
-			logoSize: 24,
+			logoSize: 28,
+			logoSpace: true,
 			//data stuff
 			dateParser: defaultDateFormatter,
 			falseorigin: false, //TODO, find out if there's a standard 'pipeline' temr for this
-			error: function(err){ console.log('ERROR: ', err) },
+			error: function(err) { console.log('ERROR: ', err) },
 			lineClasses: {},
 			niceValue: true,
 			hideSource: false,
@@ -117,6 +118,10 @@ function lineChart(p) {
 		m.contentWidth = m.width - (m.margin * 2);
 		m.chartWidth = m.contentWidth;
 		m.translate = translate(0);
+
+		if (m.logoSpace) {
+			m.chartWidth -= m.logoSize;
+		}
 
 		m.x.series = normaliseSeriesOptions(m.x.series);
 		m.y.series = normaliseYAxisOptions(m.y.series)
@@ -146,9 +151,9 @@ function lineChart(p) {
 			});
 		}
 
-		if(typeof m.key !== 'boolean') {
+		if (typeof m.key !== 'boolean') {
 			m.key = m.y.series.length > 1;
-		} else if(m.key && !m.y.series.length) {
+		} else if (m.key && !m.y.series.length) {
 			m.key = false;
 		}
 
@@ -158,18 +163,19 @@ function lineChart(p) {
 
 			if (!d || !s) return;
 
-			if(isDate(s)) {
+			if (isDate(s)) {
 				return d;
 			}
 
 			d[m.x.series.key] = m.dateParser( s );
 
-			if(d[m.x.series.key] === null) {
+			if (d[m.x.series.key] === null) {
 				m.error({
 					node: null,
 					message: 'unable to parse date "' + s + '"'
 				});
 			}
+
 			return d;
 
 		}).filter(isTruthy);
@@ -205,7 +211,8 @@ function lineChart(p) {
 		//work out the value domain
 		if (!m.valueDomain) {
 			m.valueDomain = d3.extent(extents);
-			if(!m.falseorigin && m.valueDomain[0] > 0){ // unless a false origin has been specified
+			// unless a false origin has been specified
+			if (!m.falseorigin && m.valueDomain[0] > 0) {
 				m.valueDomain[0] = 0;
 			}
 		}
@@ -245,7 +252,7 @@ function lineChart(p) {
 					return d.value;
 				})
 				.label(function (d) {
-					if(model.labelLookup !== null && model.labelLookup[d.key]){
+					if (model.labelLookup !== null && model.labelLookup[d.key]) {
 						return model.labelLookup[d.key];
 					}
 					return d.key;
@@ -291,33 +298,35 @@ function lineChart(p) {
 
 			var key = svg.append('g').attr('class', 'chart-key').datum(entries).call(chartKey);
 
-			if(!model.keyPosition){
+			if (!model.keyPosition) {
 				model.keyPosition = {top: totalHeight, left: halfLineWidth};
 				totalHeight += (getHeight(key) + model.blockPadding);
 			}
-			key.attr( 'transform',model.translate(model.keyPosition) );
+			key.attr('transform',model.translate(model.keyPosition));
 		}
 
 		var chart = svg.append('g').attr('class', 'chart');
 
 		if (!model.chartPosition) {
 			model.chartPosition = {
-				top:totalHeight + halfLineWidth,
+				top: totalHeight + halfLineWidth,
 				left: (model.numberAxisOrient === 'left' ? 0 : halfLineWidth)
 			};
 		}
 
-		chart.attr( 'transform', model.translate(model.chartPosition) );
+		chart.attr('transform', model.translate(model.chartPosition));
 
 		var footnotes = svg.append('g').attr('class','chart-footnote').datum(model.footnote).call(footerTextWrapper);
 		var source = svg.append('g').attr('class','chart-source').datum(model.sourcePrefix + model.source).call(footerTextWrapper);
 		var sourceHeight = getHeight(source);
+
 		if (model.hideSource) {
 			sourceHeight = 0;
 			source.remove();
 		}
+
 		var footnotesHeight = getHeight(footnotes);
-		var footerHeight = Math.max((footnotesHeight + sourceHeight),model.logoSize);
+		var footerHeight = Math.max(footnotesHeight + sourceHeight + (model.blockPadding * 2), model.logoSize);
 
 		totalHeight += (footerHeight + model.blockPadding);
 
@@ -325,7 +334,7 @@ function lineChart(p) {
 			model.height = totalHeight + model.chartHeight;
 		} else {
 			model.chartHeight = model.height - totalHeight;
-			if(model.chartHeight < 0){
+			if (model.chartHeight < 0) {
 				model.error({
 					node:chart,
 					message:'calculated plot height is less than zero'
@@ -343,34 +352,33 @@ function lineChart(p) {
 		//the business of the actual chart
 		//make provisional scales
 		var valueScale = d3.scale.linear()
-			.domain( model.valueDomain.reverse() )
-			.range( [0, model.chartHeight ] );
+			.domain(model.valueDomain.reverse())
+			.range([0, model.chartHeight ]);
 		
 		if (model.niceValue) {
 			valueScale.nice();
 		}
 
 		var timeScale = d3.time.scale()
-			.domain( model.timeDomain )
-			.range( [0, model.chartWidth] );
+			.domain(model.timeDomain)
+			.range([0, model.chartWidth]);
 
 		//first pass, create the axis at the entire chartWidth/Height
 		var vAxis = numberAxis()
 //				.orient( model.numberAxisOrient )
-				.tickFormat( model.numberAxisFormatter )
-				.simple( model.simpleValue )
-				.tickSize( model.chartWidth )	//make the ticks the width of the chart
-				.scale( valueScale ),
-
+				.tickFormat(model.numberAxisFormatter)
+				.simple(model.simpleValue)
+				.tickSize(model.chartWidth)	//make the ticks the width of the chart
+				.scale(valueScale),
 
 			timeAxis = dateAxis()
-				.simple( model.simpleDate )
-				.yOffset( model.chartHeight )	//position the axis at the bottom of the chart
-				.scale( timeScale );
+				.simple(model.simpleDate)
+				.yOffset(model.chartHeight)	//position the axis at the bottom of the chart
+				.scale(timeScale);
 
-		if( model.numberAxisOrient !== 'right' && model.numberAxisOrient !== 'left' ){
+		if (model.numberAxisOrient !== 'right' && model.numberAxisOrient !== 'left') {
 			vAxis.noLabels(true);
-		}else{
+		} else {
 			vAxis.orient(model.numberAxisOrient);
 		}
 
@@ -400,22 +408,27 @@ function lineChart(p) {
 		}
 
 		model.chartPosition.top += (getHeight(chart.select('.y.axis')) - plotHeight);
-		chart.attr('transform',model.translate(model.chartPosition));
+		chart.attr('transform', model.translate(model.chartPosition));
 
 		var plot = chart.append('g').attr('class', 'plot');
 
-		svg.append('g')
-			.attr('transform','translate('+ ( model.width-model.logoSize) +','+ ( model.height - model.logoSize ) +')')
-			.call(ftLogo,model.logoSize);
+		var logo = svg.append('g').call(ftLogo, model.logoSize);
+		var heightOfFontDescenders = 3;
+		var baselineOfLastSourceLine = model.height - getHeight(logo) - heightOfFontDescenders - (sourceLineHeightActual - sourceFontSize);
+
+		logo.attr('transform', model.translate({
+			left: model.width - model.logoSize,
+			top: baselineOfLastSourceLine
+		}));
 
 		function x(d) {
-			return timeScale ( d[model.x.series.key] );
+			return timeScale (d[model.x.series.key]);
 		}
 
 		function y(property) {
 			return function(d) {
 				if (d[property] == null) return '';
-				return valueScale ( d[property]);
+				return valueScale (d[property]);
 			}
 		}
 
