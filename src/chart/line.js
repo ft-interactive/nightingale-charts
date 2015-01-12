@@ -414,7 +414,6 @@ function lineChart(p) {
 			chart.selectAll('.y.axis text').each(function(){
 				vLabelWidth = Math.max(vLabelWidth, getWidth(d3.select(this)));
 			});
-			console.log('W', vLabelWidth);
 			model.chartPosition.left += vLabelWidth + 4;//NOTE magic number 4
 		}
 
