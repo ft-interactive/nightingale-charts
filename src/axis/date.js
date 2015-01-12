@@ -44,10 +44,10 @@ function dateAxis() {
 		fullyears: function(d, i) {
 			return d3.time.format('%Y')(d);
 		},
-		months: function(d, i){
+		shortmonths: function(d, i){
 			return d3.time.format('%b')(d)[0];
 		},
-		monthsm: function(d, i) {
+		months: function(d, i) {
 			return d3.time.format('%b')(d);
 		},
 

@@ -120,6 +120,10 @@ function numericAxis() {
 			a.tickValues(userTicks);
 		}else{
 			var count = Math.round( (a.scale().range()[1] - a.scale().range()[0])/pixelsPerTick );
+			if(count < 2) { count = 3; }
+			else if(count < 5) { count = 5; }
+			else if(count < 10) { count = 10; }
+
 			if (simple) {
 				var customTicks = [];
 				var r = a.scale().domain();
@@ -130,7 +134,21 @@ function numericAxis() {
 				customTicks.push(a.scale().domain()[0]);
 			}else{
 				customTicks = a.scale().ticks(count);
+				//the bottom and top of the domain should be at exact ticks
+				//get the max tic interval, this will be the default
+				var interval = 0;
+				customTicks.forEach(function(d,i){
+					if(i < customTicks.length-1){
+						interval = Math.max( customTicks[i+1] - d,  interval);
+					}
+				});
+
+				//round up to the domain to the nearest interval
+				a.scale().domain()[0] = Math.ceil(a.scale().domain()[0]/interval) * interval;
+				a.scale().domain()[1] = Math.floor(a.scale().domain()[1]/interval) * interval;
+
 				customTicks.push(a.scale().domain()[1]);
+				customTicks.push(a.scale().domain()[0]);
 				hardRules.push(a.scale().domain()[1]);
 				//if there's only one custom tick, add another
 				if(customTicks.length<2){
