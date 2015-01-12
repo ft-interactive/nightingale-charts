@@ -1,4 +1,4 @@
-//reusable linechart 
+//reusable linechart
 'use strict'
 
 var d3 = require('d3');
@@ -60,7 +60,7 @@ function getHeight(selection) {
 }
 
 function getWidth(selection) {
-	return Math.ceil(selection.node().getBoundingClientRect().width);	
+	return Math.ceil(selection.node().getBoundingClientRect().width);
 }
 
 function translate(margin) {
@@ -73,7 +73,7 @@ function translate(margin) {
 
 var defaultDateFormatter = d3.time.format('%d %b %Y').parse;
 
-function lineChart(p) { 
+function lineChart(p) {
 
 	var lineClasses = ['series1', 'series2', 'series3', 'series4', 'series5', 'series6', 'series7', 'accent'];
 
@@ -180,7 +180,7 @@ function lineChart(p) {
 
 		}).filter(isTruthy);
 
-		//make sure all the lines are numerical values, calculate extents... 
+		//make sure all the lines are numerical values, calculate extents...
 		//(by convention each non index property of the data is going to be a line)
 		var extents = [];
 		m.y.series.forEach(function (l, i) {
@@ -359,7 +359,7 @@ function lineChart(p) {
 		var valueScale = d3.scale.linear()
 			.domain(model.valueDomain.reverse())
 			.range([0, model.chartHeight ]);
-		
+
 		if (model.niceValue) {
 			valueScale.nice();
 		}
@@ -409,7 +409,13 @@ function lineChart(p) {
 		chart.call(vAxis);
 		chart.call(timeAxis);
 		if (model.numberAxisOrient !== 'right') {
-			model.chartPosition.left += (getWidth(chart.select('.y.axis')) - plotWidth);
+			//figure out how much of the extra width is the vertical axis lables
+			var vLabelWidth = 0
+			chart.selectAll('.y.axis text').each(function(){
+				vLabelWidth = Math.max(vLabelWidth, getWidth(d3.select(this)));
+			});
+			console.log('W', vLabelWidth);
+			model.chartPosition.left += vLabelWidth + 4;//NOTE magic number 4
 		}
 
 		model.chartPosition.top += (getHeight(chart.select('.y.axis')) - plotHeight);
