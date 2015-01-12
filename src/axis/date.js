@@ -44,8 +44,10 @@ function dateAxis() {
 		fullyears: function(d, i) {
 			return d3.time.format('%Y')(d);
 		},
-
-		months: function(d, i) {
+		months: function(d, i){
+			return d3.time.format('%b')(d)[0];
+		},
+		monthsm: function(d, i) {
 			return d3.time.format('%b')(d);
 		},
 
@@ -218,9 +220,10 @@ function dateAxis() {
 			u = unitGenerator(x.domain());
 		}
 		scale = x;
-		//if (nice) {
-		 	scale.nice((scale.range()[1] - scale.range()[0]) / 100); //specify the number of ticks should be about 1 every 100 pixels
-		//}
+		if (nice) {
+			scale.nice((scale.range()[1] - scale.range()[0]) / 100); //specify the number of ticks should be about 1 every 100 pixels
+			console.log(scale.range()[1] - scale.range()[0]);
+		}
 
 		//go through the units array
 
