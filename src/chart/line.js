@@ -12,10 +12,6 @@ function isDate(d) {
 	return d && d instanceof Date && !isNaN(+d);
 }
 
-function createDate(s) {
-	return new Date(s);
-}
-
 function isTruthy(value) {
 	return !!value;
 }
@@ -71,9 +67,7 @@ function translate(margin) {
 	}
 }
 
-var defaultDateFormatter = d3.time.format('%d %b %Y').parse;
-
-function lineChart(p) {
+function lineChart(p) { 
 
 	var lineClasses = ['series1', 'series2', 'series3', 'series4', 'series5', 'series6', 'series7', 'accent'];
 
@@ -93,7 +87,6 @@ function lineChart(p) {
 			logoSize: 28,
 			logoSpace: true,
 			//data stuff
-			dateParser: defaultDateFormatter,
 			falseorigin: false, //TODO, find out if there's a standard 'pipeline' temr for this
 			error: function(err) { console.log('ERROR: ', err) },
 			lineClasses: {},
@@ -134,64 +127,57 @@ function lineChart(p) {
 								return d;
 							});
 
-		if (typeof m.dateParser === 'string') {
-			m.dateParser = m.dateParser === 'ISO' || m.dateParser === 'JAVASCRIPT' ? createDate : d3.time.format(m.dateParser).parse;
-		}
-
-		if (!m.dateParser) {
-			// if we have no date format then at least try to create the date
-			m.dateParser = function(value) {
-				var date = new Date(value);
-				return isDate(date) ? date : defaultDateFormatter(value);
-			};
-			// but also notify user of the error
-			m.error({
-				node: null,
-				message: 'No date format specified'
-			});
-		}
-
 		if (typeof m.key !== 'boolean') {
 			m.key = m.y.series.length > 1;
 		} else if (m.key && !m.y.series.length) {
 			m.key = false;
 		}
 
-		m.data = !Array.isArray(m.data) ? [] : m.data.map(function (d) {
+		m.data = !Array.isArray(m.data) ? [] : m.data.map(function (d, i) {
 
 			var s = d[m.x.series.key];
+			var error = {
+				node: null,
+				message: '',
+				row: i,
+				column: m.x.series.key,
+				value: s
+			};
 
-			if (!d || !s) return;
-
-			if (isDate(s)) {
-				return d;
+			if (!d) {
+				error.message = 'Empty row';
+			} else if (!s) {
+				error.message = 'X axis value is empty or null';
+			} else if (!isDate(s)) {
+				error.message = 'Value is not a valid date';
 			}
 
-			d[m.x.series.key] = m.dateParser( s );
-
-			if (d[m.x.series.key] === null) {
-				m.error({
-					node: null,
-					message: 'unable to parse date "' + s + '"'
-				});
+			if (error.message) {
+				m.error(error);
+				d[m.x.series.key] = null;
 			}
 
 			return d;
 
-		}).filter(isTruthy);
+		});
 
-		//make sure all the lines are numerical values, calculate extents...
-		//(by convention each non index property of the data is going to be a line)
+		//make sure all the lines are numerical values, calculate extents... 
 		var extents = [];
 		m.y.series.forEach(function (l, i) {
 			var key = l.key;
-			m.data = m.data.map(function (d) {
-				//TODO, check for non numerical values
-				var v = parseFloat(d[key]);
-				if (isNaN(v)) {
-					d[key] = undefined;
-				} else {
-					d[key] = v;
+			m.data = m.data.map(function (d, j) {
+
+				var value = d[key];
+				var isValidNumber = typeof value === 'number' && !isNaN(value);
+
+				if (!isValidNumber) {
+					m.error({
+						node: null,
+						message: 'Value is not a number',
+						value: value,
+						row: j,
+						column: key
+					});
 				}
 				return d;
 			});
