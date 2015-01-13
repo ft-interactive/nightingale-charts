@@ -100,7 +100,7 @@ function dateAxis() {
 		if (timeDif < dayLength * 365.25) {
 			return ['months','years'];
 		}
-		if (timeDif < dayLength * 365.25 * 10) {
+		if (timeDif < dayLength * 365.25 * 15) {
 			return ['years'];
 		}
 		if (timeDif < dayLength * 365.25 * 100) {
@@ -181,7 +181,6 @@ function dateAxis() {
 			var include = true;
 			var current = d3.select(this);
 			bounds.forEach(function(b,i){
-				console.log(d);
 				if(intersection(b,rect)){
 					include = false;
 					overlap = true;
@@ -189,7 +188,6 @@ function dateAxis() {
 			});
 			if(include){
 				bounds.push(rect);
-				console.log('b' + bounds.length);
 			}
 		});
 		return overlap;
@@ -200,7 +198,6 @@ function dateAxis() {
 			b.left <= a.right &&
 			a.top <= b.bottom &&
 			b.top <= a.bottom);
-			console.log(overlap, a,b);
 		return overlap;
 	}
 
