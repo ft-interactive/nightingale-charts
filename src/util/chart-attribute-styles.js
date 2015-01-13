@@ -85,7 +85,6 @@ function applyAttributes(){
 				'selector':'path.line, line.key-line',
 				'attributes':{
 					'fill': 'none',
-					'stroke-width': 4,
 					'stroke-linejoin': 'round',
 					'stroke-linecap': 'round'
 				}
