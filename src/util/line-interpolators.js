@@ -9,6 +9,7 @@ function gappedLineInterpolator(points){  //interpolate straight lines with gaps
   var arrays = [[]];
   points.forEach(function(d,i){
     if(isNaN(d[1])){
+      if(arrays[section].length=1){console.log('warning: Found a line fragment which is a single point this won\'t be drawn')}
       section++;
       arrays[section] = [];
     }else{
