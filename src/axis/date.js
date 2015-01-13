@@ -94,10 +94,13 @@ function dateAxis() {
 		if (timeDif < dayLength * 2) {
 			return ['hours','days','months'];
 		}
+		if (timeDif < dayLength * 60){
+			return ['days','months'];
+		}
 		if (timeDif < dayLength * 365.25) {
 			return ['months','years'];
 		}
-		if (timeDif < dayLength * 365.25 * 5) {
+		if (timeDif < dayLength * 365.25 * 10) {
 			return ['years'];
 		}
 		if (timeDif < dayLength * 365.25 * 100) {
@@ -152,13 +155,20 @@ function dateAxis() {
 
 //check for and remove overlaping labels
 // if there are overlaps then remove text
-
-
-
-		while(overlapping( g.selectAll('text') )){
+		var limit = 5;
+		while(overlapping( g.selectAll('.primary text') ) && limit>0){
+			limit--;
 			g.selectAll('.primary text').each(function(d,i){
 				if(i%2 != 0) d3.select(this).remove();
-			})
+			});
+		}
+
+		limit = 5;
+		while(overlapping( g.selectAll('.secondary text') ) && limit>0){
+			limit--;
+			g.selectAll('.secondary text').each(function(d,i){
+				if(i%2 != 0) d3.select(this).remove();
+			});
 		}
 	}
 
@@ -233,7 +243,6 @@ function dateAxis() {
 		scale = x;
 		if (nice) {
 			scale.nice((scale.range()[1] - scale.range()[0]) / 100); //specify the number of ticks should be about 1 every 100 pixels
-			console.log(scale.range()[1] - scale.range()[0]);
 		}
 
 		//go through the units array
