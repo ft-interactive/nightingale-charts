@@ -151,27 +151,38 @@ function dateAxis() {
 		}
 
 //check for and remove overlaping labels
-		// var bounds = [];
-		// g.selectAll('.tick').each(function(d,i){
-		// 	//check whether it overlaps any of the existing bounds
-		// 	var rect = this.getBoundingClientRect();
-		// 	var include = true;
-		// 	var current = d3.select(this);
-		// 	bounds.forEach(function(b,i){
-		// 		console.log(d);
-		// 		if(intersection(b,rect)){
-		// 			//if it does, remove it
-		// 			console.log('remove', current);
-		// 			current.remove();
-		// 			include = false;
-		// 		}
-		// 	});
-		//
-		// 	if(include){
-		// 		bounds.push(rect);
-		// 		console.log('b' + bounds.length);
-		// 	}
-		// });
+// if there are overlaps then remove text
+
+
+
+		while(overlapping( g.selectAll('text') )){
+			g.selectAll('.primary text').each(function(d,i){
+				if(i%2 != 0) d3.select(this).remove();
+			})
+		}
+	}
+
+	function overlapping(selection){
+		var bounds = [];
+		var overlap = false;
+		selection.each(function(d,i){
+			//check whether it overlaps any of the existing bounds
+			var rect = this.getBoundingClientRect();
+			var include = true;
+			var current = d3.select(this);
+			bounds.forEach(function(b,i){
+				console.log(d);
+				if(intersection(b,rect)){
+					include = false;
+					overlap = true;
+				}
+			});
+			if(include){
+				bounds.push(rect);
+				console.log('b' + bounds.length);
+			}
+		});
+		return overlap;
 	}
 
 	function intersection(a, b){
