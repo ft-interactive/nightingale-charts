@@ -36,8 +36,8 @@ function numericAxis() {
 		g.append('g')
 			.attr('class', function(){
 				if (isVertical()) {
-					if (a.orient() == 'right') {
-						return 'y axis right';
+					if (a.orient() == 'left') {
+						return 'y axis left';
 					}
 					return 'y axis left';
 				} else {
@@ -48,11 +48,18 @@ function numericAxis() {
 				.attr('class', 'primary')
 				.call(a);
 
-		//if zero is in scale it gets a heavy tick
+		//arange the ticks (if they're on the right to be properly right aligned taking into account their size)
+		var textWidth = 0;
+		if(a.orient() == 'right'){
+			//measure the width of the text boxes
+			g.selectAll('text').each(function(d){
+				textWidth = Math.max( textWidth, Math.ceil(this.getBoundingClientRect().width) );
+			});
+		}
 
 		g.selectAll('*').attr('style', null); //clear the styles D3 sets so everything's coming from the css
 		if (isVertical()) {
-			g.selectAll('text').attr('transform', 'translate( 0, ' + -(lineHeight/2) + ' )'); //move the labels so they sit on the axis lines
+			g.selectAll('text').attr('transform', 'translate( '+textWidth+', ' + -(lineHeight/2) + ' )'); //move the labels so they sit on the axis lines
 			g.selectAll('.tick').classed('origin', function (d,i) { //'origin' lines are 0, the lowest line (and any user specified special values)
 				return hardRules.indexOf(d) > -1;
 			});
