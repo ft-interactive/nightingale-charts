@@ -9,6 +9,7 @@ var lineKey = require('../element/line-key.js');
 var ftLogo = require('../element/logo.js');
 var lineThickness = require('../util/line-thickness.js');
 var interpolator = require('../util/line-interpolators.js');
+var ratios = require('../util/aspect-ratios.js');
 
 function isDate(d) {
 	return d && d instanceof Date && !isNaN(+d);
@@ -81,13 +82,12 @@ function lineChart(p) {
 			//layout stuff
 			height: undefined,
 			width: 300,
-			chartHeight: 300,
-			chartWidth: 300,
+			chartHeight: undefined,
+			chartWidth: undefined,
 			blockPadding: 8,
 			simpleDate: false,
 			simpleValue: false,
 			logoSize: 28,
-			logoSpace: true,
 			//data stuff
 			falseorigin: false, //TODO, find out if there's a standard 'pipeline' temr for this
 			error: function(err) { console.log('ERROR: ', err) },
@@ -96,7 +96,7 @@ function lineChart(p) {
 			hideSource: false,
 			numberAxisOrient: 'left',
 			margin: 2,
-			lineThickness: 'medium',
+			lineThickness: undefined,
 			x: {
 				series: '&'
 			},
@@ -112,11 +112,24 @@ function lineChart(p) {
 		}
 
 		m.contentWidth = m.width - (m.margin * 2);
-		m.chartWidth = m.contentWidth;
+
 		m.translate = translate(0);
 
-		if (m.logoSpace) {
-			m.chartWidth -= m.logoSize;
+		// only set the chart width if hasn't been defined
+		// explicitly in the config
+		if (!m.chartWidth) {
+			// minus gutter for logo
+			var rightGutter = m.contentWidth < 260 ? 16 : 26
+			m.chartWidth = m.contentWidth - rightGutter;
+		}
+
+		if (!m.chartHeight) {
+			// The chart size should have a nice aspect ratio
+			var isNarrow = m.chartWidth < 220;
+			var isWide = m.chartWidth > 400;
+			var ratio = isNarrow ? 1.1 : (isWide ? ratios.commonRatios.widescreen : ratios.commonRatios.standard);
+			console.log('=>', isNarrow, isWide, ratio, m.chartWidth)
+			m.chartHeight = ratios.heightFromWidth(m.chartWidth, ratio);
 		}
 
 		m.lineStrokeWidth = lineThickness(m.lineThickness);
