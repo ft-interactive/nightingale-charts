@@ -8,6 +8,7 @@ var textArea = require('../element/text-area.js');
 var lineKey = require('../element/line-key.js');
 var ftLogo = require('../element/logo.js');
 var lineThickness = require('../util/line-thickness.js');
+var interpolator = require('../util/line-interpolators.js');
 
 function isDate(d) {
 	return d && d instanceof Date && !isNaN(+d);
@@ -68,7 +69,7 @@ function translate(margin) {
 	}
 }
 
-function lineChart(p) { 
+function lineChart(p) {
 
 	var lineClasses = ['series1', 'series2', 'series3', 'series4', 'series5', 'series6', 'series7', 'accent'];
 
@@ -165,7 +166,7 @@ function lineChart(p) {
 
 		});
 
-		//make sure all the lines are numerical values, calculate extents... 
+		//make sure all the lines are numerical values, calculate extents...
 		var extents = [];
 		m.y.series.forEach(function (l, i) {
 			var key = l.key;
@@ -434,7 +435,7 @@ function lineChart(p) {
 		}
 
 		function drawPlot(g, series) {
-			var line = d3.svg.line().x(x).y(y(series.key));
+			var line = d3.svg.line().interpolate(interpolator.gappedLine).x(x).y(y(series.key));
 			var cssClass = 'line ' + series.className;
 
 			g.append('path')
