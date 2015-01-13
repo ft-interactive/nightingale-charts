@@ -50,13 +50,13 @@ function applyAttributes(){
 			},{
 				'selector':'.primary .tick text',
 				'attributes':{
-					'font-size':14,
+					'font-size':12,
 					'fill':'#757470'
 				}
 			},{
 				'selector':'.secondary .tick text',
 				'attributes':{
-					'font-size':11,
+					'font-size':10,
 					'fill':'#757470'
 				}
 			},{
@@ -141,7 +141,7 @@ function applyAttributes(){
 				'selector':'.chart-subtitle text, .chart-subtitle tspan',
 				'attributes':{
 					'font-family': 'BentonSans, sans-serif',
-					'font-size': 14,
+					'font-size': 12,
 					'fill':'rgba(0, 0, 0, 0.5)'
 				}
 			},{

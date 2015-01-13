@@ -128,7 +128,6 @@ function lineChart(p) {
 			var isNarrow = m.chartWidth < 220;
 			var isWide = m.chartWidth > 400;
 			var ratio = isNarrow ? 1.1 : (isWide ? ratios.commonRatios.widescreen : ratios.commonRatios.standard);
-			console.log('=>', isNarrow, isWide, ratio, m.chartWidth)
 			m.chartHeight = ratios.heightFromWidth(m.chartWidth, ratio);
 		}
 
@@ -245,7 +244,7 @@ function lineChart(p) {
 		var titleLineHeightActual = Math.ceil(titleFontSize * titleLineHeight);
 		var titleLineSpacing = titleLineHeightActual - titleFontSize;
 		var footerLineHeight = 15;
-		var subtitleFontSize = 14;
+		var subtitleFontSize = 12;
 		var subtitleLineHeight = defaultLineHeight;
 		var subtitleLineHeightActual = Math.ceil(subtitleFontSize * subtitleLineHeight);
 		var subtitleLineSpacing = subtitleLineHeightActual - subtitleFontSize;
