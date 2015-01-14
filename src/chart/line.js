@@ -185,8 +185,7 @@ function lineChart(p) {
 			m.data = m.data.map(function (d, j) {
 
 				var value = d[key];
-				var isValidNumber = typeof value === 'number' && !isNaN(value);
-
+				var isValidNumber = value === null || typeof value === 'number';
 				if (!isValidNumber) {
 					m.error({
 						node: null,
