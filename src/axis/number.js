@@ -169,8 +169,6 @@ function numericAxis() {
 				formatted.push(f);
 				return true;
 			} );
-
-			console.log(formatted);
 			a.tickValues( customTicks );
 		}
 		return axis;
@@ -196,7 +194,6 @@ function numericAxis() {
 
 	axis.tickFormat = function(f){
 		if (!arguments.length) return a.tickFormat();
-		console.log('set' , f);
 		a.tickFormat(f);
 		return axis;
 	}
