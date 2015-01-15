@@ -158,6 +158,19 @@ function numericAxis() {
 				customTicks.push(a.scale().domain()[0]);
 				hardRules.push(a.scale().domain()[1]);
 			}
+			//if two of the formatted ticks have the same value, remove one of them
+
+			var formatted = [];
+			customTicks = customTicks.filter( function(d){
+				var f = a.scale().tickFormat()(d);
+				if(formatted.indexOf(f) > -1){
+					return false;
+				}
+				formatted.push(f);
+				return true;
+			} );
+
+			console.log(formatted);
 			a.tickValues( customTicks );
 		}
 		return axis;
@@ -182,8 +195,9 @@ function numericAxis() {
 	};
 
 	axis.tickFormat = function(f){
-		if (!arguments.length) return a.scale().tickFormat();
-		a.scale().tickFormat(f);
+		if (!arguments.length) return a.tickFormat();
+		console.log('set' , f);
+		a.tickFormat(f);
 		return axis;
 	}
 
