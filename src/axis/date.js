@@ -103,7 +103,7 @@ function dateAxis() {
 		if (timeDif < dayLength * 365.25 * 15) {
 			return ['years'];
 		}
-		if (timeDif < dayLength * 365.25 * 100) {
+		if (timeDif < dayLength * 365.25 * 150) {
 			return ['decades'];
 		}
 		if (timeDif < dayLength * 365.25 * 1000) {
