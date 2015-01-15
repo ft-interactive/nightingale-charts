@@ -182,8 +182,8 @@ function numericAxis() {
 	};
 
 	axis.tickFormat = function(f){
-		if (!arguments.length) return a.tickFormat();
-		a.tickFormat(f);
+		if (!arguments.length) return a.scale().tickFormat();
+		a.scale().tickFormat(f);
 		return axis;
 	}
 
