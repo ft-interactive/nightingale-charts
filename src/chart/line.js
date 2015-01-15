@@ -372,6 +372,7 @@ function lineChart(p) {
 			.range([0, model.chartWidth]);
 
 		//first pass, create the axis at the entire chartWidth/Height
+
 		var vAxis = numberAxis()
 //				.orient( model.numberAxisOrient )
 				.tickFormat(model.numberAxisFormatter)
@@ -434,26 +435,33 @@ function lineChart(p) {
 			top: baselineOfLastSourceLine
 		}));
 
-		function x(d) {
-			return timeScale (d[model.x.series.key]);
-		}
-
-		function y(property) {
-			return function(d) {
-				if (d[property] == null) return '';
-				return valueScale (d[property]);
-			}
-		}
-
 		function drawPlot(g, series) {
-			var line = d3.svg.line().interpolate(interpolator.gappedLine).x(x).y(y(series.key));
-			var cssClass = 'line ' + series.className;
+			//null values in the data are interpolated over
+			//NaN values are represented by line breaks
+			var normalisedData = model.data.map(function(d){
+				return {
+					x:d[model.x.series.key],
+					y:d[series.key]
+				}
+			});
+
+			normalisedData = normalisedData.filter(function(d){
+				return (d.y !== null);
+			});	//filter out null values, these are to be interpolated over
+
+			var line = d3.svg.line()
+				.interpolate(interpolator.gappedLine)
+				.x( function(d){ return timeScale(d.x) } )
+				.y( function(d){ return valueScale(d.y) } );
 
 			g.append('path')
-				.datum(model.data)
-				.attr('class', cssClass)
+				.datum(normalisedData)
+				.attr('class', 'line ' + series.className)
 				.attr('stroke-width', model.lineStrokeWidth)
-				.attr('d', line);
+				.attr('d', function(d){
+					console.log('datum ', d);
+					return line(d);
+				});
 		}
 
 		var i = model.y.series.length;
