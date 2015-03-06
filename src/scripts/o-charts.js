@@ -1,7 +1,6 @@
 'use strict';
 
 module.exports  = {
-
   chart: require('./chart/index.js'),
 
   axis: require('./axis/index.js'),

@@ -2,15 +2,16 @@
 <html>
 <head>
 <meta charset="utf-8" />
-<link rel="stylesheet" href="main.css" />
-<link rel="stylesheet" href="demo.css" />
+<link rel="stylesheet" href="styles/main.css" />
+<link rel="stylesheet" href="styles/demo.css" />
 <title>Date Axes</title>
 </head>
 <body class="ft">
 <h1>Date axes</h1>
 <div id="views">
 </div>
-<script src="bundle.js"></script>
+<script src="scripts/vendor.js"></script>
+<script src="scripts/o-charts.js"></script>
 <script>
 
 var lib = require('o-charts');
@@ -76,9 +77,9 @@ divs.append('h2')
 	.text(function(d){ return d.title });
 
 divs.append('svg')
-	.attr('width', function(d){ 
-		var r = d.scale.range(); 
-		return (r[1] - r[0]) + margin.left + margin.right; 
+	.attr('width', function(d){
+		var r = d.scale.range();
+		return (r[1] - r[0]) + margin.left + margin.right;
 	})
 	.attr('class','ft-chart')
 	.attr('height', margin.top + margin.bottom)
