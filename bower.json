@@ -5,7 +5,7 @@
     "kavanagh <ltkavanagh@gmail.com>"
   ],
   "description": "FT style charts, axes, scales etc",
-  "main": "src/index.js",
+  "main": "src/scripts/o-charts.js",
   "moduleType": [
     "node"
   ],

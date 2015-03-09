@@ -4,11 +4,10 @@
   "private": true,
   "main": "src/scripts/o-charts.js",
   "scripts": {
-    "test": "testling",
-    "bundle": "browserify -e src/index.js -o demos/bundle.js -r ./src/index.js:o-charts -r ./bower_components/d3/d3.js:d3",
-    "scss": "sass --style expanded style/main.scss demos/main.css",
-    "build": "npm run bundle && npm run scss",
-    "watch": "watchify -e src/index.js -o demos/bundle.js -r ./src/index.js:o-charts -r d3:d3 & sass --style expanded --watch style/main.scss:demos/main.css"
+    "build": "component build",
+    "start": "component serve",
+    "test": "component build && component test",
+    "tdd": "component test tdd"
   },
   "repository": {
     "type": "git",
@@ -17,24 +16,9 @@
   "author": "tom pearson",
   "license": "ISC",
   "devDependencies": {
-    "chai": "^1.9.2",
-    "tape": "^3.0.0",
-    "testling": "^1.7.1",
-    "watchify": "^2.0.0"
-  },
-  "dependencies": {
-    "browserify": "^5.13.1"
+    "component-helper": "git://github.com/peter-mouland/component-helper"
   },
   "browser": {
     "d3": "./bower_components/d3/d3.js"
-  },
-  "testling": {
-    "files": [
-      "test/*.js"
-    ],
-    "browsers": [
-      "chrome/latest",
-      "firefox/latest"
-    ]
   }
 }

@@ -10,7 +10,7 @@ module.exports = {
         scripts: 'browserify' // 'browserify' or 'requirejs'
     },
     browserify: {
-        insertGloabals : false,
+        insertGlobals : false,
         detectGlobals : false,
         noParse: [
             './bower_components/d3/d3.js'
