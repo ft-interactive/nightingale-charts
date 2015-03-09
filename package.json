@@ -5,7 +5,7 @@
   "main": "src/scripts/o-charts.js",
   "scripts": {
     "build": "component build",
-    "start": "component serve",
+    "start": "component build && component serve",
     "test": "component build && component test",
     "tdd": "component test tdd"
   },
@@ -16,6 +16,7 @@
   "author": "tom pearson",
   "license": "ISC",
   "devDependencies": {
+    "browserify-istanbul": "^0.2.1",
     "component-helper": "git://github.com/peter-mouland/component-helper"
   },
   "browser": {
