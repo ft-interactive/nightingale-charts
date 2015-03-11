@@ -1,6 +1,14 @@
 test:
   pre:
-    - npm i && bower i
+    - bower i
+  post:
+    - git config --global user.name "circleci"
+    - git config --global user.email "peter.mouland@ft.com"
+deployment:
+  production:
+    branch: master
+    commands:
+      - ./node_modules/component-helper/bin/component release --version=current
 machine:
   node:
     version: v0.10.33
