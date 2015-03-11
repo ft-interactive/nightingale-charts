@@ -16,10 +16,10 @@ module.exports = function(config) {
                         return browser.toLowerCase().split(/[ /-]/)[0];
                     },
                     watermarks: {
-                        statements: [75, 85],
-                        lines: [75, 85],
-                        functions: [75, 85],
-                        branches:[50, 85]
+                        statements: [0, 85],
+                        lines: [0, 85],
+                        functions: [0, 85],
+                        branches:[0, 85]
                     }},
                 { type: 'json-summary', subdir: '.', file: 'summary.json' }
             ]
