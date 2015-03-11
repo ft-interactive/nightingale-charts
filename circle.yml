@@ -4,6 +4,9 @@ test:
   post:
     - git config --global user.name "circleci"
     - git config --global user.email "peter.mouland@ft.com"
+general:
+  artifacts:
+    - test/coverage
 deployment:
   production:
     branch: master
