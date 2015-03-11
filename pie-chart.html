@@ -1,0 +1,24 @@
+<html><head><meta charset="utf-8"><link rel=stylesheet href="styles/main.css"><link rel=stylesheet href="styles/demo.css"><title>Pie Chart</title></head><body><div id=view1></div><div id=view2></div><script src=scripts/vendor.js></script><script src=scripts/o-charts.js></script><script>var lib = require('o-charts');
+var d3 = require('d3');
+
+var pieData1 = {
+	title:'Cats vs dogs',
+	data:[
+		{ '&':'Cats', value:20 },
+		{ '&':'Dogs', value:35 }
+	]
+}
+
+var pieData2 = {
+	title:'Fruits of the world',
+	subtitle:'An ill advised pie',
+	data:[
+		{ '&':'Apple', value:20 },
+		{ '&':'Orange', value:35 },
+		{ '&':'Banana', value:50 },
+		{ '&':'Mango', value:12 }
+	]
+}
+
+d3.select('#view1').datum(pieData1).call(lib.chart.pie());
+d3.select('#view2').datum(pieData2).call(lib.chart.pie());</script></body></html>

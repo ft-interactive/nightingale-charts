@@ -1,0 +1,83 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel=stylesheet href="styles/main.css"><link rel=stylesheet href="styles/demo.css"><title>Date Axes</title></head><body class=ft><h1>Date axes</h1><div id=views></div><script src=scripts/vendor.js></script><script src=scripts/o-charts.js></script><script>var lib = require('o-charts');
+var d3 = require('d3');
+
+var margin = {
+	top:20, left:50, bottom:70, right:50
+}
+var axesDefinitions = [
+	{
+		title:'A day or less',
+		simple:false,
+		scale:d3.time.scale()
+			.range([0,400])
+			.domain([new Date("October 13, 1975 11:13:00"), new Date("October 13, 1975 22:00:00")])
+	},
+	{
+		title:'A few weeks',
+		scale:d3.time.scale()
+			.range([0,400])
+			.domain([new Date("October 13, 1975 11:13:00"), new Date("November 7, 1975 22:00:00")])
+	},
+	{
+		title:'less than a year',
+		scale:d3.time.scale()
+			.range([0,400])
+			.domain([new Date(2001,3,20), new Date(2001,11,20)])
+	},
+	{
+		title:'up to 3 years',
+		scale:d3.time.scale()
+			.range([0,400])
+			.domain([new Date(2012,2,1), new Date()])
+	},
+	{
+		title:'more than 3 years',
+		simple:true,
+		scale:d3.time.scale()
+			.range([0,400])
+			.domain([new Date(1998), new Date()])
+	},
+	{
+		title:'50 years or so',
+		scale:d3.time.scale()
+			.range([0,400])
+			.domain([new Date(1966,10,1), new Date()])
+	},
+	{
+		title:'hundreds of years',
+		scale:d3.time.scale()
+			.range([0,400])
+			.domain([new Date(1500,0,1), new Date()])
+	}];
+
+
+var divs = d3.select('#views')
+	.selectAll('div')
+	.data(axesDefinitions)
+		.enter().append('div')
+			.attr('class','axis-test');
+
+divs.append('h2')
+	.text(function(d){ return d.title });
+
+divs.append('svg')
+	.attr('width', function(d){
+		var r = d.scale.range();
+		return (r[1] - r[0]) + margin.left + margin.right;
+	})
+	.attr('class','ft-chart')
+	.attr('height', margin.top + margin.bottom)
+	.each(function(d,i){
+		//create the axis, giving it a scale
+		var axis = lib.axis.date()
+			.simple(d.simple)
+			.scale(d.scale);
+
+		//create a plain 'g' node to add it to (offset to the margin)
+		var g = d3.select(this).append('g').attr('transform','translate(' + margin.left + ',' + margin.top + ')');
+
+		//render the axis
+		g.call(axis);
+	});
+
+lib.util.attributeStyler();</script></body></html>
