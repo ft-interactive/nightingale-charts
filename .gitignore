@@ -5,3 +5,4 @@ svgstyle.html
 .sass-cache
 .idea
 _site
+test/coverage
