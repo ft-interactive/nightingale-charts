@@ -12,6 +12,8 @@ module.exports  = {
 
   util: {
     attributeStyler: require('./util/chart-attribute-styles.js')
-  }
+  },
+
+  version: require('./util/version')
 
 };
