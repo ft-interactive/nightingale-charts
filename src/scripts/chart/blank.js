@@ -1,7 +1,7 @@
-'use strict';
 var d3 = require('d3');
 
 function blankChart() {
+    'use strict';
 
 	function buildModel(opts){
 		var m = {

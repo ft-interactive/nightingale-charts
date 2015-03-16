@@ -14,7 +14,8 @@ function loadAssets(page){
     document.body.innerHTML = __html__['_site/' + (page || 'html') + '.html'];
     appendCSS({path: '_site/styles/demo.css'});
     appendCSS({path: '_site/styles/main.css'});
-    appendScript({path: '_site/scripts/' + page + '.js'});
+    appendScript({path: '_site/scripts/vendor.js'});
+    appendScript({path: '_site/scripts/o-charts.js'});
 }
 
 module.exports = {

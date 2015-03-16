@@ -7,7 +7,7 @@
   "scripts": {
     "build": "component build",
     "start": "component build && component serve",
-    "test": "component build && component test",
+    "test": "jshint src && component build && component test",
     "tdd": "component test tdd"
   },
   "repository": {

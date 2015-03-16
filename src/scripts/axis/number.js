@@ -1,4 +1,3 @@
-'use strict'
 
 //this is wrapper for d3.svg.axis
 //for a standard FT styled numeric axis
@@ -7,6 +6,7 @@
 var d3 = require('d3');
 
 function numericAxis() {
+    'use strict';
 
 	var ticksize = 5;
 	var a = d3.svg.axis().orient('left').tickSize(ticksize , 0);
@@ -70,9 +70,9 @@ function numericAxis() {
 		var rules = g.selectAll('line');
 		if (isVertical()) {
 			if (a.orient() == 'right') {
-				rules.attr('x1',extension)
+				rules.attr('x1',extension);
 			}else{
-				rules.attr('x1',-extension)
+				rules.attr('x1',-extension);
 			}
 		}
 
@@ -85,13 +85,13 @@ function numericAxis() {
 		if (!arguments.length) return extension;
 		extension = x;
 		return axis;
-	}
+	};
 
 	axis.tickSize = function(x) {
 		if (!arguments.length) return ticksize;
 		a.tickSize(-x);
 		return axis;
-	}
+	};
 
 	axis.ticks = function(x) {
 		if (!arguments.length) return a.ticks();
@@ -99,7 +99,7 @@ function numericAxis() {
 			userTicks = x;
 		}
 		return axis;
-	}
+	};
 
 	axis.orient = function(x){
 		if (!arguments.length) return a.orient();
@@ -111,13 +111,13 @@ function numericAxis() {
 		if (!arguments.length) return simple;
 		simple = x;
 		return axis;
-	}
+	};
 
 	axis.pixelsPerTick = function(x){
 		if (!arguments.length) return pixelsPerTick;
 		pixelsPerTick = x;
 		return axis;
-	}
+	};
 
 	axis.scale = function(x){
 		if (!arguments.length) return a.scale();
@@ -126,13 +126,13 @@ function numericAxis() {
 		if (userTicks.length > 0) {
 			a.tickValues(userTicks);
 		}else{
+            var customTicks = [];
 			var count = Math.round( (a.scale().range()[1] - a.scale().range()[0])/pixelsPerTick );
 			if(count < 2) { count = 3; }
 			else if(count < 5) { count = 5; }
 			else if(count < 10) { count = 10; }
 
 			if (simple) {
-				var customTicks = [];
 				var r = a.scale().domain();
 				if (Math.min(r[0], r[1]) < 0 && Math.max(r[0], r[1]) > 0) {
 					customTicks.push(0);
@@ -178,11 +178,11 @@ function numericAxis() {
 		if (!arguments.length) return hardRules;
 		hardRules = x;
 		return axis;
-	}
+	};
 
-	axis.yOffset = function(x){
+	axis.yOffset = function(y){
 		if (!arguments.length) return yOffset;
-		yOffset = x;
+		yOffset = y;
 		return axis;
 	};
 
@@ -196,13 +196,13 @@ function numericAxis() {
 		if (!arguments.length) return a.tickFormat();
 		a.tickFormat(f);
 		return axis;
-	}
+	};
 
 	axis.noLabels = function(x){
 		if (!arguments.length) return noLabels;
 		noLabels = x;
 		return axis;
-	}
+	};
 
 	return axis;
 }

@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports  = {
   chart: require('./chart/index.js'),
 

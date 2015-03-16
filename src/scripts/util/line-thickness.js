@@ -13,9 +13,9 @@ module.exports = function(value) {
     return defaultThickness;
   }
 
-  var lineThicknessIsNumber = value
-                              && typeof value === 'number'
-                              && !isNaN(value);
+  var lineThicknessIsNumber = value &&
+      typeof value === 'number' &&
+      !isNaN(value);
 
   if (lineThicknessIsNumber) {
     return value;
@@ -24,4 +24,4 @@ module.exports = function(value) {
   } else {
     return defaultThickness;
   }
-}
+};

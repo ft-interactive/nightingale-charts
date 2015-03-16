@@ -6,7 +6,7 @@ var axesDefinitions = [
         simple:false,
         scale:d3.time.scale()
             .range([0,400])
-            .domain([new Date("October 13, 1975 11:13:00"), new Date("October 13, 1975 22:00:00")])
+            .domain([new Date("October 14, 1975 11:13:00"), new Date("October 14, 1975 22:00:00")])
     },
     {
         title:'A few weeks',
@@ -44,6 +44,7 @@ var axesDefinitions = [
         scale:d3.time.scale()
             .range([0,400])
             .domain([new Date(1500,0,1), new Date()])
-    }];
+    }
+];
 
 module.exports = axesDefinitions;
