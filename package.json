@@ -8,7 +8,8 @@
     "build": "component build",
     "start": "component build && component serve",
     "test": "jshint src && component build && component test",
-    "tdd": "component test tdd"
+    "tdd": "component test tdd",
+    "bump": "component bump"
   },
   "repository": {
     "type": "git",
