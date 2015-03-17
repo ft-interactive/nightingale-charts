@@ -77,7 +77,7 @@ describe('date axis shows the data when the axes is', function () {
 
     });
 
-    describe('a few weeks', function () {
+    xdescribe('a few weeks', function () {
         var dayOrLess = document.querySelector('.axis-test:nth-child(2) svg');
         var x = dayOrLess.querySelector('.x.axis');
         var ticks = x.querySelectorAll('.primary .tick');
