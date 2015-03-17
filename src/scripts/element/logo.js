@@ -1,10 +1,9 @@
 //the ft logo there's probably an easier ay to do this...
-
-'use strict'
-
 var d3 = require('d3');
 
 function ftLogo(g, dim) {
+    'use strict';
+
 	if(!dim){
 		dim = 32;
 	}

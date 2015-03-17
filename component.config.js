@@ -1,8 +1,7 @@
-var bower = require('./bower.json');
 var pkg = require('./package.json');
 
 module.exports = {
-    bower: bower,
+    bower: false,
     build: {
         fonts: true, // true or false. Set to false if you are doing your own thing in the fonts directory
         styles: 'sass', // 'sass'. less not yet available
@@ -21,8 +20,9 @@ module.exports = {
     },
     test: 'karma',  // or false.  where your tests config, specs and reports are saved
     karma : {//or mocha not yet available
-        config: './test/karma.conf.js',
-        summary: './test/coverage/summary.json'
+        functional: './test/karma.functional.js',
+        unit: false,
+        unitCoverage: './test/coverage/summary.json'
     },
     release: false,
     serve: 'staticApp', // `staticApp` or `nodeApp`

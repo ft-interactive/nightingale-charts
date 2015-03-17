@@ -7,7 +7,7 @@
   "scripts": {
     "build": "component build",
     "start": "component build && component serve",
-    "test": "component build && component test",
+    "test": "jshint src && component build && component test",
     "tdd": "component test tdd"
   },
   "repository": {
@@ -18,7 +18,8 @@
   "license": "ISC",
   "devDependencies": {
     "browserify-istanbul": "^0.2.1",
-    "component-helper": "git://github.com/peter-mouland/component-helper"
+    "component-helper": "git://github.com/peter-mouland/component-helper",
+    "jshint": "^2.6.3"
   },
   "browser": {
     "d3": "./bower_components/d3/d3.js"

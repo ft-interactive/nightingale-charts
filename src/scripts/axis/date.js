@@ -1,14 +1,12 @@
-'use strict'
-
 var d3 = require('d3');
 
 function dateAxis() {
+    'use strict';
 
 	var axes = [ d3.svg.axis().orient('bottom') ];
 	var scale;
 	var lineheight = 20;
 	var ticksize = 5;
-	var formatter = {};
 	// a simple axis has only first and last points as ticks, i.e. the scale's domain extent
 	var simple = false;
 	var nice = false;
@@ -21,22 +19,22 @@ function dateAxis() {
 
 	var formatter = {
 		centuries: function(d, i) {
-			if(i == 0 || d.getYear() % 100 == 0) {
+			if(i === 0 || d.getYear() % 100 === 0) {
 				return d3.time.format('%Y')(d);
 			}
 			return d3.time.format('%y')(d);
 		},
 
 		decades: function(d, i) {
-			if(i == 0 || d.getYear() % 100 == 0) {
+			if(i === 0 || d.getYear() % 100 === 0) {
 				return d3.time.format('%Y')(d);
 			}
 			return d3.time.format('%y')(d);
 		},
 
 		years: function(d, i) {
-			if(i == 0 || d.getYear() % 100 == 0) {
-				return d3.time.format('%Y')(d)
+			if(i === 0 || d.getYear() % 100 === 0) {
+				return d3.time.format('%Y')(d);
 			}
 			return d3.time.format('%y')(d);
 		},
@@ -126,7 +124,7 @@ function dateAxis() {
 			axes.forEach(function (a,i) {
 				g.append('g')
 					.attr('class',function() {
-						if(i==0){
+						if(i===0){
 							return 'primary';
 						}
 						return 'secondary';
@@ -155,20 +153,26 @@ function dateAxis() {
 
 //check for and remove overlaping labels
 // if there are overlaps then remove text
+        function selectAndRemove(selector){
+            var elements = g.selectAll(selector);
+            var elementCount = elements[0].length;
+            elements.each(function(d,i){
+                if(i%2 !== 0 && i !== elementCount-1) {
+                    d3.select(this).remove();
+                }
+            });
+        }
+
 		var limit = 5;
 		while(overlapping( g.selectAll('.primary text') ) && limit>0){
 			limit--;
-			g.selectAll('.primary text').each(function(d,i){
-				if(i%2 != 0) d3.select(this).remove();
-			});
+            selectAndRemove('.primary text');
 		}
 
 		limit = 5;
 		while(overlapping( g.selectAll('.secondary text') ) && limit>0){
 			limit--;
-			g.selectAll('.secondary text').each(function(d,i){
-				if(i%2 != 0) d3.select(this).remove();
-			});
+            selectAndRemove('.secondary text');
 		}
 	}
 
@@ -205,31 +209,31 @@ function dateAxis() {
 		if (!arguments.length) return simple;
 		simple = x;
 		return axis;
-	}
+	};
 
 	axis.nice = function(x) {
 		if (!arguments.length) return nice;
 		nice = x;
 		return axis;
-	}
+	};
 
 	axis.labelWidth = function() {
 		// return the width of the widest axis label
 		return labelWidth;
-	}
+	};
 
 
 	axis.lineHeight = function(x) {
 		if (!arguments.length) return lineheight;
 		lineheight = x;
 		return axis;
-	}
+	};
 
 	axis.tickSize = function(x) {
 		if (!arguments.length) return ticksize;
 		ticksize = x;
 		return axis;
-	}
+	};
 
 
 	axis.scale = function(x, u) {
@@ -247,8 +251,9 @@ function dateAxis() {
 		axes = [];
 		for (var i = 0; i < u.length; i++) {
 			if( formatter[u[i]] ){
+                var customTicks;
 				if(!simple){
-					var customTicks = scale.ticks( interval[ u[i] ], increment[ u[i] ] );
+					customTicks = scale.ticks( interval[ u[i] ], increment[ u[i] ] );
 
 					customTicks.push(scale.domain()[0]); //always include the first and last values
 					customTicks.push(scale.domain()[1]);
@@ -279,7 +284,7 @@ function dateAxis() {
 
 		axes.forEach(function (a) {
 			a.scale(scale);
-		})
+		});
 
 		return axis;
 	};

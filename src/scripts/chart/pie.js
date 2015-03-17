@@ -1,8 +1,8 @@
-'use strict';
 var d3 = require('d3');
 
 function pieChart() {
-	
+    'use strict';
+
 	function buildModel(opts) {
 		var m = {
 			//layout stuff
@@ -15,7 +15,7 @@ function pieChart() {
 			valueProperty:'value',
 			blockPadding:8,
 			data:[],
-			error:function(err){ console.log('ERROR: ', err) },
+			error:function(err){ console.log('ERROR: ', err); }
 		};
 
 		for(var key in opts){
@@ -55,7 +55,7 @@ function pieChart() {
 		var subtitle = svg.append('text').text(model.subtitle);
 		subtitle.attr('transform',translate({top: getHeight(title) + getHeight(subtitle), left:0}));
 
-		var chart = svg.append('g').attr('class','chart');
+		var chartSvg = svg.append('g').attr('class','chart');
 
 		if(model.data.length > 3){
 			model.error('PIE warning: too many segments!');
@@ -63,9 +63,9 @@ function pieChart() {
 
 		var outerRadius = model.width / 2; 
 
-		chart.selectAll('.slice')
+		chartSvg.selectAll('.slice')
 			.data( model.data )
-				.enter()
+				.enter();
 					//.append(path);
 		
 		svg.selectAll('text').attr({

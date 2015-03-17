@@ -1,9 +1,8 @@
-'use strict'
-
 var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
 
 function lineKey(options) {
+    'use strict';
 
 	options = options || {};
 
@@ -31,7 +30,7 @@ function lineKey(options) {
 				.append('g').attr({
 					'class':'key-item',
 					'transform':function(d,i){
-						return 'translate(0,' + (lineHeight + i * lineHeight) + ')'
+						return 'translate(0,' + (lineHeight + i * lineHeight) + ')';
 					}
 				});
 

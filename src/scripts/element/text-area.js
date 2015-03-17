@@ -1,10 +1,10 @@
+/*jshint -W084 */
 //text area provides a wrapping text block of a given type
-
-'use strict'
-
 var d3 = require('d3');
 
-function textArea() { 
+function textArea() {
+    'use strict';
+
 	var xOffset = 0, 
 		yOffset = 0, 
 		width=1000, 
@@ -22,7 +22,7 @@ function textArea() {
 				y = text.attr('y'),
 				dy = parseFloat(text.attr('dy'));
 
-			if(isNaN(dy)){ dy = 0 };
+			if(isNaN(dy)){ dy = 0; }
 
 			var tspan = text.text(null).append('tspan')
 				.attr('x', 0)
@@ -44,53 +44,53 @@ function textArea() {
 		});
 	}
 
-	function textArea(g, accessor){
+	function area(g, accessor){
 		if(!accessor) {
 			accessor = function(d){
 				return d;
-			}
+			};
 		}
-		g = g.append('g').attr('transform','translate(' + xOffset + ',' + yOffset + ')')
+		g = g.append('g').attr('transform','translate(' + xOffset + ',' + yOffset + ')');
 		g.append('text').text(accessor).call(wrap, width);
 		bounds = g.node().getBoundingClientRect();
 	}
 
 
-	textArea.bounds = function() {
+	area.bounds = function() {
 		return bounds;
 	};
 
-	textArea.units = function(x) { //px, em, rem
+	area.units = function(x) { //px, em, rem
 		if (!arguments.length) return units;
 		units = x;
-		return textArea;
+		return area;
 	};
 
-	textArea.lineHeight = function(x) { //pixels by default
+	area.lineHeight = function(x) { //pixels by default
 		if (!arguments.length) return lineHeight;
 		lineHeight = x;
-		return textArea;
+		return area;
 	};
 
-	textArea.width = function(x) {
+	area.width = function(x) {
 		if (!arguments.length) return width;
 		width = x;
-		return textArea;
+		return area;
 	};
 
-	textArea.yOffset = function(x) {
+	area.yOffset = function(x) {
 		if (!arguments.length) return yOffset;
 		yOffset = x;
-		return textArea;
+		return area;
 	};
 
-	textArea.xOffset = function(x) {
+	area.xOffset = function(x) {
 		if (!arguments.length) return yOffset;
 		yOffset = x;
-		return textArea;
+		return area;
 	};
 
-	return textArea;
+	return area;
 }
 
 module.exports = textArea;

@@ -1,5 +1,4 @@
 //reusable linechart
-'use strict'
 
 var d3 = require('d3');
 var dateAxis = require('../axis/date.js');
@@ -67,10 +66,11 @@ function translate(margin) {
 		var left = position.left || 0;
 		var top = position.top || 0;
 		return 'translate(' + (margin + left) + ',' + top + ')';
-	}
+	};
 }
 
 function lineChart(p) {
+    'use strict';
 
 	var lineClasses = ['series1', 'series2', 'series3', 'series4', 'series5', 'series6', 'series7', 'accent'];
 
@@ -90,7 +90,7 @@ function lineChart(p) {
 			logoSize: 28,
 			//data stuff
 			falseorigin: false, //TODO, find out if there's a standard 'pipeline' temr for this
-			error: function(err) { console.log('ERROR: ', err) },
+			error: function(err) { console.log('ERROR: ', err); },
 			lineClasses: {},
 			niceValue: true,
 			hideSource: false,
@@ -119,7 +119,7 @@ function lineChart(p) {
 		// explicitly in the config
 		if (!m.chartWidth) {
 			// minus gutter for logo
-			var rightGutter = m.contentWidth < 260 ? 16 : 26
+			var rightGutter = m.contentWidth < 260 ? 16 : 26;
 			m.chartWidth = m.contentWidth - rightGutter;
 		}
 
@@ -313,7 +313,7 @@ function lineChart(p) {
 			key.attr('transform', model.translate(model.keyPosition));
 		}
 
-		var chart = svg.append('g').attr('class', 'chart');
+		var chartSVG = svg.append('g').attr('class', 'chart');
 
 		if (!model.chartPosition) {
 			model.chartPosition = {
@@ -322,7 +322,7 @@ function lineChart(p) {
 			};
 		}
 
-		chart.attr('transform', model.translate(model.chartPosition));
+		chartSVG.attr('transform', model.translate(model.chartPosition));
 
 		var footnotes = svg.append('g').attr('class','chart-footnote').datum(model.footnote).call(footerTextWrapper);
 		var source = svg.append('g').attr('class','chart-source').datum(model.sourcePrefix + model.source).call(footerTextWrapper);
@@ -344,7 +344,7 @@ function lineChart(p) {
 			model.chartHeight = model.height - totalHeight;
 			if (model.chartHeight < 0) {
 				model.error({
-					node:chart,
+					node:chartSVG,
 					message:'calculated plot height is less than zero'
 				});
 			}
@@ -391,12 +391,12 @@ function lineChart(p) {
 			vAxis.orient(model.numberAxisOrient);
 		}
 
-		chart.call(vAxis);
-		chart.call(timeAxis);
+		chartSVG.call(vAxis);
+		chartSVG.call(timeAxis);
 
 		//measure chart
-		var widthDifference = getWidth(chart) - model.chartWidth, //this difference is the ammount of space taken up by axis labels
-			heightDifference = getHeight(chart) - model.chartHeight,
+		var widthDifference = getWidth(chartSVG) - model.chartWidth, //this difference is the ammount of space taken up by axis labels
+			heightDifference = getHeight(chartSVG) - model.chartHeight,
 			//so we can work out how big the plot should be (the labels will probably stay the same...
 			plotWidth = model.chartWidth - widthDifference,
 			plotHeight = model.chartHeight - heightDifference,
@@ -409,22 +409,22 @@ function lineChart(p) {
 		vAxis.tickSize(plotWidth).tickExtension(widthDifference);
 
 		//replace provisional axes
-		chart.selectAll('*').remove();
-		chart.call(vAxis);
-		chart.call(timeAxis);
+		chartSVG.selectAll('*').remove();
+		chartSVG.call(vAxis);
+		chartSVG.call(timeAxis);
 		if (model.numberAxisOrient !== 'right') {
 			//figure out how much of the extra width is the vertical axis lables
-			var vLabelWidth = 0
-			chart.selectAll('.y.axis text').each(function(){
+			var vLabelWidth = 0;
+			chartSVG.selectAll('.y.axis text').each(function(){
 				vLabelWidth = Math.max(vLabelWidth, getWidth(d3.select(this)));
 			});
 			model.chartPosition.left += vLabelWidth + 4;//NOTE magic number 4
 		}
 
-		model.chartPosition.top += (getHeight(chart.select('.y.axis')) - plotHeight);
-		chart.attr('transform', model.translate(model.chartPosition));
+		model.chartPosition.top += (getHeight(chartSVG.select('.y.axis')) - plotHeight);
+		chartSVG.attr('transform', model.translate(model.chartPosition));
 
-		var plot = chart.append('g').attr('class', 'plot');
+		var plot = chartSVG.append('g').attr('class', 'plot');
 
 		var logo = svg.append('g').call(ftLogo, model.logoSize);
 		var heightOfFontDescenders = 3;
@@ -442,7 +442,7 @@ function lineChart(p) {
 				return {
 					x:d[model.x.series.key],
 					y:d[series.key]
-				}
+				};
 			});
 
 			normalisedData = normalisedData.filter(function(d){
@@ -451,8 +451,8 @@ function lineChart(p) {
 
 			var line = d3.svg.line()
 				.interpolate(interpolator.gappedLine)
-				.x( function(d){ return timeScale(d.x) } )
-				.y( function(d){ return valueScale(d.y) } );
+				.x( function(d){ return timeScale(d.x); } )
+				.y( function(d){ return valueScale(d.y); } );
 
 			g.append('path')
 				.datum(normalisedData)

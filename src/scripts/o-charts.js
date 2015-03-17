@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports  = {
   chart: require('./chart/index.js'),
 
@@ -12,6 +10,8 @@ module.exports  = {
 
   util: {
     attributeStyler: require('./util/chart-attribute-styles.js')
-  }
+  },
+
+  version: require('./util/version')
 
 };

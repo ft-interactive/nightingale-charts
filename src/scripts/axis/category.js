@@ -1,8 +1,7 @@
-'use strict'
-
 var d3 = require('d3');
 
 function categoryAxis() {
+    'use strict';
 
 	var ticksize = 5;
 	var a = d3.svg.axis().orient('left').tickSize(ticksize , 0);
@@ -24,7 +23,7 @@ function categoryAxis() {
 		if (!arguments.length) return ticksize;
 		a.tickSize(-x);
 		return axis;
-	}
+	};
 
 	axis.ticks = function(x){
 		if (!arguments.length) return a.ticks();
@@ -32,7 +31,7 @@ function categoryAxis() {
 			userTicks = x;
 		}
 		return axis;
-	}
+	};
 
 	axis.orient = function(x){
 		if (!arguments.length) return a.orient();
