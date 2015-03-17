@@ -33,7 +33,17 @@ divs.append('svg')
         new oCharts.axis.Date()
             .simple(d.simple)
             .scale(d.scale)
-            .render(g);
+            .render(g)
+
+        //todo: get back to this syntax?
+        //var axis = oCharts.axis.Date()
+        //    .simple(d.simple)
+        //    .scale(d.scale);
+
+        //d3.select(this)
+        //    .append('g')
+        //    .attr('transform','translate(' + margin.left + ',' + margin.top + ')')
+        //    .call(axis)
     });
 
 oCharts.util.attributeStyler();
