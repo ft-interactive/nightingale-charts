@@ -21,7 +21,7 @@ module.exports = {
     test: 'karma',  // or false.  where your tests config, specs and reports are saved
     karma : {//or mocha not yet available
         functional: './test/karma.functional.js',
-        unit: false,
+        unit: './test/karma.unit.js',
         unitCoverage: './test/coverage/summary.json'
     },
     release: false,
