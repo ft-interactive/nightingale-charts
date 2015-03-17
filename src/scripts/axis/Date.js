@@ -144,6 +144,16 @@ DateAxis.prototype.intersection = function(a, b){
     return overlap;
 };
 
+DateAxis.prototype.removeDayLabels = function(dElements){
+    var elementCount = dElements[0].length;
+    function remove(d, i){
+        if(i !== 0 && i !== elementCount-1 && d3.select(this).text() != 1) {
+            d3.select(this).remove();
+        }
+    }
+    dElements.each(remove);
+};
+
 DateAxis.prototype.removeOverlappingLabels = function(dElements){
     var self = this;
     var elementCount = dElements[0].length;
@@ -194,7 +204,12 @@ DateAxis.prototype.render = function(g){
     }
 
     self.calculateWidestLabel(g.select('.tick text'));
-    self.removeOverlappingLabels(g.selectAll('.primary text'));
+    //if (self.config.labels == 'minimal'){
+    if (self.unitGenerator(self.config.scale.domain())[0] == 'days'){
+        self.removeDayLabels(g.selectAll('.primary text'));
+    } else {
+        self.removeOverlappingLabels(g.selectAll('.primary text'));
+    }
     self.removeOverlappingLabels(g.selectAll('.secondary text'));
 };
 
@@ -242,7 +257,6 @@ DateAxis.prototype.scale = function(x, u) {
     }
 
     //go through the units array
-
     this.config.axes = [];
     for (var i = 0; i < u.length; i++) {
         if( this.formatter[u[i]] ){

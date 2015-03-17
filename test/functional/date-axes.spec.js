@@ -87,7 +87,7 @@ describe('date axis shows the data when the axes is', function () {
 
     });
 
-    xdescribe('a few weeks', function () {
+    describe('a few weeks', function () {
         var dayOrLess = document.querySelector('.axis-test:nth-child(2) svg');
         var x = dayOrLess.querySelector('.x.axis');
         var ticks = x.querySelectorAll('.primary .tick');
@@ -103,8 +103,8 @@ describe('date axis shows the data when the axes is', function () {
         it('shows one label for each first day, first of the month, and last day', function () {
             expect(labels.length).toBe(3);
             expect(labels[0].textContent).toBe('13');
-            expect(labels[1].textContent).toBe('1');
-            expect(labels[2].textContent).toBe('7');
+            expect(labels[1].textContent).toBe(' 1');
+            expect(labels[2].textContent).toBe(' 7');
         });
 
     });
