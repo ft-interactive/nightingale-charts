@@ -11,7 +11,7 @@ deployment:
   production:
     branch: master
     commands:
-      - ./node_modules/component-helper/bin/component release --version=current
+      - ./node_modules/component-helper/bin/component release current
 machine:
   node:
     version: v0.10.33
