@@ -89,26 +89,23 @@ DateAxis.prototype.formatter = {
 DateAxis.prototype.unitGenerator = function(domain){	//which units are most appropriate
     var timeDif = domain[1].getTime() - domain[0].getTime();
     var dayLength = 86400000;
+    var units;
     if (timeDif < dayLength * 2) {
-        return ['hours','days','months'];
+        units = ['hours','days','months'];
+    } else if (timeDif < dayLength * 60){
+        units =['days','months'];
+    } else if (timeDif < dayLength * 365.25) {
+        units =['months','years'];
+    } else if (timeDif < dayLength * 365.25 * 15) {
+        units = ['years'];
+    } else if (timeDif < dayLength * 365.25 * 150) {
+        units = ['decades'];
+    } else if (timeDif < dayLength * 365.25 * 1000) {
+        units = ['centuries'];
+    } else {
+        units = ['multi'];
     }
-    if (timeDif < dayLength * 60){
-        return ['days','months'];
-    }
-    if (timeDif < dayLength * 365.25) {
-        return ['months','years'];
-    }
-    if (timeDif < dayLength * 365.25 * 15) {
-        return ['years'];
-    }
-    if (timeDif < dayLength * 365.25 * 150) {
-        return ['decades'];
-    }
-    if (timeDif < dayLength * 365.25 * 1000) {
-        return ['centuries'];
-    }
-
-    return ['multi'];
+    return units;
 };
 
 DateAxis.prototype.dateSort = function(a,b){
