@@ -1,9 +1,8 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-'use strict'
-
 var d3 = require('d3');
 
 function categoryAxis() {
+    'use strict';
 
 	var ticksize = 5;
 	var a = d3.svg.axis().orient('left').tickSize(ticksize , 0);
@@ -25,7 +24,7 @@ function categoryAxis() {
 		if (!arguments.length) return ticksize;
 		a.tickSize(-x);
 		return axis;
-	}
+	};
 
 	axis.ticks = function(x){
 		if (!arguments.length) return a.ticks();
@@ -33,7 +32,7 @@ function categoryAxis() {
 			userTicks = x;
 		}
 		return axis;
-	}
+	};
 
 	axis.orient = function(x){
 		if (!arguments.length) return a.orient();
@@ -70,17 +69,15 @@ function categoryAxis() {
 module.exports = categoryAxis;
 
 },{"d3":undefined}],2:[function(require,module,exports){
-'use strict'
-
 var d3 = require('d3');
 
 function dateAxis() {
+    'use strict';
 
 	var axes = [ d3.svg.axis().orient('bottom') ];
 	var scale;
 	var lineheight = 20;
 	var ticksize = 5;
-	var formatter = {};
 	// a simple axis has only first and last points as ticks, i.e. the scale's domain extent
 	var simple = false;
 	var nice = false;
@@ -93,22 +90,22 @@ function dateAxis() {
 
 	var formatter = {
 		centuries: function(d, i) {
-			if(i == 0 || d.getYear() % 100 == 0) {
+			if(i === 0 || d.getYear() % 100 === 0) {
 				return d3.time.format('%Y')(d);
 			}
 			return d3.time.format('%y')(d);
 		},
 
 		decades: function(d, i) {
-			if(i == 0 || d.getYear() % 100 == 0) {
+			if(i === 0 || d.getYear() % 100 === 0) {
 				return d3.time.format('%Y')(d);
 			}
 			return d3.time.format('%y')(d);
 		},
 
 		years: function(d, i) {
-			if(i == 0 || d.getYear() % 100 == 0) {
-				return d3.time.format('%Y')(d)
+			if(i === 0 || d.getYear() % 100 === 0) {
+				return d3.time.format('%Y')(d);
 			}
 			return d3.time.format('%y')(d);
 		},
@@ -198,7 +195,7 @@ function dateAxis() {
 			axes.forEach(function (a,i) {
 				g.append('g')
 					.attr('class',function() {
-						if(i==0){
+						if(i===0){
 							return 'primary';
 						}
 						return 'secondary';
@@ -227,20 +224,26 @@ function dateAxis() {
 
 //check for and remove overlaping labels
 // if there are overlaps then remove text
+        function selectAndRemove(selector){
+            var elements = g.selectAll(selector);
+            var elementCount = elements[0].length;
+            elements.each(function(d,i){
+                if(i%2 !== 0 && i !== elementCount-1) {
+                    d3.select(this).remove();
+                }
+            });
+        }
+
 		var limit = 5;
 		while(overlapping( g.selectAll('.primary text') ) && limit>0){
 			limit--;
-			g.selectAll('.primary text').each(function(d,i){
-				if(i%2 != 0) d3.select(this).remove();
-			});
+            selectAndRemove('.primary text');
 		}
 
 		limit = 5;
 		while(overlapping( g.selectAll('.secondary text') ) && limit>0){
 			limit--;
-			g.selectAll('.secondary text').each(function(d,i){
-				if(i%2 != 0) d3.select(this).remove();
-			});
+            selectAndRemove('.secondary text');
 		}
 	}
 
@@ -277,31 +280,31 @@ function dateAxis() {
 		if (!arguments.length) return simple;
 		simple = x;
 		return axis;
-	}
+	};
 
 	axis.nice = function(x) {
 		if (!arguments.length) return nice;
 		nice = x;
 		return axis;
-	}
+	};
 
 	axis.labelWidth = function() {
 		// return the width of the widest axis label
 		return labelWidth;
-	}
+	};
 
 
 	axis.lineHeight = function(x) {
 		if (!arguments.length) return lineheight;
 		lineheight = x;
 		return axis;
-	}
+	};
 
 	axis.tickSize = function(x) {
 		if (!arguments.length) return ticksize;
 		ticksize = x;
 		return axis;
-	}
+	};
 
 
 	axis.scale = function(x, u) {
@@ -319,8 +322,9 @@ function dateAxis() {
 		axes = [];
 		for (var i = 0; i < u.length; i++) {
 			if( formatter[u[i]] ){
+                var customTicks;
 				if(!simple){
-					var customTicks = scale.ticks( interval[ u[i] ], increment[ u[i] ] );
+					customTicks = scale.ticks( interval[ u[i] ], increment[ u[i] ] );
 
 					customTicks.push(scale.domain()[0]); //always include the first and last values
 					customTicks.push(scale.domain()[1]);
@@ -351,7 +355,7 @@ function dateAxis() {
 
 		axes.forEach(function (a) {
 			a.scale(scale);
-		})
+		});
 
 		return axis;
 	};
@@ -381,7 +385,6 @@ module.exports = {
 };
 
 },{"./category.js":1,"./date.js":2,"./number.js":4}],4:[function(require,module,exports){
-'use strict'
 
 //this is wrapper for d3.svg.axis
 //for a standard FT styled numeric axis
@@ -390,6 +393,7 @@ module.exports = {
 var d3 = require('d3');
 
 function numericAxis() {
+    'use strict';
 
 	var ticksize = 5;
 	var a = d3.svg.axis().orient('left').tickSize(ticksize , 0);
@@ -453,9 +457,9 @@ function numericAxis() {
 		var rules = g.selectAll('line');
 		if (isVertical()) {
 			if (a.orient() == 'right') {
-				rules.attr('x1',extension)
+				rules.attr('x1',extension);
 			}else{
-				rules.attr('x1',-extension)
+				rules.attr('x1',-extension);
 			}
 		}
 
@@ -468,13 +472,13 @@ function numericAxis() {
 		if (!arguments.length) return extension;
 		extension = x;
 		return axis;
-	}
+	};
 
 	axis.tickSize = function(x) {
 		if (!arguments.length) return ticksize;
 		a.tickSize(-x);
 		return axis;
-	}
+	};
 
 	axis.ticks = function(x) {
 		if (!arguments.length) return a.ticks();
@@ -482,7 +486,7 @@ function numericAxis() {
 			userTicks = x;
 		}
 		return axis;
-	}
+	};
 
 	axis.orient = function(x){
 		if (!arguments.length) return a.orient();
@@ -494,13 +498,13 @@ function numericAxis() {
 		if (!arguments.length) return simple;
 		simple = x;
 		return axis;
-	}
+	};
 
 	axis.pixelsPerTick = function(x){
 		if (!arguments.length) return pixelsPerTick;
 		pixelsPerTick = x;
 		return axis;
-	}
+	};
 
 	axis.scale = function(x){
 		if (!arguments.length) return a.scale();
@@ -509,13 +513,13 @@ function numericAxis() {
 		if (userTicks.length > 0) {
 			a.tickValues(userTicks);
 		}else{
+            var customTicks = [];
 			var count = Math.round( (a.scale().range()[1] - a.scale().range()[0])/pixelsPerTick );
 			if(count < 2) { count = 3; }
 			else if(count < 5) { count = 5; }
 			else if(count < 10) { count = 10; }
 
 			if (simple) {
-				var customTicks = [];
 				var r = a.scale().domain();
 				if (Math.min(r[0], r[1]) < 0 && Math.max(r[0], r[1]) > 0) {
 					customTicks.push(0);
@@ -561,11 +565,11 @@ function numericAxis() {
 		if (!arguments.length) return hardRules;
 		hardRules = x;
 		return axis;
-	}
+	};
 
-	axis.yOffset = function(x){
+	axis.yOffset = function(y){
 		if (!arguments.length) return yOffset;
-		yOffset = x;
+		yOffset = y;
 		return axis;
 	};
 
@@ -579,13 +583,13 @@ function numericAxis() {
 		if (!arguments.length) return a.tickFormat();
 		a.tickFormat(f);
 		return axis;
-	}
+	};
 
 	axis.noLabels = function(x){
 		if (!arguments.length) return noLabels;
 		noLabels = x;
 		return axis;
-	}
+	};
 
 	return axis;
 }
@@ -593,10 +597,10 @@ function numericAxis() {
 module.exports = numericAxis;
 
 },{"d3":undefined}],5:[function(require,module,exports){
-'use strict';
 var d3 = require('d3');
 
 function blankChart() {
+    'use strict';
 
 	function buildModel(opts){
 		var m = {
@@ -673,7 +677,6 @@ module.exports = {
 
 },{"./blank.js":5,"./line.js":7,"./pie.js":8}],7:[function(require,module,exports){
 //reusable linechart
-'use strict'
 
 var d3 = require('d3');
 var dateAxis = require('../axis/date.js');
@@ -741,10 +744,11 @@ function translate(margin) {
 		var left = position.left || 0;
 		var top = position.top || 0;
 		return 'translate(' + (margin + left) + ',' + top + ')';
-	}
+	};
 }
 
 function lineChart(p) {
+    'use strict';
 
 	var lineClasses = ['series1', 'series2', 'series3', 'series4', 'series5', 'series6', 'series7', 'accent'];
 
@@ -764,7 +768,7 @@ function lineChart(p) {
 			logoSize: 28,
 			//data stuff
 			falseorigin: false, //TODO, find out if there's a standard 'pipeline' temr for this
-			error: function(err) { console.log('ERROR: ', err) },
+			error: function(err) { console.log('ERROR: ', err); },
 			lineClasses: {},
 			niceValue: true,
 			hideSource: false,
@@ -793,7 +797,7 @@ function lineChart(p) {
 		// explicitly in the config
 		if (!m.chartWidth) {
 			// minus gutter for logo
-			var rightGutter = m.contentWidth < 260 ? 16 : 26
+			var rightGutter = m.contentWidth < 260 ? 16 : 26;
 			m.chartWidth = m.contentWidth - rightGutter;
 		}
 
@@ -987,7 +991,7 @@ function lineChart(p) {
 			key.attr('transform', model.translate(model.keyPosition));
 		}
 
-		var chart = svg.append('g').attr('class', 'chart');
+		var chartSVG = svg.append('g').attr('class', 'chart');
 
 		if (!model.chartPosition) {
 			model.chartPosition = {
@@ -996,7 +1000,7 @@ function lineChart(p) {
 			};
 		}
 
-		chart.attr('transform', model.translate(model.chartPosition));
+		chartSVG.attr('transform', model.translate(model.chartPosition));
 
 		var footnotes = svg.append('g').attr('class','chart-footnote').datum(model.footnote).call(footerTextWrapper);
 		var source = svg.append('g').attr('class','chart-source').datum(model.sourcePrefix + model.source).call(footerTextWrapper);
@@ -1018,7 +1022,7 @@ function lineChart(p) {
 			model.chartHeight = model.height - totalHeight;
 			if (model.chartHeight < 0) {
 				model.error({
-					node:chart,
+					node:chartSVG,
 					message:'calculated plot height is less than zero'
 				});
 			}
@@ -1065,12 +1069,12 @@ function lineChart(p) {
 			vAxis.orient(model.numberAxisOrient);
 		}
 
-		chart.call(vAxis);
-		chart.call(timeAxis);
+		chartSVG.call(vAxis);
+		chartSVG.call(timeAxis);
 
 		//measure chart
-		var widthDifference = getWidth(chart) - model.chartWidth, //this difference is the ammount of space taken up by axis labels
-			heightDifference = getHeight(chart) - model.chartHeight,
+		var widthDifference = getWidth(chartSVG) - model.chartWidth, //this difference is the ammount of space taken up by axis labels
+			heightDifference = getHeight(chartSVG) - model.chartHeight,
 			//so we can work out how big the plot should be (the labels will probably stay the same...
 			plotWidth = model.chartWidth - widthDifference,
 			plotHeight = model.chartHeight - heightDifference,
@@ -1083,22 +1087,22 @@ function lineChart(p) {
 		vAxis.tickSize(plotWidth).tickExtension(widthDifference);
 
 		//replace provisional axes
-		chart.selectAll('*').remove();
-		chart.call(vAxis);
-		chart.call(timeAxis);
+		chartSVG.selectAll('*').remove();
+		chartSVG.call(vAxis);
+		chartSVG.call(timeAxis);
 		if (model.numberAxisOrient !== 'right') {
 			//figure out how much of the extra width is the vertical axis lables
-			var vLabelWidth = 0
-			chart.selectAll('.y.axis text').each(function(){
+			var vLabelWidth = 0;
+			chartSVG.selectAll('.y.axis text').each(function(){
 				vLabelWidth = Math.max(vLabelWidth, getWidth(d3.select(this)));
 			});
 			model.chartPosition.left += vLabelWidth + 4;//NOTE magic number 4
 		}
 
-		model.chartPosition.top += (getHeight(chart.select('.y.axis')) - plotHeight);
-		chart.attr('transform', model.translate(model.chartPosition));
+		model.chartPosition.top += (getHeight(chartSVG.select('.y.axis')) - plotHeight);
+		chartSVG.attr('transform', model.translate(model.chartPosition));
 
-		var plot = chart.append('g').attr('class', 'plot');
+		var plot = chartSVG.append('g').attr('class', 'plot');
 
 		var logo = svg.append('g').call(ftLogo, model.logoSize);
 		var heightOfFontDescenders = 3;
@@ -1116,7 +1120,7 @@ function lineChart(p) {
 				return {
 					x:d[model.x.series.key],
 					y:d[series.key]
-				}
+				};
 			});
 
 			normalisedData = normalisedData.filter(function(d){
@@ -1125,8 +1129,8 @@ function lineChart(p) {
 
 			var line = d3.svg.line()
 				.interpolate(interpolator.gappedLine)
-				.x( function(d){ return timeScale(d.x) } )
-				.y( function(d){ return valueScale(d.y) } );
+				.x( function(d){ return timeScale(d.x); } )
+				.y( function(d){ return valueScale(d.y); } );
 
 			g.append('path')
 				.datum(normalisedData)
@@ -1152,11 +1156,11 @@ function lineChart(p) {
 module.exports = lineChart;
 
 },{"../axis/date.js":2,"../axis/number.js":4,"../element/line-key.js":9,"../element/logo.js":10,"../element/text-area.js":11,"../util/aspect-ratios.js":12,"../util/line-interpolators.js":14,"../util/line-thickness.js":15,"d3":undefined}],8:[function(require,module,exports){
-'use strict';
 var d3 = require('d3');
 
 function pieChart() {
-	
+    'use strict';
+
 	function buildModel(opts) {
 		var m = {
 			//layout stuff
@@ -1169,7 +1173,7 @@ function pieChart() {
 			valueProperty:'value',
 			blockPadding:8,
 			data:[],
-			error:function(err){ console.log('ERROR: ', err) },
+			error:function(err){ console.log('ERROR: ', err); }
 		};
 
 		for(var key in opts){
@@ -1209,7 +1213,7 @@ function pieChart() {
 		var subtitle = svg.append('text').text(model.subtitle);
 		subtitle.attr('transform',translate({top: getHeight(title) + getHeight(subtitle), left:0}));
 
-		var chart = svg.append('g').attr('class','chart');
+		var chartSvg = svg.append('g').attr('class','chart');
 
 		if(model.data.length > 3){
 			model.error('PIE warning: too many segments!');
@@ -1217,9 +1221,9 @@ function pieChart() {
 
 		var outerRadius = model.width / 2; 
 
-		chart.selectAll('.slice')
+		chartSvg.selectAll('.slice')
 			.data( model.data )
-				.enter()
+				.enter();
 					//.append(path);
 		
 		svg.selectAll('text').attr({
@@ -1234,12 +1238,11 @@ function pieChart() {
 module.exports = pieChart;
 
 },{"d3":undefined}],9:[function(require,module,exports){
-'use strict'
-
 var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
 
 function lineKey(options) {
+    'use strict';
 
 	options = options || {};
 
@@ -1267,7 +1270,7 @@ function lineKey(options) {
 				.append('g').attr({
 					'class':'key-item',
 					'transform':function(d,i){
-						return 'translate(0,' + (lineHeight + i * lineHeight) + ')'
+						return 'translate(0,' + (lineHeight + i * lineHeight) + ')';
 					}
 				});
 
@@ -1319,12 +1322,11 @@ module.exports = lineKey;
 
 },{"../util/line-thickness.js":15,"d3":undefined}],10:[function(require,module,exports){
 //the ft logo there's probably an easier ay to do this...
-
-'use strict'
-
 var d3 = require('d3');
 
 function ftLogo(g, dim) {
+    'use strict';
+
 	if(!dim){
 		dim = 32;
 	}
@@ -1353,13 +1355,13 @@ module.exports = ftLogo;
 		*/
 
 },{"d3":undefined}],11:[function(require,module,exports){
+/*jshint -W084 */
 //text area provides a wrapping text block of a given type
-
-'use strict'
-
 var d3 = require('d3');
 
-function textArea() { 
+function textArea() {
+    'use strict';
+
 	var xOffset = 0, 
 		yOffset = 0, 
 		width=1000, 
@@ -1377,7 +1379,7 @@ function textArea() {
 				y = text.attr('y'),
 				dy = parseFloat(text.attr('dy'));
 
-			if(isNaN(dy)){ dy = 0 };
+			if(isNaN(dy)){ dy = 0; }
 
 			var tspan = text.text(null).append('tspan')
 				.attr('x', 0)
@@ -1399,53 +1401,53 @@ function textArea() {
 		});
 	}
 
-	function textArea(g, accessor){
+	function area(g, accessor){
 		if(!accessor) {
 			accessor = function(d){
 				return d;
-			}
+			};
 		}
-		g = g.append('g').attr('transform','translate(' + xOffset + ',' + yOffset + ')')
+		g = g.append('g').attr('transform','translate(' + xOffset + ',' + yOffset + ')');
 		g.append('text').text(accessor).call(wrap, width);
 		bounds = g.node().getBoundingClientRect();
 	}
 
 
-	textArea.bounds = function() {
+	area.bounds = function() {
 		return bounds;
 	};
 
-	textArea.units = function(x) { //px, em, rem
+	area.units = function(x) { //px, em, rem
 		if (!arguments.length) return units;
 		units = x;
-		return textArea;
+		return area;
 	};
 
-	textArea.lineHeight = function(x) { //pixels by default
+	area.lineHeight = function(x) { //pixels by default
 		if (!arguments.length) return lineHeight;
 		lineHeight = x;
-		return textArea;
+		return area;
 	};
 
-	textArea.width = function(x) {
+	area.width = function(x) {
 		if (!arguments.length) return width;
 		width = x;
-		return textArea;
+		return area;
 	};
 
-	textArea.yOffset = function(x) {
+	area.yOffset = function(x) {
 		if (!arguments.length) return yOffset;
 		yOffset = x;
-		return textArea;
+		return area;
 	};
 
-	textArea.xOffset = function(x) {
+	area.xOffset = function(x) {
 		if (!arguments.length) return yOffset;
 		yOffset = x;
-		return textArea;
+		return area;
 	};
 
-	return textArea;
+	return area;
 }
 
 module.exports = textArea;
@@ -1703,29 +1705,31 @@ function applyAttributes(){
 module.exports = applyAttributes;
 
 },{"d3":undefined}],14:[function(require,module,exports){
-'use strict';
-
 //a place to define custom line interpolators
 
 var d3 = require('d3');
 
 function gappedLineInterpolator(points){  //interpolate straight lines with gaps for NaN
+    'use strict';
+
   var section = 0;
   var arrays = [[]];
   points.forEach(function(d,i){
     if(isNaN(d[1])){
-      if(arrays[section].length==1){console.log('warning: Found a line fragment which is a single point this won\'t be drawn')}
+      if(arrays[section].length==1){
+          console.log('warning: Found a line fragment which is a single point this won\'t be drawn');
+      }
       section++;
       arrays[section] = [];
     }else{
-      arrays[section].push(d)
+      arrays[section].push(d);
     }
   });
 
   var pathSections = [];
   arrays.forEach(function(points){
     pathSections.push(d3.svg.line()(points));
-  })
+  });
   var joined = pathSections.join('');
   return joined.substr(1); //substring becasue D£ always adds an M to a path so we end up with MM at the start
 }
@@ -1750,9 +1754,9 @@ module.exports = function(value) {
     return defaultThickness;
   }
 
-  var lineThicknessIsNumber = value
-                              && typeof value === 'number'
-                              && !isNaN(value);
+  var lineThicknessIsNumber = value &&
+      typeof value === 'number' &&
+      !isNaN(value);
 
   if (lineThicknessIsNumber) {
     return value;
@@ -1761,11 +1765,11 @@ module.exports = function(value) {
   } else {
     return defaultThickness;
   }
-}
+};
 
+},{}],16:[function(require,module,exports){
+module.exports = "0.0.0";
 },{}],"o-charts":[function(require,module,exports){
-'use strict';
-
 module.exports  = {
   chart: require('./chart/index.js'),
 
@@ -1778,8 +1782,10 @@ module.exports  = {
 
   util: {
     attributeStyler: require('./util/chart-attribute-styles.js')
-  }
+  },
+
+  version: require('./util/version')
 
 };
 
-},{"./axis/index.js":3,"./chart/index.js":6,"./element/line-key.js":9,"./element/text-area.js":11,"./util/chart-attribute-styles.js":13}]},{},["o-charts"]);
+},{"./axis/index.js":3,"./chart/index.js":6,"./element/line-key.js":9,"./element/text-area.js":11,"./util/chart-attribute-styles.js":13,"./util/version":16}]},{},["o-charts"]);
