@@ -44,21 +44,21 @@ describe('Date module ', function () {
             var d;
             d = d3.time.scale()
                 .range([0,400])
-                .domain([new Date("October 14, 1975 11:13:00"), new Date("november 14, 1975 22:00:00")]);
+                .domain([new Date("April 14, 1975 11:13:00"), new Date("May 14, 1975 22:00:00")]);
             expect(new DateAxis().unitGenerator(d.domain()).length).toBe(2);
             expect(new DateAxis().unitGenerator(d.domain())[0]).toBe('days');
             expect(new DateAxis().unitGenerator(d.domain())[1]).toBe('months');
 
             d = d3.time.scale()
                 .range([0,400])
-                .domain([new Date("October 14, 1975 11:13:00"), new Date("december 13, 1975 10:12:59")]);
+                .domain([new Date("April 14, 1975 11:13:00"), new Date("June 13, 1975 11:12:59")]);
             expect(new DateAxis().unitGenerator(d.domain()).length).toBe(2);
             expect(new DateAxis().unitGenerator(d.domain())[0]).toBe('days');
             expect(new DateAxis().unitGenerator(d.domain())[1]).toBe('months');
 
             d = d3.time.scale()
                 .range([0,400])
-                .domain([new Date("October 14, 1975 11:13:00"), new Date("december 13, 1975 10:13:00")]);
+                .domain([new Date("April 14, 1975 11:13:00"), new Date("June 13, 1975 11:13:00")]);
             expect(new DateAxis().unitGenerator(d.domain())[0]).not.toBe('days');
             expect(new DateAxis().unitGenerator(d.domain())[1]).not.toBe('months');
         });
