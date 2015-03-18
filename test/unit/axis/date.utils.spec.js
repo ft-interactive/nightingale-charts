@@ -1,10 +1,10 @@
 require('../../helper').loadAssets('date-axes');
 
-var utils = require('../../../src/scripts/axis/date-utils');
+var utils = require('../../../src/scripts/axis/date.utils');
 var d3 = require('d3');
 
 /* Start Test */
-describe('Date-utils  ', function () {
+describe('date.utils  ', function () {
 
     describe('unitGenerator returns scale for ', function () {
 
