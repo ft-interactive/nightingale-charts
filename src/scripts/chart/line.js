@@ -1,7 +1,7 @@
 //reusable linechart
 
 var d3 = require('d3');
-var dateAxis = require('../axis/Date.js');
+var dateAxis = require('../axis/date.js');
 var numberAxis = require('../axis/number.js');
 var textArea = require('../element/text-area.js');
 var lineKey = require('../element/line-key.js');
