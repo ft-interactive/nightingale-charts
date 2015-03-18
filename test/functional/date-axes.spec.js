@@ -26,20 +26,11 @@ divs.append('svg')
     .attr('class','ft-chart')
     .attr('height', margin.top + margin.bottom)
     .each(function(d,i){
-        //create a plain 'g' node to add it to (offset to the margin)
-        var g = d3.select(this).append('g').attr('transform','translate(' + margin.left + ',' + margin.top + ')');
-
-        //create the axis, giving it a scale
-        //new oCharts.axis.Date()
-        //    .simple(d.simple)
-        //    .scale(d.scale)
-        //    .render(g)
-
-        //todo: get back to this syntax?
-        var axis = oCharts.axis.Date()
+        var axis = oCharts.axis.date()
             .simple(d.simple)
             .scale(d.scale);
 
+        //todo: get back to this syntax?
         d3.select(this)
             .append('g')
             .attr('transform','translate(' + margin.left + ',' + margin.top + ')')

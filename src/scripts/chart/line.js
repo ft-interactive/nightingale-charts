@@ -1,7 +1,7 @@
 //reusable linechart
 
 var d3 = require('d3');
-var DateAxis = require('../axis/Date.js');
+var dateAxis = require('../axis/Date.js');
 var numberAxis = require('../axis/number.js');
 var textArea = require('../element/text-area.js');
 var lineKey = require('../element/line-key.js');
@@ -380,7 +380,7 @@ function lineChart(p) {
 				.tickSize(model.chartWidth)	//make the ticks the width of the chart
 				.scale(valueScale),
 
-			timeAxis = new DateAxis()
+			timeAxis = dateAxis()
 				.simple(model.simpleDate)
 				.yOffset(model.chartHeight)	//position the axis at the bottom of the chart
 				.scale(timeScale);
