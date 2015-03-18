@@ -96,10 +96,6 @@ function dateAxis() {
         }
         config.scale = scale;
         config.axes = axis.render(scale, units, config.tickSize, config.simple);
-        config.axes.forEach(function (axis) {
-            axis.scale(config.scale);
-        });
-
         return render;
     };
 

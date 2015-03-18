@@ -100,6 +100,9 @@ module.exports = {
                 axes.push( axis );
             }
         }
+        axes.forEach(function (axis) {
+            axis.scale(scale);
+        });
         return axes;
     }
 };

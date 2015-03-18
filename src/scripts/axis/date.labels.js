@@ -16,7 +16,6 @@ module.exports = {
         var bounds = [];
         var overlap = false;
         dElements.each(function(d,i){
-            //check whether it overlaps any of the existing bounds
             var rect = this.getBoundingClientRect();
             var include = true;
             var current = d3.select(this);
