@@ -39,7 +39,8 @@ function dateAxis() {
         labelWidth : 0,
         showDomain : false
     };
-    var render = function(g){
+
+    function render(g){
 
         g = g.append('g').attr('transform','translate(' + config.xOffset + ',' + config.yOffset + ')');
 
@@ -73,48 +74,47 @@ function dateAxis() {
             utils.removeOverlappingLabels(g.selectAll('.primary text'));
         }
         utils.removeOverlappingLabels(g.selectAll('.secondary text'));
-    };
+    }
 
-    render.simple = function(simple) {
+    render.simple = function(bool) {
         if (!arguments.length) return config.simple;
-        config.simple = simple;
+        config.simple = bool;
         return render;
     };
 
-    render.nice = function(nice) {
+    render.nice = function(bool) {
         if (!arguments.length) return config.nice;
-        config.nice = nice;
+        config.nice = bool;
         return render;
     };
 
-    render.labelWidth = function(width) {
-        if (!arguments.length) return config.labelWidth;
-        config.labelWidth = width;
-        return render;
-    };
-
-
-    render.lineHeight = function(height) {
-        if (!arguments.length) return config.lineHeight;
-        config.lineHeight = height;
-        return render;
-    };
-
-    render.tickSize = function(size) {
+    render.tickSize = function(int) {
         if (!arguments.length) return config.tickSize;
-        config.tickSize = size;
+        config.tickSize = int;
         return render;
     };
 
-    render.yOffset = function(y) {
+    render.labelWidth = function(int) {
+        if (!arguments.length) return config.labelWidth;
+        config.labelWidth = int;
+        return render;
+    };
+
+    render.lineHeight = function(int) {
+        if (!arguments.length) return config.lineHeight;
+        config.lineHeight = int;
+        return render;
+    };
+
+    render.yOffset = function(int) {
         if (!arguments.length) return config.yOffset;
-        config.yOffset = y;
+        config.yOffset = int;
         return render;
     };
 
-    render.xOffset = function(x) {
+    render.xOffset = function(int) {
         if (!arguments.length) return config.xOffset;
-        config.xOffset = x;
+        config.xOffset = int;
         return render;
     };
 
@@ -132,14 +132,10 @@ function dateAxis() {
         //go through the units array
         config.axes = [];
         for (var i = 0; i < u.length; i++) {
+            //todo: test me
             if( utils.formatter[u[i]] ){
                 var customTicks;
-                if(config.simple){
-                    if (u[i] === 'years' || u[i] === 'decades' || u[i] === 'centuries') {
-                        u[i] = 'fullYears'; //simple axis always uses full years
-                    }
-                } else {
-                    customTicks = config.scale.domain();
+                if(!config.simple){
                     customTicks = config.scale.ticks( interval[ u[i] ], increment[ u[i] ] );
 
                     customTicks.push(config.scale.domain()[0]); //always include the first and last values
@@ -151,6 +147,12 @@ function dateAxis() {
                     if(labels[labels.length-1] == labels[labels.length-2]){
                         customTicks.pop();
                     }
+                }else{
+                    //todo: move to unitGenerator
+                    if (u[i] === 'years' || u[i] === 'decades' || u[i] === 'centuries') {
+                        u[i] = 'fullYears'; //simple axis always uses full years
+                    }
+                    customTicks = config.scale.domain();
                 }
 
 
@@ -173,6 +175,5 @@ function dateAxis() {
 
     return render;
 }
-
 
 module.exports = dateAxis;
