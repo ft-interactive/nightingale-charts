@@ -84,20 +84,17 @@
             .attr('class','ft-chart')
             .attr('height', margin.top + margin.bottom)
             .each(function(d,i){
-                //create the axis, giving it a scale
-//                var axis = oCharts.axis.date()
-//                        .simple(d.simple)
-//                        .scale(d.scale);
 //
 //                //create a plain 'g' node to add it to (offset to the margin)
                 var g = d3.select(this).append('g').attr('transform','translate(' + margin.left + ',' + margin.top + ')');
-//
+                //create the axis, giving it a scale
+                var axis = new oCharts.axis.date()
+                        .simple(d.simple)
+                        .scale(d.scale);
 //                //render the axis
 //                g.call(axis);
-                new oCharts.axis.Date()
-                        .simple(d.simple)
-                        .scale(d.scale)
-                        .render(g)
+//                g.call(axis.render);
+                axis.render(g)
             });
 
     oCharts.util.attributeStyler();

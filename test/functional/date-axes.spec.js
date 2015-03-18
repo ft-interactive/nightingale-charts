@@ -30,20 +30,20 @@ divs.append('svg')
         var g = d3.select(this).append('g').attr('transform','translate(' + margin.left + ',' + margin.top + ')');
 
         //create the axis, giving it a scale
-        new oCharts.axis.Date()
-            .simple(d.simple)
-            .scale(d.scale)
-            .render(g)
+        //new oCharts.axis.Date()
+        //    .simple(d.simple)
+        //    .scale(d.scale)
+        //    .render(g)
 
         //todo: get back to this syntax?
-        //var axis = oCharts.axis.Date()
-        //    .simple(d.simple)
-        //    .scale(d.scale);
+        var axis = oCharts.axis.Date()
+            .simple(d.simple)
+            .scale(d.scale);
 
-        //d3.select(this)
-        //    .append('g')
-        //    .attr('transform','translate(' + margin.left + ',' + margin.top + ')')
-        //    .call(axis)
+        d3.select(this)
+            .append('g')
+            .attr('transform','translate(' + margin.left + ',' + margin.top + ')')
+            .call(axis)
     });
 
 oCharts.util.attributeStyler();

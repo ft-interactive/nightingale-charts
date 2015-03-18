@@ -1,7 +1,28 @@
 var d3 = require('d3');
 
+var interval = {
+    centuries: d3.time.year,
+    decades: d3.time.year,
+    years: d3.time.year,
+    fullYears: d3.time.year,
+    months: d3.time.month,
+    weeks: d3.time.week,
+    days: d3.time.day,
+    hours: d3.time.hours
+};
+
+var increment = {
+    centuries: 100,
+    decades: 10,
+    years: 1,
+    fullYears: 1,
+    months: 1,
+    weeks: 1,
+    days: 1,
+    hours: 6
+};
+
 function DateAxis() {
-    'use strict';
     this.config = {
         axes  : [d3.svg.axis().orient('bottom')],
         scale : false  ,
@@ -15,27 +36,6 @@ function DateAxis() {
         xOffset : 0,
         labelWidth : 0,
         showDomain : false
-    };
-    this.interval = {
-        centuries: d3.time.year,
-        decades: d3.time.year,
-        years: d3.time.year,
-        fullYears: d3.time.year,
-        months: d3.time.month,
-        weeks: d3.time.week,
-        days: d3.time.day,
-        hours: d3.time.hours
-    };
-
-    this.increment = {
-        centuries: 100,
-        decades: 10,
-        years: 1,
-        fullYears: 1,
-        months: 1,
-        weeks: 1,
-        days: 1,
-        hours: 6
     };
 }
 
@@ -267,7 +267,7 @@ DateAxis.prototype.scale = function(x, u) {
                 }
             } else {
                 customTicks = self.config.scale.domain();
-                customTicks = self.config.scale.ticks( self.interval[ u[i] ], self.increment[ u[i] ] );
+                customTicks = self.config.scale.ticks( interval[ u[i] ], increment[ u[i] ] );
 
                 customTicks.push(self.config.scale.domain()[0]); //always include the first and last values
                 customTicks.push(self.config.scale.domain()[1]);
