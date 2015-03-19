@@ -70,321 +70,341 @@ module.exports = categoryAxis;
 
 },{"d3":undefined}],2:[function(require,module,exports){
 var d3 = require('d3');
+var utils = require('./date.utils.js');
+
+var interval = {
+    centuries: d3.time.year,
+    decades: d3.time.year,
+    years: d3.time.year,
+    fullYears: d3.time.year,
+    months: d3.time.month,
+    weeks: d3.time.week,
+    days: d3.time.day,
+    hours: d3.time.hours
+};
+
+var increment = {
+    centuries: 100,
+    decades: 10,
+    years: 1,
+    fullYears: 1,
+    months: 1,
+    weeks: 1,
+    days: 1,
+    hours: 6
+};
+
+module.exports = {
+    formatter : {
+        centuries: function (d, i) {
+            if (i === 0 || d.getYear() % 100 === 0) {
+                return d3.time.format('%Y')(d);
+            }
+            return d3.time.format('%y')(d);
+        },
+
+        decades: function (d, i) {
+            if (i === 0 || d.getYear() % 100 === 0) {
+                return d3.time.format('%Y')(d);
+            }
+            return d3.time.format('%y')(d);
+        },
+
+        years: function (d, i) {
+            if (i === 0 || d.getYear() % 100 === 0) {
+                return d3.time.format('%Y')(d);
+            }
+            return d3.time.format('%y')(d);
+        },
+
+        fullYears: function (d, i) {
+            return d3.time.format('%Y')(d);
+        },
+        shortmonths: function (d, i) {
+            return d3.time.format('%b')(d)[0];
+        },
+        months: function (d, i) {
+            return d3.time.format('%b')(d);
+        },
+
+        weeks: function (d, i) {
+            return d3.time.format('%e %b')(d);
+        },
+
+        days: function (d, i) {
+            return d3.time.format('%e')(d);
+        },
+
+        hours: function (d, i) {
+            return parseInt(d3.time.format('%H')(d)) + ':00';
+        }
+    },
+    createDetailedTicks:function(scale, unit){
+        var customTicks = scale.ticks( interval[ unit ], increment[ unit ] );
+        customTicks.push(scale.domain()[0]); //always include the first and last values
+        customTicks.push(scale.domain()[1]);
+        customTicks.sort(this.dateSort);
+
+        //if the last 2 values labels are the same, remove them
+        var labels = customTicks.map(this.formatter[unit]);
+        if(labels[labels.length-1] == labels[labels.length-2]){
+            customTicks.pop();
+        }
+        return customTicks;
+    },
+    dateSort : function(a,b){
+        return (a.getTime() - b.getTime());
+    },
+    render: function(scale, units, tickSize, simple){
+        if (!units) {
+            units = utils.unitGenerator(scale.domain(), simple);
+        }
+        var axes = [];
+        for (var i = 0; i < units.length; i++) {
+            if( this.formatter[units[i]] ){
+                var customTicks = (simple) ? scale.domain() : this.createDetailedTicks(scale, units[i]);
+                var axis = d3.svg.axis()
+                    .scale( scale )
+                    .tickValues( customTicks )
+                    .tickFormat( this.formatter[ units[i] ] )
+                    .tickSize(tickSize,0);
+                axes.push( axis );
+            }
+        }
+        axes.forEach(function (axis) {
+            axis.scale(scale);
+        });
+        return axes;
+    }
+};
+
+},{"./date.utils.js":5,"d3":undefined}],3:[function(require,module,exports){
+var d3 = require('d3');
+var labels = require('./date.labels.js');
+var axis = require('./date.axis.js');
 
 function dateAxis() {
-    'use strict';
+    var config = {
+        axes  : [d3.svg.axis().orient('bottom')],
+        scale : false  ,
+        lineHeight : 20,
+        tickSize   : 5 ,
+        simple : false,//axis has only first and last points as ticks, i.e. the scale's domain extent
+        nice   : false,
+        units  : ['multi'],
+        unitOverride : false,
+        yOffset : 0,
+        xOffset : 0,
+        labelWidth : 0,
+        showDomain : false
+    };
 
-	var axes = [ d3.svg.axis().orient('bottom') ];
-	var scale;
-	var lineheight = 20;
-	var ticksize = 5;
-	// a simple axis has only first and last points as ticks, i.e. the scale's domain extent
-	var simple = false;
-	var nice = false;
-	var units = ['multi'];
-	var unitOverride = false;
-	var yOffset = 0;
-	var xOffset = 0;
-	var labelWidth;
-	var showDomain = false;
+    function render(g){
 
-	var formatter = {
-		centuries: function(d, i) {
-			if(i === 0 || d.getYear() % 100 === 0) {
-				return d3.time.format('%Y')(d);
-			}
-			return d3.time.format('%y')(d);
-		},
+        g = g.append('g').attr('transform','translate(' + config.xOffset + ',' + config.yOffset + ')');
 
-		decades: function(d, i) {
-			if(i === 0 || d.getYear() % 100 === 0) {
-				return d3.time.format('%Y')(d);
-			}
-			return d3.time.format('%y')(d);
-		},
-
-		years: function(d, i) {
-			if(i === 0 || d.getYear() % 100 === 0) {
-				return d3.time.format('%Y')(d);
-			}
-			return d3.time.format('%y')(d);
-		},
-
-		fullyears: function(d, i) {
-			return d3.time.format('%Y')(d);
-		},
-		shortmonths: function(d, i){
-			return d3.time.format('%b')(d)[0];
-		},
-		months: function(d, i) {
-			return d3.time.format('%b')(d);
-		},
-
-		weeks: function(d, i) {
-			return d3.time.format('%e %b')(d);
-		},
-
-		days: function(d, i) {
-			return d3.time.format('%e')(d);
-		},
-
-		hours: function(d, i) {
-			return parseInt(d3.time.format('%H')(d)) + ':00';
-		}
-
-	};
-
-	var interval = {
-		centuries: d3.time.year,
-		decades: d3.time.year,
-		years: d3.time.year,
-		fullyears: d3.time.year,
-		months: d3.time.month,
-		weeks: d3.time.week,
-		days: d3.time.day,
-		hours: d3.time.hours
-	};
-
-	var increment = {
-		centuries: 100,
-		decades: 10,
-		years: 1,
-		fullyears: 1,
-		months: 1,
-		weeks: 1,
-		days: 1,
-		hours: 6
-	};
-
-	function unitGenerator(domain){	//which units are most appropriate
-		var u = [];
-		var timeDif = domain[1].getTime() - domain[0].getTime();
-		var dayLength = 86400000;
-		if (timeDif < dayLength * 2) {
-			return ['hours','days','months'];
-		}
-		if (timeDif < dayLength * 60){
-			return ['days','months'];
-		}
-		if (timeDif < dayLength * 365.25) {
-			return ['months','years'];
-		}
-		if (timeDif < dayLength * 365.25 * 15) {
-			return ['years'];
-		}
-		if (timeDif < dayLength * 365.25 * 150) {
-			return ['decades'];
-		}
-		if (timeDif < dayLength * 365.25 * 1000) {
-			return ['centuries'];
-		}
-
-		return ['multi'];
-	}
-
-	function dateSort(a,b){
-		return (a.getTime() - b.getTime());
-	}
-
-	function axis(g){
-
-		g = g.append('g').attr('transform','translate(' + xOffset + ',' + yOffset + ')');
-
-		g.append('g').attr('class','x axis').each(function() {
-			var g = d3.select(this);
-			axes.forEach(function (a,i) {
-				g.append('g')
-					.attr('class',function() {
-						if(i===0){
-							return 'primary';
-						}
-						return 'secondary';
-					})
-					.attr('transform','translate(0,' + (i * lineheight) + ')')
-					.call(a);
-			});
-			//remove text-anchor attribute from year positions
-			var v = g.selectAll('.primary')
-				.selectAll('text').attr({
-					x: null,
-					y: null,
-					dy: 15 + ticksize
-				});
-			//clear the styles D3 sets so everything's coming from the css
-			g.selectAll('*').attr('style', null);
-		});
-
-		labelWidth = 0;
-		g.select('.tick text').each(function (d) { //calculate the widest label
-			labelWidth = Math.max(d3.select(this).node().getBoundingClientRect().width, labelWidth);
-		});
-		if(!showDomain){
-			g.select('path.domain').remove();
-		}
-
-//check for and remove overlaping labels
-// if there are overlaps then remove text
-        function selectAndRemove(selector){
-            var elements = g.selectAll(selector);
-            var elementCount = elements[0].length;
-            elements.each(function(d,i){
-                if(i%2 !== 0 && i !== elementCount-1) {
-                    d3.select(this).remove();
-                }
+        g.append('g').attr('class','x axis').each(function() {
+            var g = d3.select(this);
+            config.axes.forEach(function (a,i) {
+                g.append('g')
+                    .attr('class', ((i===0) ? 'primary' : 'secondary'))
+                    .attr('transform','translate(0,' + (i * config.lineHeight) + ')')
+                    .call(a);
             });
+            //remove text-anchor attribute from year positions
+            g.selectAll('.primary text').attr({
+                x: null,
+                y: null,
+                dy: 15 + config.tickSize
+            });
+            //clear the styles D3 sets so everything's coming from the css
+            g.selectAll('*').attr('style', null);
+        });
+
+        if(!config.showDomain){
+            g.select('path.domain').remove();
         }
 
-		var limit = 5;
-		while(overlapping( g.selectAll('.primary text') ) && limit>0){
-			limit--;
-            selectAndRemove('.primary text');
-		}
+        labels.render(config.scale, g);
+    }
 
-		limit = 5;
-		while(overlapping( g.selectAll('.secondary text') ) && limit>0){
-			limit--;
-            selectAndRemove('.secondary text');
-		}
-	}
+    render.simple = function(bool) {
+        if (!arguments.length) return config.simple;
+        config.simple = bool;
+        return render;
+    };
 
-	function overlapping(selection){
-		var bounds = [];
-		var overlap = false;
-		selection.each(function(d,i){
-			//check whether it overlaps any of the existing bounds
-			var rect = this.getBoundingClientRect();
-			var include = true;
-			var current = d3.select(this);
-			bounds.forEach(function(b,i){
-				if(intersection(b,rect)){
-					include = false;
-					overlap = true;
-				}
-			});
-			if(include){
-				bounds.push(rect);
-			}
-		});
-		return overlap;
-	}
+    render.nice = function(bool) {
+        if (!arguments.length) return config.nice;
+        config.nice = bool;
+        return render;
+    };
 
-	function intersection(a, b){
-		var overlap = (a.left <= b.right &&
-			b.left <= a.right &&
-			a.top <= b.bottom &&
-			b.top <= a.bottom);
-		return overlap;
-	}
+    render.tickSize = function(int) {
+        if (!arguments.length) return config.tickSize;
+        config.tickSize = int;
+        return render;
+    };
 
-	axis.simple = function(x) {
-		if (!arguments.length) return simple;
-		simple = x;
-		return axis;
-	};
+    render.labelWidth = function(int) {
+        if (!arguments.length) return config.labelWidth;
+        config.labelWidth = int;
+        return render;
+    };
 
-	axis.nice = function(x) {
-		if (!arguments.length) return nice;
-		nice = x;
-		return axis;
-	};
+    render.lineHeight = function(int) {
+        if (!arguments.length) return config.lineHeight;
+        config.lineHeight = int;
+        return render;
+    };
 
-	axis.labelWidth = function() {
-		// return the width of the widest axis label
-		return labelWidth;
-	};
+    render.yOffset = function(int) {
+        if (!arguments.length) return config.yOffset;
+        config.yOffset = int;
+        return render;
+    };
 
+    render.xOffset = function(int) {
+        if (!arguments.length) return config.xOffset;
+        config.xOffset = int;
+        return render;
+    };
 
-	axis.lineHeight = function(x) {
-		if (!arguments.length) return lineheight;
-		lineheight = x;
-		return axis;
-	};
+    render.scale = function(scale, units) {
+        if (!arguments.length) return config.axes[0].scale();
+        if (config.nice) {
+            scale.nice((scale.range()[1] - scale.range()[0]) / 100); //specify the number of ticks should be about 1 every 100 pixels
+        }
+        config.scale = scale;
+        config.axes = axis.render(scale, units, config.tickSize, config.simple);
+        return render;
+    };
 
-	axis.tickSize = function(x) {
-		if (!arguments.length) return ticksize;
-		ticksize = x;
-		return axis;
-	};
-
-
-	axis.scale = function(x, u) {
-		if (!arguments.length) return axes[0].scale();
-		if (!u) {
-			u = unitGenerator(x.domain());
-		}
-		scale = x;
-		if (nice) {
-			scale.nice((scale.range()[1] - scale.range()[0]) / 100); //specify the number of ticks should be about 1 every 100 pixels
-		}
-
-		//go through the units array
-
-		axes = [];
-		for (var i = 0; i < u.length; i++) {
-			if( formatter[u[i]] ){
-                var customTicks;
-				if(!simple){
-					customTicks = scale.ticks( interval[ u[i] ], increment[ u[i] ] );
-
-					customTicks.push(scale.domain()[0]); //always include the first and last values
-					customTicks.push(scale.domain()[1]);
-					customTicks.sort(dateSort);
-
-					//if the last 2 values labels are the same, remove them
-					var labels = customTicks.map(formatter[u[i]]);
-					if(labels[labels.length-1] == labels[labels.length-2]){
-						customTicks.pop();
-					}
-				}else{
-					if (u[i] === 'years' || u[i] === 'decades' || u[i] === 'centuries') {
-						u[i] = 'fullyears'; //simple axis always uses full years
-					}
-					customTicks = scale.domain();
-				}
-
-
-				var a = d3.svg.axis()
-					.scale( scale )
-					.tickValues( customTicks )
-					.tickFormat( formatter[ u[i] ] )
-					.tickSize(ticksize,0);
-
-				axes.push( a );
-			}
-		}
-
-		axes.forEach(function (a) {
-			a.scale(scale);
-		});
-
-		return axis;
-	};
-
-	axis.yOffset = function(x) {
-		if (!arguments.length) return yOffset;
-		yOffset = x;
-		return axis;
-	};
-
-	axis.xOffset = function(x) {
-		if (!arguments.length) return yOffset;
-		yOffset = x;
-		return axis;
-	};
-
-	return axis;
+    return render;
 }
 
 module.exports = dateAxis;
+},{"./date.axis.js":2,"./date.labels.js":4,"d3":undefined}],4:[function(require,module,exports){
+var d3 = require('d3');
+var utils = require('./date.utils.js');
 
-},{"d3":undefined}],3:[function(require,module,exports){
+module.exports = {
+    intersection : function(a, b){
+        var overlap = (
+        a.left <= b.right &&
+        b.left <= a.right &&
+        a.top <= b.bottom &&
+        b.top <= a.bottom
+        );
+        return overlap;
+    },
+    overlapping : function(dElements){
+        var self = this;
+        var bounds = [];
+        var overlap = false;
+        dElements.each(function(d,i){
+            var rect = this.getBoundingClientRect();
+            var include = true;
+            var current = d3.select(this);
+            bounds.forEach(function(b,i){
+                if(self.intersection(b,rect)){
+                    include = false;
+                    overlap = true;
+                }
+            });
+            if(include){
+                bounds.push(rect);
+            }
+        });
+        return overlap;
+    },
+    removeOverlappingLabels : function(dElements){
+        var self = this;
+        var elementCount = dElements[0].length;
+        var limit = 5;
+        function remove(d,i){
+            if(i%2 !== 0 && i !== elementCount-1) {
+                d3.select(this).remove();
+            }
+        }
+        while(self.overlapping( dElements ) && limit>0){
+            limit--;
+            dElements.each(remove);
+        }
+    },
+    calculateWidestLabel : function(dElements){
+        var labelWidth = 0;
+        dElements.each(function (d) {
+            labelWidth = Math.max(d3.select(this).node().getBoundingClientRect().width, labelWidth);
+        });
+        return labelWidth;
+    },
+    removeDayLabels : function(dElements){
+        var elementCount = dElements[0].length;
+        function remove(d, i){
+            if(i !== 0 && i !== elementCount-1 && d3.select(this).text() != 1) {
+                d3.select(this).remove();
+            }
+        }
+        dElements.each(remove);
+    },
+    render: function(scale, g){
+
+        var width = this.calculateWidestLabel(g.select('.tick text'));
+
+        if (utils.unitGenerator(scale.domain())[0] == 'days'){
+            this.removeDayLabels(g.selectAll('.primary text'));
+        } else {
+            this.removeOverlappingLabels(g.selectAll('.primary text'));
+        }
+        this.removeOverlappingLabels(g.selectAll('.secondary text'));
+
+        return {
+            width: width
+        };
+    }
+
+};
+
+},{"./date.utils.js":5,"d3":undefined}],5:[function(require,module,exports){
+module.exports = {
+    unitGenerator : function(domain, simple){	//which units are most appropriate
+        var timeDif = domain[1].getTime() - domain[0].getTime();
+        var dayLength = 86400000;
+        var units;
+        if (timeDif < dayLength * 2) {
+            units = ['hours','days','months'];
+        } else if (timeDif < dayLength * 60){
+            units =['days','months'];
+        } else if (timeDif < dayLength * 365.25) {
+            units =['months','years'];
+        } else if (timeDif < dayLength * 365.25 * 15) {
+            units = ['years'];
+        } else if (timeDif < dayLength * 365.25 * 150) {
+            units = ['decades'];
+        } else if (timeDif < dayLength * 365.25 * 1000) {
+            units = ['centuries'];
+        } else {
+            units = ['multi'];
+        }
+        if (simple && (
+            units.indexOf('years')>-1 ||
+            units.indexOf('decades') ||
+            units.indexOf('centuries'))) {
+            units = ['fullYears']; //simple axis always uses full years
+        }
+        return units;
+    }
+};
+
+},{}],6:[function(require,module,exports){
 module.exports = {
   category: require('./category.js'),
   date: require('./date.js'),
   number: require('./number.js')
 };
 
-},{"./category.js":1,"./date.js":2,"./number.js":4}],4:[function(require,module,exports){
+},{"./category.js":1,"./date.js":3,"./number.js":7}],7:[function(require,module,exports){
 
 //this is wrapper for d3.svg.axis
 //for a standard FT styled numeric axis
@@ -596,7 +616,7 @@ function numericAxis() {
 
 module.exports = numericAxis;
 
-},{"d3":undefined}],5:[function(require,module,exports){
+},{"d3":undefined}],8:[function(require,module,exports){
 var d3 = require('d3');
 
 function blankChart() {
@@ -668,14 +688,14 @@ function blankChart() {
 
 module.exports = blankChart;
 
-},{"d3":undefined}],6:[function(require,module,exports){
+},{"d3":undefined}],9:[function(require,module,exports){
 module.exports = {
   line: require('./line.js'),
   blank: require('./blank.js'),
   pie: require('./pie.js')
 };
 
-},{"./blank.js":5,"./line.js":7,"./pie.js":8}],7:[function(require,module,exports){
+},{"./blank.js":8,"./line.js":10,"./pie.js":11}],10:[function(require,module,exports){
 //reusable linechart
 
 var d3 = require('d3');
@@ -1155,7 +1175,7 @@ function lineChart(p) {
 
 module.exports = lineChart;
 
-},{"../axis/date.js":2,"../axis/number.js":4,"../element/line-key.js":9,"../element/logo.js":10,"../element/text-area.js":11,"../util/aspect-ratios.js":12,"../util/line-interpolators.js":14,"../util/line-thickness.js":15,"d3":undefined}],8:[function(require,module,exports){
+},{"../axis/date.js":3,"../axis/number.js":7,"../element/line-key.js":12,"../element/logo.js":13,"../element/text-area.js":14,"../util/aspect-ratios.js":15,"../util/line-interpolators.js":17,"../util/line-thickness.js":18,"d3":undefined}],11:[function(require,module,exports){
 var d3 = require('d3');
 
 function pieChart() {
@@ -1237,7 +1257,7 @@ function pieChart() {
 
 module.exports = pieChart;
 
-},{"d3":undefined}],9:[function(require,module,exports){
+},{"d3":undefined}],12:[function(require,module,exports){
 var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
 
@@ -1320,7 +1340,7 @@ function lineKey(options) {
 
 module.exports = lineKey;
 
-},{"../util/line-thickness.js":15,"d3":undefined}],10:[function(require,module,exports){
+},{"../util/line-thickness.js":18,"d3":undefined}],13:[function(require,module,exports){
 //the ft logo there's probably an easier ay to do this...
 var d3 = require('d3');
 
@@ -1354,7 +1374,7 @@ module.exports = ftLogo;
 		h3.075L110.955,1.959z"/>
 		*/
 
-},{"d3":undefined}],11:[function(require,module,exports){
+},{"d3":undefined}],14:[function(require,module,exports){
 /*jshint -W084 */
 //text area provides a wrapping text block of a given type
 var d3 = require('d3');
@@ -1452,7 +1472,7 @@ function textArea() {
 
 module.exports = textArea;
 
-},{"d3":undefined}],12:[function(require,module,exports){
+},{"d3":undefined}],15:[function(require,module,exports){
 // More info:
 // http://en.wikipedia.org/wiki/Aspect_ratio_%28image%29
 
@@ -1523,7 +1543,7 @@ module.exports = {
   }
 };
 
-},{}],13:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 // because of the need to export and convert browser rendered SVGs 
 // we need a simple way to attach styles as attributes if necessary, 
 // so, heres a list of attributes and the selectors to which they should be applied
@@ -1704,7 +1724,7 @@ function applyAttributes(){
 
 module.exports = applyAttributes;
 
-},{"d3":undefined}],14:[function(require,module,exports){
+},{"d3":undefined}],17:[function(require,module,exports){
 //a place to define custom line interpolators
 
 var d3 = require('d3');
@@ -1738,7 +1758,7 @@ module.exports = {
   gappedLine:gappedLineInterpolator
 };
 
-},{"d3":undefined}],15:[function(require,module,exports){
+},{"d3":undefined}],18:[function(require,module,exports){
 var thicknesses = {
   small: 2,
   medium: 4,
@@ -1767,7 +1787,7 @@ module.exports = function(value) {
   }
 };
 
-},{}],16:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 module.exports = "0.0.0";
 },{}],"o-charts":[function(require,module,exports){
 module.exports  = {
@@ -1788,4 +1808,4 @@ module.exports  = {
 
 };
 
-},{"./axis/index.js":3,"./chart/index.js":6,"./element/line-key.js":9,"./element/text-area.js":11,"./util/chart-attribute-styles.js":13,"./util/version":16}]},{},["o-charts"]);
+},{"./axis/index.js":6,"./chart/index.js":9,"./element/line-key.js":12,"./element/text-area.js":14,"./util/chart-attribute-styles.js":16,"./util/version":19}]},{},["o-charts"]);
