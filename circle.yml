@@ -13,5 +13,7 @@ deployment:
     commands:
       - ./node_modules/component-helper/bin/component release current
 machine:
+  timezone:
+    Europe/London
   node:
     version: v0.10.33

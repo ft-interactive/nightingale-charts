@@ -14,7 +14,7 @@
 <script src="scripts/o-charts.js"></script>
 <script>
 
-    var lib = require('o-charts');
+    var oCharts = require('o-charts');
     var d3 = require('d3');
 
     var margin = {
@@ -84,19 +84,19 @@
             .attr('class','ft-chart')
             .attr('height', margin.top + margin.bottom)
             .each(function(d,i){
+
                 //create the axis, giving it a scale
-                var axis = lib.axis.date()
-                        .simple(d.simple)
-                        .scale(d.scale);
+                var axis = oCharts.axis.date()
+                    .simple(d.simple)
+                    .scale(d.scale);
 
-                //create a plain 'g' node to add it to (offset to the margin)
-                var g = d3.select(this).append('g').attr('transform','translate(' + margin.left + ',' + margin.top + ')');
-
-                //render the axis
-                g.call(axis);
+                d3.select(this)
+                    .append('g')
+                    .attr('transform','translate(' + margin.left + ',' + margin.top + ')')
+                    .call(axis);
             });
 
-    lib.util.attributeStyler();
+    oCharts.util.attributeStyler();
 
 </script>
 </body>
