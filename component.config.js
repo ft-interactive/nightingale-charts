@@ -1,9 +1,7 @@
 var pkg = require('./package.json');
 
 module.exports = {
-    bower: false,
     build: {
-        fonts: true, // true or false. Set to false if you are doing your own thing in the fonts directory
         styles: 'sass', // 'sass'. less not yet available
         html: 'mustache',// 'mustache' or 'jade'.
         scripts: 'browserify' // 'browserify' or 'requirejs'
@@ -46,7 +44,7 @@ module.exports = {
             root: "./demo"
         },
         dist : false,
-        "site": { // Final build (Compiled demo + source) code pushed to your chosen release cloud i.e. AWS
+        site: { // Final build (Compiled demo + source) code pushed to your chosen release cloud i.e. AWS
             root: './_site'
         }
     },
