@@ -1,11 +1,10 @@
 var pkg = require('./package.json');
 
 module.exports = {
-    build: {
-        styles: 'sass', // 'sass'. less not yet available
-        html: 'mustache',// 'mustache' or 'jade'.
-        scripts: 'browserify' // 'browserify' or 'requirejs'
-    },
+    build: ['sass', 'mustache', 'browserify' ],
+    test: 'karma',  // or false.  where your tests config, specs and reports are saved
+    release: ['git'],
+    serve: 'staticApp', // `staticApp` or `nodeApp`
     browserify: {
         insertGlobals : false,
         detectGlobals : false,
@@ -16,14 +15,11 @@ module.exports = {
             { file: './bower_components/d3/d3.js', expose: 'd3'}
         ]
     },
-    test: 'karma',  // or false.  where your tests config, specs and reports are saved
     karma : {//or mocha not yet available
         functional: './test/karma.functional.js',
         unit: './test/karma.unit.js',
         unitCoverage: './test/coverage/summary.json'
     },
-    release: false,
-    serve: 'staticApp', // `staticApp` or `nodeApp`
     staticApp: {
         server: { baseDir : '_site' },
         port: 3456

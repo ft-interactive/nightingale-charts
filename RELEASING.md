@@ -6,8 +6,8 @@
  * Once the feature/bug-fix is complete, rebase from master.
  * Merge your changes into master
  * `npm test` : Run the tests again
- * `npm run bump` : Bump the version number
-   * alternatively run `component bump [patch|minor|major|vx.x.x]`
+ * `npm run bump` : Patch the version number
+   * alternatively run `npm run bump -- [patch|minor|major|vx.x.x]`
  * `git push` : to kick of the deploy process
  * CircleCI will then run your test, tag the new release within git and deploy.
 
