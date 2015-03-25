@@ -18,9 +18,6 @@ var divs = d3.select('#views')
 divs.append('h2')
     .text(function(d){ return d.title });
 
-//                var formatxAxis = d3.format('.0f');
-//                    .tickFormat(formatxAxis)
-
 divs.append('svg')
     .attr('width', function(d) {
         if (d.orient){
@@ -96,7 +93,7 @@ describe('Number axis shows the data when the axes is', function () {
             expect(labels[1].textContent).toBe('11.2');
         });
 
-        xit('and shows whole numbers (bug: NG-56)', function(){
+        it('and shows whole numbers (bug: NG-56)', function(){
             expect(labels[0].textContent).toBe('7');
             expect(labels[1].textContent).toBe('8');
             expect(labels[2].textContent).toBe('9');

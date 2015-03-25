@@ -12,25 +12,24 @@ module.exports = {
         } );
         return ticks;
     },
-    detailedTicks: function(scale, pixelsPerTick){
-        var count = this.tickCount(scale, pixelsPerTick);
-        var customTicks = scale.ticks(count);
-        //the bottom and top of the domain should be at exact ticks
-        //get the max tic interval, this will be the default
+    tickIntervalBoundaries: function(ticks){
         var interval = 0;
-        customTicks.forEach(function(d,i){
-            if(i < customTicks.length-1){
-                interval = Math.max( customTicks[i+1] - d,  interval);
+        ticks.forEach(function(d,i){
+            if(i < ticks.length-1){
+                interval = Math.max( ticks[i+1] - d,  interval);
             }
         });
-
-        //round up to the domain to the nearest interval
+        return interval;
+    },
+    detailedTicks: function(scale, pixelsPerTick){
+        var count = this.tickCount(scale, pixelsPerTick);
+        var ticks = scale.ticks(count);
+        var interval = this.tickIntervalBoundaries(ticks);
         scale.domain()[0] = Math.ceil(scale.domain()[0]/interval) * interval;
         scale.domain()[1] = Math.floor(scale.domain()[1]/interval) * interval;
-
-        customTicks.push(scale.domain()[1]);
-        customTicks.push(scale.domain()[0]);
-        return customTicks;
+        ticks.push(scale.domain()[1]);
+        ticks.push(scale.domain()[0]);
+        return ticks;
     },
     simpleTicks: function(scale){
         var customTicks = [];

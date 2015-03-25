@@ -1,4 +1,3 @@
-var d3 = require('d3');
 var utils = require('./date.utils.js');
 
 module.exports = {
@@ -33,6 +32,17 @@ module.exports = {
         }
         return textWidth;
     },
+    removeDecimals: function(g){
+        var decimalTotal = 0;
+        g.selectAll('text').each(function(d){
+            decimalTotal += parseFloat(this.textContent.split('.')[1]);
+        });
+        if (!decimalTotal){
+            g.selectAll('text').each(function(d){
+                this.textContent = this.textContent.split('.')[0];
+            });
+        }
+    },
     render: function(g, config){
         g.append('g')
             .attr('class', (this.isVertical(config.axes)) ? 'y axis' : 'x axis')
@@ -41,7 +51,7 @@ module.exports = {
             .call(config.axes);
 
         this.arrangeTicks(g, config.axes, config.lineHeight, config.hardRules);
-
+        this.removeDecimals(g);
         if (this.isVertical(config.axes)) {
             this.extendAxis(g, config.axes, config.extension);
         }
