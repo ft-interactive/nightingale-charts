@@ -9,7 +9,8 @@
     "start": "component build && component serve",
     "test": "jshint src && component build && component test",
     "tdd": "component test tdd",
-    "bump": "component bump"
+    "bump": "component bump",
+    "coverage": "component serve test/coverage/phantomjs/"
   },
   "repository": {
     "type": "git",
