@@ -1,6 +1,6 @@
 require('../../helper').loadAssets('date-axes');
 
-var utils = require('../../../src/scripts/axis/date.axis');
+var utils = require('../../../src/scripts/axis/date.scale');
 var d3 = require('d3');
 
 /* Start Test */
