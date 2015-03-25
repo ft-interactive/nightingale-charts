@@ -50,8 +50,8 @@ module.exports = {
             .attr('class', 'primary')
             .call(config.axes);
 
-        this.arrangeTicks(g, config.axes, config.lineHeight, config.hardRules);
         this.removeDecimals(g);
+        this.arrangeTicks(g, config.axes, config.lineHeight, config.hardRules);
         if (this.isVertical(config.axes)) {
             this.extendAxis(g, config.axes, config.extension);
         }
