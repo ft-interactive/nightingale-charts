@@ -8,7 +8,9 @@
 </head>
 <body class="ft">
 <h1>Date axes</h1>
-<div id="views">
+<div id="viewsLarge">
+</div>
+<div id="viewsSmall">
 </div>
 <script src="scripts/vendor.js"></script>
 <script src="scripts/o-charts.js"></script>
@@ -24,16 +26,15 @@
         {
             title:'A day or less',
             simple:false,
-            scale:d3.time.scale()
-                    .range([0,400])
-                    .domain([new Date("October 13, 1975 11:13:00"), new Date("October 13, 1975 22:00:00")])
+            dateStart : new Date("October 13, 1975 11:13:00"),
+            dateEnd: new Date("October 13, 1975 22:00:00")
         },
         {
             title:'A few weeks',
-            scale:d3.time.scale()
-                    .range([0,400])
-                    .domain([new Date("October 13, 1975 11:13:00"), new Date("November 7, 1975 22:00:00")])
-        },
+            dateStart: new Date("October 13, 1975 11:13:00"),
+            dateEnd: new Date("November 7, 1975 22:00:00")
+        }];
+        /*,
         {
             title:'less than a year',
             scale:d3.time.scale()
@@ -45,6 +46,12 @@
             scale:d3.time.scale()
                     .range([0,400])
                     .domain([new Date(2012,2,1), new Date()])
+        },
+        {
+            title:'between 3 - 15 years',
+            scale:d3.time.scale()
+                    .range([0,400])
+                    .domain([new Date(2001,3,1), new Date(2010,3, 1)])
         },
         {
             title:'more than 3 years',
@@ -64,37 +71,61 @@
             scale:d3.time.scale()
                     .range([0,400])
                     .domain([new Date(1500,0,1), new Date()])
-        }];
+        }];*/
 
+    //itterate and create two
 
-    var divs = d3.select('#views')
-            .selectAll('div')
-            .data(axesDefinitions)
-            .enter().append('div')
-            .attr('class','axis-test');
+    var axesDefinitionsSmall = [], axesDefinitionsLarge = [];
+    var chart, chartSmall, chartLarge;
+    for (chart of axesDefinitions){
 
-    divs.append('h2')
-            .text(function(d){ return d.title });
+        chartSmall = chart;
+        chartLarge = chart;
 
-    divs.append('svg')
-            .attr('width', function(d){
-                var r = d.scale.range();
-                return (r[1] - r[0]) + margin.left + margin.right;
-            })
-            .attr('class','ft-chart')
-            .attr('height', margin.top + margin.bottom)
-            .each(function(d,i){
+        chartLarge.scale = d3.time.scale()
+                .range([0,400])
+                .domain([chart.dateStart, chart.dateEnd]);
+        chartSmall.scale = d3.time.scale()
+                .range([0,200])
+                .domain([chart.dateStart, chart.dateEnd]);
 
-                //create the axis, giving it a scale
-                var axis = oCharts.axis.date()
-                    .simple(d.simple)
-                    .scale(d.scale);
+        axesDefinitionsSmall.push(chartSmall);
+        axesDefinitionsLarge.push(chartLarge);
+    }
 
-                d3.select(this)
-                    .append('g')
-                    .attr('transform','translate(' + margin.left + ',' + margin.top + ')')
-                    .call(axis);
-            });
+    function renderChartArray(div, axesDefinitionArray){
+        var divs = d3.select(div)
+                .selectAll('div')
+                .data(axesDefinitionArray)
+                .enter().append('div')
+                .attr('class','axis-test');
+
+        divs.append('h2')
+                .text(function(d){ return d.title });
+
+        divs.append('svg')
+                .attr('width', function(d){
+                    var r = d.scale.range();
+                    return (r[1] - r[0]) + margin.left + margin.right;
+                })
+                .attr('class','ft-chart')
+                .attr('height', margin.top + margin.bottom)
+                .each(function(d,i){
+
+                    //create the axis, giving it a scale
+                    var axis = oCharts.axis.date()
+                            .simple(d.simple)
+                            .scale(d.scale);
+
+                    d3.select(this)
+                            .append('g')
+                            .attr('transform','translate(' + margin.left + ',' + margin.top + ')')
+                            .call(axis);
+                });
+    }
+
+    renderChartArray('#viewsLarge', axesDefinitionsLarge);
+    renderChartArray('#viewsSmall', axesDefinitionsSmall);
 
     oCharts.util.attributeStyler();
 
