@@ -27,6 +27,7 @@ if behind a proxy run, setup git to use https:
 5. Create a topic branch to contain your change
 `git checkout -b my-feature`
 6. Hack, hack, hack
+7. Check your changes in nightingale. [More Details >](#check-your-changes-in-nightingale)
 7. Make sure [CHANGELOG.md](./CHANGELOG.md) includes a summary of your changes in a new version number heading
 8. Make sure you are still up to date with master
 `git pull upstream master`
@@ -40,3 +41,11 @@ if behind a proxy run, setup git to use https:
  * `npm start`
  * `npm test`
 
+## Check your changes in nightingale
+
+`o-chart` should be linked within bower and nightingale so that the changes can be checked locally.
+Do this by:
+ * `bower link` within o-charts root directory
+ * `bower link o-charts` within nightingale root directory
+
+When you have run nightingale locally to ensure any changes haven't broken it you can `unlink` in the same way.
