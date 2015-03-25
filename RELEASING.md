@@ -1,13 +1,29 @@
 # Release Process: Continuous Deployment
 
-> The version number must be incremented manually before code is pushed to Git.
-
+**Submitting a PR**
  * Ensure all changes are made and pushed to feature branches
  * Once the feature/bug-fix is complete, rebase from master.
- * Merge your changes into master
+ * `npm test` : Run the tests
+
+**Accepting a PR**
+ * Switch to the PR branch and review code
+ * `npm test` : Run the tests
+ * Merge the PR into master
  * `npm test` : Run the tests again
- * `npm run bump` : Patch the version number
+ * `npm run coverage` : take a look at the code coverage
+ * `npm run bump` :
    * alternatively run `npm run bump -- [patch|minor|major|vx.x.x]`
  * `git push` : to kick of the deploy process
- * CircleCI will then run your test, tag the new release within git and deploy.
 
+
+## Bump the Version
+
+> Bump the version within your app
+
+`npm run bump`
+
+This will update the version number in all the docs (package.json, version.js, *.md and *.html).
+
+By default, this applies a  `patch`.  Add a double-dash `patch`, `minor`, `major`, `prerelease` or even `v3.2.1` to specify the type of bump.
+
+i.e. `npm run bump -- major`
