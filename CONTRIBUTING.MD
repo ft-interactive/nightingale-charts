@@ -43,7 +43,7 @@ if behind a proxy run, setup git to use https:
 
 ## Check your changes in nightingale
 
-`o-chart` should be linked within bower and nightingale so that the changes can be checked locally.
+`o-chart` should be linked within bower and [nightingale](https://github.com/Financial-Times/nightingale) so that the changes can be checked locally.
 Do this by:
  * `bower link` within o-charts root directory
  * `bower link o-charts` within nightingale root directory
