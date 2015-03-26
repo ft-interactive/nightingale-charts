@@ -9,7 +9,7 @@
 <body class=ft>
 <h1>Date axes</h1>
 
-<div id=viewsLarge></div>
+<div id=views></div>
 <div id=viewsSmall></div>
 
 <script src=scripts/vendor.js></script>
@@ -51,7 +51,7 @@
             dateEnd: new Date(2010,3, 1)
         },
         {
-            title:'more than 3 years',
+            title:'more than 15 years',
             simple:true,
             dateStart: new Date(1998),
             dateEnd: new Date(2015,2,1)
@@ -116,7 +116,7 @@
                 });
     }
 
-    renderAxesArrayIntoDiv('#viewsLarge', createAxesDefArrayOfWidth(400,axesDefinitions));
+    renderAxesArrayIntoDiv('#views', createAxesDefArrayOfWidth(400,axesDefinitions));
     renderAxesArrayIntoDiv('#viewsSmall', createAxesDefArrayOfWidth(200,axesDefinitions));
 
     oCharts.util.attributeStyler();
