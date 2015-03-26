@@ -45,7 +45,7 @@ module.exports = {
     },
     render: function(g, config){
         g.append('g')
-            .attr('class', (this.isVertical(config.axes)) ? 'y axis' : 'x axis')
+            .attr('class', (this.isVertical(config.axes)) ? 'y axis left' : 'x axis')
             .append('g')
             .attr('class', 'primary')
             .call(config.axes);
