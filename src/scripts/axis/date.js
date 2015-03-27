@@ -1,6 +1,6 @@
 var d3 = require('d3');
 var labels = require('./date.labels.js');
-var axis = require('./date.axis.js');
+var dateScale = require('./date.scale.js');
 
 function dateAxis() {
     var config = {
@@ -10,6 +10,7 @@ function dateAxis() {
         tickSize   : 5 ,
         simple : false,//axis has only first and last points as ticks, i.e. the scale's domain extent
         nice   : false,
+        pixelsPerTick : 100,
         units  : ['multi'],
         unitOverride : false,
         yOffset : 0,
@@ -92,10 +93,10 @@ function dateAxis() {
     render.scale = function(scale, units) {
         if (!arguments.length) return config.axes[0].scale();
         if (config.nice) {
-            scale.nice((scale.range()[1] - scale.range()[0]) / 100); //specify the number of ticks should be about 1 every 100 pixels
+            scale.nice((scale.range()[1] - scale.range()[0]) / config.pixelsPerTick);
         }
         config.scale = scale;
-        config.axes = axis.render(scale, units, config.tickSize, config.simple);
+        config.axes = dateScale.render(scale, units, config.tickSize, config.simple);
         return render;
     };
 

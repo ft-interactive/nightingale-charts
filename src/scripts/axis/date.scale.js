@@ -94,10 +94,10 @@ module.exports = {
                 var customTicks = (simple) ? scale.domain() : this.createDetailedTicks(scale, units[i]);
                 var axis = d3.svg.axis()
                     .scale( scale )
-                    .tickValues( customTicks )
-                    .tickFormat( this.formatter[ units[i] ] )
+                    .tickValues(customTicks)
+                    .tickFormat(this.formatter[units[i]])
                     .tickSize(tickSize,0);
-                axes.push( axis );
+                axes.push(axis );
             }
         }
         axes.forEach(function (axis) {
