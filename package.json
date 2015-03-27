@@ -6,7 +6,7 @@
   "main": "src/scripts/o-charts.js",
   "scripts": {
     "start": "npm run build && srvlr _site -R -l tiny",
-    "test": "jshint src && karma start test/karma.functional.js --single-run && karma start test/karma.unit.js --single-run",
+    "test": "npm run build && jshint src && karma start test/karma.functional.js --single-run && karma start test/karma.unit.js --single-run",
     "scripts": "mkdir -p _site/scripts && browserify -r ./bower_components/d3/d3.js:d3  -r ./src/scripts/o-charts.js:o-charts > _site/scripts/o-charts.js",
     "styles": "mkdir -p _site/styles && node-sass --style expanded src/styles/main.scss _site/styles/main.css && node-sass --style expanded demo/styles/demo.scss _site/styles/demo.css",
     "build": "npm run scripts && npm run styles &&  npm run build-html",
