@@ -1,4 +1,3 @@
-
 var d3 = require('d3');
 
 var axesDefinitions = [
@@ -45,6 +44,13 @@ var axesDefinitions = [
         scale:d3.scale.linear()
             .range([0, 200])
             .domain([7, 11.2])
+    },
+    {
+        title:'above zero, below 3, decimals',
+        simple:false,
+        scale:d3.scale.linear()
+            .range([0, 200])
+            .domain([2.95, 0.2])
     }];
 
 module.exports = axesDefinitions;

@@ -138,5 +138,21 @@ describe('Number axis shows the data when the axes is', function () {
 
     });
 
+    describe('decimals', function () {
+        var decimals = document.querySelector('.axis-test:nth-child(7) svg');
+        var y = decimals.querySelector('.y.axis');
+        var labels = y.querySelectorAll('.primary .tick text');
+
+        it('0.0 should always be displayed as 0', function () {
+            expect(labels.length).toBe(7);
+            expect(labels[5].textContent).toBe('0');
+            expect(labels[0].textContent).toBe('0.5');
+            expect(labels[1].textContent).toBe('1.0');
+            expect(labels[2].textContent).toBe('1.5');
+            expect(labels[3].textContent).toBe('2.0');
+            expect(labels[4].textContent).toBe('2.5');
+        });
+    })
+
 
 });
