@@ -10,7 +10,7 @@
  * `npm test` : Run the tests
  * Merge the PR into master
  * `npm test` : Run the tests again
- * `npm run coverage` : take a look at the code coverage
+ * `npm run report` : take a look at the code coverage
  * `npm run bump` :
    * alternatively run `npm run bump -- [patch|minor|major|vx.x.x]`
  * `git push` : to kick of the deploy process
