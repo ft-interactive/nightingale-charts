@@ -20,6 +20,7 @@
   "author": "tom pearson",
   "license": "ISC",
   "devDependencies": {
+    "karma-browserify": "nikku/karma-browserify",
     "browserify-istanbul": "^0.2.1",
     "component-helper": "git://github.com/peter-mouland/component-helper",
     "jshint": "^2.6.3"
