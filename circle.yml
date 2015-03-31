@@ -7,11 +7,11 @@ test:
 general:
   artifacts:
     - test/coverage
-deployment:
-  production:
-    branch: master
-    commands:
-      - ./node_modules/component-helper/bin/component release current
+#deployment:
+#  production:
+#    branch: master
+#    commands:
+#      - ./node_modules/component-helper/bin/component release current
 machine:
   timezone:
     Europe/London
