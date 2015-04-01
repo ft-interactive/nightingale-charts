@@ -27,7 +27,13 @@ var axesDefinitions = [
             .domain([new Date(2012,2,1), new Date()])
     },
     {
-        title:'more than 3 years',
+        title:'between 3 - 15 years',
+        scale:d3.time.scale()
+            .range([0,400])
+            .domain([new Date(2001,3,1), new Date(2010,3, 1)])
+    },
+    {
+        title:'more than 15 years',
         simple:true,
         scale:d3.time.scale()
             .range([0,400])

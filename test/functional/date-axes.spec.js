@@ -79,8 +79,8 @@ describe('date axis shows the data when the axes is', function () {
     });
 
     describe('a few weeks', function () {
-        var dayOrLess = document.querySelector('.axis-test:nth-child(2) svg');
-        var x = dayOrLess.querySelector('.x.axis');
+        var aFewWeeks = document.querySelector('.axis-test:nth-child(2) svg');
+        var x = aFewWeeks.querySelector('.x.axis');
         var ticks = x.querySelectorAll('.primary .tick');
         var labels = x.querySelectorAll('.primary .tick text');
         var firstTick = ticks[0];
@@ -100,5 +100,40 @@ describe('date axis shows the data when the axes is', function () {
 
     });
 
+    describe('between 3 - 15 years', function () {
+        var threeToFifteenYears = document.querySelector('.axis-test:nth-child(5) svg');
+        var x = threeToFifteenYears.querySelector('.x.axis');
+        var ticks = x.querySelectorAll('.primary .tick');
+        var labels = x.querySelectorAll('.primary .tick text');
+        var firstTick = ticks[0];
+        var firstTickLine = firstTick.querySelectorAll('line');
 
+        it('shows one tick for each year', function () {
+            expect(ticks.length).toBe(10);
+            expect(firstTickLine.length).toBe(1);
+        });
+
+        it('shows one label for each year', function () {
+            expect(labels.length).toBe(10);
+
+        });
+
+        it('shows first label as the full year', function () {
+            expect(labels[0].textContent).toBe('2001');
+
+        });
+
+        it('shows subsequent labels as last 2 digits of year', function () {
+            expect(labels[1].textContent).toBe('02');
+            expect(labels[2].textContent).toBe('03');
+            expect(labels[3].textContent).toBe('04');
+            expect(labels[4].textContent).toBe('05');
+            expect(labels[5].textContent).toBe('06');
+            expect(labels[6].textContent).toBe('07');
+            expect(labels[7].textContent).toBe('08');
+            expect(labels[8].textContent).toBe('09');
+            expect(labels[9].textContent).toBe('10');
+        });
+
+    });
 });

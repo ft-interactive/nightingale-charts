@@ -1,7 +1,4 @@
-var utils = require('./date.utils.js');
-
 module.exports = {
-
 
     isVertical: function (axis) {
         return axis.orient() === 'left' || axis.orient() === 'right';
