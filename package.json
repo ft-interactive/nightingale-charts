@@ -1,5 +1,5 @@
 {
-  "version": "0.0.2",
+  "version": "0.0.3",
   "name": "o-charts",
   "description": "FT style charts, axes, scales etc",
   "private": true,
@@ -23,7 +23,6 @@
     "browserify": "^9.0.3",
     "browserify-istanbul": "^0.2.1",
     "browserify-shim": "^3.8.3",
-    "browserify-istanbul": "^0.2.1",
     "component-helper": "git://github.com/peter-mouland/component-helper",
     "jshint": "^2.6.3",
     "karma": "^0.12.31",
