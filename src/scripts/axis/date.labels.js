@@ -31,12 +31,17 @@ module.exports = {
         });
         return overlap;
     },
+
     removeOverlappingLabels : function(dElements){
         var self = this;
-        var elementCount = dElements[0].length;
+        var elements = dElements[0];
+        var elementCount = elements.length;
         var limit = 5;
         function remove(d,i){
-            if(i%2 !== 0 && i !== elementCount-1) {
+            if (i === elementCount-1){
+                var previousLabel = dElements[0][elementCount-2];
+                d3.select(previousLabel).remove();
+            } else if(i%2 !== 0) {
                 d3.select(this).remove();
             }
         }

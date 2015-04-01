@@ -24,14 +24,13 @@ describe('date axis shows the data when the axes is', function () {
         });
 
         it('shows one label for each viewable hour', function () {
-            expect(labels.length).toBe(7);
+            expect(labels.length).toBe(6);
             expect(labels[0].textContent).toBe('11:00');
             expect(labels[1].textContent).toBe('13:00');
             expect(labels[2].textContent).toBe('15:00');
             expect(labels[3].textContent).toBe('17:00');
             expect(labels[4].textContent).toBe('19:00');
-            expect(labels[5].textContent).toBe('21:00');
-            expect(labels[6].textContent).toBe('22:00');
+            expect(labels[5].textContent).toBe('22:00');
         });
 
         it('always shows the time for the final tick (bug: NG-54)', function(){
@@ -55,7 +54,7 @@ describe('date axis shows the data when the axes is', function () {
             expect(firstTickLine.length).toBe(1);
         });
 
-        it('shows one label for each viewable hour', function () {
+        it('shows one label for each viewable hour (bug: NG-60)', function () {
             expect(labels.length).toBe(6);
             expect(labels[0].textContent).toBe('11:00');
             expect(labels[1].textContent).toBe('13:00');
