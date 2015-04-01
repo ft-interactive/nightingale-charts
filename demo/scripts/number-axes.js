@@ -43,6 +43,12 @@ var axesDefinitions = [
         orient:'bottom',
         start:7,
         end: 11.2
+    },
+    {
+        title:'above zero, below 3, decimals',
+        simple:false,
+        start:2.95,
+        end: 0.2
     }];
 
 function createAxesDefArrayOfWidth(axisWidth, axesDefinitionArray) {
