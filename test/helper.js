@@ -11,11 +11,11 @@ function appendScript(fileObj){
     document.body.appendChild(link)
 }
 function loadAssets(page){
-    document.body.innerHTML = __html__['_site/' + (page || 'html') + '.html'];
+    document.body.innerHTML = __html__['_site/' + (page || 'index') + '.html'];
     appendCSS({path: '_site/styles/demo.css'});
     appendCSS({path: '_site/styles/main.css'});
     appendScript({path: '_site/scripts/vendor.js'});
-    appendScript({path: '_site/scripts/o-charts.js'});
+    appendScript({path: '_site/scripts/' + (page || 'o-charts') + '.js'});
 }
 
 module.exports = {
