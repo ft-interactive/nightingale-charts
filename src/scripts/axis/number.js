@@ -21,22 +21,6 @@ function numericAxis() {
     var pixelsPerTick = 100;
     var tickExtension = 0;
 
-    function removeDecimals(g){
-        var decimalTotal = 0;
-        g.selectAll('text').each(function(d){
-            decimalTotal += parseFloat(this.textContent.split('.')[1]);
-        });
-        if (!decimalTotal){
-            g.selectAll('text').each(function(d){
-                this.textContent = this.textContent.split('.')[0];
-            });
-        }
-    }
-
-    function isVertical() {
-        return a.orient() === 'left' || a.orient() === 'right';
-    }
-
     function axis(g) {
         var orientOffset = (a.orient() === 'right') ? -a.tickSize() : 0 ;
 
