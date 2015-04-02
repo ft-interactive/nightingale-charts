@@ -8,6 +8,9 @@ module.exports = function(config) {
             'test/unit/**/*.js': ['browserify'],
             '_site/*.html': ['html2js']
         },
+        plugins: [
+            'karma-browserify', 'karma-jasmine', 'karma-coverage', 'karma-phantomjs-launcher', 'karma-chrome-launcher', 'karma-html2js-preprocessor'
+        ],
         coverageReporter: {
             dir : 'test/coverage/',
             reporters: [
