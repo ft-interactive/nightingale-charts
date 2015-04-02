@@ -8,6 +8,9 @@ module.exports = function(config) {
             'test/functional/**/*.js': ['browserify'],
             '_site/*.html': ['html2js']
         },
+        plugins: [
+            'karma-browserify', 'karma-jasmine', 'karma-coverage', 'karma-phantomjs-launcher', 'karma-chrome-launcher', 'karma-html2js-preprocessor'
+        ],
         files: [
             {pattern: '_site/**/vendor.*', included: true, served: true, watched: true},
             {pattern: '_site/**/*.*', included: true, served: true, watched: true},
