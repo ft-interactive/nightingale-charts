@@ -1,7 +1,4 @@
-var utils = require('./date.utils.js');
-
 module.exports = {
-
 
     isVertical: function (axis) {
         return axis.orient() === 'left' || axis.orient() === 'right';
@@ -35,7 +32,12 @@ module.exports = {
     removeDecimals: function(g){
         var decimalTotal = 0;
         g.selectAll('text').each(function(d){
-            decimalTotal += parseFloat(this.textContent.split('.')[1]);
+            var val0 = parseFloat(this.textContent.split('.')[0]);
+            var val1 = parseFloat(this.textContent.split('.')[1]);
+            decimalTotal += val1;
+            if (val0 === 0 && val1===0) {
+                this.textContent = 0;
+            }
         });
         if (!decimalTotal){
             g.selectAll('text').each(function(d){
