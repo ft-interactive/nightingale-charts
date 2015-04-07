@@ -2,25 +2,29 @@
 var oCharts = require('../../src/scripts/o-charts');
 var d3 = require('d3');
 
-function createChart(i){
-    d3.select('body').append('div').attr('id','line-chart'+i);
+var y = [
+    { series: ['value', 'value2']},
+    { series: [{key:'value', label:'String Value'},
+              {key:'value2', label:'Another String Value'}]},
+    { series: [{key:'value', label:function(){ return 'Function Value';}},
+              {key:'value2', label:function(){ return 'Another function Value';}}]}
+];
+var hideSource = [true, true, false];
+var numberAxisOrient = ['left','right','left'];
 
-    var simpleData = {
+function getChartData(i){
+    return {
         comment: "Line chart",
         footnote: "this is just for testing!",
         source: "tbc",
-        title: "Some Simple Lines",
+        title: "Some Simple Lines: " + (i+1),
         subtitle: "Drawn for you",
-        numberAxisOrient:'right',//or 'left'//todo: refactor onto y object
-        hideSource:true,
+        numberAxisOrient: numberAxisOrient[i], //todo: refactor onto y object
+        hideSource: hideSource[i],
         x:{
           series: {key:'date', label:'year'}
         },
-        y:{
-          series: ['value', {key:'value2', label:function(){
-              return 'foo'
-          }}]  //could be an array of {key:, label}
-        },
+        y: y[i],
         data: [
             {date: new Date('2000-01-01T00:00:00.000Z'), value: Math.random() * 40, value2: Math.random() * 40},
             {date: new Date('2001-01-01T00:00:00.000Z'), value: Math.random() * 40, value2: Math.random() * 40},
@@ -28,15 +32,14 @@ function createChart(i){
             {date: new Date('2003-01-01T00:00:00.000Z'), value: Math.random() * 40, value2: Math.random() * 40}
         ]
     };
-
-    var lineChart = oCharts.chart.line();
-    d3.select('#line-chart'+i).data([simpleData]).call( lineChart );
 }
 
 module.exports = {
+    getChartData: getChartData,
     init: function(){
         for(var i=0;i<3;i++){
-            createChart(i);
+            d3.select('body').append('div').attr('id','line-chart' + (i+1));
+            d3.select('#line-chart'+ (i+1)).data([getChartData(i)]).call( oCharts.chart.line() );
         }
     }
 };

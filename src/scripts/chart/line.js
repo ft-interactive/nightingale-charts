@@ -234,6 +234,8 @@ function lineChart(p) {
 					height: model.height,
 					width: model.width
 				});
+		var titleMetaData = svg.append('title').text(model.title);
+		var subtitleMetaData = svg.append('desc').text(model.subtitle);
 
 		var defaultLineHeight = 1.2;
 		// TODO: don't hard-code the fontsize, get from CSS somehow.
@@ -271,6 +273,8 @@ function lineChart(p) {
 		//position stuff
 		//start from the top...
 		var title = svg.append('g').attr('class','chart-title').datum(model.title).call(titleTextWrapper);
+
+
 		if (!model.titlePosition) {
 			if (model.title) {
 				model.titlePosition = {top: totalHeight + titleFontSize, left: 0};
