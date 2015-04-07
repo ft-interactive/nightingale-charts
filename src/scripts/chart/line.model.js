@@ -59,7 +59,7 @@ function setValueDomain(model){
 	if (model.valueDomain) { return model.valueDomain; }
 	var extents = setExtents(model);
 	var valueDomain = d3.extent(extents);
-	if (!model.falseorigin && valueDomain[0] > 0) {
+	if (!model.falseOrigin && valueDomain[0] > 0) {
 		valueDomain[0] = 0;
 	}
 	return valueDomain;
@@ -74,9 +74,9 @@ function setChartHeight(model){
 }
 
 function verifyData(model){
-	return !Array.isArray(model.data) ? [] : model.data.map(function (d, i) {
+	return !Array.isArray(model.data) ? [] : model.data.map(function (dataItem, i) {
 
-		var s = d[model.x.series.key];
+		var s = dataItem[model.x.series.key];
 		var error = {
 			node: null,
 			message: '',
@@ -85,7 +85,7 @@ function verifyData(model){
 			value: s
 		};
 
-		if (!d) {
+		if (!dataItem) {
 			error.message = 'Empty row';
 		} else if (!s) {
 			error.message = 'X axis value is empty or null';
@@ -95,10 +95,10 @@ function verifyData(model){
 
 		if (error.message) {
 			model.error(error);
-			d[model.x.series.key] = null;
+			dataItem[model.x.series.key] = null;
 		}
 
-		return d;
+		return dataItem;
 
 	});
 }
@@ -113,7 +113,8 @@ function setKey(model){
 	return key;
 }
 
-function buildModel(opts) {
+
+function Model(opts) {
 	var lineClasses = ['series1', 'series2', 'series3', 'series4', 'series5', 'series6', 'series7', 'accent'];
 	var m = {
 		//layout stuff
@@ -126,8 +127,8 @@ function buildModel(opts) {
 		simpleValue: false,
 		logoSize: 28,
 		//data stuff
-		falseorigin: false, //TODO, find out if there's a standard 'pipeline' temr for this
-		error: function(err) { console.log('ERROR: ', err); },
+		falseOrigin: false, //TODO, find out if there's a standard 'pipeline' temr for this
+		error: this.error,
 		lineClasses: {},
 		niceValue: true,
 		hideSource: false,
@@ -168,11 +169,10 @@ function buildModel(opts) {
 							return d;
 						});
 
-
 	return m;
 }
 
-
-module.exports = {
-	build: buildModel
+Model.prototype.error = function(err) {
+	console.log('ERROR: ', err);
 };
+module.exports = Model;

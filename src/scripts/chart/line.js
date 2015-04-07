@@ -5,7 +5,7 @@ var textArea = require('../element/text-area.js');
 var lineKey = require('../element/line-key.js');
 var ftLogo = require('../element/logo.js');
 var interpolator = require('../util/line-interpolators.js');
-var lineModel = require('./line.model.js');
+var LineModel = require('./line.model.js');
 
 function getHeight(selection) {
 	return Math.ceil(selection.node().getBoundingClientRect().height);
@@ -20,12 +20,10 @@ function lineChart(p) {
 
 	function chart(g){
 
-		//the model is built froma  copy of the data
-		var model = lineModel.build(Object.create(g.data()[0]));
+		var model = new LineModel(Object.create(g.data()[0]));
 		var svg = g.append('svg')
 				.attr({
 					'class': 'graphic line-chart',
-					//we don't necessarily know the height at the moment so may be undefiend...
 					height: model.height,
 					width: model.width
 				});
@@ -61,14 +59,11 @@ function lineChart(p) {
 				.label(function (d) {
 					return d.key;
 				}),
-
-			elementPositions = [],
 			totalHeight = 0;
 
 		//position stuff
 		//start from the top...
 		var title = svg.append('g').attr('class','chart-title').datum(model.title).call(titleTextWrapper);
-
 
 		if (!model.titlePosition) {
 			if (model.title) {
