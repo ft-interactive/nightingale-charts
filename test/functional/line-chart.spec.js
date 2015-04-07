@@ -72,6 +72,14 @@ describe('line-chart  ', function () {
 
     describe('positions y axis ', function () {
 
+        it('without error', function () {
+            var yAxis = lineChart1.querySelector('.y.axis text');
+            expect(yAxis.textContent).not.toBe('NaN');
+
+            yAxis = lineChart2.querySelector('.y.axis text');
+            expect(yAxis.textContent).not.toBe('NaN');
+        });
+
         it('on the left', function () {
             var yAxis = lineChart1.querySelector('.y.axis text');
             expect(parseInt(yAxis.getAttribute('x')) <0 ).toBeTruthy();

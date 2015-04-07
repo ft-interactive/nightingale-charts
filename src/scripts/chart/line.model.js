@@ -26,7 +26,6 @@ function setExtents(model){
 	model.y.series.forEach(function (l, i) {
 		var key = l.key;
 		model.data = model.data.map(function (d, j) {
-
 			var value = d[key];
 			var isValidNumber = value === null || typeof value === 'number';
 			if (!isValidNumber) {
@@ -149,6 +148,17 @@ function Model(opts) {
 		m[key] = opts[key];
 	}
 
+	m.x.series = seriesOptions.normalise(m.x.series);
+	m.y.series = seriesOptions.normaliseY(m.y.series)
+		.filter(function (d) {
+			return !!d.key && d.key !== m.x.series.key;
+		})
+		.map(function (d, i) {
+			d.index = i;
+			d.className = lineClasses[i];
+			return d;
+		});
+
 	m.data = verifyData(m);
 	m.contentWidth = m.width - (m.margin * 2);
 	m.translate = translate(0);
@@ -158,16 +168,6 @@ function Model(opts) {
 	m.valueDomain = setValueDomain(m);
 	m.lineStrokeWidth = lineThickness(m.lineThickness);
 	m.key = setKey(m);
-	m.x.series = seriesOptions.normalise(m.x.series);
-	m.y.series = seriesOptions.normaliseY(m.y.series)
-						.filter(function (d) {
-							return !!d.key && d.key !== m.x.series.key;
-						})
-						.map(function (d, i) {
-							d.index = i;
-							d.className = lineClasses[i];
-							return d;
-						});
 
 	return m;
 }
