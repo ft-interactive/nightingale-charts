@@ -15,6 +15,22 @@ function getWidth(selection) {
 	return Math.ceil(selection.node().getBoundingClientRect().width);
 }
 
+function createMetaData(svg, model){
+	svg.append('title').text(model.title);
+	svg.append('desc').text(model.subtitle);
+	var metadata = svg.append('metadata')
+		//.attr({'id' : "license",
+		//		'xmlns:rdf':"http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+		//		'xmlns:dc':"http://purl.org/dc/elements/1.1/",
+		//		'xmlns:cc':"http://creativecommons.org/ns#"});
+	var rdf = metadata.append(':rdf:RDF');
+	var cc = rdf.append(':cc:Work');
+	var title = cc.append(':dc:title').text(model.title);
+	var description = cc.append(':dc:description').text(model.subtitle);
+	var format = cc.append(':dc:format').text('image/svg+xml');
+	var date = cc.append(':dc:date').text(new Date());
+}
+
 function lineChart(p) {
     'use strict';
 
@@ -25,10 +41,11 @@ function lineChart(p) {
 				.attr({
 					'class': 'graphic line-chart',
 					height: model.height,
-					width: model.width
+					width: model.width,
+					xmlns:"http://www.w3.org/2000/svg",
+					version:"1.2"
 				});
-		svg.append('title').text(model.title);
-		svg.append('desc').text(model.subtitle);
+		createMetaData(svg, model);
 
 		var defaultLineHeight = 1.2;
 		// TODO: don't hard-code the fontsize, get from CSS somehow.
