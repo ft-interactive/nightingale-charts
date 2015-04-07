@@ -262,9 +262,6 @@ function lineChart(p) {
 					return d.value;
 				})
 				.label(function (d) {
-					if (model.labelLookup !== null && model.labelLookup[d.key]) {
-						return model.labelLookup[d.key];
-					}
 					return d.key;
 				}),
 
