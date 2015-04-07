@@ -1,5 +1,3 @@
-//reusable linechart
-
 var d3 = require('d3');
 var dateAxis = require('../axis/date.js');
 var numberAxis = require('../axis/number.js');
@@ -9,48 +7,10 @@ var ftLogo = require('../element/logo.js');
 var lineThickness = require('../util/line-thickness.js');
 var interpolator = require('../util/line-interpolators.js');
 var ratios = require('../util/aspect-ratios.js');
+var seriesOptions = require('../util/series-options.js');
 
 function isDate(d) {
 	return d && d instanceof Date && !isNaN(+d);
-}
-
-function isTruthy(value) {
-	return !!value;
-}
-
-function normaliseSeriesOptions(value) {
-	var d = {key: null, label: null};
-
-	if (!value) {
-		return d;
-	}
-
-	if (typeof value === 'string') {
-		d.key = d.label = value;
-	} else if (Array.isArray(value) && value.length <= 2 && typeof value[0] === 'string') {
-		d.key = value[0];
-		d.label = typeof value[1] !== 'string' ? d.key : value[1];
-	} else if (typeof value === 'function') {
-		d = value();
-	} else if (value.key) {
-		d.key = value.key;
-		d.label = value.label || d.key;
-	}
-
-	if (typeof d.key === 'function') {
-		d.key = d.key();
-	}
-
-	if (typeof d.label === 'function') {
-		d.label = d.label();
-	}
-
-	return d;
-}
-
-function normaliseYAxisOptions(value) {
-	if (!value) return [];
-	return (!Array.isArray(value) ? [normaliseSeriesOptions(value)] : value.map(normaliseSeriesOptions)).filter(isTruthy);
 }
 
 function getHeight(selection) {
@@ -133,8 +93,8 @@ function lineChart(p) {
 
 		m.lineStrokeWidth = lineThickness(m.lineThickness);
 
-		m.x.series = normaliseSeriesOptions(m.x.series);
-		m.y.series = normaliseYAxisOptions(m.y.series)
+		m.x.series = seriesOptions.normalise(m.x.series);
+		m.y.series = seriesOptions.normaliseY(m.y.series)
 							.filter(function (d) {
 								return !!d.key && d.key !== m.x.series.key;
 							})
