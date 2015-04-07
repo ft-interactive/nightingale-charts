@@ -21,13 +21,96 @@ function setChartWidth(model){
 	return  model.contentWidth - rightGutter;
 }
 
+function setExtents(model){
+	var extents = [];
+	model.y.series.forEach(function (l, i) {
+		var key = l.key;
+		model.data = model.data.map(function (d, j) {
+
+			var value = d[key];
+			var isValidNumber = value === null || typeof value === 'number';
+			if (!isValidNumber) {
+				model.error({
+					node: null,
+					message: 'Value is not a number',
+					value: value,
+					row: j,
+					column: key
+				});
+			}
+			return d;
+		});
+		var ext = d3.extent(model.data, function(d){
+			return d[key];
+		});
+		extents = extents.concat (ext);
+	});
+	return extents;
+}
+
+function setTimeDomain(model){
+	if (model.timeDomain) { return model.timeDomain; }
+	return d3.extent(model.data, function (d) {
+		return d[model.x.series.key];
+	});
+}
+
+function setValueDomain(model){
+	if (model.valueDomain) { return model.valueDomain; }
+	var extents = setExtents(model);
+	var valueDomain = d3.extent(extents);
+	if (!model.falseorigin && valueDomain[0] > 0) {
+		valueDomain[0] = 0;
+	}
+	return valueDomain;
+}
+
 function setChartHeight(model){
 	if (model.chartHeight) { return model.chartHeight; }
-	// The chart size should have a nice aspect ratio
 	var isNarrow = model.chartWidth < 220;
 	var isWide = model.chartWidth > 400;
 	var ratio = isNarrow ? 1.1 : (isWide ? ratios.commonRatios.widescreen : ratios.commonRatios.standard);
 	return ratios.heightFromWidth(model.chartWidth, ratio);
+}
+
+function verifyData(model){
+	return !Array.isArray(model.data) ? [] : model.data.map(function (d, i) {
+
+		var s = d[model.x.series.key];
+		var error = {
+			node: null,
+			message: '',
+			row: i,
+			column: model.x.series.key,
+			value: s
+		};
+
+		if (!d) {
+			error.message = 'Empty row';
+		} else if (!s) {
+			error.message = 'X axis value is empty or null';
+		} else if (!isDate(s)) {
+			error.message = 'Value is not a valid date';
+		}
+
+		if (error.message) {
+			model.error(error);
+			d[model.x.series.key] = null;
+		}
+
+		return d;
+
+	});
+}
+
+function setKey(model){
+	var key = model.key;
+	if (typeof model.key !== 'boolean') {
+		key = model.y.series.length > 1;
+	} else if (model.key && !model.y.series.length) {
+		key = false;
+	}
+	return key;
 }
 
 function buildModel(opts) {
@@ -65,11 +148,15 @@ function buildModel(opts) {
 		m[key] = opts[key];
 	}
 
+	m.data = verifyData(m);
 	m.contentWidth = m.width - (m.margin * 2);
 	m.translate = translate(0);
 	m.chartWidth = setChartWidth(m);
 	m.chartHeight = setChartHeight(m);
+	m.timeDomain = setTimeDomain(m);
+	m.valueDomain = setValueDomain(m);
 	m.lineStrokeWidth = lineThickness(m.lineThickness);
+	m.key = setKey(m);
 	m.x.series = seriesOptions.normalise(m.x.series);
 	m.y.series = seriesOptions.normaliseY(m.y.series)
 						.filter(function (d) {
@@ -81,80 +168,6 @@ function buildModel(opts) {
 							return d;
 						});
 
-	if (typeof m.key !== 'boolean') {
-		m.key = m.y.series.length > 1;
-	} else if (m.key && !m.y.series.length) {
-		m.key = false;
-	}
-
-	m.data = !Array.isArray(m.data) ? [] : m.data.map(function (d, i) {
-
-		var s = d[m.x.series.key];
-		var error = {
-			node: null,
-			message: '',
-			row: i,
-			column: m.x.series.key,
-			value: s
-		};
-
-		if (!d) {
-			error.message = 'Empty row';
-		} else if (!s) {
-			error.message = 'X axis value is empty or null';
-		} else if (!isDate(s)) {
-			error.message = 'Value is not a valid date';
-		}
-
-		if (error.message) {
-			m.error(error);
-			d[m.x.series.key] = null;
-		}
-
-		return d;
-
-	});
-
-	//make sure all the lines are numerical values, calculate extents...
-	var extents = [];
-	m.y.series.forEach(function (l, i) {
-		var key = l.key;
-		m.data = m.data.map(function (d, j) {
-
-			var value = d[key];
-			var isValidNumber = value === null || typeof value === 'number';
-			if (!isValidNumber) {
-				m.error({
-					node: null,
-					message: 'Value is not a number',
-					value: value,
-					row: j,
-					column: key
-				});
-			}
-			return d;
-		});
-		var ext = d3.extent(m.data, function(d){
-			return d[key];
-		});
-		extents = extents.concat (ext);
-	});
-
-	//work out the time domain
-	if (!m.timeDomain) {
-		m.timeDomain = d3.extent(m.data, function (d) {
-			return d[m.x.series.key];
-		});
-	}
-
-	//work out the value domain
-	if (!m.valueDomain) {
-		m.valueDomain = d3.extent(extents);
-		// unless a false origin has been specified
-		if (!m.falseorigin && m.valueDomain[0] > 0) {
-			m.valueDomain[0] = 0;
-		}
-	}
 
 	return m;
 }
