@@ -4,9 +4,9 @@ require('../helper').loadAssets('number-axes');
 require('../../demo/scripts/number-axes').init();
 
 /* Start Test */
-describe('Number axis shows the data when the axes is', function () {
+describe('When Number axis data is', function () {
 
-    describe('6 or less', function () {
+    describe('6 or less, it', function () {
         var sixOrLess = document.querySelector('.axis-test:nth-child(1) svg');
         var y = sixOrLess.querySelector('.y.axis');
         var labels = y.querySelectorAll('.primary .tick text');
@@ -45,7 +45,7 @@ describe('Number axis shows the data when the axes is', function () {
             expect(labels[1].textContent).toBe('11.2');
         });
 
-        it('and shows whole numbers (bug: NG-56)', function(){
+        it('shows whole numbers (bug: NG-56)', function(){
             expect(labels[0].textContent).toBe('7');
             expect(labels[1].textContent).toBe('8');
             expect(labels[2].textContent).toBe('9');
@@ -53,7 +53,7 @@ describe('Number axis shows the data when the axes is', function () {
 
     });
 
-    describe('more than 6', function () {
+    describe('more than 6, it', function () {
 
         var sixOrMore = document.querySelector('.axis-test:nth-child(2) svg');
         var y = sixOrMore.querySelector('.y.axis');
@@ -90,12 +90,12 @@ describe('Number axis shows the data when the axes is', function () {
 
     });
 
-    describe('decimals', function () {
+    describe('decimals, it', function () {
         var decimals = document.querySelector('.axis-test:nth-child(7) svg');
         var y = decimals.querySelector('.y.axis');
         var labels = y.querySelectorAll('.primary .tick text');
 
-        it('0.0 should always be displayed as 0', function () {
+        it('should always display 0.0 as 0', function () {
             expect(labels.length).toBe(7);
             expect(labels[5].textContent).toBe('0');
             expect(labels[0].textContent).toBe('0.5');
