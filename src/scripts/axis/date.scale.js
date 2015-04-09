@@ -20,7 +20,7 @@ var increment = {
     months: 1,
     weeks: 1,
     days: 1,
-    hours: 6
+    hours: 1
 };
 
 module.exports = {

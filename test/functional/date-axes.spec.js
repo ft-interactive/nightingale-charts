@@ -1,50 +1,13 @@
 /* Add HTML + CSS to setup page for functional testing */
 require('../helper').loadAssets('date-axes');
 
-/* Require file to test */
-var oCharts = require('../../src/scripts/o-charts');
-
-var d3 = require('d3');
-var axesDefinitions = require('./date-axes.fixture.js');
-var margin = {
-    top:20, left:50, bottom:70, right:50
-};
-var divs = d3.select('#views')
-    .selectAll('div')
-    .data(axesDefinitions)
-    .enter().append('div')
-    .attr('class','axis-test');
-
-divs.append('h2')
-    .text(function(d){ return d.title });
-
-divs.append('svg')
-    .attr('width', function(d){
-        var r = d.scale.range();
-        return (r[1] - r[0]) + margin.left + margin.right;
-    })
-    .attr('class','ft-chart')
-    .attr('height', margin.top + margin.bottom)
-    .each(function(d,i){
-        var axis = oCharts.axis.date()
-            .simple(d.simple)
-            .scale(d.scale);
-
-        //todo: get back to this syntax?
-        d3.select(this)
-            .append('g')
-            .attr('transform','translate(' + margin.left + ',' + margin.top + ')')
-            .call(axis)
-    });
-
-oCharts.util.attributeStyler();
-
+require('../../demo/scripts/date-axes').init();
 
 /* Start Test */
 describe('date axis shows the data when the axes is', function () {
 
     describe('a day or less', function () {
-        var dayOrLess = document.querySelector('.axis-test:nth-child(1) svg');
+        var dayOrLess = document.querySelector('#views .axis-test:nth-child(1) svg');
         var x = dayOrLess.querySelector('.x.axis');
         var ticks = x.querySelectorAll('.primary .tick');
         var labels = x.querySelectorAll('.primary .tick text');
@@ -55,31 +18,56 @@ describe('date axis shows the data when the axes is', function () {
         var finalTickLine = finalTick.querySelectorAll('line');
         var finalTickLabel = finalTick.querySelectorAll('text');
 
-        xit('shows one tick for each hour', function () {
+        it('shows one tick for each hour', function () {
             expect(ticks.length).toBe(12);
             expect(firstTickLine.length).toBe(1);
         });
 
-        it('shows one label for each 6 hours', function () {
-            //currently, 12 is hidden because of overlap,
-            //then it's every 6 hours
-            // should it be every 6 hours from the first tick?
-            expect(labels.length).toBe(3);
+        it('shows one label for each viewable hour', function () {
+            expect(labels.length).toBe(6);
             expect(labels[0].textContent).toBe('11:00');
-            expect(labels[1].textContent).toBe('18:00');
-            expect(labels[2].textContent).toBe('22:00');
+            expect(labels[1].textContent).toBe('13:00');
+            expect(labels[2].textContent).toBe('15:00');
+            expect(labels[3].textContent).toBe('17:00');
+            expect(labels[4].textContent).toBe('19:00');
+            expect(labels[5].textContent).toBe('22:00');
         });
 
         it('always shows the time for the final tick (bug: NG-54)', function(){
             expect(finalTickLine.length).toBe(1);
             expect(finalTickLabel.length).toBe(1);
-            expect(labels[2].textContent).toBe('22:00');
+            expect(labels[labels.length-1].textContent).toBe('22:00');
+        });
+
+    });
+
+    describe('a day or less (small)', function () {
+        var dayOrLessSmall = document.querySelector('#viewsSmall .axis-test:nth-child(1) svg');
+        var x = dayOrLessSmall.querySelector('.x.axis');
+        var ticks = x.querySelectorAll('.primary .tick');
+        var labels = x.querySelectorAll('.primary .tick text');
+        var firstTick = ticks[0];
+        var firstTickLine = firstTick.querySelectorAll('line');
+
+        it('shows one tick for each hour', function () {
+            expect(ticks.length).toBe(12);
+            expect(firstTickLine.length).toBe(1);
+        });
+
+        it('shows one label for each viewable hour (bug: NG-60)', function () {
+            expect(labels.length).toBe(6);
+            expect(labels[0].textContent).toBe('11:00');
+            expect(labels[1].textContent).toBe('13:00');
+            expect(labels[2].textContent).toBe('15:00');
+            expect(labels[3].textContent).toBe('17:00');
+            expect(labels[4].textContent).toBe('19:00');
+            expect(labels[5].textContent).toBe('22:00');
         });
 
     });
 
     describe('a few weeks', function () {
-        var aFewWeeks = document.querySelector('.axis-test:nth-child(2) svg');
+        var aFewWeeks = document.querySelector('#views .axis-test:nth-child(2) svg');
         var x = aFewWeeks.querySelector('.x.axis');
         var ticks = x.querySelectorAll('.primary .tick');
         var labels = x.querySelectorAll('.primary .tick text');
@@ -101,7 +89,7 @@ describe('date axis shows the data when the axes is', function () {
     });
 
     describe('between 3 - 15 years', function () {
-        var threeToFifteenYears = document.querySelector('.axis-test:nth-child(5) svg');
+        var threeToFifteenYears = document.querySelector('#views .axis-test:nth-child(5) svg');
         var x = threeToFifteenYears.querySelector('.x.axis');
         var ticks = x.querySelectorAll('.primary .tick');
         var labels = x.querySelectorAll('.primary .tick text');
