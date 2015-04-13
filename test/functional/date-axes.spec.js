@@ -127,19 +127,27 @@ describe('When the date axis is', function () {
 
     describe('has 2 ticks very close to each other, ', function () {
         var overlapping = document.querySelector('#viewsSmall .axis-test:nth-child(9) svg');
-        var x = overlapping.querySelector('.x.axis');
-        var ticks = x.querySelectorAll('.primary .tick');
-        var labels = x.querySelectorAll('.primary .tick text');
-        var firstTick = ticks[0];
-        var firstTickLine = firstTick.querySelectorAll('line');
+        var overlappingX = overlapping.querySelector('.x.axis');
+        var ticks = overlappingX.querySelectorAll('.primary .tick');
+        var overlappingLabels = overlappingX.querySelectorAll('.primary .tick text');
 
         it('they should not overlap', function () {
             expect(ticks.length).toBe(15);
-            expect(labels.length).toBe(5);
-            expect(labels[0].textContent).toBe('1999');
-            expect(labels[1].textContent).toBe('03');
-            expect(labels[2].textContent).toBe('07');
-            expect(labels[3].textContent).toBe('11');
+            expect(overlappingLabels.length).toBe(5);
+            expect(overlappingLabels[0].textContent).toBe('1999');
+            expect(overlappingLabels[4].textContent).toBe('13');
+        });
+
+        xit('they should show full label if significant change', function () {
+            var hundreds = document.querySelector('#viewsSmall .axis-test:nth-child(8) svg');
+            var hundredsX = hundreds.querySelector('.x.axis');
+            var hundredsLabels = hundredsX.querySelectorAll('.primary .tick text');
+            expect(hundredsLabels[0].textContent).toBe('1500');
+            expect(hundredsLabels[3].textContent).toBe('2015');
+
+            expect(overlappingLabels[0].textContent).toBe('1999');
+            expect(overlappingLabels[1].textContent).toBe('2003');
+            expect(overlappingLabels[4].textContent).toBe('13');
         });
     });
 });

@@ -33,7 +33,6 @@ module.exports = {
 
     removeOverlappingLabels : function(g, selector){
         var self = this;
-        selector += ' text';//:not([aria-label])';
         var dElements = g.selectAll(selector );
         var elementCount = dElements[0].length;
         var limit = 5;
@@ -54,6 +53,7 @@ module.exports = {
             elementCount = dElements[0].length;
         }
     },
+
     calculateWidestLabel : function(dElements){
         var labelWidth = 0;
         dElements.each(function (d) {
@@ -62,11 +62,12 @@ module.exports = {
         return labelWidth;
     },
     removeDayLabels : function(g, selector){
-        var dElements  = g.selectAll(selector + ' text');
+        var dElements  = g.selectAll(selector);
         var elementCount = dElements[0].length;
         function remove(d, i){
-            if(i !== 0 && i !== elementCount-1 && d3.select(this).text() != 1) {
-                d3.select(this).remove();
+            var d3This = d3.select(this);
+            if(i !== 0 && i !== elementCount-1 && d3This.text() != 1) {
+                d3This.remove();
             }
         }
         dElements.each(remove);
@@ -76,15 +77,14 @@ module.exports = {
         var width = this.calculateWidestLabel(g.select('.tick text'));
 
         if (utils.unitGenerator(scale.domain())[0] == 'days'){
-            this.removeDayLabels(g, '.primary');
+            this.removeDayLabels(g, '.primary text');
         } else {
-            this.removeOverlappingLabels(g, '.primary');
+            this.removeOverlappingLabels(g, '.primary text');
         }
-        this.removeOverlappingLabels(g, '.secondary');
+        this.removeOverlappingLabels(g, '.secondary text');
 
         return {
             width: width
         };
     }
-
 };
