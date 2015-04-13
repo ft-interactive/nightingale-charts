@@ -4,9 +4,9 @@ require('../helper').loadAssets('date-axes');
 require('../../demo/scripts/date-axes').init();
 
 /* Start Test */
-describe('date axis shows the data when the axes is', function () {
+describe('When the date axis is', function () {
 
-    describe('a day or less', function () {
+    describe('a day or less,', function () {
         var dayOrLess = document.querySelector('#views .axis-test:nth-child(1) svg');
         var x = dayOrLess.querySelector('.x.axis');
         var ticks = x.querySelectorAll('.primary .tick');
@@ -18,12 +18,12 @@ describe('date axis shows the data when the axes is', function () {
         var finalTickLine = finalTick.querySelectorAll('line');
         var finalTickLabel = finalTick.querySelectorAll('text');
 
-        it('shows one tick for each hour', function () {
+        it('one tick for each hour is shown', function () {
             expect(ticks.length).toBe(12);
             expect(firstTickLine.length).toBe(1);
         });
 
-        it('shows one label for each viewable hour', function () {
+        it('one label for each hour is shown', function () {
             expect(labels.length).toBe(6);
             expect(labels[0].textContent).toBe('11:00');
             expect(labels[1].textContent).toBe('13:00');
@@ -33,7 +33,7 @@ describe('date axis shows the data when the axes is', function () {
             expect(labels[5].textContent).toBe('22:00');
         });
 
-        it('always shows the time for the final tick (bug: NG-54)', function(){
+        it('the time for the final tick is always shown (bug: NG-54)', function(){
             expect(finalTickLine.length).toBe(1);
             expect(finalTickLabel.length).toBe(1);
             expect(labels[labels.length-1].textContent).toBe('22:00');
@@ -41,7 +41,7 @@ describe('date axis shows the data when the axes is', function () {
 
     });
 
-    describe('a day or less (small)', function () {
+    describe('a day or less (small),', function () {
         var dayOrLessSmall = document.querySelector('#viewsSmall .axis-test:nth-child(1) svg');
         var x = dayOrLessSmall.querySelector('.x.axis');
         var ticks = x.querySelectorAll('.primary .tick');
@@ -49,12 +49,12 @@ describe('date axis shows the data when the axes is', function () {
         var firstTick = ticks[0];
         var firstTickLine = firstTick.querySelectorAll('line');
 
-        it('shows one tick for each hour', function () {
+        it('one tick for each hour is shown', function () {
             expect(ticks.length).toBe(12);
             expect(firstTickLine.length).toBe(1);
         });
 
-        it('shows one label for each viewable hour (bug: NG-60)', function () {
+        it('one label for each non-overlapping hour is shown (bug: NG-60)', function () {
             expect(labels.length).toBe(6);
             expect(labels[0].textContent).toBe('11:00');
             expect(labels[1].textContent).toBe('13:00');
@@ -63,10 +63,9 @@ describe('date axis shows the data when the axes is', function () {
             expect(labels[4].textContent).toBe('19:00');
             expect(labels[5].textContent).toBe('22:00');
         });
-
     });
 
-    describe('a few weeks', function () {
+    describe('a few weeks,', function () {
         var aFewWeeks = document.querySelector('#views .axis-test:nth-child(2) svg');
         var x = aFewWeeks.querySelector('.x.axis');
         var ticks = x.querySelectorAll('.primary .tick');
@@ -74,12 +73,12 @@ describe('date axis shows the data when the axes is', function () {
         var firstTick = ticks[0];
         var firstTickLine = firstTick.querySelectorAll('line');
 
-        it('shows one tick for each day', function () {
+        it('one tick for each day is shown', function () {
             expect(ticks.length).toBe(26);
             expect(firstTickLine.length).toBe(1);
         });
 
-        it('shows one label for each first day, first of the month, and last day', function () {
+        it('one label for each first day, first of the month, and last day are shown', function () {
             expect(labels.length).toBe(3);
             expect(labels[0].textContent).toBe('13');
             expect(labels[1].textContent).toBe(' 1');
@@ -88,7 +87,7 @@ describe('date axis shows the data when the axes is', function () {
 
     });
 
-    describe('between 3 - 15 years', function () {
+    describe('between 3 - 15 years,', function () {
         var threeToFifteenYears = document.querySelector('#views .axis-test:nth-child(5) svg');
         var x = threeToFifteenYears.querySelector('.x.axis');
         var ticks = x.querySelectorAll('.primary .tick');
@@ -123,5 +122,23 @@ describe('date axis shows the data when the axes is', function () {
             expect(labels[9].textContent).toBe('10');
         });
 
+    });
+
+    describe('has 2 ticks very close to each other, ', function () {
+        var overlapping = document.querySelector('#viewsSmall .axis-test:nth-child(9) svg');
+        var x = overlapping.querySelector('.x.axis');
+        var ticks = x.querySelectorAll('.primary .tick');
+        var labels = x.querySelectorAll('.primary .tick text');
+        var firstTick = ticks[0];
+        var firstTickLine = firstTick.querySelectorAll('line');
+
+        it('they should not overlap', function () {
+            expect(ticks.length).toBe(15);
+            expect(labels.length).toBe(5);
+            expect(labels[0].textContent).toBe('1999');
+            expect(labels[1].textContent).toBe('03');
+            expect(labels[2].textContent).toBe('07');
+            expect(labels[3].textContent).toBe('11');
+        });
     });
 });

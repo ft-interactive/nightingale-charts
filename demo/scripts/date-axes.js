@@ -4,7 +4,7 @@ var d3 = require('d3');
 
 var margin = {
     top:20, left:50, bottom:70, right:50
-}
+};
 
 var axesDefinitions = [
     {
@@ -48,6 +48,11 @@ var axesDefinitions = [
         title:'hundreds of years',
         dateStart: new Date(1500,0,1),
         dateEnd: new Date(2015,2,1)
+    },
+    {
+        title:'Years Overlapping',
+        dateStart: new Date(1999, 8, 31),
+        dateEnd: new Date(2013, 1, 4)
     }];
 
 function createAxesDefArrayOfWidth(axisWidth, axesDefinitionArray) {

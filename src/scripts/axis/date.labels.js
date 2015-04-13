@@ -32,8 +32,9 @@ module.exports = {
         return overlap;
     },
 
-    removeOverlappingLabels : function(dElements){
+    removeOverlappingLabels : function(g, selector){
         var self = this;
+        var dElements = g.selectAll(selector);
         var elements = dElements[0];
         var elementCount = elements.length;
         var limit = 5;
@@ -45,9 +46,9 @@ module.exports = {
                 d3.select(this).remove();
             }
         }
-        while(self.overlapping( dElements ) && limit>0){
+        while(self.overlapping( g.selectAll(selector) ) && limit>0){
             limit--;
-            dElements.each(remove);
+            g.selectAll(selector).each(remove);
         }
     },
     calculateWidestLabel : function(dElements){
@@ -57,7 +58,8 @@ module.exports = {
         });
         return labelWidth;
     },
-    removeDayLabels : function(dElements){
+    removeDayLabels : function(g, selector){
+        var dElements  = g.selectAll(selector);
         var elementCount = dElements[0].length;
         function remove(d, i){
             if(i !== 0 && i !== elementCount-1 && d3.select(this).text() != 1) {
@@ -71,11 +73,11 @@ module.exports = {
         var width = this.calculateWidestLabel(g.select('.tick text'));
 
         if (utils.unitGenerator(scale.domain())[0] == 'days'){
-            this.removeDayLabels(g.selectAll('.primary text'));
+            this.removeDayLabels(g, '.primary text');
         } else {
-            this.removeOverlappingLabels(g.selectAll('.primary text'));
+            this.removeOverlappingLabels(g, '.primary text');
         }
-        this.removeOverlappingLabels(g.selectAll('.secondary text'));
+        this.removeOverlappingLabels(g, '.secondary text');
 
         return {
             width: width
