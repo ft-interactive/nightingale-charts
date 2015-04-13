@@ -4,10 +4,10 @@ var utils = require('./date.utils.js');
 module.exports = {
     intersection : function(a, b){
         var overlap = (
-        a.left <= b.right &&
-        b.left <= a.right &&
-        a.top <= b.bottom &&
-        b.top <= a.bottom
+            a.left <= b.right &&
+            b.left <= a.right &&
+            a.top <= b.bottom &&
+            b.top <= a.bottom
         );
         return overlap;
     },
@@ -18,7 +18,6 @@ module.exports = {
         dElements.each(function(d,i){
             var rect = this.getBoundingClientRect();
             var include = true;
-            var current = d3.select(this);
             bounds.forEach(function(b,i){
                 if(self.intersection(b,rect)){
                     include = false;
@@ -34,21 +33,25 @@ module.exports = {
 
     removeOverlappingLabels : function(g, selector){
         var self = this;
-        var dElements = g.selectAll(selector);
-        var elements = dElements[0];
-        var elementCount = elements.length;
+        selector += ' text';//:not([aria-label])';
+        var dElements = g.selectAll(selector );
+        var elementCount = dElements[0].length;
         var limit = 5;
         function remove(d,i){
-            if (i === elementCount-1){
-                var previousLabel = dElements[0][elementCount-2];
+            var last = i === elementCount-1;
+            var previousLabel = dElements[0][elementCount-2];
+            var lastOverlapsPrevious = (last && self.intersection(previousLabel.getBoundingClientRect(), this.getBoundingClientRect()));
+            if (last && lastOverlapsPrevious){
                 d3.select(previousLabel).remove();
-            } else if(i%2 !== 0) {
+            } else if(i%2 !== 0 && !last) {
                 d3.select(this).remove();
             }
         }
-        while(self.overlapping( g.selectAll(selector) ) && limit>0){
+        while(self.overlapping( g.selectAll(selector ) ) && limit>0){
             limit--;
-            g.selectAll(selector).each(remove);
+            g.selectAll(selector ).each(remove);
+            dElements = g.selectAll(selector );
+            elementCount = dElements[0].length;
         }
     },
     calculateWidestLabel : function(dElements){
@@ -59,7 +62,7 @@ module.exports = {
         return labelWidth;
     },
     removeDayLabels : function(g, selector){
-        var dElements  = g.selectAll(selector);
+        var dElements  = g.selectAll(selector + ' text');
         var elementCount = dElements[0].length;
         function remove(d, i){
             if(i !== 0 && i !== elementCount-1 && d3.select(this).text() != 1) {
@@ -73,11 +76,11 @@ module.exports = {
         var width = this.calculateWidestLabel(g.select('.tick text'));
 
         if (utils.unitGenerator(scale.domain())[0] == 'days'){
-            this.removeDayLabels(g, '.primary text');
+            this.removeDayLabels(g, '.primary');
         } else {
-            this.removeOverlappingLabels(g, '.primary text');
+            this.removeOverlappingLabels(g, '.primary');
         }
-        this.removeOverlappingLabels(g, '.secondary text');
+        this.removeOverlappingLabels(g, '.secondary');
 
         return {
             width: width

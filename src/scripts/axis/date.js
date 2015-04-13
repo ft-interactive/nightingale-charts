@@ -1,6 +1,7 @@
 var d3 = require('d3');
 var labels = require('./date.labels.js');
 var dateScale = require('./date.scale.js');
+var styler = require('../util/chart-attribute-styles');
 
 function dateAxis() {
     var config = {
@@ -39,6 +40,9 @@ function dateAxis() {
             });
             //clear the styles D3 sets so everything's coming from the css
             g.selectAll('*').attr('style', null);
+            //todo: only apply to this svg i.e. pass in `g` as parent node
+            //todo: optimise: only do this for 'axis'
+            styler();
         });
 
         if(!config.showDomain){
