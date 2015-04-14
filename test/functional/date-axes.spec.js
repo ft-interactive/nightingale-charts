@@ -131,7 +131,7 @@ describe('When the date axis is', function () {
         var ticks = overlappingX.querySelectorAll('.primary .tick');
         var overlappingLabels = overlappingX.querySelectorAll('.primary .tick text');
 
-        it('they should not overlap', function () {
+        it('they should not overlap (ng-65)', function () {
             expect(ticks.length).toBe(15);
             expect(overlappingLabels.length).toBe(5);
             expect(overlappingLabels[0].textContent).toBe('1999');

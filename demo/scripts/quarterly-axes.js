@@ -10,12 +10,17 @@ var axesDefinitions = [
     {
         title:'A Year',
         dateStart : new Date("March 31, 1981"),
-        dateEnd: new Date("March 31, 1982")
+        dateEnd: new Date("December 31, 1981")
     },
     {
-        title:'2 Years with missing data',
-        dateStart : new Date("March 31, 1981"),
-        dateEnd: new Date("March 31, 1983")
+        title:'A Few Years',
+        dateStart : new Date("April 1, 1981"),
+        dateEnd: new Date("March 31, 1985")
+    },
+    {
+        title:'many many many',
+        dateStart : new Date("April 1, 1981"),
+        dateEnd: new Date("March 31, 2012")
     }
 ];
 
@@ -57,9 +62,9 @@ function renderAxesArrayIntoDiv(div, axesDefinitionArray) {
         .each(function (d, i) {
 
             //create the axis, giving it a scale
-            var axis = oCharts.axis.quarterly()
+            var axis = oCharts.axis.date()
                 .simple(d.simple)
-                .scale(d.scale);
+                .scale(d.scale, ['quarters', 'years']);
 
             d3.select(this)
                 .append('g')

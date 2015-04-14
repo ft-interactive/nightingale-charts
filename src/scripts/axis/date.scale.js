@@ -6,6 +6,7 @@ var interval = {
     decades: d3.time.year,
     years: d3.time.year,
     fullYears: d3.time.year,
+    quarters: d3.time.month,
     months: d3.time.month,
     weeks: d3.time.week,
     days: d3.time.day,
@@ -17,57 +18,63 @@ var increment = {
     decades: 10,
     years: 1,
     fullYears: 1,
+    quarters: 3,
     months: 1,
     weeks: 1,
     days: 1,
     hours: 1
 };
 
-module.exports = {
-    formatter : {
-        centuries: function (d, i) {
-            if (i === 0 || d.getYear() % 100 === 0) {
-                return d3.time.format('%Y')(d);
-            }
-            return d3.time.format('%y')(d);
-        },
-
-        decades: function (d, i) {
-            if (i === 0 || d.getYear() % 100 === 0) {
-                return d3.time.format('%Y')(d);
-            }
-            return d3.time.format('%y')(d);
-        },
-
-        years: function (d, i) {
-            if (i === 0 || d.getYear() % 100 === 0) {
-                return d3.time.format('%Y')(d);
-            }
-            return d3.time.format('%y')(d);
-        },
-
-        fullYears: function (d, i) {
+var formatter = {
+    centuries: function (d, i) {
+        if (i === 0 || d.getYear() % 100 === 0) {
             return d3.time.format('%Y')(d);
-        },
-        shortmonths: function (d, i) {
-            return d3.time.format('%b')(d)[0];
-        },
-        months: function (d, i) {
-            return d3.time.format('%b')(d);
-        },
-
-        weeks: function (d, i) {
-            return d3.time.format('%e %b')(d);
-        },
-
-        days: function (d, i) {
-            return d3.time.format('%e')(d);
-        },
-
-        hours: function (d, i) {
-            return parseInt(d3.time.format('%H')(d)) + ':00';
         }
+        return d3.time.format('%y')(d);
     },
+
+    decades: function (d, i) {
+        if (i === 0 || d.getYear() % 100 === 0) {
+            return d3.time.format('%Y')(d);
+        }
+        return d3.time.format('%y')(d);
+    },
+
+    years: function (d, i) {
+        if (i === 0 || d.getYear() % 100 === 0) {
+            return d3.time.format('%Y')(d);
+        }
+        return d3.time.format('%y')(d);
+    },
+
+    fullYears: function (d, i) {
+        return d3.time.format('%Y')(d);
+    },
+    quarters: function (d, i) {
+        return  'Q' + Math.floor((d.getMonth() + 3) / 3);
+    },
+    shortmonths: function (d, i) {
+        return d3.time.format('%b')(d)[0];
+    },
+    months: function (d, i) {
+        return d3.time.format('%b')(d);
+    },
+
+    weeks: function (d, i) {
+        return d3.time.format('%e %b')(d);
+    },
+
+    days: function (d, i) {
+        return d3.time.format('%e')(d);
+    },
+
+    hours: function (d, i) {
+        return parseInt(d3.time.format('%H')(d)) + ':00';
+    }
+};
+
+module.exports = {
+    formatter : formatter,
     createDetailedTicks:function(scale, unit){
         var customTicks = scale.ticks( interval[ unit ], increment[ unit ] );
         customTicks.push(scale.domain()[0]); //always include the first and last values
@@ -95,6 +102,7 @@ module.exports = {
                 var axis = d3.svg.axis()
                     .scale( scale )
                     .tickValues(customTicks)
+                    .ticks(d3.time.months, 3)
                     .tickFormat(this.formatter[units[i]])
                     .tickSize(tickSize,0);
                 axes.push(axis );

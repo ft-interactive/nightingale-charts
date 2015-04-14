@@ -1,9 +1,6 @@
-/* Add HTML + CSS to setup page for functional testing */
 require('../helper').loadAssets('quarterly-axes');
-
 require('../../demo/scripts/quarterly-axes').init();
 
-/* Start Test */
 describe('quarterly axis', function () {
 
     describe('shows a year on the x axis', function () {
