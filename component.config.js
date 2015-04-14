@@ -3,7 +3,7 @@ var pkg = require('./package.json');
 module.exports = {
     build: ['sass', 'mustache', 'browserify' ],
     test: 'karma',  // or false.  where your tests config, specs and reports are saved
-    release: ['git'],
+    release: ['git', 'gh-pages'],
     serve: 'staticApp', // `staticApp` or `nodeApp`
     browserify: {
         insertGlobals : false,

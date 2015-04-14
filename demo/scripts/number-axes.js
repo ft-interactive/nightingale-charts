@@ -114,7 +114,5 @@ function renderAxesArrayIntoDiv(div, axesDefinitionArray) {
 module.exports = {
     init: function() {
         renderAxesArrayIntoDiv('#views', createAxesDefArrayOfWidth(200, axesDefinitions));
-
-        oCharts.util.attributeStyler();
     }
 };

@@ -1,6 +1,7 @@
 var d3 = require('d3');
 var labels = require('./date.labels.js');
 var dateScale = require('./date.scale.js');
+var styler = require('../util/chart-attribute-styles');
 
 function dateAxis() {
     var config = {
@@ -37,8 +38,7 @@ function dateAxis() {
                 y: null,
                 dy: 15 + config.tickSize
             });
-            //clear the styles D3 sets so everything's coming from the css
-            g.selectAll('*').attr('style', null);
+            styler(g);
         });
 
         if(!config.showDomain){
