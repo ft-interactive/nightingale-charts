@@ -8,16 +8,9 @@ describe('quarterly axis', function () {
         var x = aYear.querySelector('.x.axis');
         var ticks = x.querySelectorAll('.primary .tick');
         var labels = x.querySelectorAll('.primary .tick text');
-        var firstTick = ticks[0];
-        var finalTick = ticks[ticks.length-1];
-        var firstTickLine = firstTick.querySelectorAll('line');
-        var firstTickLabel = firstTick.querySelectorAll('text');
-        var finalTickLine = finalTick.querySelectorAll('line');
-        var finalTickLabel = finalTick.querySelectorAll('text');
 
         it('with one tick for each quarter', function () {
             expect(ticks.length).toBe(4);
-            expect(firstTickLine.length).toBe(1);
         });
 
         it('with one label for each viewable quarter', function () {
@@ -35,16 +28,9 @@ describe('quarterly axis', function () {
         var x = twoYears.querySelector('.x.axis');
         var ticks = x.querySelectorAll('.primary .tick');
         var labels = x.querySelectorAll('.primary .tick text');
-        var firstTick = ticks[0];
-        var finalTick = ticks[ticks.length-1];
-        var firstTickLine = firstTick.querySelectorAll('line');
-        var firstTickLabel = firstTick.querySelectorAll('text');
-        var finalTickLine = finalTick.querySelectorAll('line');
-        var finalTickLabel = finalTick.querySelectorAll('text');
 
         it('with one tick for each quarter', function () {
             expect(ticks.length).toBe(8);
-            expect(firstTickLine.length).toBe(1);
         });
 
         it('with one label for each viewable quarter', function () {
