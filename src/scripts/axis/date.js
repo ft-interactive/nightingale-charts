@@ -38,11 +38,7 @@ function dateAxis() {
                 y: null,
                 dy: 15 + config.tickSize
             });
-            //clear the styles D3 sets so everything's coming from the css
-            g.selectAll('*').attr('style', null);
-            //todo: only apply to this svg i.e. pass in `g` as parent node
-            //todo: optimise: only do this for 'axis'
-            styler();
+            styler(g);
         });
 
         if(!config.showDomain){

@@ -4,7 +4,7 @@
 
 var d3 = require('d3');
 
-function applyAttributes(){
+function applyAttributes(g){
 	var styleList = [
 		//general
 			{
@@ -168,11 +168,10 @@ function applyAttributes(){
 			}
 		];
 
-
-	for(var s in styleList){
-		s = styleList[s];	
-		var selected = d3.selectAll(s.selector).attr(s.attributes);
-	}
+	(g || d3).selectAll('*').attr('style', null);
+    styleList.forEach(function(style, i){
+        (g || d3).selectAll(style.selector).attr(style.attributes);
+    });
 	return true;
 }
 

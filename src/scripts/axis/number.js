@@ -5,6 +5,7 @@
 var d3 = require('d3');
 var numberLabels = require('./number.labels');
 var numberScales = require('./number.scale');
+var styler = require('../util/chart-attribute-styles');
 
 function numericAxis() {
     'use strict';
@@ -25,15 +26,13 @@ function numericAxis() {
         var orientOffset = (a.orient() === 'right') ? -a.tickSize() : 0 ;
 
         g = g.append('g').attr('transform','translate(' + (xOffset + orientOffset) + ',' + yOffset + ')');
-
         numberLabels.render(g,{
             axes: a, lineHeight: lineHeight, hardRules: hardRules, extension: tickExtension
         });
-
         if (noLabels) {
             g.selectAll('text').remove();
         }
-        g.selectAll('*').attr('style', null); //clear the styles D3 sets so everything's coming from the css
+        styler(g);
     }
 
     axis.tickExtension = function(int) { // extend the axis ticks to the right/ left a specified distance
