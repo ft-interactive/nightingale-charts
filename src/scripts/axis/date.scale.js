@@ -97,13 +97,13 @@ module.exports = {
         }
         var axes = [];
         for (var i = 0; i < units.length; i++) {
-            if( this.formatter[units[i]] ){
-                var customTicks = (simple) ? scale.domain() : this.createDetailedTicks(scale, units[i]);
+            var unit = units[i];
+            if( this.formatter[unit] ){
+                var customTicks = (simple) ? scale.domain() : this.createDetailedTicks(scale, unit);
                 var axis = d3.svg.axis()
                     .scale( scale )
                     .tickValues(customTicks)
-                    .ticks(d3.time.months, 3)
-                    .tickFormat(this.formatter[units[i]])
+                    .tickFormat(this.formatter[unit])
                     .tickSize(tickSize,0);
                 axes.push(axis );
             }

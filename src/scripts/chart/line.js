@@ -8,12 +8,37 @@ var interpolator = require('../util/line-interpolators.js');
 var LineModel = require('./line.model.js');
 var metadata = require('../util/metadata.js');
 
+var totalHeight = 0;
+
 function getHeight(selection) {
     return Math.ceil(selection.node().getBoundingClientRect().height);
 }
 
 function getWidth(selection) {
     return Math.ceil(selection.node().getBoundingClientRect().width);
+}
+
+function addSeriesKey(model){
+    if (!model.key) { return; }
+	var halfLineStrokeWidth = Math.ceil(model.lineStrokeWidth / 2);
+	var chartKey = lineKey({lineThickness: model.lineStrokeWidth})
+			.style(function (d) {
+				return d.value;
+			})
+			.label(function (d) {
+				return d.key;
+			});
+	var entries = model.y.series.map(function (d) {
+		return {key: d.label, value: d.className};
+	});
+
+	var key = svg.append('g').attr('class', 'chart-key').datum(entries).call(chartKey);
+
+	if (!model.keyPosition) {
+		model.keyPosition = {top: totalHeight, left: halfLineStrokeWidth};
+		totalHeight += (getHeight(key) + model.blockPadding);
+	}
+	key.attr('transform', model.translate(model.keyPosition));
 }
 
 function lineChart(p) {
@@ -49,19 +74,10 @@ function lineChart(p) {
 		var sourceLineHeightActual = sourceFontSize * sourceLineHeight;
 		var halfLineStrokeWidth = Math.ceil(model.lineStrokeWidth / 2);
 
-			//create title, subtitle, key, source, footnotes, logo, the chart itself
-			var titleTextWrapper = textArea().width(model.contentWidth).lineHeight(titleLineHeightActual),
-			subtitleTextWrapper = textArea().width(model.contentWidth).lineHeight(subtitleLineHeightActual),
-			footerTextWrapper = textArea().width(model.contentWidth - model.logoSize).lineHeight(footerLineHeight),
-
-			chartKey = lineKey({lineThickness: model.lineStrokeWidth})
-				.style(function (d) {
-					return d.value;
-				})
-				.label(function (d) {
-					return d.key;
-				}),
-			totalHeight = 0;
+		//create title, subtitle, key, source, footnotes, logo, the chart itself
+		var titleTextWrapper = textArea().width(model.contentWidth).lineHeight(titleLineHeightActual),
+		subtitleTextWrapper = textArea().width(model.contentWidth).lineHeight(subtitleLineHeightActual),
+		footerTextWrapper = textArea().width(model.contentWidth - model.logoSize).lineHeight(footerLineHeight);
 
 		//position stuff
 		//start from the top...
@@ -92,19 +108,7 @@ function lineChart(p) {
 
 		subtitle.attr('transform', model.translate(model.subtitlePosition));
 
-		if (model.key) {
-			var entries = model.y.series.map(function (d) {
-				return {key: d.label, value: d.className};
-			});
-
-			var key = svg.append('g').attr('class', 'chart-key').datum(entries).call(chartKey);
-
-			if (!model.keyPosition) {
-				model.keyPosition = {top: totalHeight, left: halfLineStrokeWidth};
-				totalHeight += (getHeight(key) + model.blockPadding);
-			}
-			key.attr('transform', model.translate(model.keyPosition));
-		}
+        addSeriesKey(model);
 
 		var chartSVG = svg.append('g').attr('class', 'chart');
 
