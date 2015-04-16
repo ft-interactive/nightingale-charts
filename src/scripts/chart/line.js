@@ -1,5 +1,5 @@
 var d3 = require('d3');
-var Axes = require('./line.axes.js');
+var Axes = require('../util/draw-axes.js');
 var interpolator = require('../util/line-interpolators.js');
 var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');

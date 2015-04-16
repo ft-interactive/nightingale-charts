@@ -1,4 +1,4 @@
-var LineModel = require('../../../src/scripts/chart/line.model');
+var LineModel = require('../../../src/scripts/util/data.model');
 
 describe('line model', function () {
 

@@ -1,5 +1,5 @@
 var d3 = require('d3');
-var Axes = require('./line.axes.js');
+var Axes = require('../util/draw-axes.js');
 var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');
 var Dressing = require('../util/dressing.js');
@@ -19,7 +19,7 @@ function plotSeries(plotSVG, model, axes, series) {
 
     var timeBands = d3.scale.ordinal()
         .domain(data.map(function(d) { return d.name; }))
-        .rangeRoundBands([0, model.plotWidth], .2);
+        .rangeRoundBands([0, model.plotWidth], 0.2);
 
     plotSVG.selectAll("rect")
         .data(data)

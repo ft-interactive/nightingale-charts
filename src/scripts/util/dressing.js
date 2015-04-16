@@ -6,10 +6,6 @@ function getHeight(selection) {
     return Math.ceil(selection.node().getBoundingClientRect().height);
 }
 
-function getWidth(selection) {
-    return Math.ceil(selection.node().getBoundingClientRect().width);
-}
-
 function Dressing(svg, model){
     // TODO: don't hard-code the fontsize, get from CSS somehow.
     // TODO: move calculation of lineheight to the textarea component;
@@ -74,7 +70,7 @@ Dressing.prototype.addSubTitle = function(){
         }
     }
     subtitle.attr('transform', model.translate(this.subtitlePosition));
-}
+};
 
 Dressing.prototype.addTitle = function(){
     var svg = this.svg;
@@ -126,7 +122,7 @@ Dressing.prototype.addFootNotes = function(){
     var svg = this.svg;
     var model = this.model;
 
-    var text = textArea().width(this.model.contentWidth - this.model.logoSize).lineHeight(this.footerLineHeight)
+    var text = textArea().width(this.model.contentWidth - this.model.logoSize).lineHeight(this.footerLineHeight);
     var footnotes = svg.append('g').attr('class','chart-footnote').datum(model.footnote).call(text);
     var footnotesHeight = getHeight(footnotes);
 
