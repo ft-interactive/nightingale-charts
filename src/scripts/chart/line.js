@@ -40,7 +40,7 @@ function lineChart(p) {
 		if (!model.height) {
 			model.height = dressing.headerHeight + model.chartHeight + dressing.footerHeight;
 		} else {
-			model.chartHeight = model.height - dressing.headerHeight;
+			model.chartHeight = model.height - dressing.headerHeight - dressing.footerHeight;
 			if (model.chartHeight < 0) {
 				model.error({
 					node:chartSVG,
