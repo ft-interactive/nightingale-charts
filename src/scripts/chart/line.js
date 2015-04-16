@@ -5,19 +5,16 @@ var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');
 var Dressing = require('../util/dressing.js');
 
-//null values in the data are interpolated over
+//null values in the data are interpolated over, filter these out
 //NaN values are represented by line breaks
 function plotSeries(plotSVG, model, axes, series) {
 
-    var normalisedData = model.data.map(function(d){
+    var data = model.data.map(function(d){
         return {
             x:d[model.x.series.key],
             y:d[series.key]
         };
-    });
-
-    //filter out null values, these are to be interpolated over
-    normalisedData = normalisedData.filter(function(d){
+    }).filter(function(d){
         return (d.y !== null);
     });
 
@@ -27,7 +24,7 @@ function plotSeries(plotSVG, model, axes, series) {
         .y( function(d){ return axes.valueScale(d.y); } );
 
     plotSVG.append('path')
-        .datum(normalisedData)
+        .datum(data)
         .attr('class', 'line ' + series.className)
         .attr('stroke-width', model.lineStrokeWidth)
         .attr('d', function(d){

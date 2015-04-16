@@ -26,7 +26,6 @@ Axes.prototype.addTimeScale = function(){
 		.scale(timeScale);
 	this.svg.call(timeAxis);
 
-
 	var yLabelWidth = getWidth(this.svg) - model.chartWidth;
 	var plotWidth = model.chartWidth - yLabelWidth;
 	timeScale.range([timeScale.range()[0], plotWidth]);
@@ -56,6 +55,8 @@ Axes.prototype.repositionAxis = function(){
 
 	model.chartPosition.top += (getHeight(this.svg.select('.y.axis')) - plotHeight);
 	this.svg.attr('transform', model.translate(model.chartPosition));
+    model.plotWidth = plotWidth;
+    model.plotHeight = plotHeight;
 };
 
 Axes.prototype.addValueScale = function(){
@@ -66,6 +67,7 @@ Axes.prototype.addValueScale = function(){
 	if (model.niceValue) {
 		valueScale.nice();
 	}
+
 	var vAxis = numberAxis()
 		.tickFormat(model.numberAxisFormatter)
 		.simple(model.simpleValue)

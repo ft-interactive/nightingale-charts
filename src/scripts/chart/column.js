@@ -1,38 +1,36 @@
 var d3 = require('d3');
 var Axes = require('./line.axes.js');
-var interpolator = require('../util/line-interpolators.js');
 var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');
 var Dressing = require('../util/dressing.js');
 
-//null values in the data are interpolated over
+//null values in the data are interpolated over, filter these out
 //NaN values are represented by line breaks
 function plotSeries(plotSVG, model, axes, series) {
 
-	var normalisedData = model.data.map(function(d){
+	var data = model.data.map(function(d){
 		return {
-			x:d[model.x.series.key],
-			y:d[series.key]
+			name:d[model.x.series.key],
+			value:d[series.key]
 		};
-	});
-
-	//filter out null values, these are to be interpolated over
-	normalisedData = normalisedData.filter(function(d){
+	}).filter(function(d){
 		return (d.y !== null);
 	});
 
-	var line = d3.svg.line()
-		.interpolate(interpolator.gappedLine)
-		.x( function(d){ return axes.timeScale(d.x); } )
-		.y( function(d){ return axes.valueScale(d.y); } );
+    var timeBands = d3.scale.ordinal()
+        .domain(data.map(function(d) { return d.name; }))
+        .rangeRoundBands([0, model.plotWidth], .2);
 
-	plotSVG.append('path')
-		.data(normalisedData).enter()
-		.append("rect")
-		.attr("x", 0)
-		.attr("y", 0)
-		.attr("width", 20)
-		.attr("height", 100);
+    plotSVG.selectAll("rect")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("class", function(d) { return d.value < 0 ? "bar negative" : "bar positive"; })
+        .attr("data-value", function(d) { return d.value; })
+        .attr("x", function(d) { return axes.timeScale(d.name); })
+        .attr("y", function(d) { return axes.valueScale(Math.max(0, d.value)); })
+        .attr("height", function(d) { return Math.abs(axes.valueScale(d.value) - axes.valueScale(0)); })
+        .attr("width", timeBands.rangeBand());
 }
 
 function columnChart(g) {
