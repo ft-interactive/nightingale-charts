@@ -39,7 +39,7 @@ module.exports = {
     init: function(){
         for(var i=0;i<3;i++){
             d3.select('body').append('div').attr('id','line-chart' + (i+1));
-            d3.select('#line-chart'+ (i+1)).data([getChartData(i)]).call( oCharts.chart.line() );
+            d3.select('#line-chart'+ (i+1)).data([getChartData(i)]).call( oCharts.chart.line );
         }
     }
 };

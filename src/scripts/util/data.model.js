@@ -121,7 +121,6 @@ function Model(opts) {
 		width: 300,
 		chartHeight: undefined,
 		chartWidth: undefined,
-		blockPadding: 8,
 		simpleDate: false,
 		simpleValue: false,
 		logoSize: 28,
