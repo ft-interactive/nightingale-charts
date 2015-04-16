@@ -25,7 +25,7 @@ function plotSeries(plotSVG, model, axes, series) {
         .data(data)
         .enter()
         .append("rect")
-        .attr("class", function(d) { return d.value < 0 ? "bar negative" : "bar positive"; })
+        .attr("class", function(d) { return "column "  + series.className + (d.value < 0 ? " negative" : " positive"); })
         .attr("data-value", function(d) { return d.value; })
         .attr("x", function(d) { return axes.timeScale(d.name); })
         .attr("y", function(d) { return axes.valueScale(Math.max(0, d.value)); })
