@@ -3,7 +3,7 @@ var oCharts = require('../../src/scripts/o-charts');
 var d3 = require('d3');
 
 var y = [
-    { series: ['value', 'value2']},
+    { series: ['value']},
     { series: [{key:'value', label:'String Value'}]},
     { series: [{key:'value', label:function(){ return 'Function Value';}}]}
 ];
@@ -23,6 +23,7 @@ function getChartData(i){
           series: {key:'date', label:'year'}
         },
         y: y[i],
+        groupDates: 'quarters',
         data: [
             { date: new Date('6/30/05'), value: 1.027, value2: 0.5027},
             { date: new Date('9/30/05'), value: 1.03, value2: 0.503},

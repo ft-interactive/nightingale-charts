@@ -61,7 +61,11 @@ function columnChart(g) {
 
 	var axes = new Axes(chartSVG, model);
 	axes.addValueScale();
-	axes.addTimeScale();
+	if (model.groupDates){
+		axes.addGroupedTimeScale();
+	} else {
+		axes.addTimeScale();
+	}
 	axes.repositionAxis();
 
 	var plotSVG = chartSVG.append('g').attr('class', 'plot');

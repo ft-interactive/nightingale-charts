@@ -6,7 +6,6 @@ var interval = {
     decades: d3.time.year,
     years: d3.time.year,
     fullYears: d3.time.year,
-    quarters: d3.time.month,
     months: d3.time.month,
     weeks: d3.time.week,
     days: d3.time.day,
@@ -18,7 +17,6 @@ var increment = {
     decades: 10,
     years: 1,
     fullYears: 1,
-    quarters: 3,
     months: 1,
     weeks: 1,
     days: 1,
@@ -49,9 +47,6 @@ var formatter = {
 
     fullYears: function (d, i) {
         return d3.time.format('%Y')(d);
-    },
-    quarters: function (d, i) {
-        return  'Q' + Math.floor((d.getMonth() + 3) / 3);
     },
     shortmonths: function (d, i) {
         return d3.time.format('%b')(d)[0];

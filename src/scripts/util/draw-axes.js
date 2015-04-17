@@ -15,6 +15,29 @@ function Axes(svg, model){
 	this.svg = svg;
 }
 
+
+Axes.prototype.addGroupedTimeScale = function(){
+	var model = this.model;
+
+	var timeScale = d3.scale.ordinal()
+		.domain(model.timeDomain)
+		.rangeRoundBands([0, model.chartWidth]);
+
+	var timeAxis = d3.svg.axis()//todo: custom cat axis
+		.scale(timeScale);
+
+	this.svg.call(timeAxis);
+
+	var yLabelWidth = getWidth(this.svg) - model.chartWidth;
+	var plotWidth = model.chartWidth - yLabelWidth;
+	//timeScale.range([timeScale.range()[0], plotWidth]);
+
+	this.plotWidth = plotWidth;
+	this.yLabelWidth = yLabelWidth;
+	this.timeScale = timeScale;
+	this.timeAxis = timeAxis;
+};
+
 Axes.prototype.addTimeScale = function(){
 	var model = this.model;
 	var timeScale = d3.time.scale()
@@ -34,29 +57,6 @@ Axes.prototype.addTimeScale = function(){
 	this.yLabelWidth = yLabelWidth;
 	this.timeScale = timeScale;
 	this.timeAxis = timeAxis;
-};
-
-Axes.prototype.repositionAxis = function(){
-	var model = this.model;
-	var xLabelHeight = getHeight(this.svg) - model.chartHeight;
-	var plotHeight = model.chartHeight - xLabelHeight;
-	this.valueScale.range([this.valueScale.range()[0], plotHeight]);
-
-	var yLabelWidth = getWidth(this.svg) - model.chartWidth;
-	var plotWidth = model.chartWidth - yLabelWidth;
-	this.timeScale.range([this.timeScale.range()[0], plotWidth]);
-	this.timeAxis.yOffset(plotHeight);
-
-	this.vAxis.tickSize(this.plotWidth).tickExtension(this.yLabelWidth);
-
-	this.svg.selectAll('*').remove();
-	this.svg.call(this.vAxis);
-	this.svg.call(this.timeAxis);
-
-	model.chartPosition.top += (getHeight(this.svg.select('.y.axis')) - plotHeight);
-	this.svg.attr('transform', model.translate(model.chartPosition));
-    model.plotWidth = plotWidth;
-    model.plotHeight = plotHeight;
 };
 
 Axes.prototype.addValueScale = function(){
@@ -91,6 +91,29 @@ Axes.prototype.addValueScale = function(){
 
 	this.valueScale = valueScale;
 	this.vAxis = vAxis;
+};
+
+Axes.prototype.repositionAxis = function(){
+	var model = this.model;
+	var xLabelHeight = getHeight(this.svg) - model.chartHeight;
+	var plotHeight = model.chartHeight - xLabelHeight;
+	this.valueScale.range([this.valueScale.range()[0], plotHeight]);
+
+	var yLabelWidth = getWidth(this.svg) - model.chartWidth;
+	var plotWidth = model.chartWidth - yLabelWidth;
+	this.timeScale.range([this.timeScale.range()[0], plotWidth]);
+	this.timeAxis.yOffset(plotHeight);
+
+	this.vAxis.tickSize(this.plotWidth).tickExtension(this.yLabelWidth);
+
+	this.svg.selectAll('*').remove();
+	this.svg.call(this.vAxis);
+	this.svg.call(this.timeAxis);
+
+	model.chartPosition.top += (getHeight(this.svg.select('.y.axis')) - plotHeight);
+	this.svg.attr('transform', model.translate(model.chartPosition));
+	model.plotWidth = plotWidth;
+	model.plotHeight = plotHeight;
 };
 
 module.exports = Axes;
