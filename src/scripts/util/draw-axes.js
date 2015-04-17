@@ -24,7 +24,8 @@ Axes.prototype.addGroupedTimeScale = function(){
 		.rangeRoundBands([0, model.chartWidth]);
 
 	var timeAxis = d3.svg.axis()//todo: custom cat axis
-		.scale(timeScale);
+		.scale(timeScale)
+		.orient('bottom');
 
 	this.svg.call(timeAxis);
 
@@ -102,7 +103,7 @@ Axes.prototype.repositionAxis = function(){
 	var yLabelWidth = getWidth(this.svg) - model.chartWidth;
 	var plotWidth = model.chartWidth - yLabelWidth;
 	this.timeScale.range([this.timeScale.range()[0], plotWidth]);
-	this.timeAxis.yOffset(plotHeight);
+	//this.timeAxis.yOffset(plotHeight);
 
 	this.vAxis.tickSize(this.plotWidth).tickExtension(this.yLabelWidth);
 
