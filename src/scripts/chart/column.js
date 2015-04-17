@@ -35,12 +35,6 @@ function formatData(model, series){
     }).filter(function(d){
         return (d.y !== null);
     });
-
-    //data = d3.nest()
-    //	.key(function(d)  {
-    //		return 'Q' + Math.floor((d.key.getMonth()+3)/3) + ' ' + (d.key.getYear()+1900);
-    //	})
-    //	.entries(data);
     return data;
 }
 
