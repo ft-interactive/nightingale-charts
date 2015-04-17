@@ -4,33 +4,44 @@ var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');
 var Dressing = require('../util/dressing.js');
 
-//null values in the data are interpolated over, filter these out
-//NaN values are represented by line breaks
 function plotSeries(plotSVG, model, axes, series) {
 
-	var data = model.data.map(function(d){
-		return {
-			name:d[model.x.series.key],
-			value:d[series.key]
-		};
-	}).filter(function(d){
-		return (d.y !== null);
-	});
+	var data = formatData(model, series);
 
     var timeBands = d3.scale.ordinal()
-        .domain(data.map(function(d) { return d.name; }))
+        .domain(data.map(function(d) { return d.key; }))
         .rangeRoundBands([0, model.plotWidth], 0.2);
 
     plotSVG.selectAll("rect")
         .data(data)
         .enter()
         .append("rect")
-        .attr("class", function(d) { return "column "  + series.className + (d.value < 0 ? " negative" : " positive"); })
+        .attr("class", function(d) { return "column column--"  + series.className + (d.value < 0 ? " negative" : " positive"); })
         .attr("data-value", function(d) { return d.value; })
-        .attr("x", function(d) { return axes.timeScale(d.name); })
+        .attr("x", function(d) { return axes.timeScale(d.key); })
         .attr("y", function(d) { return axes.valueScale(Math.max(0, d.value)); })
         .attr("height", function(d) { return Math.abs(axes.valueScale(d.value) - axes.valueScale(0)); })
         .attr("width", timeBands.rangeBand());
+}
+
+function formatData(model, series){
+    //null values in the data are interpolated over, filter these out
+    //NaN values are represented by line breaks
+    var data = model.data.map(function(d){
+        return {
+            key:d[model.x.series.key],
+            value:d[series.key]
+        };
+    }).filter(function(d){
+        return (d.y !== null);
+    });
+
+    //data = d3.nest()
+    //	.key(function(d)  {
+    //		return 'Q' + Math.floor((d.key.getMonth()+3)/3) + ' ' + (d.key.getYear()+1900);
+    //	})
+    //	.entries(data);
+    return data;
 }
 
 function columnChart(g) {

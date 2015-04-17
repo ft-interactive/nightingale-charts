@@ -25,7 +25,7 @@ function plotSeries(plotSVG, model, axes, series) {
 
     plotSVG.append('path')
         .datum(data)
-        .attr('class', 'line ' + series.className)
+        .attr('class', 'line line--' + series.className)
         .attr('stroke-width', model.lineStrokeWidth)
         .attr('d', function(d){
             console.log('datum ', d);
