@@ -103,7 +103,7 @@ Axes.prototype.repositionAxis = function(){
 	var yLabelWidth = getWidth(this.svg) - model.chartWidth;
 	var plotWidth = model.chartWidth - yLabelWidth;
 	this.timeScale.range([this.timeScale.range()[0], plotWidth]);
-	//this.timeAxis.yOffset(plotHeight);
+	this.timeAxis.yOffset(plotHeight);
 
 	this.vAxis.tickSize(this.plotWidth).tickExtension(this.yLabelWidth);
 
