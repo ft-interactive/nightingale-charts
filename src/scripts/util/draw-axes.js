@@ -19,19 +19,20 @@ function Axes(svg, model){
 
 Axes.prototype.addGroupedTimeScale = function(){
 	var model = this.model;
-	var timeScale = d3.scale
-		.ordinal()
+	var timeScale = d3.scale.ordinal()
 		.domain(model.timeDomain)
 		.rangeRoundBands([0, model.chartWidth], 0, 0);
 
 	var timeAxis = categoryAxis()
+		.simple(model.simpleDate)
+		.yOffset(model.chartHeight)
 		.scale(timeScale);
 
 	this.svg.call(timeAxis);
 
 	var yLabelWidth = getWidth(this.svg) - model.chartWidth;
 	var plotWidth = model.chartWidth - yLabelWidth;
-	//timeScale.range([timeScale.range()[0], plotWidth]);
+    //timeScale.range([timeScale.range()[0], plotWidth]);
 
 	this.plotWidth = plotWidth;
 	this.yLabelWidth = yLabelWidth;
@@ -52,7 +53,7 @@ Axes.prototype.addTimeScale = function(){
 
 	var yLabelWidth = getWidth(this.svg) - model.chartWidth;
 	var plotWidth = model.chartWidth - yLabelWidth;
-	timeScale.range([timeScale.range()[0], plotWidth]);
+	//timeScale.range([timeScale.range()[0], plotWidth]);
 
 	this.plotWidth = plotWidth;
 	this.yLabelWidth = yLabelWidth;
@@ -89,7 +90,6 @@ Axes.prototype.addValueScale = function(){
 		});
 		model.chartPosition.left += vLabelWidth + 4;//NOTE magic number 4
 	}
-
 	this.valueScale = valueScale;
 	this.vAxis = vAxis;
 };
@@ -100,17 +100,13 @@ Axes.prototype.repositionAxis = function(){
 	var plotHeight = model.chartHeight - xLabelHeight;
 	this.valueScale.range([this.valueScale.range()[0], plotHeight]);
 
-	var yLabelWidth = getWidth(this.svg) - model.chartWidth;
-	var plotWidth = model.chartWidth - yLabelWidth;
-
 	if (this.timeScale.rangeRoundBands){
-		this.timeScale.rangeRoundBands([this.timeScale.range()[0], plotWidth], 0, 0);
+		this.timeScale.rangeRoundBands([this.timeScale.range()[0], this.plotWidth], 0, 0);
 	} else {
-		this.timeScale.range([this.timeScale.range()[0], plotWidth]);
+		this.timeScale.range([this.timeScale.range()[0], this.plotWidth]);
 	}
 
 	this.timeAxis.yOffset(plotHeight);
-
 	this.vAxis.tickSize(this.plotWidth).tickExtension(this.yLabelWidth);
 
 	this.svg.selectAll('*').remove();
@@ -119,7 +115,7 @@ Axes.prototype.repositionAxis = function(){
 
 	model.chartPosition.top += (getHeight(this.svg.select('.y.axis')) - plotHeight);
 	this.svg.attr('transform', model.translate(model.chartPosition));
-	model.plotWidth = plotWidth;
+	model.plotWidth = this.plotWidth;
 	model.plotHeight = plotHeight;
 };
 

@@ -1,6 +1,6 @@
 var d3 = require('d3');
 var labels = require('../axis/category.labels.js');
-//var styler = require('../util/chart-attribute-styles');
+var styler = require('../util/chart-attribute-styles');
 
 function categoryAxis() {
 
@@ -22,13 +22,14 @@ function categoryAxis() {
 
 	function render(g){
 
-		g = g.append('g').attr('transform','translate(' + config.xOffset + ',' + config.yOffset + ')')
-			.attr('class', 'x axis').each(function() {
+		g = g.append('g').attr('transform','translate(' + config.xOffset + ',' + config.yOffset + ')');
+
+		g.append('g').attr('class', 'x axis').each(function() {
 				var g = d3.select(this);
 				config.axes.forEach(function (a,i) {
 					g.append('g')
 						.attr('class', ((i===0) ? 'primary' : 'secondary'))
-						.attr('transform','translate(0,' + (i * config.lineHeight) + ')')
+						//.attr('transform','translate(0,' + (i * config.lineHeight) + ')')
 						.call(a);
 				});
 				//remove text-anchor attribute from year positions
@@ -39,6 +40,10 @@ function categoryAxis() {
 				});
 				//styler(g);
 			});
+
+		if(!config.showDomain){
+			g.select('path.domain').remove();
+		}
 
 		labels.render(config.scale, g);
 
@@ -88,9 +93,9 @@ function categoryAxis() {
 
 	render.scale = function(scale, units) {
 		if (!arguments.length) return config.axes[0].scale();
-		if (config.nice) {
-			scale.nice((scale.range()[1] - scale.range()[0]) / config.pixelsPerTick);
-		}
+		//if (config.nice) {
+		//	scale.nice((scale.range()[1] - scale.range()[0]) / config.pixelsPerTick);
+		//}
 		config.scale = scale;
 
 		var axes = [];
