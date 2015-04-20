@@ -1,4 +1,5 @@
 var d3 = require('d3');
+var categoryAxis = require('../axis/category.js');
 var dateAxis = require('../axis/date.js');
 var numberAxis = require('../axis/number.js');
 
@@ -18,14 +19,13 @@ function Axes(svg, model){
 
 Axes.prototype.addGroupedTimeScale = function(){
 	var model = this.model;
-
-	var timeScale = d3.scale.ordinal()
+	var timeScale = d3.scale
+		.ordinal()
 		.domain(model.timeDomain)
-		.rangeRoundBands([0, model.chartWidth]);
+		.rangeRoundBands([0, model.chartWidth], 0, 0)
 
-	var timeAxis = d3.svg.axis()//todo: custom cat axis
-		.scale(timeScale)
-		.orient('bottom');
+	var timeAxis = categoryAxis()
+		.scale(timeScale);
 
 	this.svg.call(timeAxis);
 
@@ -102,7 +102,13 @@ Axes.prototype.repositionAxis = function(){
 
 	var yLabelWidth = getWidth(this.svg) - model.chartWidth;
 	var plotWidth = model.chartWidth - yLabelWidth;
-	this.timeScale.range([this.timeScale.range()[0], plotWidth]);
+
+	if (this.timeScale.rangeRoundBands){
+		this.timeScale.rangeRoundBands([this.timeScale.range()[0], plotWidth], 0, 0);
+	} else {
+		this.timeScale.range([this.timeScale.range()[0], plotWidth]);
+	}
+
 	this.timeAxis.yOffset(plotHeight);
 
 	this.vAxis.tickSize(this.plotWidth).tickExtension(this.yLabelWidth);

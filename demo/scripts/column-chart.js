@@ -23,7 +23,7 @@ function getChartData(i){
           series: {key:'date', label:'year'}
         },
         y: y[i],
-        //groupDates: 'quarters',
+        groupDates: 'quarters',
         data: [
             { date: new Date('6/30/05'), value: 1.027, value2: 0.5027},
             { date: new Date('9/30/05'), value: 1.03, value2: 0.503},

@@ -123,8 +123,7 @@ function setKey(model){
 function groupDates(m){
 	m.data = d3.nest()
 		.key(function(d)  {
-			//return d[m.x.series.key];
-			return 'Q' + Math.floor((d[m.x.series.key].getMonth()+3)/3);// + ' ' + (d.key.getYear()+1900);
+			return 'Q' + Math.floor((d[m.x.series.key].getMonth()+3)/3) + ' ' + (d[m.x.series.key].getYear()+1900);
 		})
 		.rollup(function(d) { return d3.mean(d, function(d) { return d.value; }); })
 		.entries(m.data);
