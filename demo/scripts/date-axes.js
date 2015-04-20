@@ -55,10 +55,10 @@ var axesDefinitions = [
         dateEnd: new Date(2013, 1, 4)
     }];
 
-function createAxesDefArrayOfWidth(axisWidth, axesDefinitionArray) {
+function createAxesDefArrayOfWidth(axisWidth) {
 
     var sizedAxesDefinitions = [];
-    axesDefinitionArray.forEach(function(axis){
+    axesDefinitions.forEach(function(axis){
         var sizedAxis = {
             title: axis.title,
             simple: axis.simple,
@@ -106,7 +106,9 @@ function renderAxesArrayIntoDiv(div, axesDefinitionArray) {
 
 module.exports = {
     init: function(){
-        renderAxesArrayIntoDiv('#views', createAxesDefArrayOfWidth(400,axesDefinitions));
-        renderAxesArrayIntoDiv('#viewsSmall', createAxesDefArrayOfWidth(200,axesDefinitions));
+        var viewData = createAxesDefArrayOfWidth(400);
+        var viewSmallData = createAxesDefArrayOfWidth(200);
+        renderAxesArrayIntoDiv('#views', viewData);
+        renderAxesArrayIntoDiv('#viewsSmall', viewSmallData);
     }
 };

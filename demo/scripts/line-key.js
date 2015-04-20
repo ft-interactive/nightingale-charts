@@ -25,6 +25,5 @@ module.exports = {
             .datum(data)
             .call(key);
 
-        oCharts.util.attributeStyler();
     }
 };

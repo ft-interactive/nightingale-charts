@@ -126,13 +126,12 @@ function groupDates(m){
 			//return d[m.x.series.key];
 			return 'Q' + Math.floor((d[m.x.series.key].getMonth()+3)/3);// + ' ' + (d.key.getYear()+1900);
 		})
-		.rollup(function(d) { return d3.mean(d, function(d) { return d.value; })})
+		.rollup(function(d) { return d3.mean(d, function(d) { return d.value; }); })
 		.entries(m.data);
 	m.x.series.key = 'key';
 	m.y.series.forEach(function(s){
 		s.key = 'values';
 	});
-	console.log(m.data);
 	return m.data;
 }
 

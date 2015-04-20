@@ -1,68 +1,111 @@
 var d3 = require('d3');
+var labels = require('../axis/category.labels.js');
 
 function categoryAxis() {
-    'use strict';
 
-	var ticksize = 5;
-	var a = d3.svg.axis().orient('left').tickSize(ticksize , 0);
-	var lineHeight = 16;
-	var userTicks = [];
-	var yOffset = 0;
-	var xOffset = 0;
+	var config = {
+		axes  : [d3.svg.axis().orient('bottom')],
+		scale : false  ,
+		lineHeight : 20,
+		tickSize   : 5 ,
+		simple : false,//axis has only first and last points as ticks, i.e. the scale's domain extent
+		nice   : false,
+		pixelsPerTick : 100,
+		units  : ['multi'],
+		unitOverride : false,
+		yOffset : 0,
+		xOffset : 0,
+		labelWidth : 0,
+		showDomain : false
+	};
 
-	function isVertical() {
-		return a.orient() === 'left' || a.orient() === 'right';
+	function render(g){
+
+		g = g.append('g').attr('transform','translate(' + config.xOffset + ',' + config.yOffset + ')')
+			.attr('class', 'x axis').each(function() {
+				var g = d3.select(this);
+				config.axes.forEach(function (a,i) {
+					g.append('g')
+						.attr('class', ((i===0) ? 'primary' : 'secondary'))
+						.attr('transform','translate(0,' + (i * config.lineHeight) + ')')
+						.call(a);
+				});
+				//remove text-anchor attribute from year positions
+				g.selectAll('.primary text').attr({
+					x: null,
+					y: null,
+					dy: 15 + config.tickSize
+				});
+				//styler(g);
+			});
+
+		labels.render(config.scale, g);
+
 	}
 
-	function axis(g) {
-		g = g.append('g').attr('transform','translate(' + xOffset + ',' + yOffset + ')');
-		g.call(a);
-	}
-
-	axis.tickSize = function(x){
-		if (!arguments.length) return ticksize;
-		a.tickSize(-x);
-		return axis;
+	render.simple = function(bool) {
+		if (!arguments.length) return config.simple;
+		config.simple = bool;
+		return render;
 	};
 
-	axis.ticks = function(x){
-		if (!arguments.length) return a.ticks();
-		if (x.length) {
-			userTicks = x;
+	render.nice = function(bool) {
+		if (!arguments.length) return config.nice;
+		config.nice = bool;
+		return render;
+	};
+
+	render.tickSize = function(int) {
+		if (!arguments.length) return config.tickSize;
+		config.tickSize = int;
+		return render;
+	};
+
+	render.labelWidth = function(int) {
+		if (!arguments.length) return config.labelWidth;
+		config.labelWidth = int;
+		return render;
+	};
+
+	render.lineHeight = function(int) {
+		if (!arguments.length) return config.lineHeight;
+		config.lineHeight = int;
+		return render;
+	};
+
+	render.yOffset = function(int) {
+		if (!arguments.length) return config.yOffset;
+		config.yOffset = int;
+		return render;
+	};
+
+	render.xOffset = function(int) {
+		if (!arguments.length) return config.xOffset;
+		config.xOffset = int;
+		return render;
+	};
+
+	render.scale = function(scale, units) {
+		if (!arguments.length) return config.axes[0].scale();
+		if (config.nice) {
+			scale.nice((scale.range()[1] - scale.range()[0]) / config.pixelsPerTick);
 		}
-		return axis;
+		config.scale = scale;
+
+		var axes = [];
+		var axis = d3.svg.axis()
+			.scale( scale )
+			.tickFormat(function (d, i){
+				return d.split(' ')[0];
+			})
+			.tickSize(config.tickSize,0);
+		axes.push(axis);
+
+		config.axes = axes;
+		return render;
 	};
 
-	axis.orient = function(x){
-		if (!arguments.length) return a.orient();
-		a.orient(x);
-		return axis;
-	};
-
-	axis.scale = function(x){
-		if (!arguments.length) return a.scale();
-		a.scale(x);
-		if (userTicks.length) {
-			a.tickValues( userTicks );
-		} else {
-			a.ticks( Math.round( (a.scale().range()[1] - a.scale().range()[0])/100 ) );
-		}
-		return axis;
-	};
-
-	axis.yOffset = function(x){
-		if (!arguments.length) return yOffset;
-		yOffset = x;
-		return axis;
-	};
-
-	axis.xOffset = function(x){
-		if (!arguments.length) return yOffset;
-		xOffset = x;
-		return axis;
-	};
-
-	return axis;
+	return render;
 }
 
 module.exports = categoryAxis;
