@@ -49,13 +49,8 @@ var data = [
 ];
 
 function getChartData(i){
-
     return {
-        comment: 'Column chart',
-        footnote: 'this is just for testing!',
-        source: 'tbc',
         title: 'Some Simple Columns: ' + (i + 1),
-        subtitle: 'Drawn for you',
         x:{
             series: {key:'date', label:'year'},
         },
@@ -64,9 +59,7 @@ function getChartData(i){
         scale: d3.scale
             .ordinal()
             .rangeRoundBands([0, 400], 0, 0)
-            .domain(data.map(function (d){return d.key;})),
-        isDate: true,
-        singleSeries: true
+            .domain(data.map(function (d){return d.key;}))
     };
 }
 
