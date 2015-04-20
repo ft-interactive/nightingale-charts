@@ -22,7 +22,7 @@ Axes.prototype.addGroupedTimeScale = function(){
 	var timeScale = d3.scale
 		.ordinal()
 		.domain(model.timeDomain)
-		.rangeRoundBands([0, model.chartWidth], 0, 0)
+		.rangeRoundBands([0, model.chartWidth], 0, 0);
 
 	var timeAxis = categoryAxis()
 		.scale(timeScale);
