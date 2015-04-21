@@ -2087,7 +2087,7 @@ module.exports = {
 
 },{}],28:[function(require,module,exports){
 module.exports = "0.0.6";
-},{}],"number-axes":[function(require,module,exports){
+},{}],"quarterly-axes":[function(require,module,exports){
 
 var oCharts = require('../../src/scripts/o-charts');
 var d3 = require('d3');
@@ -2095,51 +2095,24 @@ var d3 = require('d3');
 var margin = {
     top:20, left:50, bottom:70, right:50
 }
+
 var axesDefinitions = [
     {
-        title:'6 or less',
-        simple:false,
-        start:11.2,
-        end: 7
+        title:'A Year',
+        dateStart : new Date("March 31, 1981"),
+        dateEnd: new Date("December 31, 1981")
     },
     {
-        title:'more than 6',
-        simple:false,
-        start: 356,
-        end: 0
+        title:'A Few Years',
+        dateStart : new Date("June 30, 1981"),
+        dateEnd: new Date("March 31, 1985")
     },
     {
-        title:'6 or less (simple)',
-        simple:true,
-        start:11.2,
-        end: 7
-    },
-    {
-        title:'more than 6 (simple)',
-        simple:true,
-        start: 356,
-        end: 0
-    },
-    {
-        title:'6 or less',
-        simple:false,
-        orient:'bottom',
-        start:7,
-        end: 11.2
-    },
-    {
-        title:'6 or less (simple)',
-        simple:true,
-        orient:'bottom',
-        start:7,
-        end: 11.2
-    },
-    {
-        title:'above zero, below 3, decimals',
-        simple:false,
-        start:2.95,
-        end: 0.2
-    }];
+        title:'many many many',
+        dateStart : new Date("June 30, 1981"),
+        dateEnd: new Date("March 31, 2012")
+    }
+];
 
 function createAxesDefArrayOfWidth(axisWidth, axesDefinitionArray) {
 
@@ -2147,11 +2120,10 @@ function createAxesDefArrayOfWidth(axisWidth, axesDefinitionArray) {
     axesDefinitionArray.forEach(function(axis){
         var sizedAxis = {
             title: axis.title,
-            orient: axis.orient,
             simple: axis.simple,
-            scale: d3.scale.linear()
+            scale: d3.time.scale()
                 .range([0, axisWidth])
-                .domain([axis.start, axis.end])
+                .domain([axis.dateStart, axis.dateEnd])
         };
         sizedAxesDefinitions.push(sizedAxis);
     });
@@ -2159,7 +2131,8 @@ function createAxesDefArrayOfWidth(axisWidth, axesDefinitionArray) {
 }
 
 function renderAxesArrayIntoDiv(div, axesDefinitionArray) {
-    var divs = d3.select('#views')
+
+    var divs = d3.select(div)
         .selectAll('div')
         .data(axesDefinitionArray)
         .enter().append('div')
@@ -2172,27 +2145,17 @@ function renderAxesArrayIntoDiv(div, axesDefinitionArray) {
 
     divs.append('svg')
         .attr('width', function (d) {
-            if (d.orient) {
-                var r = d.scale.range();
-                return r[0] + r[1] + margin.bottom
-            }
-            return margin.left + margin.right
+            var r = d.scale.range();
+            return (r[1] - r[0]) + margin.left + margin.right;
         })
         .attr('class', 'ft-chart')
-        .attr('height', function (d) {
-            if (d.orient) {
-                return margin.bottom
-            }
-            var r = d.scale.range();
-            return r[0] + r[1] + margin.bottom
-        })
+        .attr('height', margin.top + margin.bottom)
         .each(function (d, i) {
-            var axis = oCharts.axis.number()
+
+            //create the axis, giving it a scale
+            var axis = oCharts.axis.date()
                 .simple(d.simple)
-                .scale(d.scale);
-            if (d.orient) {
-                axis.orient(d.orient);
-            }
+                .scale(d.scale, ['quarters', 'years']);
 
             d3.select(this)
                 .append('g')
@@ -2202,8 +2165,10 @@ function renderAxesArrayIntoDiv(div, axesDefinitionArray) {
 }
 
 module.exports = {
-    init: function() {
-        renderAxesArrayIntoDiv('#views', createAxesDefArrayOfWidth(200, axesDefinitions));
+    init: function(){
+        renderAxesArrayIntoDiv('#views', createAxesDefArrayOfWidth(400,axesDefinitions));
+        renderAxesArrayIntoDiv('#viewsSmall', createAxesDefArrayOfWidth(200,axesDefinitions));
     }
-};
-},{"../../src/scripts/o-charts":18,"d3":"d3"}]},{},["number-axes"]);
+}
+
+},{"../../src/scripts/o-charts":18,"d3":"d3"}]},{},["quarterly-axes"]);

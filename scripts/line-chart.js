@@ -276,6 +276,7 @@ var interval = {
     decades: d3.time.year,
     years: d3.time.year,
     fullYears: d3.time.year,
+    quarters: d3.time.month,
     months: d3.time.month,
     weeks: d3.time.week,
     days: d3.time.day,
@@ -287,57 +288,63 @@ var increment = {
     decades: 10,
     years: 1,
     fullYears: 1,
+    quarters: 3,
     months: 1,
     weeks: 1,
     days: 1,
     hours: 1
 };
 
-module.exports = {
-    formatter : {
-        centuries: function (d, i) {
-            if (i === 0 || d.getYear() % 100 === 0) {
-                return d3.time.format('%Y')(d);
-            }
-            return d3.time.format('%y')(d);
-        },
-
-        decades: function (d, i) {
-            if (i === 0 || d.getYear() % 100 === 0) {
-                return d3.time.format('%Y')(d);
-            }
-            return d3.time.format('%y')(d);
-        },
-
-        years: function (d, i) {
-            if (i === 0 || d.getYear() % 100 === 0) {
-                return d3.time.format('%Y')(d);
-            }
-            return d3.time.format('%y')(d);
-        },
-
-        fullYears: function (d, i) {
+var formatter = {
+    centuries: function (d, i) {
+        if (i === 0 || d.getYear() % 100 === 0) {
             return d3.time.format('%Y')(d);
-        },
-        shortmonths: function (d, i) {
-            return d3.time.format('%b')(d)[0];
-        },
-        months: function (d, i) {
-            return d3.time.format('%b')(d);
-        },
-
-        weeks: function (d, i) {
-            return d3.time.format('%e %b')(d);
-        },
-
-        days: function (d, i) {
-            return d3.time.format('%e')(d);
-        },
-
-        hours: function (d, i) {
-            return parseInt(d3.time.format('%H')(d)) + ':00';
         }
+        return d3.time.format('%y')(d);
     },
+
+    decades: function (d, i) {
+        if (i === 0 || d.getYear() % 100 === 0) {
+            return d3.time.format('%Y')(d);
+        }
+        return d3.time.format('%y')(d);
+    },
+
+    years: function (d, i) {
+        if (i === 0 || d.getYear() % 100 === 0) {
+            return d3.time.format('%Y')(d);
+        }
+        return d3.time.format('%y')(d);
+    },
+
+    fullYears: function (d, i) {
+        return d3.time.format('%Y')(d);
+    },
+    quarters: function (d, i) {
+        return  'Q' + Math.floor((d.getMonth() + 3) / 3);
+    },
+    shortmonths: function (d, i) {
+        return d3.time.format('%b')(d)[0];
+    },
+    months: function (d, i) {
+        return d3.time.format('%b')(d);
+    },
+
+    weeks: function (d, i) {
+        return d3.time.format('%e %b')(d);
+    },
+
+    days: function (d, i) {
+        return d3.time.format('%e')(d);
+    },
+
+    hours: function (d, i) {
+        return parseInt(d3.time.format('%H')(d)) + ':00';
+    }
+};
+
+module.exports = {
+    formatter : formatter,
     createDetailedTicks:function(scale, unit){
         var customTicks = scale.ticks( interval[ unit ], increment[ unit ] );
         customTicks.push(scale.domain()[0]); //always include the first and last values
@@ -360,12 +367,13 @@ module.exports = {
         }
         var axes = [];
         for (var i = 0; i < units.length; i++) {
-            if( this.formatter[units[i]] ){
-                var customTicks = (simple) ? scale.domain() : this.createDetailedTicks(scale, units[i]);
+            var unit = units[i];
+            if( this.formatter[unit] ){
+                var customTicks = (simple) ? scale.domain() : this.createDetailedTicks(scale, unit);
                 var axis = d3.svg.axis()
                     .scale( scale )
                     .tickValues(customTicks)
-                    .tickFormat(this.formatter[units[i]])
+                    .tickFormat(this.formatter[unit])
                     .tickSize(tickSize,0);
                 axes.push(axis );
             }
@@ -739,466 +747,161 @@ function blankChart() {
 module.exports = blankChart;
 
 },{"d3":"d3"}],11:[function(require,module,exports){
+var d3 = require('d3');
+var Axes = require('../util/draw-axes.js');
+var DataModel = require('../util/data.model.js');
+var metadata = require('../util/metadata.js');
+var Dressing = require('../util/dressing.js');
+
+function plotSeries(plotSVG, model, axes, series) {
+
+	var data = formatData(model, series);
+
+    var timeBands = d3.scale.ordinal()
+        .domain(data.map(function(d) { return d.key; }))
+        .rangeRoundBands([0, model.plotWidth], 0.2);
+
+    plotSVG.selectAll("rect")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("class", function(d) { return "column column--"  + series.className + (d.value < 0 ? " negative" : " positive"); })
+        .attr("data-value", function(d) { return d.value; })
+        .attr("x", function(d) { return axes.timeScale(d.key); })
+        .attr("y", function(d) { return axes.valueScale(Math.max(0, d.value)); })
+        .attr("height", function(d) { return Math.abs(axes.valueScale(d.value) - axes.valueScale(0)); })
+        .attr("width", timeBands.rangeBand());
+}
+
+function formatData(model, series){
+    //null values in the data are interpolated over, filter these out
+    //NaN values are represented by line breaks
+    var data = model.data.map(function(d){
+        return {
+            key:d[model.x.series.key],
+            value:d[series.key]
+        };
+    }).filter(function(d){
+        return (d.y !== null);
+    });
+    return data;
+}
+
+function columnChart(g) {
+	'use strict';
+
+	var model = new DataModel(Object.create(g.data()[0]));
+	var svg = g.append('svg')
+		.attr({
+			'class': 'graphic line-chart',
+			height: model.height,
+			width: model.width,
+			xmlns:"http://www.w3.org/2000/svg",
+			version:"1.2"
+		});
+	metadata.create(svg, model);
+
+	var dressing = new Dressing(svg, model);
+	dressing.addHeader();
+	dressing.addFooter();
+
+	var chartSVG = svg.append('g').attr('class', 'chart');
+	chartSVG.attr('transform', model.translate(model.chartPosition));
+
+	var axes = new Axes(chartSVG, model);
+	axes.addValueScale();
+	axes.addTimeScale();
+	axes.repositionAxis();
+
+	var plotSVG = chartSVG.append('g').attr('class', 'plot');
+	var i = model.y.series.length;
+	while (i--) {
+		plotSeries(plotSVG, model, axes, model.y.series[i]);
+	}
+}
+
+module.exports = columnChart;
+
+},{"../util/data.model.js":21,"../util/draw-axes.js":22,"../util/dressing.js":23,"../util/metadata.js":26,"d3":"d3"}],12:[function(require,module,exports){
 module.exports = {
   line: require('./line.js'),
   blank: require('./blank.js'),
-  pie: require('./pie.js')
+  pie: require('./pie.js'),
+  column: require('./column.js')
 };
 
-},{"./blank.js":10,"./line.js":12,"./pie.js":14}],12:[function(require,module,exports){
+},{"./blank.js":10,"./column.js":11,"./line.js":13,"./pie.js":14}],13:[function(require,module,exports){
 var d3 = require('d3');
-var dateAxis = require('../axis/date.js');
-var numberAxis = require('../axis/number.js');
-var textArea = require('../element/text-area.js');
-var lineKey = require('../element/line-key.js');
-var ftLogo = require('../element/logo.js');
+var Axes = require('../util/draw-axes.js');
 var interpolator = require('../util/line-interpolators.js');
-var LineModel = require('./line.model.js');
+var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');
+var Dressing = require('../util/dressing.js');
 
-function getHeight(selection) {
-    return Math.ceil(selection.node().getBoundingClientRect().height);
+//null values in the data are interpolated over, filter these out
+//NaN values are represented by line breaks
+function plotSeries(plotSVG, model, axes, series) {
+
+    var data = model.data.map(function(d){
+        return {
+            x:d[model.x.series.key],
+            y:d[series.key]
+        };
+    }).filter(function(d){
+        return (d.y !== null);
+    });
+
+    var line = d3.svg.line()
+        .interpolate(interpolator.gappedLine)
+        .x( function(d){ return axes.timeScale(d.x); } )
+        .y( function(d){ return axes.valueScale(d.y); } );
+
+    plotSVG.append('path')
+        .datum(data)
+        .attr('class', 'line line--' + series.className)
+        .attr('stroke-width', model.lineStrokeWidth)
+        .attr('d', function(d){
+            console.log('datum ', d);
+            return line(d);
+        });
 }
 
-function getWidth(selection) {
-    return Math.ceil(selection.node().getBoundingClientRect().width);
-}
-
-function lineChart(p) {
+function lineChart(g) {
     'use strict';
 
-	function chart(g){
-
-		var model = new LineModel(Object.create(g.data()[0]));
-		var svg = g.append('svg')
-				.attr({
-					'class': 'graphic line-chart',
-					height: model.height,
-					width: model.width,
-					xmlns:"http://www.w3.org/2000/svg",
-					version:"1.2"
-				});
-        metadata.create(svg, model);
-
-		var defaultLineHeight = 1.2;
-		// TODO: don't hard-code the fontsize, get from CSS somehow.
-		var titleFontSize = 18;
-		// TODO: move calculation of lineheight to the textarea component;
-		var titleLineHeight = defaultLineHeight;
-		var titleLineHeightActual = Math.ceil(titleFontSize * titleLineHeight);
-		var titleLineSpacing = titleLineHeightActual - titleFontSize;
-		var footerLineHeight = 15;
-		var subtitleFontSize = 12;
-		var subtitleLineHeight = defaultLineHeight;
-		var subtitleLineHeightActual = Math.ceil(subtitleFontSize * subtitleLineHeight);
-		var subtitleLineSpacing = subtitleLineHeightActual - subtitleFontSize;
-		var sourceFontSize = 10;
-		var sourceLineHeight = defaultLineHeight;
-		var sourceLineHeightActual = sourceFontSize * sourceLineHeight;
-		var halfLineStrokeWidth = Math.ceil(model.lineStrokeWidth / 2);
-
-			//create title, subtitle, key, source, footnotes, logo, the chart itself
-			var titleTextWrapper = textArea().width(model.contentWidth).lineHeight(titleLineHeightActual),
-			subtitleTextWrapper = textArea().width(model.contentWidth).lineHeight(subtitleLineHeightActual),
-			footerTextWrapper = textArea().width(model.contentWidth - model.logoSize).lineHeight(footerLineHeight),
-
-			chartKey = lineKey({lineThickness: model.lineStrokeWidth})
-				.style(function (d) {
-					return d.value;
-				})
-				.label(function (d) {
-					return d.key;
-				}),
-			totalHeight = 0;
-
-		//position stuff
-		//start from the top...
-		var title = svg.append('g').attr('class','chart-title').datum(model.title).call(titleTextWrapper);
-
-		if (!model.titlePosition) {
-			if (model.title) {
-				model.titlePosition = {top: totalHeight + titleFontSize, left: 0};
-				//if the title is multi line it's positon should only be the offset by the height of the first line...
-				totalHeight += (getHeight(title) + model.blockPadding - titleLineSpacing);
-			} else {
-				model.titlePosition = {top: totalHeight, left: 0};
-			}
-		}
-
-		title.attr('transform', model.translate(model.titlePosition));
-
-		var subtitle = svg.append('g').attr('class','chart-subtitle').datum(model.subtitle).call(subtitleTextWrapper);
-
-		if (!model.subtitlePosition) {
-			if (model.subtitle) {
-				model.subtitlePosition = {top: totalHeight + subtitleFontSize, left: 0};
-				totalHeight += (getHeight(subtitle) + model.blockPadding);
-			} else {
-				model.subtitlePosition = {top: totalHeight, left: 0};
-			}
-		}
-
-		subtitle.attr('transform', model.translate(model.subtitlePosition));
-
-		if (model.key) {
-			var entries = model.y.series.map(function (d) {
-				return {key: d.label, value: d.className};
+	var model = new DataModel(Object.create(g.data()[0]));
+	var svg = g.append('svg')
+			.attr({
+				'class': 'graphic line-chart',
+				height: model.height,
+				width: model.width,
+				xmlns:"http://www.w3.org/2000/svg",
+				version:"1.2"
 			});
+	metadata.create(svg, model);
 
-			var key = svg.append('g').attr('class', 'chart-key').datum(entries).call(chartKey);
+	var dressing = new Dressing(svg, model);
+	dressing.addHeader();
+	dressing.addFooter();
 
-			if (!model.keyPosition) {
-				model.keyPosition = {top: totalHeight, left: halfLineStrokeWidth};
-				totalHeight += (getHeight(key) + model.blockPadding);
-			}
-			key.attr('transform', model.translate(model.keyPosition));
-		}
+    var chartSVG = svg.append('g').attr('class', 'chart');
+    chartSVG.attr('transform', model.translate(model.chartPosition));
 
-		var chartSVG = svg.append('g').attr('class', 'chart');
+    var axes = new Axes(chartSVG, model);
+    axes.addValueScale();
+    axes.addTimeScale();
+    axes.repositionAxis();
 
-		if (!model.chartPosition) {
-			model.chartPosition = {
-				top: totalHeight + halfLineStrokeWidth,
-				left: (model.numberAxisOrient === 'left' ? 0 : halfLineStrokeWidth)
-			};
-		}
-
-		chartSVG.attr('transform', model.translate(model.chartPosition));
-
-		var footnotes = svg.append('g').attr('class','chart-footnote').datum(model.footnote).call(footerTextWrapper);
-		var source = svg.append('g').attr('class','chart-source').datum(model.sourcePrefix + model.source).call(footerTextWrapper);
-		var sourceHeight = getHeight(source);
-
-		if (model.hideSource) {
-			sourceHeight = 0;
-			source.remove();
-		}
-
-		var footnotesHeight = getHeight(footnotes);
-		var footerHeight = Math.max(footnotesHeight + sourceHeight + (model.blockPadding * 2), model.logoSize);
-
-		totalHeight += (footerHeight + model.blockPadding);
-
-		if (!model.height) {
-			model.height = totalHeight + model.chartHeight;
-		} else {
-			model.chartHeight = model.height - totalHeight;
-			if (model.chartHeight < 0) {
-				model.error({
-					node:chartSVG,
-					message:'calculated plot height is less than zero'
-				});
-			}
-		}
-
-		svg.attr('height', Math.ceil(model.height));
-
-		//the position at the bottom of the 'chart'
-		var currentPosition = model.chartPosition.top + model.chartHeight;
-		footnotes.attr('transform', model.translate({ top: currentPosition + footerLineHeight + model.blockPadding }));
-		source.attr('transform', model.translate({ top: currentPosition + footnotesHeight + sourceLineHeightActual + (model.blockPadding * 2)}));
-
-		//the business of the actual chart
-		//make provisional scales
-		var valueScale = d3.scale.linear()
-			.domain(model.valueDomain.reverse())
-			.range([0, model.chartHeight ]);
-
-		if (model.niceValue) {
-			valueScale.nice();
-		}
-
-		var timeScale = d3.time.scale()
-			.domain(model.timeDomain)
-			.range([0, model.chartWidth]);
-
-		//first pass, create the axis at the entire chartWidth/Height
-
-		var vAxis = numberAxis()
-//				.orient( model.numberAxisOrient )
-				.tickFormat(model.numberAxisFormatter)
-				.simple(model.simpleValue)
-				.tickSize(model.chartWidth)	//make the ticks the width of the chart
-				.scale(valueScale),
-
-			timeAxis = dateAxis()
-				.simple(model.simpleDate)
-				.yOffset(model.chartHeight)	//position the axis at the bottom of the chart
-				.scale(timeScale);
-
-		if (model.numberAxisOrient !== 'right' && model.numberAxisOrient !== 'left') {
-			vAxis.noLabels(true);
-		} else {
-			vAxis.orient(model.numberAxisOrient);
-		}
-
-		chartSVG.call(vAxis);
-		chartSVG.call(timeAxis);
-
-		//measure chart
-		var widthDifference = getWidth(chartSVG) - model.chartWidth, //this difference is the ammount of space taken up by axis labels
-			heightDifference = getHeight(chartSVG) - model.chartHeight,
-			//so we can work out how big the plot should be (the labels will probably stay the same...
-			plotWidth = model.chartWidth - widthDifference,
-			plotHeight = model.chartHeight - heightDifference,
-			newValueRange = [valueScale.range()[0], plotHeight],
-			newTimeRange = [timeScale.range()[0], plotWidth];
-
-		valueScale.range(newValueRange);
-		timeScale.range(newTimeRange);
-		timeAxis.yOffset(plotHeight);
-		vAxis.tickSize(plotWidth).tickExtension(widthDifference);
-
-		//replace provisional axes
-		chartSVG.selectAll('*').remove();
-		chartSVG.call(vAxis);
-		chartSVG.call(timeAxis);
-		if (model.numberAxisOrient !== 'right') {
-			//figure out how much of the extra width is the vertical axis lables
-			var vLabelWidth = 0;
-			chartSVG.selectAll('.y.axis text').each(function(){
-				vLabelWidth = Math.max(vLabelWidth, getWidth(d3.select(this)));
-			});
-			model.chartPosition.left += vLabelWidth + 4;//NOTE magic number 4
-		}
-
-		model.chartPosition.top += (getHeight(chartSVG.select('.y.axis')) - plotHeight);
-		chartSVG.attr('transform', model.translate(model.chartPosition));
-
-		var plot = chartSVG.append('g').attr('class', 'plot');
-
-		var logo = svg.append('g').call(ftLogo, model.logoSize);
-		var heightOfFontDescenders = 3;
-		var baselineOfLastSourceLine = model.height - getHeight(logo) - heightOfFontDescenders - (sourceLineHeightActual - sourceFontSize);
-
-		logo.attr('transform', model.translate({
-			left: model.width - model.logoSize,
-			top: baselineOfLastSourceLine
-		}));
-
-		function drawPlot(g, series) {
-			//null values in the data are interpolated over
-			//NaN values are represented by line breaks
-			var normalisedData = model.data.map(function(d){
-				return {
-					x:d[model.x.series.key],
-					y:d[series.key]
-				};
-			});
-
-			normalisedData = normalisedData.filter(function(d){
-				return (d.y !== null);
-			});	//filter out null values, these are to be interpolated over
-
-			var line = d3.svg.line()
-				.interpolate(interpolator.gappedLine)
-				.x( function(d){ return timeScale(d.x); } )
-				.y( function(d){ return valueScale(d.y); } );
-
-			g.append('path')
-				.datum(normalisedData)
-				.attr('class', 'line ' + series.className)
-				.attr('stroke-width', model.lineStrokeWidth)
-				.attr('d', function(d){
-					console.log('datum ', d);
-					return line(d);
-				});
-		}
-
-		var i = model.y.series.length;
-
-		while (i--) {
-			drawPlot(plot, model.y.series[i]);
-		}
-
-	}
-
-	return chart;
+    var plotSVG = chartSVG.append('g').attr('class', 'plot');
+    var i = model.y.series.length;
+    while (i--) {
+        plotSeries(plotSVG, model, axes, model.y.series[i]);
+    }
 }
 
 module.exports = lineChart;
 
-},{"../axis/date.js":2,"../axis/number.js":7,"../element/line-key.js":15,"../element/logo.js":16,"../element/text-area.js":17,"../util/line-interpolators.js":21,"../util/metadata.js":23,"./line.model.js":13,"d3":"d3"}],13:[function(require,module,exports){
-var d3 = require('d3');
-var lineThickness = require('../util/line-thickness.js');
-var ratios = require('../util/aspect-ratios.js');
-var seriesOptions = require('../util/series-options.js');
-
-function isDate(d) {
-	return d && d instanceof Date && !isNaN(+d);
-}
-
-function translate(margin) {
-	return function(position) {
-		var left = position.left || 0;
-		var top = position.top || 0;
-		return 'translate(' + (margin + left) + ',' + top + ')';
-	};
-}
-
-function setChartWidth(model){
-	if (model.chartWidth) { return model.chartWidth; }
-	var rightGutter = model.contentWidth < 260 ? 16 : 26;
-	return  model.contentWidth - rightGutter;
-}
-
-function setExtents(model){
-	var extents = [];
-	model.y.series.forEach(function (l, i) {
-		var key = l.key;
-		model.data = model.data.map(function (d, j) {
-			var value = d[key];
-			var isValidNumber = value === null || typeof value === 'number';
-			if (!isValidNumber) {
-				model.error({
-					node: null,
-					message: 'Value is not a number',
-					value: value,
-					row: j,
-					column: key
-				});
-			}
-			return d;
-		});
-		var ext = d3.extent(model.data, function(d){
-			return d[key];
-		});
-		extents = extents.concat (ext);
-	});
-	return extents;
-}
-
-function setTimeDomain(model){
-	if (model.timeDomain) { return model.timeDomain; }
-	return d3.extent(model.data, function (d) {
-		return d[model.x.series.key];
-	});
-}
-
-function setValueDomain(model){
-	if (model.valueDomain) { return model.valueDomain; }
-	var extents = setExtents(model);
-	var valueDomain = d3.extent(extents);
-	if (!model.falseOrigin && valueDomain[0] > 0) {
-		valueDomain[0] = 0;
-	}
-	return valueDomain;
-}
-
-function setChartHeight(model){
-	if (model.chartHeight) { return model.chartHeight; }
-	var isNarrow = model.chartWidth < 220;
-	var isWide = model.chartWidth > 400;
-	var ratio = isNarrow ? 1.1 : (isWide ? ratios.commonRatios.widescreen : ratios.commonRatios.standard);
-	return ratios.heightFromWidth(model.chartWidth, ratio);
-}
-
-function verifyData(model){
-	return !Array.isArray(model.data) ? [] : model.data.map(function (dataItem, i) {
-
-		var s = dataItem[model.x.series.key];
-		var error = {
-			node: null,
-			message: '',
-			row: i,
-			column: model.x.series.key,
-			value: s
-		};
-
-		if (!dataItem) {
-			error.message = 'Empty row';
-		} else if (!s) {
-			error.message = 'X axis value is empty or null';
-		} else if (!isDate(s)) {
-			error.message = 'Value is not a valid date';
-		}
-
-		if (error.message) {
-			model.error(error);
-			dataItem[model.x.series.key] = null;
-		}
-
-		return dataItem;
-
-	});
-}
-
-function setKey(model){
-	var key = model.key;
-	if (typeof model.key !== 'boolean') {
-		key = model.y.series.length > 1;
-	} else if (model.key && !model.y.series.length) {
-		key = false;
-	}
-	return key;
-}
-
-
-function Model(opts) {
-	var lineClasses = ['series1', 'series2', 'series3', 'series4', 'series5', 'series6', 'series7', 'accent'];
-	var m = {
-		//layout stuff
-		height: undefined,
-		width: 300,
-		chartHeight: undefined,
-		chartWidth: undefined,
-		blockPadding: 8,
-		simpleDate: false,
-		simpleValue: false,
-		logoSize: 28,
-		//data stuff
-		falseOrigin: false, //TODO, find out if there's a standard 'pipeline' temr for this
-		error: this.error,
-		lineClasses: {},
-		niceValue: true,
-		hideSource: false,
-		numberAxisOrient: 'left',
-		margin: 2,
-		lineThickness: undefined,
-		x: {
-			series: '&'
-		},
-		y: {
-			series: []
-		},
-		labelLookup: null,
-		sourcePrefix: 'Source: '
-	};
-
-	for (var key in opts) {
-		m[key] = opts[key];
-	}
-
-	m.x.series = seriesOptions.normalise(m.x.series);
-	m.y.series = seriesOptions.normaliseY(m.y.series)
-		.filter(function (d) {
-			return !!d.key && d.key !== m.x.series.key;
-		})
-		.map(function (d, i) {
-			d.index = i;
-			d.className = lineClasses[i];
-			return d;
-		});
-
-	m.data = verifyData(m);
-	m.contentWidth = m.width - (m.margin * 2);
-	m.translate = translate(0);
-	m.chartWidth = setChartWidth(m);
-	m.chartHeight = setChartHeight(m);
-	m.timeDomain = setTimeDomain(m);
-	m.valueDomain = setValueDomain(m);
-	m.lineStrokeWidth = lineThickness(m.lineThickness);
-	m.key = setKey(m);
-
-	return m;
-}
-
-Model.prototype.error = function(err) {
-	console.log('ERROR: ', err);
-};
-module.exports = Model;
-
-},{"../util/aspect-ratios.js":19,"../util/line-thickness.js":22,"../util/series-options.js":24,"d3":"d3"}],14:[function(require,module,exports){
+},{"../util/data.model.js":21,"../util/draw-axes.js":22,"../util/dressing.js":23,"../util/line-interpolators.js":24,"../util/metadata.js":26,"d3":"d3"}],14:[function(require,module,exports){
 var d3 = require('d3');
 
 function pieChart() {
@@ -1363,7 +1066,7 @@ function lineKey(options) {
 
 module.exports = lineKey;
 
-},{"../util/line-thickness.js":22,"d3":"d3"}],16:[function(require,module,exports){
+},{"../util/line-thickness.js":25,"d3":"d3"}],16:[function(require,module,exports){
 //the ft logo there's probably an easier ay to do this...
 var d3 = require('d3');
 
@@ -1514,7 +1217,7 @@ module.exports  = {
 
 };
 
-},{"./axis/index.js":6,"./chart/index.js":11,"./element/line-key.js":15,"./element/text-area.js":17,"./util/chart-attribute-styles.js":20,"./util/version":25}],19:[function(require,module,exports){
+},{"./axis/index.js":6,"./chart/index.js":12,"./element/line-key.js":15,"./element/text-area.js":17,"./util/chart-attribute-styles.js":20,"./util/version":28}],19:[function(require,module,exports){
 // More info:
 // http://en.wikipedia.org/wiki/Aspect_ratio_%28image%29
 
@@ -1766,6 +1469,465 @@ function applyAttributes(g){
 module.exports = applyAttributes;
 
 },{"d3":"d3"}],21:[function(require,module,exports){
+var d3 = require('d3');
+var lineThickness = require('../util/line-thickness.js');
+var ratios = require('../util/aspect-ratios.js');
+var seriesOptions = require('../util/series-options.js');
+
+function isDate(d) {
+	return d && d instanceof Date && !isNaN(+d);
+}
+
+function translate(margin) {
+	return function(position) {
+		var left = position.left || 0;
+		var top = position.top || 0;
+		return 'translate(' + (margin + left) + ',' + top + ')';
+	};
+}
+
+function setChartWidth(model){
+	if (model.chartWidth) { return model.chartWidth; }
+	var rightGutter = model.contentWidth < 260 ? 16 : 26;
+	return  model.contentWidth - rightGutter;
+}
+
+function setExtents(model){
+	var extents = [];
+	model.y.series.forEach(function (l, i) {
+		var key = l.key;
+		model.data = model.data.map(function (d, j) {
+			var value = d[key];
+			var isValidNumber = value === null || typeof value === 'number';
+			if (!isValidNumber) {
+				model.error({
+					node: null,
+					message: 'Value is not a number',
+					value: value,
+					row: j,
+					column: key
+				});
+			}
+			return d;
+		});
+		var ext = d3.extent(model.data, function(d){
+			return d[key];
+		});
+		extents = extents.concat (ext);
+	});
+	return extents;
+}
+
+function setTimeDomain(model){
+	if (model.timeDomain) { return model.timeDomain; }
+	return d3.extent(model.data, function (d) {
+		return d[model.x.series.key];
+	});
+}
+
+function setValueDomain(model){
+	if (model.valueDomain) { return model.valueDomain; }
+	var extents = setExtents(model);
+	var valueDomain = d3.extent(extents);
+	if (!model.falseOrigin && valueDomain[0] > 0) {
+		valueDomain[0] = 0;
+	}
+	return valueDomain;
+}
+
+function setChartHeight(model){
+	if (model.chartHeight) { return model.chartHeight; }
+	var isNarrow = model.chartWidth < 220;
+	var isWide = model.chartWidth > 400;
+	var ratio = isNarrow ? 1.1 : (isWide ? ratios.commonRatios.widescreen : ratios.commonRatios.standard);
+	return ratios.heightFromWidth(model.chartWidth, ratio);
+}
+
+function verifyData(model){
+	return !Array.isArray(model.data) ? [] : model.data.map(function (dataItem, i) {
+
+		var s = dataItem[model.x.series.key];
+		var error = {
+			node: null,
+			message: '',
+			row: i,
+			column: model.x.series.key,
+			value: s
+		};
+
+		if (!dataItem) {
+			error.message = 'Empty row';
+		} else if (!s) {
+			error.message = 'X axis value is empty or null';
+		} else if (!isDate(s)) {
+			error.message = 'Value is not a valid date';
+		}
+
+		if (error.message) {
+			model.error(error);
+			dataItem[model.x.series.key] = null;
+		}
+
+		return dataItem;
+
+	});
+}
+
+function setKey(model){
+	var key = model.key;
+	if (typeof model.key !== 'boolean') {
+		key = model.y.series.length > 1;
+	} else if (model.key && !model.y.series.length) {
+		key = false;
+	}
+	return key;
+}
+
+
+function Model(opts) {
+	var lineClasses = ['series1', 'series2', 'series3', 'series4', 'series5', 'series6', 'series7', 'accent'];
+	var m = {
+		//layout stuff
+		height: undefined,
+		width: 300,
+		chartHeight: undefined,
+		chartWidth: undefined,
+		simpleDate: false,
+		simpleValue: false,
+		logoSize: 28,
+		//data stuff
+		falseOrigin: false, //TODO, find out if there's a standard 'pipeline' temr for this
+		error: this.error,
+		lineClasses: {},
+		niceValue: true,
+		hideSource: false,
+		numberAxisOrient: 'left',
+		margin: 2,
+		lineThickness: undefined,
+		x: {
+			series: '&'
+		},
+		y: {
+			series: []
+		},
+		labelLookup: null,
+		sourcePrefix: 'Source: '
+	};
+
+	for (var key in opts) {
+		m[key] = opts[key];
+	}
+
+	m.x.series = seriesOptions.normalise(m.x.series);
+	m.y.series = seriesOptions.normaliseY(m.y.series)
+		.filter(function (d) {
+			return !!d.key && d.key !== m.x.series.key;
+		})
+		.map(function (d, i) {
+			d.index = i;
+			d.className = lineClasses[i];
+			return d;
+		});
+
+	m.data = verifyData(m);
+	m.contentWidth = m.width - (m.margin * 2);
+	m.translate = translate(0);
+	m.chartWidth = setChartWidth(m);
+	m.chartHeight = setChartHeight(m);
+	m.timeDomain = setTimeDomain(m);
+	m.valueDomain = setValueDomain(m);
+	m.lineStrokeWidth = lineThickness(m.lineThickness);
+	m.key = setKey(m);
+
+	return m;
+}
+
+Model.prototype.error = function(err) {
+	console.log('ERROR: ', err);
+};
+module.exports = Model;
+
+},{"../util/aspect-ratios.js":19,"../util/line-thickness.js":25,"../util/series-options.js":27,"d3":"d3"}],22:[function(require,module,exports){
+var d3 = require('d3');
+var dateAxis = require('../axis/date.js');
+var numberAxis = require('../axis/number.js');
+
+function getHeight(selection) {
+	return Math.ceil(selection.node().getBoundingClientRect().height);
+}
+
+function getWidth(selection) {
+	return Math.ceil(selection.node().getBoundingClientRect().width);
+}
+
+function Axes(svg, model){
+	this.model = model;
+	this.svg = svg;
+}
+
+Axes.prototype.addTimeScale = function(){
+	var model = this.model;
+	var timeScale = d3.time.scale()
+		.domain(model.timeDomain)
+		.range([0, model.chartWidth]);
+	var timeAxis = dateAxis()
+		.simple(model.simpleDate)
+		.yOffset(model.chartHeight)	//position the axis at the bottom of the chart
+		.scale(timeScale);
+	this.svg.call(timeAxis);
+
+	var yLabelWidth = getWidth(this.svg) - model.chartWidth;
+	var plotWidth = model.chartWidth - yLabelWidth;
+	timeScale.range([timeScale.range()[0], plotWidth]);
+
+	this.plotWidth = plotWidth;
+	this.yLabelWidth = yLabelWidth;
+	this.timeScale = timeScale;
+	this.timeAxis = timeAxis;
+};
+
+Axes.prototype.repositionAxis = function(){
+	var model = this.model;
+	var xLabelHeight = getHeight(this.svg) - model.chartHeight;
+	var plotHeight = model.chartHeight - xLabelHeight;
+	this.valueScale.range([this.valueScale.range()[0], plotHeight]);
+
+	var yLabelWidth = getWidth(this.svg) - model.chartWidth;
+	var plotWidth = model.chartWidth - yLabelWidth;
+	this.timeScale.range([this.timeScale.range()[0], plotWidth]);
+	this.timeAxis.yOffset(plotHeight);
+
+	this.vAxis.tickSize(this.plotWidth).tickExtension(this.yLabelWidth);
+
+	this.svg.selectAll('*').remove();
+	this.svg.call(this.vAxis);
+	this.svg.call(this.timeAxis);
+
+	model.chartPosition.top += (getHeight(this.svg.select('.y.axis')) - plotHeight);
+	this.svg.attr('transform', model.translate(model.chartPosition));
+    model.plotWidth = plotWidth;
+    model.plotHeight = plotHeight;
+};
+
+Axes.prototype.addValueScale = function(){
+	var model = this.model;
+	var valueScale = d3.scale.linear()
+		.domain(model.valueDomain.reverse())
+		.range([0, model.chartHeight ]);
+	if (model.niceValue) {
+		valueScale.nice();
+	}
+
+	var vAxis = numberAxis()
+		.tickFormat(model.numberAxisFormatter)
+		.simple(model.simpleValue)
+		.tickSize(model.chartWidth)	//make the ticks the width of the chart
+		.scale(valueScale);
+	if (model.numberAxisOrient !== 'right' && model.numberAxisOrient !== 'left') {
+		vAxis.noLabels(true);
+	} else {
+		vAxis.orient(model.numberAxisOrient);
+	}
+	this.svg.call(vAxis);
+
+	if (model.numberAxisOrient !== 'right') {
+		//figure out how much of the extra width is the vertical axis lables
+		var vLabelWidth = 0;
+		this.svg.selectAll('.y.axis text').each(function(){
+			vLabelWidth = Math.max(vLabelWidth, getWidth(d3.select(this)));
+		});
+		model.chartPosition.left += vLabelWidth + 4;//NOTE magic number 4
+	}
+
+	this.valueScale = valueScale;
+	this.vAxis = vAxis;
+};
+
+module.exports = Axes;
+
+},{"../axis/date.js":2,"../axis/number.js":7,"d3":"d3"}],23:[function(require,module,exports){
+var textArea = require('../element/text-area.js');
+var lineKey = require('../element/line-key.js');
+var ftLogo = require('../element/logo.js');
+
+function getHeight(selection) {
+    return Math.ceil(selection.node().getBoundingClientRect().height);
+}
+
+function Dressing(svg, model){
+    // TODO: don't hard-code the fontsize, get from CSS somehow.
+    // TODO: move calculation of lineheight to the textarea component;
+    this.svg = svg;
+    this.model = model;
+    this.blockPadding = 8;
+    this.defaultLineHeight = 1.2;
+    this.titleFontSize = 18;
+    this.footerLineHeight = 15;
+    this.subtitleFontSize = 12;
+    this.sourceFontSize = 10;
+    this.halfLineStrokeWidth = Math.ceil(model.lineStrokeWidth / 2);
+
+    this.headerHeight = 0;
+    this.footerHeight = 0;
+    this.sourceFontOffset = 0;
+}
+
+Dressing.prototype.addHeader = function(){
+    this.addTitle();
+    this.addSubTitle();
+    this.addSeriesKey();
+    this.setPosition();
+};
+
+Dressing.prototype.addFooter = function(){
+    this.addFootNotes();
+    this.addSource();
+    this.setHeight();
+    this.addLogo();
+};
+
+Dressing.prototype.addLogo = function(){
+    var svg = this.svg;
+    var model = this.model;
+
+    var logo = svg.append('g').attr('class','chart-logo').call(ftLogo, model.logoSize);
+    var heightOfFontDescenders = 3;
+    var baselineOfLastSourceLine = model.height - getHeight(logo) - heightOfFontDescenders - this.getSourceFontOffset();
+
+    logo.attr('transform', model.translate({
+        left: model.width - model.logoSize,
+        top: baselineOfLastSourceLine
+    }));
+};
+
+Dressing.prototype.addSubTitle = function(){
+    var svg = this.svg;
+    var model = this.model;
+
+    var subtitleLineHeight = this.defaultLineHeight;
+    var subtitleLineHeightActual = Math.ceil(this.subtitleFontSize * subtitleLineHeight);
+    var subtitleLineSpacing = subtitleLineHeightActual - this.subtitleFontSize;
+    var subtitleTextWrapper = textArea().width(model.contentWidth).lineHeight(subtitleLineHeightActual);
+    var subtitle = svg.append('g').attr('class','chart-subtitle').datum(model.subtitle).call(subtitleTextWrapper);
+    if (!this.subtitlePosition) {
+        if (model.subtitle) {
+            this.subtitlePosition = {top: this.headerHeight + this.subtitleFontSize, left: 0};
+            this.headerHeight += (getHeight(subtitle) + this.blockPadding);
+        } else {
+            this.subtitlePosition = {top: this.headerHeight, left: 0};
+        }
+    }
+    subtitle.attr('transform', model.translate(this.subtitlePosition));
+};
+
+Dressing.prototype.addTitle = function(){
+    var svg = this.svg;
+    var model = this.model;
+
+    var titleLineHeight = this.defaultLineHeight;
+    var titleLineHeightActual = Math.ceil(this.titleFontSize * titleLineHeight);
+    var titleLineSpacing = titleLineHeightActual - this.titleFontSize;
+    var titleTextWrapper = textArea().width(model.contentWidth).lineHeight(titleLineHeightActual);
+
+    var title = svg.append('g').attr('class','chart-title').datum(model.title).call(titleTextWrapper);
+    if (!this.titlePosition) {
+        if (model.title) {
+            this.titlePosition = {top: this.headerHeight + this.titleFontSize, left: 0};
+            this.headerHeight += (getHeight(title) + this.blockPadding - titleLineSpacing);
+        } else {
+            this.titlePosition = {top: this.headerHeight, left: 0};
+        }
+    }
+    title.attr('transform', model.translate(this.titlePosition));
+};
+
+Dressing.prototype.addSeriesKey = function(){
+    var svg = this.svg;
+    var model = this.model;
+
+    if (!model.key) { return; }
+    var chartKey = lineKey({lineThickness: model.lineStrokeWidth})
+        .style(function (d) {
+            return d.value;
+        })
+        .label(function (d) {
+            return d.key;
+        });
+    var entries = model.y.series.map(function (d) {
+        return {key: d.label, value: d.className};
+    });
+
+    var key = svg.append('g').attr('class', 'chart-key').datum(entries).call(chartKey);
+    if (!this.keyPosition) {
+        this.keyPosition = {top: this.headerHeight, left: this.halfLineStrokeWidth};
+        this.headerHeight += (getHeight(key) + this.blockPadding);
+    }
+    key.attr('transform', model.translate(this.keyPosition));
+};
+
+
+Dressing.prototype.addFootNotes = function(){
+    var svg = this.svg;
+    var model = this.model;
+
+    var text = textArea().width(this.model.contentWidth - this.model.logoSize).lineHeight(this.footerLineHeight);
+    var footnotes = svg.append('g').attr('class','chart-footnote').datum(model.footnote).call(text);
+    var footnotesHeight = getHeight(footnotes);
+
+    var footerHeight = Math.max(footnotesHeight + (this.blockPadding * 2), model.logoSize);
+    var currentPosition = model.chartPosition.top + model.chartHeight;
+
+    footnotes.attr('transform', model.translate({ top: currentPosition + this.footerLineHeight + this.blockPadding }));
+    this.footerHeight += (footerHeight + this.blockPadding);
+};
+
+Dressing.prototype.addSource = function(){
+    var svg = this.svg;
+    var model = this.model;
+
+    var text = textArea().width(this.model.contentWidth - this.model.logoSize).lineHeight(this.footerLineHeight);
+    var sourceLineHeight = this.defaultLineHeight;
+    var sourceLineHeightActual = this.sourceFontSize * sourceLineHeight;
+    var source = svg.append('g').attr('class','chart-source').datum(model.sourcePrefix + model.source).call(text);
+    var sourceHeight = getHeight(source);
+    var currentPosition = model.chartPosition.top + model.chartHeight;
+
+    source.attr('transform', model.translate({ top: currentPosition + this.footerHeight + sourceLineHeightActual + this.blockPadding }));
+    if (model.hideSource) {
+        source.remove();
+    }
+    this.sourceFontOffset = sourceLineHeightActual - this.sourceFontSize;
+    this.footerHeight += sourceHeight;
+};
+
+Dressing.prototype.getSourceFontOffset = function(){
+    return this.sourceFontOffset;
+};
+
+Dressing.prototype.setHeight = function(){
+    var model = this.model;
+    if (!model.height) {
+        model.height = this.headerHeight + model.chartHeight + this.footerHeight;
+    } else {
+        model.chartHeight = model.height - this.headerHeight - this.footerHeight;
+        if (model.chartHeight < 0) {
+            model.error({
+                message:'calculated plot height is less than zero'
+            });
+        }
+    }
+    this.svg.attr('height', Math.ceil(model.height));
+};
+
+Dressing.prototype.setPosition = function(){
+    this.model.chartPosition = {
+        top: this.headerHeight + this.halfLineStrokeWidth,
+        left: (this.model.numberAxisOrient === 'left' ? 0 : this.halfLineStrokeWidth)
+    };
+};
+
+module.exports = Dressing;
+},{"../element/line-key.js":15,"../element/logo.js":16,"../element/text-area.js":17}],24:[function(require,module,exports){
 //a place to define custom line interpolators
 
 var d3 = require('d3');
@@ -1799,7 +1961,7 @@ module.exports = {
   gappedLine:gappedLineInterpolator
 };
 
-},{"d3":"d3"}],22:[function(require,module,exports){
+},{"d3":"d3"}],25:[function(require,module,exports){
 var thicknesses = {
   small: 2,
   medium: 4,
@@ -1828,7 +1990,7 @@ module.exports = function(value) {
   }
 };
 
-},{}],23:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 //example:
 //http://codinginparadise.org/projects/svgweb-staging/tests/htmlObjectHarness/basic-metadata-example-01-b.html
 var svgSchema = 'http://www.w3.org/2000/svg';
@@ -1878,7 +2040,7 @@ function create(svg, model) {
 module.exports = {
     create: create
 };
-},{}],24:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 function isTruthy(value) {
 	return !!value;
 }
@@ -1923,7 +2085,7 @@ module.exports = {
 	normalise: normalise
 };
 
-},{}],25:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 module.exports = "0.0.6";
 },{}],"line-chart":[function(require,module,exports){
 
@@ -1967,7 +2129,7 @@ module.exports = {
     init: function(){
         for(var i=0;i<3;i++){
             d3.select('body').append('div').attr('id','line-chart' + (i+1));
-            d3.select('#line-chart'+ (i+1)).data([getChartData(i)]).call( oCharts.chart.line() );
+            d3.select('#line-chart'+ (i+1)).data([getChartData(i)]).call( oCharts.chart.line );
         }
     }
 };
