@@ -14,7 +14,8 @@ module.exports = function(config) {
         files: [
             {pattern: '_site/**/vendor.*', included: true, served: true, watched: true},
             {pattern: '_site/**/*.*', included: true, served: true, watched: true},
-            'test/functional/**/*.spec.js'
+            //'test/functional/**/*.spec.js'
+            'test/functional/**/column-chart.spec.js' //runs only this file
         ],
         exclude: [
             '**/*.png',

@@ -1,10 +1,11 @@
 require('../helper').loadAssets('category-axes');
 require('../../demo/scripts/category-axes').init();
 
-xdescribe('category axis', function () {
+describe('category axis', function () {
 
     describe('shows 4 quarters for a year', function () {
-        var aYear = document.querySelector('#views .axis-test:nth-child(1) svg');
+        //var aYear = document.querySelector('#views svg:nth-child(1)');
+        var aYear = document.querySelectorAll('svg')[0];
         var x = aYear.querySelector('.x.axis');
         var ticks = x.querySelectorAll('.primary .tick');
         var labels = x.querySelectorAll('.primary .tick text');
