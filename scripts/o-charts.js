@@ -2067,7 +2067,7 @@ module.exports = {
 };
 
 },{}],27:[function(require,module,exports){
-module.exports = "0.0.6";
+module.exports = "0.0.7";
 },{}],"o-charts":[function(require,module,exports){
 module.exports  = {
   chart: require('./chart/index.js'),

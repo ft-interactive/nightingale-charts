@@ -2086,7 +2086,7 @@ module.exports = {
 };
 
 },{}],28:[function(require,module,exports){
-module.exports = "0.0.6";
+module.exports = "0.0.7";
 },{}],"column-chart":[function(require,module,exports){
 
 var oCharts = require('../../src/scripts/o-charts');
