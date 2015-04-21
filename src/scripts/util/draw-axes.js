@@ -26,7 +26,7 @@ Axes.prototype.addGroupedTimeScale = function(units){
 	var timeAxis = categoryAxis()
 		.simple(model.simpleDate)
 		.yOffset(model.chartHeight)
-		.scale(timeScale, units || model.units);
+		.scale(timeScale, units);
 
 	this.svg.call(timeAxis);
 
