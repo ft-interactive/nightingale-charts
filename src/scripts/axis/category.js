@@ -30,7 +30,7 @@ function categoryAxis() {
 				config.axes.forEach(function (a,i) {
 					g.append('g')
 						.attr('class', ((i===0) ? 'primary' : 'secondary'))
-						//.attr('transform','translate(0,' + (i * config.lineHeight) + ')')
+						.attr('transform','translate(0,' + (i * config.lineHeight) + ')')
 						.call(a);
 				});
 				//remove text-anchor attribute from year positions
