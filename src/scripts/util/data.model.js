@@ -2,6 +2,7 @@ var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
 var ratios = require('../util/aspect-ratios.js');
 var seriesOptions = require('../util/series-options.js');
+var dateUtil = require('../util/dates.js');
 
 function isDate(d) {
 	return d && d instanceof Date && !isNaN(+d);
@@ -120,10 +121,10 @@ function setKey(model){
 	return key;
 }
 
-function groupDates(m){
+function groupDates(m, units){
 	m.data = d3.nest()
 		.key(function(d)  {
-			return 'Q' + Math.floor((d[m.x.series.key].getMonth()+3)/3) + ' ' + (d[m.x.series.key].getYear()+1900);
+			return dateUtil.formatter[units[0]](d.date);
 		})
 		.rollup(function(d) { return d3.mean(d, function(d) { return d.value; }); })
 		.entries(m.data);
@@ -181,7 +182,7 @@ function Model(opts) {
 
 	m.data = verifyData(m);
 	if (m.groupDates){
-		m.data = groupDates(m);
+		m.data = groupDates(m, m.groupDates);
 		m.timeDomain = setGroupedTimeDomain(m);
 	} else {
 		m.timeDomain = setTimeDomain(m);

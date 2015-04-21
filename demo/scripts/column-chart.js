@@ -20,10 +20,10 @@ function getChartData(i){
         numberAxisOrient: numberAxisOrient[i], //todo: refactor onto y object
         hideSource: hideSource[i],
         x:{
-          series: {key:'date', label:'year'}
+          series: {key:'date', label:'yearly'}
         },
         y: y[i],
-        groupDates: 'quarters',
+        groupDates: ['quarterly', 'yearly'],
         data: [
             { date: new Date('6/30/05'), value: 1.027, value2: 0.5027},
             { date: new Date('9/30/05'), value: 1.03, value2: 0.503},

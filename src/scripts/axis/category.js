@@ -1,6 +1,7 @@
 var d3 = require('d3');
 var labels = require('../axis/category.labels.js');
 var styler = require('../util/chart-attribute-styles');
+var utils = require('./category.utils.js');
 
 function categoryAxis() {
 
@@ -93,19 +94,20 @@ function categoryAxis() {
 
 	render.scale = function(scale, units) {
 		if (!arguments.length) return config.axes[0].scale();
-		//if (config.nice) {
-		//	scale.nice((scale.range()[1] - scale.range()[0]) / config.pixelsPerTick);
-		//}
+		units = units || ['unknown'];
 		config.scale = scale;
 
 		var axes = [];
-		var axis = d3.svg.axis()
-			.scale( scale )
-			.tickFormat(function (d, i){
-				return d.split(' ')[0];
-			})
-			.tickSize(config.tickSize,0);
-		axes.push(axis);
+		for (var i = 0; i < units.length; i++) {
+			var unit = units[i];
+			if( utils.formatter[unit] ) {
+				var axis = d3.svg.axis()
+					.scale(scale)
+					.tickFormat(utils.formatter[unit])
+					.tickSize(config.tickSize, 0);
+				axes.push(axis);
+			}
+		}
 
 		config.axes = axes;
 		return render;

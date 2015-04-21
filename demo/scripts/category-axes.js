@@ -48,9 +48,9 @@ var data = [
     { date: new Date('12/31/14'), value:     0.607}
 ];
 
-function getChartData(i){
+function getChartData(){
     return {
-        title: 'Some Simple Columns: ' + (i + 1),
+        title: 'Grouped Date Series ',
         x:{
             series: {key:'date', label:'year'},
         },
@@ -59,7 +59,8 @@ function getChartData(i){
         scale: d3.scale
             .ordinal()
             .rangeRoundBands([0, 400], 0, 0)
-            .domain(data.map(function (d){return d.key;}))
+            .domain(data.map(function (d){return d.key;})),
+        units: ['quarterly', 'yearly']
     };
 }
 
@@ -70,28 +71,27 @@ module.exports = {
             .key(function(d)  { return 'Q' + Math.floor((d.date.getMonth()+3)/3) + ' ' + (d.date.getYear() + 1900);  })
             .entries(data);
 
-        for(var i=0;i<3;i++){
-            d3.select('body')
-                .append('div').attr('id','column-chart' + (i+1))
-                .data([getChartData(i)])
-                .append('h2')
-                .text(function (d) {
-                    return d.title
-                })
-                .append('svg')
-                .attr('width', function (d) {
-                    var r = d.scale.range();
-                    return (r[r.length-1] - r[0]) + margin.left + margin.right;
-                })
-                .each(function (d, i) {
-                    var axis = oCharts.axis.category()
-                        .scale(d.scale);
+        d3.select('body')
+            .append('div').attr('id','column-chart')
+            .data([getChartData()])
+            .append('h2')
+            .text(function (d) {
+                return d.title
+            });
+        d3.select('#column-chart').append('svg')
+            .attr('width', function (d) {
+                var r = d.scale.range();
+                return (r[r.length-1] - r[0]) + margin.left + margin.right;
+            })
+            .each(function (d, i) {
+                var axis = oCharts.axis.category()
+                    .scale(d.scale, d.units);
 
-                    d3.select(this)
-                        .append('g')
-                        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-                        .call(axis);
-                });
-        }
+                d3.select(this)
+                    .append('g')
+                    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+                    .call(axis);
+            });
+
     }
 };

@@ -17,7 +17,7 @@ function Axes(svg, model){
 }
 
 
-Axes.prototype.addGroupedTimeScale = function(){
+Axes.prototype.addGroupedTimeScale = function(units){
 	var model = this.model;
 	var timeScale = d3.scale.ordinal()
 		.domain(model.timeDomain)
@@ -26,7 +26,7 @@ Axes.prototype.addGroupedTimeScale = function(){
 	var timeAxis = categoryAxis()
 		.simple(model.simpleDate)
 		.yOffset(model.chartHeight)
-		.scale(timeScale);
+		.scale(timeScale, units || model.units);
 
 	this.svg.call(timeAxis);
 

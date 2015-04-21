@@ -1,7 +1,7 @@
-require('../helper').loadAssets('quarterly-axes');
-require('../../demo/scripts/quarterly-axes').init();
+require('../helper').loadAssets('category-axes');
+require('../../demo/scripts/category-axes').init();
 
-xdescribe('quarterly axis', function () {
+xdescribe('category axis', function () {
 
     describe('shows 4 quarters for a year', function () {
         var aYear = document.querySelector('#views .axis-test:nth-child(1) svg');

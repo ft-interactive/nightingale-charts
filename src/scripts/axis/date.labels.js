@@ -1,5 +1,5 @@
 var d3 = require('d3');
-var utils = require('./date.utils.js');
+var utils = require('../util/dates.js');
 var overlappingLabels = require('../util/overlapping-labels.js');
 
 module.exports = {
