@@ -43,8 +43,8 @@ describe('line model', function () {
         expect(model.chartHeight).toBe(88);
         expect(model.chartWidth).toBe(80);
         expect(model.timeDomain.length).toBe(2);
-        expect(model.timeDomain[0].toString()).toBe('Sat Jan 01 2000 00:00:00 GMT+0000 (GMT)');
-        expect(model.timeDomain[1].toString()).toBe('Wed Jan 01 2003 00:00:00 GMT+0000 (GMT)');
+        expect(model.timeDomain[0].toString()).toBe(new Date('2000-01-01T00:00:00.000Z').toString());
+        expect(model.timeDomain[1].toString()).toBe(new Date('2003-01-01T00:00:00.000Z').toString());
         expect(model.valueDomain.length).toBe(2);
         expect(model.valueDomain[0]).toBe(0);
         expect(model.valueDomain[1]).toBe(39.23);
