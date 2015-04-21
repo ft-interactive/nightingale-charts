@@ -77,7 +77,7 @@ function getChartData(timeFrame){
         comment: "Column chart",
         footnote: "this is just for testing!",
         source: "tbc",
-        title: "Some Simple Columns: ",
+        title: "Columns: " + timeFrame,
         subtitle: "Drawn for you",
         numberAxisOrient: 'left', //todo: refactor onto y object
         hideSource: false,
