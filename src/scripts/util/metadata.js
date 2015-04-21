@@ -6,7 +6,7 @@ var xmlnsSchema = 'http://www.w3.org/2000/xmlns/';
 var rdfSchema = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
 var dcSchema = 'http://purl.org/dc/elements/1.1/';
 var ccSchema = 'http://creativecommons.org/ns#';
-var prismSchema = "http://prismstandard.org/namespaces/1.0/basic/" ;
+var prismSchema = "http://prismstandard.org/namespaces/1.0/basic/";
 var rdfsSchema = "http://www.w3.org/2000/01/rdf-schema#";
 
 function create(svg, model) {

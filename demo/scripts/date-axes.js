@@ -1,56 +1,55 @@
-
 var oCharts = require('../../src/scripts/o-charts');
 var d3 = require('d3');
 
 var margin = {
-    top:20, left:50, bottom:70, right:50
+    top: 20, left: 50, bottom: 70, right: 50
 };
 
 var axesDefinitions = [
     {
-        title:'A day or less',
-        simple:false,
-        dateStart : new Date("October 13, 1975 11:13:00"),
+        title: 'A day or less',
+        simple: false,
+        dateStart: new Date("October 13, 1975 11:13:00"),
         dateEnd: new Date("October 13, 1975 22:00:00")
     },
     {
-        title:'A few weeks',
+        title: 'A few weeks',
         dateStart: new Date("October 13, 1975 11:13:00"),
         dateEnd: new Date("November 7, 1975 22:00:00")
     },
     {
-        title:'less than a year',
-        dateStart: new Date(2001,3,20),
-        dateEnd: new Date(2001,11,20)
+        title: 'less than a year',
+        dateStart: new Date(2001, 3, 20),
+        dateEnd: new Date(2001, 11, 20)
     },
     {
-        title:'up to 3 years',
-        dateStart: new Date(2012,2,1),
-        dateEnd: new Date(2015,2,1)
+        title: 'up to 3 years',
+        dateStart: new Date(2012, 2, 1),
+        dateEnd: new Date(2015, 2, 1)
     },
     {
-        title:'between 3 - 15 years',
-        dateStart: new Date(2001,3,1),
-        dateEnd: new Date(2010,3, 1)
+        title: 'between 3 - 15 years',
+        dateStart: new Date(2001, 3, 1),
+        dateEnd: new Date(2010, 3, 1)
     },
     {
-        title:'more than 15 years',
-        simple:true,
+        title: 'more than 15 years',
+        simple: true,
         dateStart: new Date(1998),
-        dateEnd: new Date(2015,2,1)
+        dateEnd: new Date(2015, 2, 1)
     },
     {
-        title:'50 years or so',
-        dateStart: new Date(1966,10,1),
-        dateEnd: new Date(2015,2,1)
+        title: '50 years or so',
+        dateStart: new Date(1966, 10, 1),
+        dateEnd: new Date(2015, 2, 1)
     },
     {
-        title:'hundreds of years',
-        dateStart: new Date(1500,0,1),
-        dateEnd: new Date(2015,2,1)
+        title: 'hundreds of years',
+        dateStart: new Date(1500, 0, 1),
+        dateEnd: new Date(2015, 2, 1)
     },
     {
-        title:'Years Overlapping',
+        title: 'Years Overlapping',
         dateStart: new Date(1999, 8, 31),
         dateEnd: new Date(2013, 1, 4)
     }];
@@ -58,7 +57,7 @@ var axesDefinitions = [
 function createAxesDefArrayOfWidth(axisWidth, axesDefinitionArray) {
 
     var sizedAxesDefinitions = [];
-    axesDefinitionArray.forEach(function(axis){
+    axesDefinitionArray.forEach(function (axis) {
         var sizedAxis = {
             title: axis.title,
             simple: axis.simple,
@@ -105,8 +104,8 @@ function renderAxesArrayIntoDiv(div, axesDefinitionArray) {
 }
 
 module.exports = {
-    init: function(){
-        renderAxesArrayIntoDiv('#views', createAxesDefArrayOfWidth(400,axesDefinitions));
-        renderAxesArrayIntoDiv('#viewsSmall', createAxesDefArrayOfWidth(200,axesDefinitions));
+    init: function () {
+        renderAxesArrayIntoDiv('#views', createAxesDefArrayOfWidth(400, axesDefinitions));
+        renderAxesArrayIntoDiv('#viewsSmall', createAxesDefArrayOfWidth(200, axesDefinitions));
     }
 };
