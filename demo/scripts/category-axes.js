@@ -89,7 +89,7 @@ function drawDemo(timeFrame){
             .ordinal()
             .rangeRoundBands([0, 400], 0, 0)
             .domain(nestedFixture.map(function (d){return d.key;})),
-        groupDates: ['monthly', 'yearly']//units[timeFrame]// || ['quarterly', 'yearly']
+        groupDates: units[timeFrame] || ['quarterly', 'yearly']
     };
 
     d3.select('#views')
