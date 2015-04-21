@@ -5,16 +5,16 @@
 
 **Accepting a PR**
  * Review code within GitHub
- * Checkout the PR branch
+ * Checkout the PR branch (as stated in git hub)
  * Merge master
  * `npm test` : Run the tests
  * Merge the PR into master
- * `npm test` : Run the tests again
- * `npm run report` : take a look at the code coverage
  * `npm run bump` :
    * alternatively run `npm run bump -- [patch|minor|major|vx.x.x]`
+ * `npm test` : Run the tests again
+ * Add and Commit version changes
+ * `npm run report` : take a look at the code coverage
  * `git push` : to kick of the deploy process
-
 
 ## Bump the Version
 
