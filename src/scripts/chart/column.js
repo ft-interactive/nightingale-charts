@@ -8,10 +8,6 @@ function plotSeries(plotSVG, model, axes, series) {
 
 	var data = formatData(model, series);
 
-    var timeBands = d3.scale.ordinal()
-        .domain(data.map(function(d) { return d.key; }))
-        .rangeRoundBands([0, model.plotWidth], 0.2);
-
     plotSVG.selectAll("rect")
         .data(data)
         .enter()
@@ -21,7 +17,7 @@ function plotSeries(plotSVG, model, axes, series) {
         .attr("x", function(d) { return axes.timeScale(d.key); })
         .attr("y", function(d) { return axes.valueScale(Math.max(0, d.value)); })
         .attr("height", function(d) { return Math.abs(axes.valueScale(d.value) - axes.valueScale(0)); })
-        .attr("width", timeBands.rangeBand());
+        .attr("width", axes.timeScale.rangeBand());
 }
 
 function formatData(model, series){

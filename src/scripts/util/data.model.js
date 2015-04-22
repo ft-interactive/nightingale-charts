@@ -16,7 +16,7 @@ function translate(margin) {
 	};
 }
 
-function setChartWidth(model){
+function chartWidth(model){
 	if (model.chartWidth) { return model.chartWidth; }
 	var rightGutter = model.contentWidth < 260 ? 16 : 26;
 	return  model.contentWidth - rightGutter;
@@ -48,22 +48,21 @@ function setExtents(model){
 	return extents;
 }
 
-function setGroupedTimeDomain(model){
+function groupedTimeDomain(model){
 	if (model.timeDomain) { return model.timeDomain; }
-	var map = model.data.map(function(d){
+	return model.data.map(function(d){
 		return d[model.x.series.key];
 	});
-	return map;
 }
 
-function setTimeDomain(model){
+function timeDomain(model){
 	if (model.timeDomain) { return model.timeDomain; }
 	return d3.extent(model.data, function (d) {
 		return d[model.x.series.key];
 	});
 }
 
-function setValueDomain(model){
+function valueDomain(model){
 	if (model.valueDomain) { return model.valueDomain; }
 	var extents = setExtents(model);
 	var valueDomain = d3.extent(extents);
@@ -73,7 +72,7 @@ function setValueDomain(model){
 	return valueDomain;
 }
 
-function setChartHeight(model){
+function chartHeight(model){
 	if (model.chartHeight) { return model.chartHeight; }
 	var isNarrow = model.chartWidth < 220;
 	var isWide = model.chartWidth > 400;
@@ -180,18 +179,18 @@ function Model(opts) {
 			return d;
 		});
 
+	m.contentWidth = m.width - (m.margin * 2);
+	m.chartWidth = chartWidth(m);
+	m.chartHeight = chartHeight(m);
+	m.translate = translate(0);
 	m.data = verifyData(m);
 	if (m.groupDates){
 		m.data = groupDates(m, m.groupDates);
-		m.timeDomain = setGroupedTimeDomain(m);
+		m.timeDomain = groupedTimeDomain(m);
 	} else {
-		m.timeDomain = setTimeDomain(m);
+		m.timeDomain = timeDomain(m);
 	}
-	m.contentWidth = m.width - (m.margin * 2);
-	m.translate = translate(0);
-	m.chartWidth = setChartWidth(m);
-	m.chartHeight = setChartHeight(m);
-	m.valueDomain = setValueDomain(m);
+	m.valueDomain = valueDomain(m);
 	m.lineStrokeWidth = lineThickness(m.lineThickness);
 	m.key = setKey(m);
 

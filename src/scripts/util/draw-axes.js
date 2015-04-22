@@ -19,68 +19,48 @@ function Axes(svg, model){
 
 Axes.prototype.addGroupedTimeScale = function(units){
 	var model = this.model;
-	var timeScale = d3.scale.ordinal()
-		.domain(model.timeDomain)
-		.rangeRoundBands([0, model.chartWidth], 0, 0);
-
-	var timeAxis = categoryAxis()
+	this.timeScale = d3.scale.ordinal().domain(model.timeDomain);
+	this.timeAxis = categoryAxis()
 		.simple(model.simpleDate)
 		.yOffset(model.chartHeight)
-		.scale(timeScale, units);
-
-	this.svg.call(timeAxis);
-
-	var yLabelWidth = getWidth(this.svg) - model.chartWidth;
-	var plotWidth = model.chartWidth - yLabelWidth;
-    //timeScale.range([timeScale.range()[0], plotWidth]);
-
-	this.plotWidth = plotWidth;
-	this.yLabelWidth = yLabelWidth;
-	this.timeScale = timeScale;
-	this.timeAxis = timeAxis;
+		.scale(this.timeScale, units);
+	this.svg.call(this.timeAxis);
 };
 
 Axes.prototype.addTimeScale = function(){
 	var model = this.model;
-	var timeScale = d3.time.scale()
+	this.timeScale = d3.time.scale()
 		.domain(model.timeDomain)
 		.range([0, model.chartWidth]);
-	var timeAxis = dateAxis()
+	this.timeAxis = dateAxis()
 		.simple(model.simpleDate)
 		.yOffset(model.chartHeight)	//position the axis at the bottom of the chart
-		.scale(timeScale);
-	this.svg.call(timeAxis);
-
-	var yLabelWidth = getWidth(this.svg) - model.chartWidth;
-	var plotWidth = model.chartWidth - yLabelWidth;
-	//timeScale.range([timeScale.range()[0], plotWidth]);
-
-	this.plotWidth = plotWidth;
-	this.yLabelWidth = yLabelWidth;
-	this.timeScale = timeScale;
-	this.timeAxis = timeAxis;
+		.scale(this.timeScale);
+	this.svg.call(this.timeAxis);
 };
 
 Axes.prototype.addValueScale = function(){
 	var model = this.model;
-	var valueScale = d3.scale.linear()
+	this.valueScale = d3.scale.linear()
 		.domain(model.valueDomain.reverse())
 		.range([0, model.chartHeight ]);
+
 	if (model.niceValue) {
-		valueScale.nice();
+		this.valueScale.nice();
 	}
 
-	var vAxis = numberAxis()
+	this.vAxis = numberAxis()
 		.tickFormat(model.numberAxisFormatter)
 		.simple(model.simpleValue)
 		.tickSize(model.chartWidth)	//make the ticks the width of the chart
-		.scale(valueScale);
+		.scale(this.valueScale);
+
 	if (model.numberAxisOrient !== 'right' && model.numberAxisOrient !== 'left') {
-		vAxis.noLabels(true);
+		this.vAxis.noLabels(true);
 	} else {
-		vAxis.orient(model.numberAxisOrient);
+		this.vAxis.orient(model.numberAxisOrient);
 	}
-	this.svg.call(vAxis);
+	this.svg.call(this.vAxis);
 
 	if (model.numberAxisOrient !== 'right') {
 		//figure out how much of the extra width is the vertical axis lables
@@ -90,24 +70,25 @@ Axes.prototype.addValueScale = function(){
 		});
 		model.chartPosition.left += vLabelWidth + 4;//NOTE magic number 4
 	}
-	this.valueScale = valueScale;
-	this.vAxis = vAxis;
 };
 
 Axes.prototype.repositionAxis = function(){
 	var model = this.model;
 	var xLabelHeight = getHeight(this.svg) - model.chartHeight;
+	var yLabelWidth = getWidth(this.svg) - model.chartWidth;
 	var plotHeight = model.chartHeight - xLabelHeight;
+	var plotWidth = model.chartWidth - yLabelWidth;
+
 	this.valueScale.range([this.valueScale.range()[0], plotHeight]);
 
 	if (this.timeScale.rangeRoundBands){
-		this.timeScale.rangeRoundBands([this.timeScale.range()[0], this.plotWidth], 0, 0);
+		this.timeScale.rangeRoundBands([0, plotWidth], 0.2);
 	} else {
-		this.timeScale.range([this.timeScale.range()[0], this.plotWidth]);
+		this.timeScale.range([this.timeScale.range()[0], plotWidth]);
 	}
 
 	this.timeAxis.yOffset(plotHeight);
-	this.vAxis.tickSize(this.plotWidth).tickExtension(this.yLabelWidth);
+	this.vAxis.tickSize(plotWidth).tickExtension(yLabelWidth);
 
 	this.svg.selectAll('*').remove();
 	this.svg.call(this.vAxis);
@@ -115,7 +96,7 @@ Axes.prototype.repositionAxis = function(){
 
 	model.chartPosition.top += (getHeight(this.svg.select('.y.axis')) - plotHeight);
 	this.svg.attr('transform', model.translate(model.chartPosition));
-	model.plotWidth = this.plotWidth;
+	model.plotWidth = plotWidth;
 	model.plotHeight = plotHeight;
 };
 

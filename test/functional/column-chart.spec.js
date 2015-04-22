@@ -3,45 +3,76 @@ require('../helper').loadAssets('column-chart');
 require('../../demo/scripts/column-chart').init();
 
 describe('column-chart.js', function(){
-    describe('check y values are', function(){
-        it('correct and >= 0', function(){
+
+    describe('y-axis values', function(){
+
+        it('can positive only numbers', function(){
+            var values = document.querySelectorAll('svg')[0].querySelectorAll('.y.axis text');
+            expect(values[0].textContent).toBe('0');
+            expect(values[7].textContent).toBe('1.4');
+        });
+        it('can handle negative numbers', function(){
+            var values = document.querySelectorAll('svg')[1].querySelectorAll('.y.axis text');
+            expect(values[0].textContent).toBe('-2');
+            expect(values[1].textContent).toBe('-1');
+            expect(values[2].textContent).toBe('0');
+            expect(values[3].textContent).toBe('1');
+            expect(values[4].textContent).toBe('-3');
+            expect(values[5].textContent).toBe('2');
+        });
+    });
+
+    describe('column values ', function(){
+        it('match d3 and >= 0', function(){
             var cols = document.querySelectorAll('svg')[0].querySelectorAll('rect');
-            var acceptable = true;
+            var max = 0;
             var i = cols.length;
 
             while(i--){
-                cols[i].__data__.value > 0 && cols[i].__data__.value === Number(cols[i].getAttribute('data-value')) ? 0 : acceptable = false; //make sure D3 data value is the same as the data-value attribute on the column and that all values are greater than or equal to 0
+                expect(cols[i].__data__.value).toBe(Number(cols[i].getAttribute('data-value')));
+                max = (cols[i].__data__.value > 0) ? cols[i].__data__.value : max;
             }
 
-            expect(acceptable).toBe(true);
+            expect(cols.length).toBe(4);
+            expect(max).toBeGreaterThan(0);
         });
 
-        it('correct with some values < 0', function(){
+        it('match d3 with some values < 0', function(){
             var cols = document.querySelectorAll('svg')[1].querySelectorAll('rect');
-            var acceptable = false;
+            var min = 0;
             var i = cols.length;
 
             while(i--){
-                cols[i].__data__.value < 0 && cols[i].__data__.value === Number(cols[i].getAttribute('data-value')) && acceptable === false ? acceptable = true : 0; //make sure D3 data value is the same as the data-value attribute on the column and that all values are greater than or equal to 0
+                expect(cols[i].__data__.value).toBe(Number(cols[i].getAttribute('data-value')))
+                min = (cols[i].__data__.value < 0) ? cols[i].__data__.value : min;
             }
 
-            expect(acceptable).toBe(true);
+            expect(cols.length).toBe(39);
+            expect(min).toBeLessThan(0);
         });
 
 
-        it('correct with primary labels appearing as abbreviated months', function(){
+        it('match d3 with primary labels appearing as abbreviated months', function(){
             var txt = document.querySelectorAll('svg')[2].querySelectorAll('g.x.axis .primary text');
             var cols = document.querySelectorAll('svg')[2].querySelectorAll('rect');
-            var months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
-            var acceptable = true;
+            var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             var i = txt.length;
 
             while(i--){
-                cols[i].__data__.value === Number(cols[i].getAttribute('data-value')) ? 0 : acceptable = false; //make sure D3 data value is the same as the data-value attribute on the column and that all values are greater than or equal to 0
-                txt[i].innerHTML && months.join('').indexOf(txt[i].innerHTML.toLowerCase()) === -1 ? acceptable = false : 0; //txt[i].innerHTML comes first otherwise you get errors in console (phantomJS) but not chrome. make sure month labels are actually month labels
+                expect(cols[i].__data__.value).toBe(Number(cols[i].getAttribute('data-value')));
+                expect(months.indexOf(txt[i].textContent)).toBeGreaterThan(-1);
             }
 
-            expect(true).toBe(true);
+            expect(cols.length).toBe(4);
+        });
+
+        xit('to display empty month columns even if date is missing', function(){
+            var txt = document.querySelectorAll('svg')[2].querySelectorAll('g.x.axis .primary text');
+//todo: Months card is later!
+            expect(txt[0].textContent).toBe('Mar');
+            expect(txt[1].textContent).toBe('Apr');
+            expect(txt[2].textContent).toBe('May');
+            expect(txt[3].textContent).toBe('Jun');
         });
     });
 });
