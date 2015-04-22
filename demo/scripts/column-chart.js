@@ -118,7 +118,7 @@ module.exports = {
     getChartData: getChartData,
     init: function(){
 
-        var demos = ['yearWithNegative','year','years','decade', 'month'];
+        var demos = ['year','yearWithNegative','years','decade', 'month'];
         demos.forEach(function(timeFrame){
             d3.select('#views').append('div').attr('id','column-chart__' + timeFrame);
             d3.select('#column-chart__'+ (timeFrame)).data([getChartData(timeFrame)]).call( oCharts.chart.column );

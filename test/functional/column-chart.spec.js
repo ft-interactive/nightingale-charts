@@ -14,7 +14,7 @@ describe('column-chart.js', function(){
             expect(values[7].textContent).toBe('1.4');
         });
         it('can handle negative numbers', function(){
-            var values = document.querySelectorAll('svg')[1].querySelectorAll('.y.axis text');
+            var values = document.querySelectorAll('svg')[3].querySelectorAll('.y.axis text');
             expect(values[0].textContent).toBe('-2');
             expect(values[1].textContent).toBe('-1');
             expect(values[2].textContent).toBe('0');
@@ -40,7 +40,7 @@ describe('column-chart.js', function(){
         });
 
         it('match d3 with some values < 0', function(){
-            var cols = document.querySelectorAll('svg')[1].querySelectorAll('rect');
+            var cols = document.querySelectorAll('svg')[3].querySelectorAll('rect');
             var min = 0;
             var i = cols.length;
 
@@ -55,8 +55,8 @@ describe('column-chart.js', function(){
 
 
         it('match d3 with primary labels appearing as abbreviated months', function(){
-            var txt = document.querySelectorAll('svg')[2].querySelectorAll('g.x.axis .primary text');
-            var cols = document.querySelectorAll('svg')[2].querySelectorAll('rect');
+            var txt = document.querySelectorAll('svg')[4].querySelectorAll('g.x.axis .primary text');
+            var cols = document.querySelectorAll('svg')[4].querySelectorAll('rect');
             var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             var i = txt.length;
 
