@@ -16,7 +16,6 @@ function Axes(svg, model){
 	this.svg = svg;
 }
 
-
 Axes.prototype.addGroupedTimeScale = function(units){
 	var model = this.model;
 	this.timeScale = d3.scale.ordinal().domain(model.timeDomain);
@@ -61,15 +60,6 @@ Axes.prototype.addValueScale = function(){
 		this.vAxis.orient(model.numberAxisOrient);
 	}
 	this.svg.call(this.vAxis);
-
-	if (model.numberAxisOrient !== 'right') {
-		//figure out how much of the extra width is the vertical axis lables
-		var vLabelWidth = 0;
-		this.svg.selectAll('.y.axis text').each(function(){
-			vLabelWidth = Math.max(vLabelWidth, getWidth(d3.select(this)));
-		});
-		model.chartPosition.left += vLabelWidth + 4;//NOTE magic number 4
-	}
 };
 
 Axes.prototype.repositionAxis = function(){
@@ -78,6 +68,7 @@ Axes.prototype.repositionAxis = function(){
 	var yLabelWidth = getWidth(this.svg) - model.chartWidth;
 	var plotHeight = model.chartHeight - xLabelHeight;
 	var plotWidth = model.chartWidth - yLabelWidth;
+	var vLabelWidth = 0;
 
 	this.valueScale.range([this.valueScale.range()[0], plotHeight]);
 
@@ -94,6 +85,12 @@ Axes.prototype.repositionAxis = function(){
 	this.svg.call(this.vAxis);
 	this.svg.call(this.timeAxis);
 
+	if (model.numberAxisOrient !== 'right') {
+		this.svg.selectAll('.y.axis text').each(function(){
+			vLabelWidth = Math.max(vLabelWidth, getWidth(d3.select(this)));
+		});
+		model.chartPosition.left += vLabelWidth + 4;//NOTE magic number 4
+	}
 	model.chartPosition.top += (getHeight(this.svg.select('.y.axis')) - plotHeight);
 	this.svg.attr('transform', model.translate(model.chartPosition));
 	model.plotWidth = plotWidth;
