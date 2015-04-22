@@ -18,7 +18,9 @@ function Axes(svg, model){
 
 Axes.prototype.addGroupedTimeScale = function(units){
 	var model = this.model;
-	this.timeScale = d3.scale.ordinal().domain(model.timeDomain);
+	this.timeScale = d3.scale.ordinal()
+		.domain(model.timeDomain)
+		.rangeRoundBands([0, 0], 0, 0);//looks useless but prevents .scale errors
 	this.timeAxis = categoryAxis()
 		.simple(model.simpleDate)
 		.yOffset(model.chartHeight)
@@ -71,15 +73,14 @@ Axes.prototype.repositionAxis = function(){
 	var vLabelWidth = 0;
 
 	this.valueScale.range([this.valueScale.range()[0], plotHeight]);
+	this.timeAxis.yOffset(plotHeight);
+	this.vAxis.tickSize(plotWidth).tickExtension(yLabelWidth);
 
 	if (this.timeScale.rangeRoundBands){
 		this.timeScale.rangeRoundBands([0, plotWidth], 0.2);
 	} else {
 		this.timeScale.range([this.timeScale.range()[0], plotWidth]);
 	}
-
-	this.timeAxis.yOffset(plotHeight);
-	this.vAxis.tickSize(plotWidth).tickExtension(yLabelWidth);
 
 	this.svg.selectAll('*').remove();
 	this.svg.call(this.vAxis);
@@ -92,9 +93,10 @@ Axes.prototype.repositionAxis = function(){
 		model.chartPosition.left += vLabelWidth + 4;//NOTE magic number 4
 	}
 	model.chartPosition.top += (getHeight(this.svg.select('.y.axis')) - plotHeight);
-	this.svg.attr('transform', model.translate(model.chartPosition));
 	model.plotWidth = plotWidth;
 	model.plotHeight = plotHeight;
+
+	this.svg.attr('transform', model.translate(model.chartPosition));
 };
 
 module.exports = Axes;
