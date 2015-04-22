@@ -1,10 +1,27 @@
 describe('column-chart.js', function(){
 
     beforeEach(function(){
-        //pm: hack to stop quarterly axis spec rewriting dom too early :(
+        //pm: hack to stop spec rewriting dom too early :(
         require('../helper').loadAssets('column-chart');
         require('../../demo/scripts/column-chart').init();
     })
+
+    xdescribe('hides ticks ', function(){
+
+        it('when no labels have been removed and there is no negative value', function(){
+            var ticksA = document.querySelectorAll('svg')[0].querySelectorAll('.x.axis ticks');
+            var ticksB = document.querySelectorAll('svg')[1].querySelectorAll('.x.axis ticks');
+            expect(ticksA.length).toBe(4);
+            expect(ticksB.length).toBe(0);
+        });
+
+    });
+
+    xdescribe('hides labels ', function(){
+        it('when no labels have been removed and there is no negative value', function(){
+
+        });
+    });
 
     describe('y-axis values', function(){
 
