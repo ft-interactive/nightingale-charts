@@ -1,8 +1,10 @@
-/* Add HTML + CSS to setup page for functional testing */
-require('../helper').loadAssets('column-chart');
-require('../../demo/scripts/column-chart').init();
-
 describe('column-chart.js', function(){
+
+    beforeEach(function(){
+        //pm: hack to stop quarterly axis spec rewriting dom too early :(
+        require('../helper').loadAssets('column-chart');
+        require('../../demo/scripts/column-chart').init();
+    })
 
     describe('y-axis values', function(){
 

@@ -4,7 +4,6 @@ require('../../demo/scripts/category-axes').init();
 describe('category axis', function () {
 
     describe('shows 4 quarters for a year', function () {
-        //var aYear = document.querySelector('#views svg:nth-child(1)');
         var aYear = document.querySelectorAll('svg')[0];
         var x = aYear.querySelector('.x.axis');
         var ticks = x.querySelectorAll('.primary .tick');
@@ -24,8 +23,8 @@ describe('category axis', function () {
 
     });
 
-    describe('hides q2, q3 + q4 when any quarter overlaps', function () {
-        var twoYears = document.querySelector('#views .axis-test:nth-child(2) svg');
+    xdescribe('hides q2, q3 + q4 when any quarter overlaps', function () {
+        var twoYears = document.querySelectorAll('svg')[1];
         var x = twoYears.querySelector('.x.axis');
         var ticks = x.querySelectorAll('.primary .tick');
         var labels = x.querySelectorAll('.primary .tick text');
@@ -49,8 +48,8 @@ describe('category axis', function () {
 
     });
 
-    describe('shows years when move than a decade', function () {
-        var decades = document.querySelector('#views .axis-test:nth-child(3) svg');
+    xdescribe('shows years when more than a decade', function () {
+        var decades = document.querySelectorAll('svg')[2];
         var x = decades.querySelector('.x.axis');
         var ticks = x.querySelectorAll('.primary .tick');
         var labels = x.querySelectorAll('.primary .tick text');

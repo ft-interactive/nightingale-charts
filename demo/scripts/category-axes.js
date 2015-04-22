@@ -3,7 +3,7 @@ var oCharts = require('../../src/scripts/o-charts');
 var d3 = require('d3');
 
 var margin = {
-    top:20, left:50, bottom:70, right:50
+    top:.0, left:00, bottom:0, right:75
 };
 
 var fixtures = {

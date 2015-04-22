@@ -65,11 +65,11 @@ function timeDomain(model){
 function valueDomain(model){
 	if (model.valueDomain) { return model.valueDomain; }
 	var extents = setExtents(model);
-	var valueDomain = d3.extent(extents);
-	if (!model.falseOrigin && valueDomain[0] > 0) {
-		valueDomain[0] = 0;
+	var domain = d3.extent(extents);
+	if (!model.falseOrigin && domain[0] > 0) {
+		domain[0] = 0;
 	}
-	return valueDomain;
+	return domain;
 }
 
 function chartHeight(model){
