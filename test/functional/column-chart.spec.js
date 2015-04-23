@@ -1,4 +1,4 @@
-describe('column-chart.js', function(){
+fdescribe('column-chart.js', function(){
 
     beforeEach(function(){
         //pm: hack to stop spec rewriting dom too early :(
@@ -16,14 +16,17 @@ describe('column-chart.js', function(){
             expect(quarterlyTicksGraphA[2].getAttribute('y2')).toBe('0');
             expect(quarterlyTicksGraphA[3].getAttribute('y2')).toBe('0');
         });
+
         it('displayed when there is negative value', function(){
             var quarterlyTicksGraphB = document.querySelectorAll('.width600 svg')[1].querySelectorAll('.x.axis .primary line');
             expect(quarterlyTicksGraphB.length).toBe(4);
         });
+
         it('displayed when labels have been removed', function(){
             var quarterlyTicksGraphC = document.querySelectorAll('.width600 svg')[4].querySelectorAll('.x.axis .primary line');
             expect(quarterlyTicksGraphC.length).toBe(39);
         });
+
         it('extended when quarter labels are removed', function(){
             var quarterlyTicksGraphC = document.querySelectorAll('.width300 svg')[2].querySelectorAll('.x.axis .primary line');
             expect(quarterlyTicksGraphC[0].getAttribute('y2')).toBe('5');
@@ -40,6 +43,7 @@ describe('column-chart.js', function(){
     });
 
     describe('has labels ', function(){
+
         it('hidden when any quarter overlaps', function(){
             var quarterlyTicksGraphA = document.querySelectorAll('.width300 svg')[2].querySelectorAll('.x.axis .primary line');
             var quarterlyLabelsGraphA = document.querySelectorAll('.width300 svg')[2].querySelectorAll('.x.axis .primary text');
@@ -49,6 +53,7 @@ describe('column-chart.js', function(){
             expect(quarterlyLabelsGraphA[0].textContent).toBe('2005');
             expect(yearlyLabelsGraphA.length).toBe(0);
         });
+
         it('hidden when there are duplicate year labels', function(){
             var yearlyLabelsGraphA = document.querySelectorAll('.width600 svg')[0].querySelectorAll('.x.axis .secondary text');
             var yearlyLabelsGraphB = document.querySelectorAll('.width600 svg')[1].querySelectorAll('.x.axis .secondary text');
@@ -57,6 +62,15 @@ describe('column-chart.js', function(){
             expect(yearlyLabelsGraphB.length).toBe(1);
             expect(yearlyLabelsGraphC.length).toBe(5);
         });
+
+        it('shortened to 2 digits on the year that is not significant (ie. not the millenium)', function(){
+            var yearlyLabelsGraphA = document.querySelectorAll('.width300 svg')[2].querySelectorAll('.x.axis .primary text');
+            expect(yearlyLabelsGraphA[0].textContent).toBe('2005');
+            expect(yearlyLabelsGraphA[1].textContent).toBe('06');
+            expect(yearlyLabelsGraphA[2].textContent).toBe('07');
+            expect(yearlyLabelsGraphA[3].textContent).toBe('08');
+        });
+
     });
 
     describe('y-axis values', function(){
@@ -66,6 +80,7 @@ describe('column-chart.js', function(){
             expect(values[0].textContent).toBe('0');
             expect(values[7].textContent).toBe('1.4');
         });
+
         it('can handle negative numbers', function(){
             var values = document.querySelectorAll('.width600 svg')[3].querySelectorAll('.y.axis text');
             expect(values[0].textContent).toBe('-2');
@@ -75,6 +90,7 @@ describe('column-chart.js', function(){
             expect(values[4].textContent).toBe('-3');
             expect(values[5].textContent).toBe('2');
         });
+
     });
 
     describe('column values ', function(){

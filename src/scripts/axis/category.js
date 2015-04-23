@@ -46,10 +46,10 @@ function categoryAxis() {
 			g.select('path.domain').remove();
 		}
 
-		labels.removeOverlapping(g, '.primary text');
-		labels.removeOverlapping(g, '.secondary text');
 		labels.removeDuplicates(g, '.primary text');
 		labels.removeDuplicates(g, '.secondary text');
+		labels.removeOverlapping(g, '.primary text');
+		labels.removeOverlapping(g, '.secondary text');
 
 	}
 
