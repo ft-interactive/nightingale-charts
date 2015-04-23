@@ -1,12 +1,11 @@
 var d3 = require('d3');
-var utils = require('./date.utils.js');
+var utils = require('../util/dates.js');
 
 var interval = {
     centuries: d3.time.year,
     decades: d3.time.year,
     years: d3.time.year,
     fullYears: d3.time.year,
-    quarters: d3.time.month,
     months: d3.time.month,
     weeks: d3.time.week,
     days: d3.time.day,
@@ -18,71 +17,21 @@ var increment = {
     decades: 10,
     years: 1,
     fullYears: 1,
-    quarters: 3,
     months: 1,
     weeks: 1,
     days: 1,
     hours: 1
 };
 
-var formatter = {
-    centuries: function (d, i) {
-        if (i === 0 || d.getYear() % 100 === 0) {
-            return d3.time.format('%Y')(d);
-        }
-        return d3.time.format('%y')(d);
-    },
-
-    decades: function (d, i) {
-        if (i === 0 || d.getYear() % 100 === 0) {
-            return d3.time.format('%Y')(d);
-        }
-        return d3.time.format('%y')(d);
-    },
-
-    years: function (d, i) {
-        if (i === 0 || d.getYear() % 100 === 0) {
-            return d3.time.format('%Y')(d);
-        }
-        return d3.time.format('%y')(d);
-    },
-
-    fullYears: function (d, i) {
-        return d3.time.format('%Y')(d);
-    },
-    quarters: function (d, i) {
-        return  'Q' + Math.floor((d.getMonth() + 3) / 3);
-    },
-    shortmonths: function (d, i) {
-        return d3.time.format('%b')(d)[0];
-    },
-    months: function (d, i) {
-        return d3.time.format('%b')(d);
-    },
-
-    weeks: function (d, i) {
-        return d3.time.format('%e %b')(d);
-    },
-
-    days: function (d, i) {
-        return d3.time.format('%e')(d);
-    },
-
-    hours: function (d, i) {
-        return parseInt(d3.time.format('%H')(d)) + ':00';
-    }
-};
-
 module.exports = {
-    formatter : formatter,
-    createDetailedTicks:function(scale, unit){
+    customTicks:function(scale, unit){
         var customTicks = scale.ticks( interval[ unit ], increment[ unit ] );
         customTicks.push(scale.domain()[0]); //always include the first and last values
         customTicks.push(scale.domain()[1]);
         customTicks.sort(this.dateSort);
 
         //if the last 2 values labels are the same, remove them
-        var labels = customTicks.map(this.formatter[unit]);
+        var labels = customTicks.map(utils.formatter[unit]);
         if(labels[labels.length-1] == labels[labels.length-2]){
             customTicks.pop();
         }
@@ -98,12 +47,12 @@ module.exports = {
         var axes = [];
         for (var i = 0; i < units.length; i++) {
             var unit = units[i];
-            if( this.formatter[unit] ){
-                var customTicks = (simple) ? scale.domain() : this.createDetailedTicks(scale, unit);
+            if( utils.formatter[unit] ){
+                var customTicks = (simple) ? scale.domain() : this.customTicks(scale, unit);
                 var axis = d3.svg.axis()
                     .scale( scale )
                     .tickValues(customTicks)
-                    .tickFormat(this.formatter[unit])
+                    .tickFormat(utils.formatter[unit])
                     .tickSize(tickSize,0);
                 axes.push(axis );
             }

@@ -58,7 +58,6 @@ Dressing.prototype.addSubTitle = function(){
 
     var subtitleLineHeight = this.defaultLineHeight;
     var subtitleLineHeightActual = Math.ceil(this.subtitleFontSize * subtitleLineHeight);
-    var subtitleLineSpacing = subtitleLineHeightActual - this.subtitleFontSize;
     var subtitleTextWrapper = textArea().width(model.contentWidth).lineHeight(subtitleLineHeightActual);
     var subtitle = svg.append('g').attr('class','chart-subtitle').datum(model.subtitle).call(subtitleTextWrapper);
     if (!this.subtitlePosition) {
@@ -144,7 +143,7 @@ Dressing.prototype.addSource = function(){
     var sourceHeight = getHeight(source);
     var currentPosition = model.chartPosition.top + model.chartHeight;
 
-    source.attr('transform', model.translate({ top: currentPosition + this.footerHeight + sourceLineHeightActual + this.blockPadding }));
+    source.attr('transform', model.translate({ top:  this.footerHeight + currentPosition + this.blockPadding }));
     if (model.hideSource) {
         source.remove();
     }

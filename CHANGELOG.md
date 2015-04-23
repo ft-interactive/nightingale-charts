@@ -2,6 +2,10 @@
 
 ## 0.0.x
 
+ * todo: release feature branch to `/branch-name`
+ * todo: warn on js typo rather than crash
+ * todo: editor config
+
  * **0.0.6**
      * Updated Zero (0) to never have decimals
      * Updated to show integers if all labels in axes end in `.0`

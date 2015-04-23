@@ -1,5 +1,6 @@
 var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
+var styler = require('../util/chart-attribute-styles');
 
 function lineKey(options) {
     'use strict';
@@ -48,6 +49,7 @@ function lineKey(options) {
 			'class':'key-label',
 			x:strokeLength + 10
 		}).text(label);
+		styler(g);
 
 	}
 

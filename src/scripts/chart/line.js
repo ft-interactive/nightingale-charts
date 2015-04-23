@@ -28,7 +28,7 @@ function plotSeries(plotSVG, model, axes, series) {
         .attr('class', 'line line--' + series.className)
         .attr('stroke-width', model.lineStrokeWidth)
         .attr('d', function(d){
-            console.log('datum ', d);
+            //console.log('datum ', d);//todo: log function that can be mocked in tests
             return line(d);
         });
 }

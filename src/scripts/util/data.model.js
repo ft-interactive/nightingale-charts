@@ -2,6 +2,7 @@ var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
 var ratios = require('../util/aspect-ratios.js');
 var seriesOptions = require('../util/series-options.js');
+var dateUtil = require('../util/dates.js');
 
 function isDate(d) {
 	return d && d instanceof Date && !isNaN(+d);
@@ -15,7 +16,7 @@ function translate(margin) {
 	};
 }
 
-function setChartWidth(model){
+function chartWidth(model){
 	if (model.chartWidth) { return model.chartWidth; }
 	var rightGutter = model.contentWidth < 260 ? 16 : 26;
 	return  model.contentWidth - rightGutter;
@@ -23,7 +24,7 @@ function setChartWidth(model){
 
 function setExtents(model){
 	var extents = [];
-	model.y.series.forEach(function (l, i) {
+	model.y.series.forEach(function (l) {
 		var key = l.key;
 		model.data = model.data.map(function (d, j) {
 			var value = d[key];
@@ -47,24 +48,31 @@ function setExtents(model){
 	return extents;
 }
 
-function setTimeDomain(model){
+function groupedTimeDomain(model){
+	if (model.timeDomain) { return model.timeDomain; }
+	return model.data.map(function(d){
+		return d[model.x.series.key];
+	});
+}
+
+function timeDomain(model){
 	if (model.timeDomain) { return model.timeDomain; }
 	return d3.extent(model.data, function (d) {
 		return d[model.x.series.key];
 	});
 }
 
-function setValueDomain(model){
+function valueDomain(model){
 	if (model.valueDomain) { return model.valueDomain; }
 	var extents = setExtents(model);
-	var valueDomain = d3.extent(extents);
-	if (!model.falseOrigin && valueDomain[0] > 0) {
-		valueDomain[0] = 0;
+	var domain = d3.extent(extents);
+	if (!model.falseOrigin && domain[0] > 0) {
+		domain[0] = 0;
 	}
-	return valueDomain;
+	return domain;
 }
 
-function setChartHeight(model){
+function chartHeight(model){
 	if (model.chartHeight) { return model.chartHeight; }
 	var isNarrow = model.chartWidth < 220;
 	var isWide = model.chartWidth > 400;
@@ -112,6 +120,20 @@ function setKey(model){
 	return key;
 }
 
+function groupDates(m, units){
+	var i=0;
+	m.data = d3.nest()
+		.key(function(d)  {
+			return dateUtil.formatter[units[0]](d.date, i++);
+		})
+		.rollup(function(d) { return d3.mean(d, function(d) { return d.value; }); })
+		.entries(m.data);
+	m.x.series.key = 'key';
+	m.y.series.forEach(function(s){
+		s.key = 'values';
+	});
+	return m.data;
+}
 
 function Model(opts) {
 	var lineClasses = ['series1', 'series2', 'series3', 'series4', 'series5', 'series6', 'series7', 'accent'];
@@ -158,13 +180,18 @@ function Model(opts) {
 			return d;
 		});
 
-	m.data = verifyData(m);
 	m.contentWidth = m.width - (m.margin * 2);
+	m.chartWidth = chartWidth(m);
+	m.chartHeight = chartHeight(m);
 	m.translate = translate(0);
-	m.chartWidth = setChartWidth(m);
-	m.chartHeight = setChartHeight(m);
-	m.timeDomain = setTimeDomain(m);
-	m.valueDomain = setValueDomain(m);
+	m.data = verifyData(m);
+	if (m.groupDates){
+		m.data = groupDates(m, m.groupDates);
+		m.timeDomain = groupedTimeDomain(m);
+	} else {
+		m.timeDomain = timeDomain(m);
+	}
+	m.valueDomain = valueDomain(m);
 	m.lineStrokeWidth = lineThickness(m.lineThickness);
 	m.key = setKey(m);
 
