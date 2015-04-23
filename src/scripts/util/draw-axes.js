@@ -15,6 +15,7 @@ function Axes(svg, model){
 	this.model = model;
 	this.svg = svg;
 	this.margin = 0.2;
+	this.tickExtender = 1.5;
 }
 
 Axes.prototype.rearrangeLabels = function(){
@@ -24,7 +25,7 @@ Axes.prototype.rearrangeLabels = function(){
 	if (showsAllLabels && allPositiveValues){
 		this.timeAxis.tickSize(0).scale(this.timeScale, this.units);
 	} else if (!showsAllLabels) {
-		this.timeAxis.tickSize(model.tickSize * 2)
+		this.timeAxis.tickSize(model.tickSize * this.tickExtender)
 			.scale(this.timeScale, ['yearly']);
 		this.svg.call(this.timeAxis);
 	}
@@ -85,10 +86,11 @@ Axes.prototype.addValueScale = function(){
 
 Axes.prototype.reduceExtendedTicks = function(){
 	var model = this.model;
-	var extendedTicks_selector = ".x.axis .tick line[y2=\"" + model.tickSize*2 +"\"]";
+	var self = this;
+	var extendedTicks_selector = ".x.axis .tick line[y2=\"" + (model.tickSize * this.tickExtender) +"\"]";
 	this.svg.selectAll(extendedTicks_selector)
 		.attr("y2", function(d){
-			return (d.toString().indexOf('Q1')<0 ) ?  model.tickSize :  model.tickSize * 1.5;
+			return (d.toString().indexOf('Q1')<0 ) ?  model.tickSize :  (model.tickSize * self.tickExtender);
 		});
 };
 
