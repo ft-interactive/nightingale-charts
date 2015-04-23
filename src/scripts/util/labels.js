@@ -10,6 +10,7 @@ module.exports = {
         );
         return overlap;
     },
+
     overlapping : function(dElements){
         var self = this;
         var bounds = [];
@@ -30,7 +31,19 @@ module.exports = {
         return overlap;
     },
 
-    remove : function(g, selector){
+    removeDays : function(g, selector){
+        var dElements  = g.selectAll(selector);
+        var elementCount = dElements[0].length;
+        function remove(d, i){
+            var d3This = d3.select(this);
+            if(i !== 0 && i !== elementCount-1 && d3This.text() != 1) {
+                d3This.remove();
+            }
+        }
+        dElements.each(remove);
+    },
+
+    removeOverlapping : function(g, selector){
         var self = this;
         var dElements = g.selectAll(selector );
         var elementCount = dElements[0].length;
@@ -53,11 +66,16 @@ module.exports = {
         }
     },
 
-    widest: function(dElements){
-        var labelWidth = 0;
-        dElements.each(function (d) {
-            labelWidth = Math.max(d3.select(this).node().getBoundingClientRect().width, labelWidth);
-        });
-        return labelWidth;
+    removeDuplicates : function(g, selector){
+        var dElements  = g.selectAll(selector);
+        function remove(label, i){
+            if (i===0) return;
+            var d3This = d3.select(this);
+            var previousLabel = dElements[0][i-1];
+            if(d3This.text() === d3.select(previousLabel).text()) {
+                d3This.remove();
+            }
+        }
+        dElements.each(remove);
     }
 };

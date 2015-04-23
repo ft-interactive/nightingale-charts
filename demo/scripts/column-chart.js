@@ -11,19 +11,39 @@ var hideSource = [true, true, false];
 var numberAxisOrient = ['left','right','left'];
 
 var fixtures = {
-    yearWithNegative : [//test ticks exist because negative numbers
-        { date: new Date('3/31/05'), value:      0.583},
-        { date: new Date('6/30/05'), value: -1.027},
-        { date: new Date('9/30/05'), value: 1.03},
-        { date: new Date('12/30/05'), value:     1.348}
-    ],
-    year : [//if no labels removed, no negative number exists then remove ticks
+    year : [
         { date: new Date('3/31/05'), value:      0.583},
         { date: new Date('6/30/05'), value: 1.027},
         { date: new Date('9/30/05'), value: 1.03},
         { date: new Date('12/30/05'), value:     1.348}
     ],
-    years : [//remove q labels keep ticks + remove duplicate year labels + extend q1 tick. year label is primary
+    yearWithNegative : [
+        { date: new Date('3/31/05'), value:      0.583},
+        { date: new Date('6/30/05'), value: -1.027},
+        { date: new Date('9/30/05'), value: 1.03},
+        { date: new Date('12/30/05'), value:     1.348}
+    ],
+    years : [
+        { date: new Date('6/30/05'), value: 1.027},
+        { date: new Date('9/30/05'), value: 1.03},
+        { date: new Date('12/30/05'), value:     1.348},
+        { date: new Date('3/31/06'), value:      0.583},
+        { date: new Date('6/30/06'), value:      0.501},
+        { date: new Date('9/29/06'), value:      0.175},
+        { date: new Date('12/29/06'), value:     0.753},
+        { date: new Date('3/30/07'), value:      0.763},
+        { date: new Date('6/29/07'), value:      0.601},
+        { date: new Date('9/28/07'), value:      0.843},
+        { date: new Date('12/31/07'), value:     0.468},
+        { date: new Date('3/31/08'), value:      0.313},
+        { date: new Date('6/30/08'), value:      0.231},
+        { date: new Date('9/30/08'), value:      1.664},
+        { date: new Date('12/31/08'), value:     2.229},
+        { date: new Date('3/31/09'), value:      1.79},
+        { date: new Date('6/30/09'), value:      0.261},
+        { date: new Date('9/30/09'), value:      0.2}
+    ],
+    yearsWithNegative : [//remove q labels keep ticks + remove duplicate year labels + extend q1 tick. year label is primary
         { date: new Date('6/30/05'), value: 1.027},
         { date: new Date('9/30/05'), value: 1.03},
         { date: new Date('12/30/05'), value:     1.348},
@@ -95,6 +115,7 @@ var fixtures = {
 var units = {
     month: ['monthly', 'yearly']
 }
+var widths = [600, 300];
 
 function getChartData(timeFrame){
     return {
@@ -108,6 +129,7 @@ function getChartData(timeFrame){
         x:{
           series: {key:'date', label:'yearly'}
         },
+        tickSize: 5,
         y: { series: ['value'] },
         groupDates: units[timeFrame] || ['quarterly', 'yearly'],
         data: fixtures[timeFrame]
@@ -117,11 +139,18 @@ function getChartData(timeFrame){
 module.exports = {
     getChartData: getChartData,
     init: function(){
-
-        var demos = ['year','yearWithNegative','years','decade', 'month'];
+        var demos = ['year','yearWithNegative','years','yearsWithNegative','decade', 'month'];
         demos.forEach(function(timeFrame){
-            d3.select('#views').append('div').attr('id','column-chart__' + timeFrame);
-            d3.select('#column-chart__'+ (timeFrame)).data([getChartData(timeFrame)]).call( oCharts.chart.column );
+            d3.select('#views').append('div').attr({
+                'id':'column-chart__' + timeFrame
+            });
+            widths.forEach(function(width){
+                var data = getChartData(timeFrame);
+                data.width = width;
+                d3.select('#column-chart__' + timeFrame).append('span').attr({
+                    'class':'width' + width
+                }).data([data]).call( oCharts.chart.column );
+            });
         });
     }
 };

@@ -24,7 +24,7 @@ var increment = {
 };
 
 module.exports = {
-    createDetailedTicks:function(scale, unit){
+    customTicks:function(scale, unit){
         var customTicks = scale.ticks( interval[ unit ], increment[ unit ] );
         customTicks.push(scale.domain()[0]); //always include the first and last values
         customTicks.push(scale.domain()[1]);
@@ -48,7 +48,7 @@ module.exports = {
         for (var i = 0; i < units.length; i++) {
             var unit = units[i];
             if( utils.formatter[unit] ){
-                var customTicks = (simple) ? scale.domain() : this.createDetailedTicks(scale, unit);
+                var customTicks = (simple) ? scale.domain() : this.customTicks(scale, unit);
                 var axis = d3.svg.axis()
                     .scale( scale )
                     .tickValues(customTicks)

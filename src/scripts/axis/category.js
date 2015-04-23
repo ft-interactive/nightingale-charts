@@ -1,6 +1,6 @@
 var d3 = require('d3');
-var labels = require('../axis/category.labels.js');
 var styler = require('../util/chart-attribute-styles');
+var labels = require('../util/labels.js');
 var utils = require('./category.utils.js');
 
 function categoryAxis() {
@@ -26,27 +26,30 @@ function categoryAxis() {
 		g = g.append('g').attr('transform','translate(' + config.xOffset + ',' + config.yOffset + ')');
 
 		g.append('g').attr('class', 'x axis').each(function() {
-				var g = d3.select(this);
-				config.axes.forEach(function (a,i) {
-					g.append('g')
-						.attr('class', ((i===0) ? 'primary' : 'secondary'))
-						.attr('transform','translate(0,' + (i * config.lineHeight) + ')')
-						.call(a);
-				});
-				//remove text-anchor attribute from year positions
-				g.selectAll('.primary text').attr({
-					x: null,
-					y: null,
-					dy: 15 + config.tickSize
-				});
-				//styler(g);
+			var g = d3.select(this);
+			config.axes.forEach(function (a,i) {
+				g.append('g')
+					.attr('class', ((i===0) ? 'primary' : 'secondary'))
+					.attr('transform','translate(0,' + (i * config.lineHeight) + ')')
+					.call(a);
 			});
+			//remove text-anchor attribute from year positions
+			g.selectAll('.primary text').attr({
+				x: null,
+				y: null,
+				dy: 15 + config.tickSize
+			});
+			styler(g, true);
+		});
 
 		if(!config.showDomain){
 			g.select('path.domain').remove();
 		}
 
-		labels.render(config.scale, g);
+		labels.removeOverlapping(g, '.primary text');
+		labels.removeOverlapping(g, '.secondary text');
+		labels.removeDuplicates(g, '.primary text');
+		labels.removeDuplicates(g, '.secondary text');
 
 	}
 

@@ -1,5 +1,6 @@
 var d3 = require('d3');
-var labels = require('./date.labels.js');
+var labels = require('../util/labels.js');
+var dates = require('../util/dates.js');
 var dateScale = require('./date.scale.js');
 var styler = require('../util/chart-attribute-styles');
 
@@ -45,7 +46,12 @@ function dateAxis() {
             g.select('path.domain').remove();
         }
 
-        labels.render(config.scale, g);
+        if (dates.unitGenerator(config.scale.domain())[0] == 'days'){
+            labels.removeDays(g, '.primary text');
+        } else {
+            labels.removeOverlapping(g, '.primary text');
+        }
+        labels.removeOverlapping(g, '.secondary text');
     }
 
     render.simple = function(bool) {

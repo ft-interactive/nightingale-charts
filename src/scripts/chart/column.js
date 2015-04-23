@@ -43,8 +43,8 @@ function columnChart(g) {
 			'class': 'graphic line-chart',
 			height: model.height,
 			width: model.width,
-			xmlns:"http://www.w3.org/2000/svg",
-			version:"1.2"
+			xmlns: "http://www.w3.org/2000/svg",
+			version: "1.2"
 		});
 	metadata.create(svg, model);
 
@@ -57,7 +57,7 @@ function columnChart(g) {
 
 	var axes = new Axes(chartSVG, model);
 	axes.addValueScale();
-	if (model.groupDates){
+	if (model.groupDates) {
 		axes.addGroupedTimeScale(model.groupDates);
 	} else {
 		axes.addTimeScale();
