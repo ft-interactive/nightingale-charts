@@ -51,7 +51,7 @@ var formatter = {
         return d3.time.format('%Y')(d);
     },
     quarters: function (d, i) {
-        return  'Q' + Math.floor((d.getMonth() + 3) / 3);
+        return 'Q' + Math.floor((d.getMonth() + 3) / 3);
     },
     shortmonths: function (d, i) {
         return d3.time.format('%b')(d)[0];
@@ -74,38 +74,38 @@ var formatter = {
 };
 
 module.exports = {
-    formatter : formatter,
-    createDetailedTicks:function(scale, unit){
-        var customTicks = scale.ticks( interval[ unit ], increment[ unit ] );
+    formatter: formatter,
+    createDetailedTicks: function (scale, unit) {
+        var customTicks = scale.ticks(interval[unit], increment[unit]);
         customTicks.push(scale.domain()[0]); //always include the first and last values
         customTicks.push(scale.domain()[1]);
         customTicks.sort(this.dateSort);
 
         //if the last 2 values labels are the same, remove them
         var labels = customTicks.map(this.formatter[unit]);
-        if(labels[labels.length-1] == labels[labels.length-2]){
+        if (labels[labels.length - 1] == labels[labels.length - 2]) {
             customTicks.pop();
         }
         return customTicks;
     },
-    dateSort : function(a,b){
+    dateSort: function (a, b) {
         return (a.getTime() - b.getTime());
     },
-    render: function(scale, units, tickSize, simple){
+    render: function (scale, units, tickSize, simple) {
         if (!units) {
             units = utils.unitGenerator(scale.domain(), simple);
         }
         var axes = [];
         for (var i = 0; i < units.length; i++) {
             var unit = units[i];
-            if( this.formatter[unit] ){
+            if (this.formatter[unit]) {
                 var customTicks = (simple) ? scale.domain() : this.createDetailedTicks(scale, unit);
                 var axis = d3.svg.axis()
-                    .scale( scale )
+                    .scale(scale)
                     .tickValues(customTicks)
                     .tickFormat(this.formatter[unit])
-                    .tickSize(tickSize,0);
-                axes.push(axis );
+                    .tickSize(tickSize, 0);
+                axes.push(axis);
             }
         }
         axes.forEach(function (axis) {

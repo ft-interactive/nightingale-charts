@@ -1,60 +1,59 @@
-
 var oCharts = require('../../src/scripts/o-charts');
 var d3 = require('d3');
 
 var margin = {
-    top:20, left:50, bottom:70, right:50
+    top: 20, left: 50, bottom: 70, right: 50
 }
 var axesDefinitions = [
     {
-        title:'6 or less',
-        simple:false,
-        start:11.2,
+        title: '6 or less',
+        simple: false,
+        start: 11.2,
         end: 7
     },
     {
-        title:'more than 6',
-        simple:false,
+        title: 'more than 6',
+        simple: false,
         start: 356,
         end: 0
     },
     {
-        title:'6 or less (simple)',
-        simple:true,
-        start:11.2,
+        title: '6 or less (simple)',
+        simple: true,
+        start: 11.2,
         end: 7
     },
     {
-        title:'more than 6 (simple)',
-        simple:true,
+        title: 'more than 6 (simple)',
+        simple: true,
         start: 356,
         end: 0
     },
     {
-        title:'6 or less',
-        simple:false,
-        orient:'bottom',
-        start:7,
+        title: '6 or less',
+        simple: false,
+        orient: 'bottom',
+        start: 7,
         end: 11.2
     },
     {
-        title:'6 or less (simple)',
-        simple:true,
-        orient:'bottom',
-        start:7,
+        title: '6 or less (simple)',
+        simple: true,
+        orient: 'bottom',
+        start: 7,
         end: 11.2
     },
     {
-        title:'above zero, below 3, decimals',
-        simple:false,
-        start:2.95,
+        title: 'above zero, below 3, decimals',
+        simple: false,
+        start: 2.95,
         end: 0.2
     }];
 
 function createAxesDefArrayOfWidth(axisWidth, axesDefinitionArray) {
 
     var sizedAxesDefinitions = [];
-    axesDefinitionArray.forEach(function(axis){
+    axesDefinitionArray.forEach(function (axis) {
         var sizedAxis = {
             title: axis.title,
             orient: axis.orient,
@@ -112,7 +111,7 @@ function renderAxesArrayIntoDiv(div, axesDefinitionArray) {
 }
 
 module.exports = {
-    init: function() {
+    init: function () {
         renderAxesArrayIntoDiv('#views', createAxesDefArrayOfWidth(200, axesDefinitions));
     }
 };

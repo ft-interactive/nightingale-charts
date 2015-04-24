@@ -1,25 +1,24 @@
-
 var oCharts = require('../../src/scripts/o-charts');
 var d3 = require('d3');
 
 var margin = {
-    top:20, left:50, bottom:70, right:50
+    top: 20, left: 50, bottom: 70, right: 50
 }
 
 var axesDefinitions = [
     {
-        title:'A Year',
-        dateStart : new Date("March 31, 1981"),
+        title: 'A Year',
+        dateStart: new Date("March 31, 1981"),
         dateEnd: new Date("December 31, 1981")
     },
     {
-        title:'A Few Years',
-        dateStart : new Date("June 30, 1981"),
+        title: 'A Few Years',
+        dateStart: new Date("June 30, 1981"),
         dateEnd: new Date("March 31, 1985")
     },
     {
-        title:'many many many',
-        dateStart : new Date("June 30, 1981"),
+        title: 'many many many',
+        dateStart: new Date("June 30, 1981"),
         dateEnd: new Date("March 31, 2012")
     }
 ];
@@ -27,7 +26,7 @@ var axesDefinitions = [
 function createAxesDefArrayOfWidth(axisWidth, axesDefinitionArray) {
 
     var sizedAxesDefinitions = [];
-    axesDefinitionArray.forEach(function(axis){
+    axesDefinitionArray.forEach(function (axis) {
         var sizedAxis = {
             title: axis.title,
             simple: axis.simple,
@@ -75,8 +74,8 @@ function renderAxesArrayIntoDiv(div, axesDefinitionArray) {
 }
 
 module.exports = {
-    init: function(){
-        renderAxesArrayIntoDiv('#views', createAxesDefArrayOfWidth(400,axesDefinitions));
-        renderAxesArrayIntoDiv('#viewsSmall', createAxesDefArrayOfWidth(200,axesDefinitions));
+    init: function () {
+        renderAxesArrayIntoDiv('#views', createAxesDefArrayOfWidth(400, axesDefinitions));
+        renderAxesArrayIntoDiv('#viewsSmall', createAxesDefArrayOfWidth(200, axesDefinitions));
     }
 }
