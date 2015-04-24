@@ -187,15 +187,22 @@ function Model(opts) {
 	m.chartHeight = chartHeight(m);
 	m.translate = translate(0);
 	m.data = verifyData(m);
-	if (m.groupDates){
+
+	//console.log('ben', m.seriesLength);
+
+	if(m.groupDates && m.seriesLength === 1){
 		m.data = groupDates(m, m.groupDates);
 		m.timeDomain = groupedTimeDomain(m);
-	} else {
+	}else{
 		m.timeDomain = timeDomain(m);
+		console.log('ben', m.seriesLength);
 	}
+
 	m.valueDomain = valueDomain(m);
 	m.lineStrokeWidth = lineThickness(m.lineThickness);
 	m.key = setKey(m);
+
+	//console.log('after?', m);
 
 	return m;
 }
