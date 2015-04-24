@@ -122,9 +122,11 @@ function setKey(model){
 
 function groupDates(m, units){
 	var i=0;
+	var firstDate;
 	m.data = d3.nest()
 		.key(function(d)  {
-			return dateUtil.formatter[units[0]](d.date, i++);
+			firstDate = firstDate || d.date;
+			return dateUtil.formatter[units[0]](d.date, i++, firstDate);
 		})
 		.rollup(function(d) { return d3.mean(d, function(d) { return d.value; }); })
 		.entries(m.data);

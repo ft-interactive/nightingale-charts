@@ -45,12 +45,10 @@ function categoryAxis() {
 		if(!config.showDomain){
 			g.select('path.domain').remove();
 		}
-
 		labels.removeDuplicates(g, '.primary text');
 		labels.removeDuplicates(g, '.secondary text');
 		labels.removeOverlapping(g, '.primary text');
 		labels.removeOverlapping(g, '.secondary text');
-
 	}
 
 	render.simple = function(bool) {
