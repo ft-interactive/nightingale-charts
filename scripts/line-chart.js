@@ -4,66 +4,66 @@ var d3 = require('d3');
 function categoryAxis() {
     'use strict';
 
-	var ticksize = 5;
-	var a = d3.svg.axis().orient('left').tickSize(ticksize , 0);
-	var lineHeight = 16;
-	var userTicks = [];
-	var yOffset = 0;
-	var xOffset = 0;
+    var ticksize = 5;
+    var a = d3.svg.axis().orient('left').tickSize(ticksize, 0);
+    var lineHeight = 16;
+    var userTicks = [];
+    var yOffset = 0;
+    var xOffset = 0;
 
-	function isVertical() {
-		return a.orient() === 'left' || a.orient() === 'right';
-	}
+    function isVertical() {
+        return a.orient() === 'left' || a.orient() === 'right';
+    }
 
-	function axis(g) {
-		g = g.append('g').attr('transform','translate(' + xOffset + ',' + yOffset + ')');
-		g.call(a);
-	}
+    function axis(g) {
+        g = g.append('g').attr('transform', 'translate(' + xOffset + ',' + yOffset + ')');
+        g.call(a);
+    }
 
-	axis.tickSize = function(x){
-		if (!arguments.length) return ticksize;
-		a.tickSize(-x);
-		return axis;
-	};
+    axis.tickSize = function (x) {
+        if (!arguments.length) return ticksize;
+        a.tickSize(-x);
+        return axis;
+    };
 
-	axis.ticks = function(x){
-		if (!arguments.length) return a.ticks();
-		if (x.length) {
-			userTicks = x;
-		}
-		return axis;
-	};
+    axis.ticks = function (x) {
+        if (!arguments.length) return a.ticks();
+        if (x.length) {
+            userTicks = x;
+        }
+        return axis;
+    };
 
-	axis.orient = function(x){
-		if (!arguments.length) return a.orient();
-		a.orient(x);
-		return axis;
-	};
+    axis.orient = function (x) {
+        if (!arguments.length) return a.orient();
+        a.orient(x);
+        return axis;
+    };
 
-	axis.scale = function(x){
-		if (!arguments.length) return a.scale();
-		a.scale(x);
-		if (userTicks.length) {
-			a.tickValues( userTicks );
-		} else {
-			a.ticks( Math.round( (a.scale().range()[1] - a.scale().range()[0])/100 ) );
-		}
-		return axis;
-	};
+    axis.scale = function (x) {
+        if (!arguments.length) return a.scale();
+        a.scale(x);
+        if (userTicks.length) {
+            a.tickValues(userTicks);
+        } else {
+            a.ticks(Math.round((a.scale().range()[1] - a.scale().range()[0]) / 100));
+        }
+        return axis;
+    };
 
-	axis.yOffset = function(x){
-		if (!arguments.length) return yOffset;
-		yOffset = x;
-		return axis;
-	};
+    axis.yOffset = function (x) {
+        if (!arguments.length) return yOffset;
+        yOffset = x;
+        return axis;
+    };
 
-	axis.xOffset = function(x){
-		if (!arguments.length) return yOffset;
-		xOffset = x;
-		return axis;
-	};
+    axis.xOffset = function (x) {
+        if (!arguments.length) return yOffset;
+        xOffset = x;
+        return axis;
+    };
 
-	return axis;
+    return axis;
 }
 
 module.exports = categoryAxis;
@@ -76,31 +76,31 @@ var styler = require('../util/chart-attribute-styles');
 
 function dateAxis() {
     var config = {
-        axes  : [d3.svg.axis().orient('bottom')],
-        scale : false  ,
-        lineHeight : 20,
-        tickSize   : 5 ,
-        simple : false,//axis has only first and last points as ticks, i.e. the scale's domain extent
-        nice   : false,
-        pixelsPerTick : 100,
-        units  : ['multi'],
-        unitOverride : false,
-        yOffset : 0,
-        xOffset : 0,
-        labelWidth : 0,
-        showDomain : false
+        axes: [d3.svg.axis().orient('bottom')],
+        scale: false,
+        lineHeight: 20,
+        tickSize: 5,
+        simple: false,//axis has only first and last points as ticks, i.e. the scale's domain extent
+        nice: false,
+        pixelsPerTick: 100,
+        units: ['multi'],
+        unitOverride: false,
+        yOffset: 0,
+        xOffset: 0,
+        labelWidth: 0,
+        showDomain: false
     };
 
-    function render(g){
+    function render(g) {
 
-        g = g.append('g').attr('transform','translate(' + config.xOffset + ',' + config.yOffset + ')');
+        g = g.append('g').attr('transform', 'translate(' + config.xOffset + ',' + config.yOffset + ')');
 
-        g.append('g').attr('class','x axis').each(function() {
+        g.append('g').attr('class', 'x axis').each(function () {
             var g = d3.select(this);
-            config.axes.forEach(function (a,i) {
+            config.axes.forEach(function (a, i) {
                 g.append('g')
-                    .attr('class', ((i===0) ? 'primary' : 'secondary'))
-                    .attr('transform','translate(0,' + (i * config.lineHeight) + ')')
+                    .attr('class', ((i === 0) ? 'primary' : 'secondary'))
+                    .attr('transform', 'translate(0,' + (i * config.lineHeight) + ')')
                     .call(a);
             });
             //remove text-anchor attribute from year positions
@@ -112,56 +112,56 @@ function dateAxis() {
             styler(g);
         });
 
-        if(!config.showDomain){
+        if (!config.showDomain) {
             g.select('path.domain').remove();
         }
 
         labels.render(config.scale, g);
     }
 
-    render.simple = function(bool) {
+    render.simple = function (bool) {
         if (!arguments.length) return config.simple;
         config.simple = bool;
         return render;
     };
 
-    render.nice = function(bool) {
+    render.nice = function (bool) {
         if (!arguments.length) return config.nice;
         config.nice = bool;
         return render;
     };
 
-    render.tickSize = function(int) {
+    render.tickSize = function (int) {
         if (!arguments.length) return config.tickSize;
         config.tickSize = int;
         return render;
     };
 
-    render.labelWidth = function(int) {
+    render.labelWidth = function (int) {
         if (!arguments.length) return config.labelWidth;
         config.labelWidth = int;
         return render;
     };
 
-    render.lineHeight = function(int) {
+    render.lineHeight = function (int) {
         if (!arguments.length) return config.lineHeight;
         config.lineHeight = int;
         return render;
     };
 
-    render.yOffset = function(int) {
+    render.yOffset = function (int) {
         if (!arguments.length) return config.yOffset;
         config.yOffset = int;
         return render;
     };
 
-    render.xOffset = function(int) {
+    render.xOffset = function (int) {
         if (!arguments.length) return config.xOffset;
         config.xOffset = int;
         return render;
     };
 
-    render.scale = function(scale, units) {
+    render.scale = function (scale, units) {
         if (!arguments.length) return config.axes[0].scale();
         if (config.nice) {
             scale.nice((scale.range()[1] - scale.range()[0]) / config.pixelsPerTick);
@@ -175,86 +175,91 @@ function dateAxis() {
 }
 
 module.exports = dateAxis;
+
 },{"../util/chart-attribute-styles":20,"./date.labels.js":3,"./date.scale.js":4,"d3":"d3"}],3:[function(require,module,exports){
 var d3 = require('d3');
 var utils = require('./date.utils.js');
 
 module.exports = {
-    intersection : function(a, b){
+    intersection: function (a, b) {
         var overlap = (
-            a.left <= b.right &&
-            b.left <= a.right &&
-            a.top <= b.bottom &&
-            b.top <= a.bottom
+        a.left <= b.right &&
+        b.left <= a.right &&
+        a.top <= b.bottom &&
+        b.top <= a.bottom
         );
         return overlap;
     },
-    overlapping : function(dElements){
+    overlapping: function (dElements) {
         var self = this;
         var bounds = [];
         var overlap = false;
-        dElements.each(function(d,i){
+        dElements.each(function (d, i) {
             var rect = this.getBoundingClientRect();
             var include = true;
-            bounds.forEach(function(b,i){
-                if(self.intersection(b,rect)){
+            bounds.forEach(function (b, i) {
+                if (self.intersection(b, rect)) {
                     include = false;
                     overlap = true;
                 }
             });
-            if(include){
+            if (include) {
                 bounds.push(rect);
             }
         });
         return overlap;
     },
 
-    removeOverlappingLabels : function(g, selector){
+    removeOverlappingLabels: function (g, selector) {
         var self = this;
-        var dElements = g.selectAll(selector );
+        var dElements = g.selectAll(selector);
         var elementCount = dElements[0].length;
         var limit = 5;
-        function remove(d,i){
-            var last = i === elementCount-1;
-            var previousLabel = dElements[0][elementCount-2];
+
+        function remove(d, i) {
+            var last = i === elementCount - 1;
+            var previousLabel = dElements[0][elementCount - 2];
             var lastOverlapsPrevious = (last && self.intersection(previousLabel.getBoundingClientRect(), this.getBoundingClientRect()));
-            if (last && lastOverlapsPrevious){
+            if (last && lastOverlapsPrevious) {
                 d3.select(previousLabel).remove();
-            } else if(i%2 !== 0 && !last) {
+            } else if (i % 2 !== 0 && !last) {
                 d3.select(this).remove();
             }
         }
-        while(self.overlapping( g.selectAll(selector ) ) && limit>0){
+
+        while (self.overlapping(g.selectAll(selector)) && limit > 0) {
             limit--;
-            g.selectAll(selector ).each(remove);
-            dElements = g.selectAll(selector );
+            g.selectAll(selector).each(remove);
+            dElements = g.selectAll(selector);
             elementCount = dElements[0].length;
         }
     },
 
-    calculateWidestLabel : function(dElements){
+    calculateWidestLabel: function (dElements) {
         var labelWidth = 0;
         dElements.each(function (d) {
             labelWidth = Math.max(d3.select(this).node().getBoundingClientRect().width, labelWidth);
         });
         return labelWidth;
     },
-    removeDayLabels : function(g, selector){
-        var dElements  = g.selectAll(selector);
+    removeDayLabels: function (g, selector) {
+        var dElements = g.selectAll(selector);
         var elementCount = dElements[0].length;
-        function remove(d, i){
+
+        function remove(d, i) {
             var d3This = d3.select(this);
-            if(i !== 0 && i !== elementCount-1 && d3This.text() != 1) {
+            if (i !== 0 && i !== elementCount - 1 && d3This.text() != 1) {
                 d3This.remove();
             }
         }
+
         dElements.each(remove);
     },
-    render: function(scale, g){
+    render: function (scale, g) {
 
         var width = this.calculateWidestLabel(g.select('.tick text'));
 
-        if (utils.unitGenerator(scale.domain())[0] == 'days'){
+        if (utils.unitGenerator(scale.domain())[0] == 'days') {
             this.removeDayLabels(g, '.primary text');
         } else {
             this.removeOverlappingLabels(g, '.primary text');
@@ -321,7 +326,7 @@ var formatter = {
         return d3.time.format('%Y')(d);
     },
     quarters: function (d, i) {
-        return  'Q' + Math.floor((d.getMonth() + 3) / 3);
+        return 'Q' + Math.floor((d.getMonth() + 3) / 3);
     },
     shortmonths: function (d, i) {
         return d3.time.format('%b')(d)[0];
@@ -344,38 +349,38 @@ var formatter = {
 };
 
 module.exports = {
-    formatter : formatter,
-    createDetailedTicks:function(scale, unit){
-        var customTicks = scale.ticks( interval[ unit ], increment[ unit ] );
+    formatter: formatter,
+    createDetailedTicks: function (scale, unit) {
+        var customTicks = scale.ticks(interval[unit], increment[unit]);
         customTicks.push(scale.domain()[0]); //always include the first and last values
         customTicks.push(scale.domain()[1]);
         customTicks.sort(this.dateSort);
 
         //if the last 2 values labels are the same, remove them
         var labels = customTicks.map(this.formatter[unit]);
-        if(labels[labels.length-1] == labels[labels.length-2]){
+        if (labels[labels.length - 1] == labels[labels.length - 2]) {
             customTicks.pop();
         }
         return customTicks;
     },
-    dateSort : function(a,b){
+    dateSort: function (a, b) {
         return (a.getTime() - b.getTime());
     },
-    render: function(scale, units, tickSize, simple){
+    render: function (scale, units, tickSize, simple) {
         if (!units) {
             units = utils.unitGenerator(scale.domain(), simple);
         }
         var axes = [];
         for (var i = 0; i < units.length; i++) {
             var unit = units[i];
-            if( this.formatter[unit] ){
+            if (this.formatter[unit]) {
                 var customTicks = (simple) ? scale.domain() : this.createDetailedTicks(scale, unit);
                 var axis = d3.svg.axis()
-                    .scale( scale )
+                    .scale(scale)
                     .tickValues(customTicks)
                     .tickFormat(this.formatter[unit])
-                    .tickSize(tickSize,0);
-                axes.push(axis );
+                    .tickSize(tickSize, 0);
+                axes.push(axis);
             }
         }
         axes.forEach(function (axis) {
@@ -387,16 +392,16 @@ module.exports = {
 
 },{"./date.utils.js":5,"d3":"d3"}],5:[function(require,module,exports){
 module.exports = {
-    unitGenerator : function(domain, simple){	//which units are most appropriate
+    unitGenerator: function (domain, simple) {	//which units are most appropriate
         var timeDif = domain[1].getTime() - domain[0].getTime();
         var dayLength = 86400000;
         var units;
         if (timeDif < dayLength * 2) {
-            units = ['hours','days','months'];
-        } else if (timeDif < dayLength * 60){
-            units =['days','months'];
+            units = ['hours', 'days', 'months'];
+        } else if (timeDif < dayLength * 60) {
+            units = ['days', 'months'];
         } else if (timeDif < dayLength * 365.25) {
-            units =['months','years'];
+            units = ['months', 'years'];
         } else if (timeDif < dayLength * 365.25 * 15) {
             units = ['years'];
         } else if (timeDif < dayLength * 365.25 * 150) {
@@ -407,7 +412,7 @@ module.exports = {
             units = ['multi'];
         }
         if (simple && (
-            units.indexOf('years')>-1 ||
+            units.indexOf('years') > -1 ||
             units.indexOf('decades') ||
             units.indexOf('centuries'))) {
             units = ['fullYears']; //simple axis always uses full years
@@ -418,9 +423,9 @@ module.exports = {
 
 },{}],6:[function(require,module,exports){
 module.exports = {
-  category: require('./category.js'),
-  date: require('./date.js'),
-  number: require('./number.js')
+    category: require('./category.js'),
+    date: require('./date.js'),
+    number: require('./number.js')
 };
 
 },{"./category.js":1,"./date.js":2,"./number.js":7}],7:[function(require,module,exports){
@@ -437,7 +442,7 @@ function numericAxis() {
     'use strict';
 
     var ticksize = 5;
-    var a = d3.svg.axis().orient('left').tickSize(ticksize , 0);
+    var a = d3.svg.axis().orient('left').tickSize(ticksize, 0);
     var lineHeight = 16;
     var userTicks = [];
     var hardRules = [0];
@@ -449,10 +454,10 @@ function numericAxis() {
     var tickExtension = 0;
 
     function axis(g) {
-        var orientOffset = (a.orient() === 'right') ? -a.tickSize() : 0 ;
+        var orientOffset = (a.orient() === 'right') ? -a.tickSize() : 0;
 
-        g = g.append('g').attr('transform','translate(' + (xOffset + orientOffset) + ',' + yOffset + ')');
-        numberLabels.render(g,{
+        g = g.append('g').attr('transform', 'translate(' + (xOffset + orientOffset) + ',' + yOffset + ')');
+        numberLabels.render(g, {
             axes: a, lineHeight: lineHeight, hardRules: hardRules, extension: tickExtension
         });
         if (noLabels) {
@@ -461,19 +466,19 @@ function numericAxis() {
         styler(g);
     }
 
-    axis.tickExtension = function(int) { // extend the axis ticks to the right/ left a specified distance
+    axis.tickExtension = function (int) { // extend the axis ticks to the right/ left a specified distance
         if (!arguments.length) return tickExtension;
         tickExtension = int;
         return axis;
     };
 
-    axis.tickSize = function(int) {
+    axis.tickSize = function (int) {
         if (!arguments.length) return ticksize;
         a.tickSize(-int);
         return axis;
     };
 
-    axis.ticks = function(int) {
+    axis.ticks = function (int) {
         if (!arguments.length) return a.ticks();
         if (int.length > 0) {
             userTicks = int;
@@ -481,61 +486,61 @@ function numericAxis() {
         return axis;
     };
 
-    axis.orient = function(string){
+    axis.orient = function (string) {
         if (!arguments.length) return a.orient();
         a.orient(string);
         return axis;
     };
 
-    axis.simple = function(bool){
+    axis.simple = function (bool) {
         if (!arguments.length) return simple;
         simple = bool;
         return axis;
     };
 
-    axis.pixelsPerTick = function(int){
+    axis.pixelsPerTick = function (int) {
         if (!arguments.length) return pixelsPerTick;
         pixelsPerTick = int;
         return axis;
     };
 
-    axis.scale = function(x){
+    axis.scale = function (x) {
         if (!arguments.length) return a.scale();
         a.scale(x);
         if (userTicks.length > 0) {
             a.tickValues(userTicks);
-        }else{
-            var customTicks = numberScales.customTicks(a.scale(), pixelsPerTick,hardRules,  simple);
-            a.tickValues( customTicks );
+        } else {
+            var customTicks = numberScales.customTicks(a.scale(), pixelsPerTick, hardRules, simple);
+            a.tickValues(customTicks);
         }
         return axis;
     };
 
-    axis.hardRules = function(int){ //this allows you to set which lines will be solid rather than dotted, by default it's just zero and the bottom of the chart
+    axis.hardRules = function (int) { //this allows you to set which lines will be solid rather than dotted, by default it's just zero and the bottom of the chart
         if (!arguments.length) return hardRules;
         hardRules = int;
         return axis;
     };
 
-    axis.yOffset = function(int){
+    axis.yOffset = function (int) {
         if (!arguments.length) return yOffset;
         yOffset = int;
         return axis;
     };
 
-    axis.xOffset = function(int){
+    axis.xOffset = function (int) {
         if (!arguments.length) return xOffset;
         xOffset = int;
         return axis;
     };
 
-    axis.tickFormat = function(format){
+    axis.tickFormat = function (format) {
         if (!arguments.length) return a.tickFormat();
         a.tickFormat(format);
         return axis;
     };
 
-    axis.noLabels = function(bool){
+    axis.noLabels = function (bool) {
         if (!arguments.length) return noLabels;
         noLabels = bool;
         return axis;
@@ -552,49 +557,49 @@ module.exports = {
     isVertical: function (axis) {
         return axis.orient() === 'left' || axis.orient() === 'right';
     },
-    arrangeTicks: function(g, axes, lineHeight, hardRules){
+    arrangeTicks: function (g, axes, lineHeight, hardRules) {
         var textWidth = this.textWidth(g, axes.orient());
         if (this.isVertical(axes)) {
-            g.selectAll('text').attr('transform', 'translate( '+textWidth+', ' + -(lineHeight/2) + ' )');
-            g.selectAll('.tick').classed('origin', function (d,i) {
+            g.selectAll('text').attr('transform', 'translate( ' + textWidth + ', ' + -(lineHeight / 2) + ' )');
+            g.selectAll('.tick').classed('origin', function (d, i) {
                 return hardRules.indexOf(d) > -1;
             });
         }
     },
-    extendAxis: function(g, axes, extension){
+    extendAxis: function (g, axes, extension) {
         var rules = g.selectAll('line');
         if (axes.orient() == 'right') {
             rules.attr('x1', extension);
-        }else{
+        } else {
             rules.attr('x1', -extension);
         }
     },
-    textWidth: function(g, orient){
+    textWidth: function (g, orient) {
         var textWidth = 0;
-        if(orient == 'right'){
-            g.selectAll('text').each(function(d){
-                textWidth = Math.max( textWidth, Math.ceil(this.getBoundingClientRect().width) );
+        if (orient == 'right') {
+            g.selectAll('text').each(function (d) {
+                textWidth = Math.max(textWidth, Math.ceil(this.getBoundingClientRect().width));
             });
         }
         return textWidth;
     },
-    removeDecimals: function(g){
+    removeDecimals: function (g) {
         var decimalTotal = 0;
-        g.selectAll('text').each(function(d){
+        g.selectAll('text').each(function (d) {
             var val0 = parseFloat(this.textContent.split('.')[0]);
             var val1 = parseFloat(this.textContent.split('.')[1]);
             decimalTotal += val1;
-            if (val0 === 0 && val1===0) {
+            if (val0 === 0 && val1 === 0) {
                 this.textContent = 0;
             }
         });
-        if (!decimalTotal){
-            g.selectAll('text').each(function(d){
+        if (!decimalTotal) {
+            g.selectAll('text').each(function (d) {
                 this.textContent = this.textContent.split('.')[0];
             });
         }
     },
-    render: function(g, config){
+    render: function (g, config) {
         g.append('g')
             .attr('class', (this.isVertical(config.axes)) ? 'y axis left' : 'x axis')
             .append('g')
@@ -612,39 +617,39 @@ module.exports = {
 
 },{}],9:[function(require,module,exports){
 module.exports = {
-    removeDuplicateTicks: function(scale, ticks){
+    removeDuplicateTicks: function (scale, ticks) {
         var formatted = [];
         var tickFormat = scale.tickFormat();
-        ticks = ticks.filter( function(d){
+        ticks = ticks.filter(function (d) {
             var f = tickFormat(d);
-            if(formatted.indexOf(f) > -1){
+            if (formatted.indexOf(f) > -1) {
                 return false;
             }
             formatted.push(f);
             return true;
-        } );
+        });
         return ticks;
     },
-    tickIntervalBoundaries: function(ticks){
+    tickIntervalBoundaries: function (ticks) {
         var interval = 0;
-        ticks.forEach(function(d,i){
-            if(i < ticks.length-1){
-                interval = Math.max( ticks[i+1] - d,  interval);
+        ticks.forEach(function (d, i) {
+            if (i < ticks.length - 1) {
+                interval = Math.max(ticks[i + 1] - d, interval);
             }
         });
         return interval;
     },
-    detailedTicks: function(scale, pixelsPerTick){
+    detailedTicks: function (scale, pixelsPerTick) {
         var count = this.tickCount(scale, pixelsPerTick);
         var ticks = scale.ticks(count);
         var interval = this.tickIntervalBoundaries(ticks);
-        scale.domain()[0] = Math.ceil(scale.domain()[0]/interval) * interval;
-        scale.domain()[1] = Math.floor(scale.domain()[1]/interval) * interval;
+        scale.domain()[0] = Math.ceil(scale.domain()[0] / interval) * interval;
+        scale.domain()[1] = Math.floor(scale.domain()[1] / interval) * interval;
         ticks.push(scale.domain()[1]);
         ticks.push(scale.domain()[0]);
         return ticks;
     },
-    simpleTicks: function(scale){
+    simpleTicks: function (scale) {
         var customTicks = [];
         var domain = scale.domain();
         if (Math.min(domain[0], domain[1]) < 0 && Math.max(domain[0], domain[1]) > 0) {
@@ -654,18 +659,24 @@ module.exports = {
         customTicks.push(domain[0]);
         return customTicks;
     },
-    tickCount: function(scale, pixelsPerTick) {
-        var count = Math.round( (scale.range()[1] - scale.range()[0])/pixelsPerTick );
-        if(count < 2) { count = 3; }
-        else if(count < 5) { count = 5; }
-        else if(count < 10) { count = 10; }
+    tickCount: function (scale, pixelsPerTick) {
+        var count = Math.round((scale.range()[1] - scale.range()[0]) / pixelsPerTick);
+        if (count < 2) {
+            count = 3;
+        }
+        else if (count < 5) {
+            count = 5;
+        }
+        else if (count < 10) {
+            count = 10;
+        }
         return count;
     },
-    customTicks: function(scale, pixelsPerTick,hardRules,  simple){
+    customTicks: function (scale, pixelsPerTick, hardRules, simple) {
         var customTicks = [];
         if (simple) {
             customTicks = this.simpleTicks(scale);
-        }else{
+        } else {
             customTicks = this.detailedTicks(scale, pixelsPerTick);
             hardRules.push(scale.domain()[1]);
         }
@@ -680,68 +691,68 @@ var d3 = require('d3');
 function blankChart() {
     'use strict';
 
-	function buildModel(opts){
-		var m = {
-			//layout stuff
-			title: 'chart title',
-			subtitle: 'chart subtitle (letters)',
-			height: undefined,
-			width: 300,
-			chartHeight: 300,
-			chartWidth: 300,
-			blockPadding: 8,
-			data: [],
-			error: function(err) {
-				console.log('ERROR: ', err);
-			}
-		};
+    function buildModel(opts) {
+        var m = {
+            //layout stuff
+            title: 'chart title',
+            subtitle: 'chart subtitle (letters)',
+            height: undefined,
+            width: 300,
+            chartHeight: 300,
+            chartWidth: 300,
+            blockPadding: 8,
+            data: [],
+            error: function (err) {
+                console.log('ERROR: ', err);
+            }
+        };
 
-		for(var key in opts) {
-			m[key] = opts[key];
-		}
+        for (var key in opts) {
+            m[key] = opts[key];
+        }
 
-		return m;
-	}
+        return m;
+    }
 
-	function getHeight(selection){
-		return Math.ceil(selection.node().getBoundingClientRect().height);
-	}
+    function getHeight(selection) {
+        return Math.ceil(selection.node().getBoundingClientRect().height);
+    }
 
-	function getWidth(selection){
-		return Math.ceil(selection.node().getBoundingClientRect().width);
-	}
+    function getWidth(selection) {
+        return Math.ceil(selection.node().getBoundingClientRect().width);
+    }
 
-	function translate(position){
-		return 'translate(' + position.left + ',' + position.top + ')';
-	}
+    function translate(position) {
+        return 'translate(' + position.left + ',' + position.top + ')';
+    }
 
-	function chart(g) {
+    function chart(g) {
 
-		var model = buildModel(g.data()[0]);
+        var model = buildModel(g.data()[0]);
 
-		if(!model.height) {
-			model.height = model.width;
-		}
+        if (!model.height) {
+            model.height = model.width;
+        }
 
-		var	svg = g.append('svg')
-				.attr({
-					'class': 'null-chart',
-					height: model.height,
-					width: model.width
-				});
+        var svg = g.append('svg')
+            .attr({
+                'class': 'null-chart',
+                height: model.height,
+                width: model.width
+            });
 
-		var title = svg.append('text').text(model.title + " - PLACE HOLDER CHART");
-		title.attr('transform', translate({top: getHeight(title), left: 0}));
-		var subtitle = svg.append('text').text(model.subtitle);
-		subtitle.attr('transform', translate({top: getHeight(title) + getHeight(subtitle) ,left: 0}));
+        var title = svg.append('text').text(model.title + " - PLACE HOLDER CHART");
+        title.attr('transform', translate({top: getHeight(title), left: 0}));
+        var subtitle = svg.append('text').text(model.subtitle);
+        subtitle.attr('transform', translate({top: getHeight(title) + getHeight(subtitle), left: 0}));
 
-		svg.selectAll('text').attr({
-			fill:'#000',
-			stroke:'none'
-		});
-	}
+        svg.selectAll('text').attr({
+            fill: '#000',
+            stroke: 'none'
+        });
+    }
 
-	return chart;
+    return chart;
 }
 
 module.exports = blankChart;
@@ -755,79 +766,91 @@ var Dressing = require('../util/dressing.js');
 
 function plotSeries(plotSVG, model, axes, series) {
 
-	var data = formatData(model, series);
+    var data = formatData(model, series);
 
     var timeBands = d3.scale.ordinal()
-        .domain(data.map(function(d) { return d.key; }))
+        .domain(data.map(function (d) {
+            return d.key;
+        }))
         .rangeRoundBands([0, model.plotWidth], 0.2);
 
     plotSVG.selectAll("rect")
         .data(data)
         .enter()
         .append("rect")
-        .attr("class", function(d) { return "column column--"  + series.className + (d.value < 0 ? " negative" : " positive"); })
-        .attr("data-value", function(d) { return d.value; })
-        .attr("x", function(d) { return axes.timeScale(d.key); })
-        .attr("y", function(d) { return axes.valueScale(Math.max(0, d.value)); })
-        .attr("height", function(d) { return Math.abs(axes.valueScale(d.value) - axes.valueScale(0)); })
+        .attr("class", function (d) {
+            return "column column--" + series.className + (d.value < 0 ? " negative" : " positive");
+        })
+        .attr("data-value", function (d) {
+            return d.value;
+        })
+        .attr("x", function (d) {
+            return axes.timeScale(d.key);
+        })
+        .attr("y", function (d) {
+            return axes.valueScale(Math.max(0, d.value));
+        })
+        .attr("height", function (d) {
+            return Math.abs(axes.valueScale(d.value) - axes.valueScale(0));
+        })
         .attr("width", timeBands.rangeBand());
 }
 
-function formatData(model, series){
+function formatData(model, series) {
     //null values in the data are interpolated over, filter these out
     //NaN values are represented by line breaks
-    var data = model.data.map(function(d){
+    var data = model.data.map(function (d) {
         return {
-            key:d[model.x.series.key],
-            value:d[series.key]
+            key: d[model.x.series.key],
+            value: d[series.key]
         };
-    }).filter(function(d){
+    }).filter(function (d) {
         return (d.y !== null);
     });
     return data;
 }
 
 function columnChart(g) {
-	'use strict';
+    'use strict';
 
-	var model = new DataModel(Object.create(g.data()[0]));
-	var svg = g.append('svg')
-		.attr({
-			'class': 'graphic line-chart',
-			height: model.height,
-			width: model.width,
-			xmlns:"http://www.w3.org/2000/svg",
-			version:"1.2"
-		});
-	metadata.create(svg, model);
+    var model = new DataModel(Object.create(g.data()[0]));
+    var svg = g.append('svg')
+        .attr({
+            'class': 'graphic line-chart',
+            height: model.height,
+            width: model.width,
+            xmlns: "http://www.w3.org/2000/svg",
+            version: "1.2"
+        });
+    metadata.create(svg, model);
 
-	var dressing = new Dressing(svg, model);
-	dressing.addHeader();
-	dressing.addFooter();
+    var dressing = new Dressing(svg, model);
+    dressing.addHeader();
+    dressing.addFooter();
 
-	var chartSVG = svg.append('g').attr('class', 'chart');
-	chartSVG.attr('transform', model.translate(model.chartPosition));
+    var chartSVG = svg.append('g').attr('class', 'chart');
+    chartSVG.attr('transform', model.translate(model.chartPosition));
 
-	var axes = new Axes(chartSVG, model);
-	axes.addValueScale();
-	axes.addTimeScale();
-	axes.repositionAxis();
+    var axes = new Axes(chartSVG, model);
+    axes.addValueScale();
+    axes.addTimeScale();
+    axes.repositionAxis();
 
-	var plotSVG = chartSVG.append('g').attr('class', 'plot');
-	var i = model.y.series.length;
-	while (i--) {
-		plotSeries(plotSVG, model, axes, model.y.series[i]);
-	}
+    var plotSVG = chartSVG.append('g').attr('class', 'plot');
+    var i = model.y.series.length;
+    while (i--) {
+        plotSeries(plotSVG, model, axes, model.y.series[i]);
+    }
 }
 
 module.exports = columnChart;
 
 },{"../util/data.model.js":21,"../util/draw-axes.js":22,"../util/dressing.js":23,"../util/metadata.js":26,"d3":"d3"}],12:[function(require,module,exports){
 module.exports = {
-  line: require('./line.js'),
-  blank: require('./blank.js'),
-  pie: require('./pie.js'),
-  column: require('./column.js')
+    line: require('./line.js'),
+    blank: require('./blank.js'),
+    pie: require('./pie.js'),
+    column: require('./column.js')
 };
 
 },{"./blank.js":10,"./column.js":11,"./line.js":13,"./pie.js":14}],13:[function(require,module,exports){
@@ -842,25 +865,29 @@ var Dressing = require('../util/dressing.js');
 //NaN values are represented by line breaks
 function plotSeries(plotSVG, model, axes, series) {
 
-    var data = model.data.map(function(d){
+    var data = model.data.map(function (d) {
         return {
-            x:d[model.x.series.key],
-            y:d[series.key]
+            x: d[model.x.series.key],
+            y: d[series.key]
         };
-    }).filter(function(d){
+    }).filter(function (d) {
         return (d.y !== null);
     });
 
     var line = d3.svg.line()
         .interpolate(interpolator.gappedLine)
-        .x( function(d){ return axes.timeScale(d.x); } )
-        .y( function(d){ return axes.valueScale(d.y); } );
+        .x(function (d) {
+            return axes.timeScale(d.x);
+        })
+        .y(function (d) {
+            return axes.valueScale(d.y);
+        });
 
     plotSVG.append('path')
         .datum(data)
         .attr('class', 'line line--' + series.className)
         .attr('stroke-width', model.lineStrokeWidth)
-        .attr('d', function(d){
+        .attr('d', function (d) {
             console.log('datum ', d);
             return line(d);
         });
@@ -869,20 +896,20 @@ function plotSeries(plotSVG, model, axes, series) {
 function lineChart(g) {
     'use strict';
 
-	var model = new DataModel(Object.create(g.data()[0]));
-	var svg = g.append('svg')
-			.attr({
-				'class': 'graphic line-chart',
-				height: model.height,
-				width: model.width,
-				xmlns:"http://www.w3.org/2000/svg",
-				version:"1.2"
-			});
-	metadata.create(svg, model);
+    var model = new DataModel(Object.create(g.data()[0]));
+    var svg = g.append('svg')
+        .attr({
+            'class': 'graphic line-chart',
+            height: model.height,
+            width: model.width,
+            xmlns: "http://www.w3.org/2000/svg",
+            version: "1.2"
+        });
+    metadata.create(svg, model);
 
-	var dressing = new Dressing(svg, model);
-	dressing.addHeader();
-	dressing.addFooter();
+    var dressing = new Dressing(svg, model);
+    dressing.addHeader();
+    dressing.addFooter();
 
     var chartSVG = svg.append('g').attr('class', 'chart');
     chartSVG.attr('transform', model.translate(model.chartPosition));
@@ -907,78 +934,80 @@ var d3 = require('d3');
 function pieChart() {
     'use strict';
 
-	function buildModel(opts) {
-		var m = {
-			//layout stuff
-			title:'chart title',
-			height:undefined,
-			width:300,
-			chartHeight:300,
-			chartWidth:300,
-			indexProperty:'&',
-			valueProperty:'value',
-			blockPadding:8,
-			data:[],
-			error:function(err){ console.log('ERROR: ', err); }
-		};
+    function buildModel(opts) {
+        var m = {
+            //layout stuff
+            title: 'chart title',
+            height: undefined,
+            width: 300,
+            chartHeight: 300,
+            chartWidth: 300,
+            indexProperty: '&',
+            valueProperty: 'value',
+            blockPadding: 8,
+            data: [],
+            error: function (err) {
+                console.log('ERROR: ', err);
+            }
+        };
 
-		for(var key in opts){
-			m[key] = opts[key];
-		}
+        for (var key in opts) {
+            m[key] = opts[key];
+        }
 
-		return m;
-	}
+        return m;
+    }
 
-	function getHeight(selection) {
-		return Math.ceil(selection.node().getBoundingClientRect().height);
-	}
+    function getHeight(selection) {
+        return Math.ceil(selection.node().getBoundingClientRect().height);
+    }
 
-	function getWidth(selection) {
-		return Math.ceil(selection.node().getBoundingClientRect().width);	
-	}
+    function getWidth(selection) {
+        return Math.ceil(selection.node().getBoundingClientRect().width);
+    }
 
-	function translate(position) {
-		return 'translate(' + position.left + ',' + position.top + ')';
-	}
+    function translate(position) {
+        return 'translate(' + position.left + ',' + position.top + ')';
+    }
 
-	function chart(g) {
-		var model = buildModel( g.data()[0] );
-		if(!model.height){
-			model.height = model.width;
-		}
-		var	svg = g.append('svg')
-				.attr({
-					'class':'null-chart',
-					'height':model.height,
-					'width':model.width
-				});
+    function chart(g) {
+        var model = buildModel(g.data()[0]);
+        if (!model.height) {
+            model.height = model.width;
+        }
+        var svg = g.append('svg')
+            .attr({
+                'class': 'null-chart',
+                'height': model.height,
+                'width': model.width
+            });
 
-		var title = svg.append('text').text(model.title + " - PLACE HOLDER CHART");
-		title.attr('transform',translate({top: getHeight(title), left:0}));
+        var title = svg.append('text').text(model.title + " - PLACE HOLDER CHART");
+        title.attr('transform', translate({top: getHeight(title), left: 0}));
 
-		var subtitle = svg.append('text').text(model.subtitle);
-		subtitle.attr('transform',translate({top: getHeight(title) + getHeight(subtitle), left:0}));
+        var subtitle = svg.append('text').text(model.subtitle);
+        subtitle.attr('transform', translate({top: getHeight(title) + getHeight(subtitle), left: 0}));
 
-		var chartSvg = svg.append('g').attr('class','chart');
+        var chartSvg = svg.append('g').attr('class', 'chart');
 
-		if(model.data.length > 3){
-			model.error('PIE warning: too many segments!');
-		}
+        if (model.data.length > 3) {
+            model.error('PIE warning: too many segments!');
+        }
 
-		var outerRadius = model.width / 2; 
+        var outerRadius = model.width / 2;
 
-		chartSvg.selectAll('.slice')
-			.data( model.data )
-				.enter();
-					//.append(path);
-		
-		svg.selectAll('text').attr({
-			fill:'#000',
-			stroke:'none'
-		});
-	}
+        chartSvg.selectAll('.slice')
+            .data(model.data)
+            .enter();
+        //.append(path);
 
-	return chart;
+        svg.selectAll('text').attr({
+            fill: '#000',
+            stroke: 'none'
+        });
+    }
+
+    return chart;
 }
 
 module.exports = pieChart;
@@ -990,78 +1019,78 @@ var lineThickness = require('../util/line-thickness.js');
 function lineKey(options) {
     'use strict';
 
-	options = options || {};
+    options = options || {};
 
-	var width = 300;
-	var strokeLength = 15;
-	var lineHeight = 16;
-	var strokeWidth = lineThickness(options.lineThickness);
+    var width = 300;
+    var strokeLength = 15;
+    var lineHeight = 16;
+    var strokeWidth = lineThickness(options.lineThickness);
 
-	var style = function(d) {
-		return d.style;
-	};
+    var style = function (d) {
+        return d.style;
+    };
 
-	var label = function(d) {
-		return d.label;
-	};
+    var label = function (d) {
+        return d.label;
+    };
 
-	var filter = function(){
-		return true;
-	};
+    var filter = function () {
+        return true;
+    };
 
-	function key(g){
-		g = g.append('g').attr('class','chart-linekey');
-		var keyItems = g.selectAll('g').data( g.datum().filter( filter ) )
-				.enter()
-				.append('g').attr({
-					'class':'key-item',
-					'transform':function(d,i){
-						return 'translate(0,' + (lineHeight + i * lineHeight) + ')';
-					}
-				});
+    function key(g) {
+        g = g.append('g').attr('class', 'chart-linekey');
+        var keyItems = g.selectAll('g').data(g.datum().filter(filter))
+            .enter()
+            .append('g').attr({
+                'class': 'key-item',
+                'transform': function (d, i) {
+                    return 'translate(0,' + (lineHeight + i * lineHeight) + ')';
+                }
+            });
 
-		keyItems.append('line').attr({
-			'class': style,
-			x1: 1,
-			y1: -5,
-			x2: strokeLength,
-			y2: -5
-		})
-		.attr('stroke-width', strokeWidth)
-		.classed('key-line',true);
+        keyItems.append('line').attr({
+            'class': style,
+            x1: 1,
+            y1: -5,
+            x2: strokeLength,
+            y2: -5
+        })
+            .attr('stroke-width', strokeWidth)
+            .classed('key-line', true);
 
-		keyItems.append('text').attr({
-			'class':'key-label',
-			x:strokeLength + 10
-		}).text(label);
+        keyItems.append('text').attr({
+            'class': 'key-label',
+            x: strokeLength + 10
+        }).text(label);
 
-	}
+    }
 
-	key.label = function(f){
-		if (!arguments.length) return label;
-		label = f;
-		return key;
-	};
+    key.label = function (f) {
+        if (!arguments.length) return label;
+        label = f;
+        return key;
+    };
 
-	key.style = function(f){
-		if (!arguments.length) return style;
-		style = f;
-		return key;
-	};
+    key.style = function (f) {
+        if (!arguments.length) return style;
+        style = f;
+        return key;
+    };
 
-	key.width = function(x){
-		if (!arguments.length) return width;
-		width = x;
-		return key;
-	};
+    key.width = function (x) {
+        if (!arguments.length) return width;
+        width = x;
+        return key;
+    };
 
-	key.lineHeight = function(x){
-		if (!arguments.length) return lineHeight;
-		lineHeight = x;
-		return key;
-	};
+    key.lineHeight = function (x) {
+        if (!arguments.length) return lineHeight;
+        lineHeight = x;
+        return key;
+    };
 
-	return key;
+    return key;
 }
 
 module.exports = lineKey;
@@ -1073,32 +1102,32 @@ var d3 = require('d3');
 function ftLogo(g, dim) {
     'use strict';
 
-	if(!dim){
-		dim = 32;
-	}
-	var d = 'M21.777,53.336c0,6.381,1.707,7.1,8.996,7.37v2.335H1.801v-2.335c6.027-0.27,7.736-0.989,7.736-7.37v-41.67 c0-6.387-1.708-7.104-7.556-7.371V1.959h51.103l0.363,13.472h-2.519c-2.16-6.827-4.502-8.979-16.467-8.979h-9.27 c-2.785,0-3.415,0.624-3.415,3.142v19.314h4.565c9.54,0,11.61-1.712,12.779-8.089h2.338v21.559h-2.338 c-1.259-7.186-4.859-8.981-12.779-8.981h-4.565V53.336z M110.955,1.959H57.328l-1.244,13.477h3.073c1.964-6.601,4.853-8.984,11.308-8.984h7.558v46.884 c0,6.381-1.71,7.1-8.637,7.37v2.335H98.9v-2.335c-6.931-0.27-8.64-0.989-8.64-7.37V6.453h7.555c6.458,0,9.351,2.383,11.309,8.984 h3.075L110.955,1.959z';
-	var path = g.append('path').attr('d', d); //measure and rescale to the bounds
-	var rect = path.node().getBoundingClientRect();
-	//the logo is square so
-	var scale = Math.min (dim /rect.width, dim / rect.height);
+    if (!dim) {
+        dim = 32;
+    }
+    var d = 'M21.777,53.336c0,6.381,1.707,7.1,8.996,7.37v2.335H1.801v-2.335c6.027-0.27,7.736-0.989,7.736-7.37v-41.67 c0-6.387-1.708-7.104-7.556-7.371V1.959h51.103l0.363,13.472h-2.519c-2.16-6.827-4.502-8.979-16.467-8.979h-9.27 c-2.785,0-3.415,0.624-3.415,3.142v19.314h4.565c9.54,0,11.61-1.712,12.779-8.089h2.338v21.559h-2.338 c-1.259-7.186-4.859-8.981-12.779-8.981h-4.565V53.336z M110.955,1.959H57.328l-1.244,13.477h3.073c1.964-6.601,4.853-8.984,11.308-8.984h7.558v46.884 c0,6.381-1.71,7.1-8.637,7.37v2.335H98.9v-2.335c-6.931-0.27-8.64-0.989-8.64-7.37V6.453h7.555c6.458,0,9.351,2.383,11.309,8.984 h3.075L110.955,1.959z';
+    var path = g.append('path').attr('d', d); //measure and rescale to the bounds
+    var rect = path.node().getBoundingClientRect();
+    //the logo is square so
+    var scale = Math.min(dim / rect.width, dim / rect.height);
 
-	path.attr({
-		'transform':'scale('+scale+')',
-		'fill':'rgba(0,0,0,0.1)'
-	});
-} 
+    path.attr({
+        'transform': 'scale(' + scale + ')',
+        'fill': 'rgba(0,0,0,0.1)'
+    });
+}
 
 module.exports = ftLogo;
 
 /*
-<path fill="none" d="M21.777,53.336c0,6.381,1.707,7.1,8.996,7.37v2.335H1.801v-2.335c6.027-0.27,7.736-0.989,7.736-7.37v-41.67
-		c0-6.387-1.708-7.104-7.556-7.371V1.959h51.103l0.363,13.472h-2.519c-2.16-6.827-4.502-8.979-16.467-8.979h-9.27
-		c-2.785,0-3.415,0.624-3.415,3.142v19.314h4.565c9.54,0,11.61-1.712,12.779-8.089h2.338v21.559h-2.338
-		c-1.259-7.186-4.859-8.981-12.779-8.981h-4.565V53.336z"/>
-	<path fill="none" d="M110.955,1.959H57.328l-1.244,13.477h3.073c1.964-6.601,4.853-8.984,11.308-8.984h7.558v46.884
-		c0,6.381-1.71,7.1-8.637,7.37v2.335H98.9v-2.335c-6.931-0.27-8.64-0.989-8.64-7.37V6.453h7.555c6.458,0,9.351,2.383,11.309,8.984
-		h3.075L110.955,1.959z"/>
-		*/
+ <path fill="none" d="M21.777,53.336c0,6.381,1.707,7.1,8.996,7.37v2.335H1.801v-2.335c6.027-0.27,7.736-0.989,7.736-7.37v-41.67
+ c0-6.387-1.708-7.104-7.556-7.371V1.959h51.103l0.363,13.472h-2.519c-2.16-6.827-4.502-8.979-16.467-8.979h-9.27
+ c-2.785,0-3.415,0.624-3.415,3.142v19.314h4.565c9.54,0,11.61-1.712,12.779-8.089h2.338v21.559h-2.338
+ c-1.259-7.186-4.859-8.981-12.779-8.981h-4.565V53.336z"/>
+ <path fill="none" d="M110.955,1.959H57.328l-1.244,13.477h3.073c1.964-6.601,4.853-8.984,11.308-8.984h7.558v46.884
+ c0,6.381-1.71,7.1-8.637,7.37v2.335H98.9v-2.335c-6.931-0.27-8.64-0.989-8.64-7.37V6.453h7.555c6.458,0,9.351,2.383,11.309,8.984
+ h3.075L110.955,1.959z"/>
+ */
 
 },{"d3":"d3"}],17:[function(require,module,exports){
 /*jshint -W084 */
@@ -1108,112 +1137,114 @@ var d3 = require('d3');
 function textArea() {
     'use strict';
 
-	var xOffset = 0, 
-		yOffset = 0, 
-		width=1000, 
-		lineHeight = 20, 
-		units = 'px', //pixels by default
-		bounds;
+    var xOffset = 0,
+        yOffset = 0,
+        width = 1000,
+        lineHeight = 20,
+        units = 'px', //pixels by default
+        bounds;
 
-	function wrap(text, width) {
-		text.each(function() {
-			var text = d3.select(this),
-				words = text.text().trim().split(/\s+/).reverse(),
-				word,
-				line = [],
-				lineNumber = 0,
-				y = text.attr('y'),
-				dy = parseFloat(text.attr('dy'));
+    function wrap(text, width) {
+        text.each(function () {
+            var text = d3.select(this),
+                words = text.text().trim().split(/\s+/).reverse(),
+                word,
+                line = [],
+                lineNumber = 0,
+                y = text.attr('y'),
+                dy = parseFloat(text.attr('dy'));
 
-			if(isNaN(dy)){ dy = 0; }
+            if (isNaN(dy)) {
+                dy = 0;
+            }
 
-			var tspan = text.text(null).append('tspan')
-				.attr('x', 0)
-				.attr('y', y)
-				.attr('dy', dy + units);
+            var tspan = text.text(null).append('tspan')
+                .attr('x', 0)
+                .attr('y', y)
+                .attr('dy', dy + units);
 
-			while (word = words.pop()) {
-				line.push(word);
-				tspan.text(line.join(' '));
-				if (tspan.node().getComputedTextLength() > width) {
-					line.pop();
-					tspan.text(line.join(' '));
-					line = [word];
-					lineNumber ++;
-					var newY = (lineNumber * lineHeight);
-					tspan = text.append('tspan').attr('x', 0).attr('y', y).attr('y', + newY + units).text(word);
-				}
-			}
-		});
-	}
+            while (word = words.pop()) {
+                line.push(word);
+                tspan.text(line.join(' '));
+                if (tspan.node().getComputedTextLength() > width) {
+                    line.pop();
+                    tspan.text(line.join(' '));
+                    line = [word];
+                    lineNumber++;
+                    var newY = (lineNumber * lineHeight);
+                    tspan = text.append('tspan').attr('x', 0).attr('y', y).attr('y', +newY + units).text(word);
+                }
+            }
+        });
+    }
 
-	function area(g, accessor){
-		if(!accessor) {
-			accessor = function(d){
-				return d;
-			};
-		}
-		g = g.append('g').attr('transform','translate(' + xOffset + ',' + yOffset + ')');
-		g.append('text').text(accessor).call(wrap, width);
-		bounds = g.node().getBoundingClientRect();
-	}
+    function area(g, accessor) {
+        if (!accessor) {
+            accessor = function (d) {
+                return d;
+            };
+        }
+        g = g.append('g').attr('transform', 'translate(' + xOffset + ',' + yOffset + ')');
+        g.append('text').text(accessor).call(wrap, width);
+        bounds = g.node().getBoundingClientRect();
+    }
 
 
-	area.bounds = function() {
-		return bounds;
-	};
+    area.bounds = function () {
+        return bounds;
+    };
 
-	area.units = function(x) { //px, em, rem
-		if (!arguments.length) return units;
-		units = x;
-		return area;
-	};
+    area.units = function (x) { //px, em, rem
+        if (!arguments.length) return units;
+        units = x;
+        return area;
+    };
 
-	area.lineHeight = function(x) { //pixels by default
-		if (!arguments.length) return lineHeight;
-		lineHeight = x;
-		return area;
-	};
+    area.lineHeight = function (x) { //pixels by default
+        if (!arguments.length) return lineHeight;
+        lineHeight = x;
+        return area;
+    };
 
-	area.width = function(x) {
-		if (!arguments.length) return width;
-		width = x;
-		return area;
-	};
+    area.width = function (x) {
+        if (!arguments.length) return width;
+        width = x;
+        return area;
+    };
 
-	area.yOffset = function(x) {
-		if (!arguments.length) return yOffset;
-		yOffset = x;
-		return area;
-	};
+    area.yOffset = function (x) {
+        if (!arguments.length) return yOffset;
+        yOffset = x;
+        return area;
+    };
 
-	area.xOffset = function(x) {
-		if (!arguments.length) return yOffset;
-		yOffset = x;
-		return area;
-	};
+    area.xOffset = function (x) {
+        if (!arguments.length) return yOffset;
+        yOffset = x;
+        return area;
+    };
 
-	return area;
+    return area;
 }
 
 module.exports = textArea;
 
 },{"d3":"d3"}],18:[function(require,module,exports){
-module.exports  = {
-  chart: require('./chart/index.js'),
+module.exports = {
+    chart: require('./chart/index.js'),
 
-  axis: require('./axis/index.js'),
+    axis: require('./axis/index.js'),
 
-  element: {
-    lineKey: require('./element/line-key.js'),
-    textArea: require('./element/text-area.js')
-  },
+    element: {
+        lineKey: require('./element/line-key.js'),
+        textArea: require('./element/text-area.js')
+    },
 
-  util: {
-    attributeStyler: require('./util/chart-attribute-styles.js')
-  },
+    util: {
+        attributeStyler: require('./util/chart-attribute-styles.js')
+    },
 
-  version: require('./util/version')
+    version: require('./util/version')
 
 };
 
@@ -1222,248 +1253,248 @@ module.exports  = {
 // http://en.wikipedia.org/wiki/Aspect_ratio_%28image%29
 
 var commonRatios = {
-  square: {width: 1, height: 1},
-  standard: {width: 4, height: 3},
-  golden: {width: 1.618, height: 1},
-  classicPhoto: {width: 3, height: 2},
-  widescreen: {width: 16, height: 9},
-  panoramic: {width: 2.39, height: 1}
+    square: {width: 1, height: 1},
+    standard: {width: 4, height: 3},
+    golden: {width: 1.618, height: 1},
+    classicPhoto: {width: 3, height: 2},
+    widescreen: {width: 16, height: 9},
+    panoramic: {width: 2.39, height: 1}
 };
 
 function getRatio(name) {
-  if (!name) return;
+    if (!name) return;
 
-  if (name in commonRatios) {
-    return commonRatios[name];
-  }
+    if (name in commonRatios) {
+        return commonRatios[name];
+    }
 
-  if (typeof name === 'string') {
-    var p = name.split(':');
-    return {width: p[0], height: p[1]};
-  }
+    if (typeof name === 'string') {
+        var p = name.split(':');
+        return {width: p[0], height: p[1]};
+    }
 
-  return name;
+    return name;
 }
 
 module.exports = {
 
-  commonRatios: commonRatios,
+    commonRatios: commonRatios,
 
-  widthFromHeight: function(height, ratio) {
+    widthFromHeight: function (height, ratio) {
 
-    ratio = getRatio(ratio);
+        ratio = getRatio(ratio);
 
-    if (!ratio) {
-      throw new Error('Ratio is falsey');
+        if (!ratio) {
+            throw new Error('Ratio is falsey');
+        }
+
+        if (typeof ratio === 'number') return height * ratio;
+
+        if (!ratio.height || !ratio.width) {
+            throw new Error('Ratio must have width and height values');
+        }
+
+        ratio = ratio.width / ratio.height;
+
+        return Math.ceil(height * ratio);
+    },
+
+    heightFromWidth: function (width, ratio) {
+
+        ratio = getRatio(ratio);
+
+        if (!ratio) {
+            throw new Error('Ratio is falsey');
+        }
+
+        if (typeof ratio === 'number') return width * ratio;
+
+        if (!ratio.height || !ratio.width) {
+            throw new Error('Ratio must have width and height values');
+        }
+
+        ratio = ratio.height / ratio.width;
+
+        return Math.ceil(width * ratio);
     }
-
-    if (typeof ratio === 'number') return height * ratio;
-
-    if (!ratio.height || !ratio.width) {
-      throw new Error('Ratio must have width and height values');
-    }
-
-    ratio = ratio.width / ratio.height;
-
-    return Math.ceil(height * ratio);
-  },
-
-  heightFromWidth: function(width, ratio) {
-
-    ratio = getRatio(ratio);
-
-    if (!ratio) {
-      throw new Error('Ratio is falsey');
-    }
-
-    if (typeof ratio === 'number') return width * ratio;
-
-    if (!ratio.height || !ratio.width) {
-      throw new Error('Ratio must have width and height values');
-    }
-
-    ratio = ratio.height / ratio.width;
-
-    return Math.ceil(width * ratio);
-  }
 };
 
 },{}],20:[function(require,module,exports){
-// because of the need to export and convert browser rendered SVGs 
-// we need a simple way to attach styles as attributes if necessary, 
+// because of the need to export and convert browser rendered SVGs
+// we need a simple way to attach styles as attributes if necessary,
 // so, heres a list of attributes and the selectors to which they should be applied
 
 var d3 = require('d3');
 
-function applyAttributes(g){
-	var styleList = [
-		//general
-			{
-				'selector':'svg text',
-				'attributes':{
-					'font-family':'BentonSans, sans-serif',
-					'fill':'#a7a59b',
-					'stroke':'none'
-				}
-			},
-		//axes
-			{
-				'selector':'.axis path, .axis line',
-				'attributes':{
-					'shape-rendering':'crispEdges',
-					'fill':'none'
-				}
-			},{
-				'selector':'.y.axis path.domain, .secondary path.domain, .secondary .tick line',
-				'attributes':{
-					'stroke':'none'
-				}
-			},
+function applyAttributes(g) {
+    var styleList = [
+        //general
+        {
+            'selector': 'svg text',
+            'attributes': {
+                'font-family': 'BentonSans, sans-serif',
+                'fill': '#a7a59b',
+                'stroke': 'none'
+            }
+        },
+        //axes
+        {
+            'selector': '.axis path, .axis line',
+            'attributes': {
+                'shape-rendering': 'crispEdges',
+                'fill': 'none'
+            }
+        }, {
+            'selector': '.y.axis path.domain, .secondary path.domain, .secondary .tick line',
+            'attributes': {
+                'stroke': 'none'
+            }
+        },
 
-			{
-				'selector':'.y.axis .tick line',
-				'attributes':{
-					'stroke-dasharray':'2 2'
-				}
-			},
-			{
-				'selector':'.y.axis .origin line',
-				'attributes':{
-					'stroke':'#333',
-					'stroke-dasharray':'none'
-				}
-			},{
-				'selector':'.y.axis .origin.tick line',
-				'attributes':{
-					'stroke':'#333',
-					'stroke-dasharray':'none'
-				}
-			},{
-				'selector':'.primary .tick text',
-				'attributes':{
-					'font-size':12,
-					'fill':'#757470'
-				}
-			},{
-				'selector':'.secondary .tick text',
-				'attributes':{
-					'font-size':10,
-					'fill':'#757470'
-				}
-			},{
-				'selector':'.primary .tick line',
-				'attributes':{
-					'stroke':'#a7a59b'
-				}
-			},{ 
-				'selector':'.y.axis.right text',
-				'attributes':{
-					'text-anchor':'start'
-				}
-			},{ 
-				'selector':'.y.axis.left text',
-				'attributes':{
-					'text-anchor':'end'
-				}
-			},{
-				'selector':'.x.axis .primary path.domain',
-				'attributes':{
-					'stroke':'#757470'
-				}
-			},
-		//lines
-			{
-				'selector':'path.line, line.key-line',
-				'attributes':{
-					'fill': 'none',
-					'stroke-linejoin': 'round',
-					'stroke-linecap': 'round'
-				}
-			},{
-				'selector':'path.series1, line.series1',
-				'attributes':{
-					'stroke':'#af516c'
-				}
-			},{
-				'selector':'path.series2, line.series2',
-				'attributes':{
-					'stroke':'#ecafaf'
-				}
-			},{
-				'selector':'path.series3, line.series3',
-				'attributes':{
-					'stroke':'#d7706c'
-				}
-			},{
-				'selector':'path.series4, line.series4',
-				'attributes':{
-					'stroke':'#76acb8'
-				}
-			},{
-				'selector':'path.series5, line.series5',
-				'attributes':{
-					'stroke':'#81d0e6'
-				}
-			},{
-				'selector':'path.series6, line.series6',
-				'attributes':{
-					'stroke':'#4086b6'
-				}
-			},{
-				'selector':'path.series7, line.series7',
-				'attributes':{
-					'stroke':'#b8b1a9'
-				}
-			},{
-				'selector':'path.accent, line.accent',
-				'attributes':{
-					'stroke':'rgb(184,177,169)'
-				}
-			},
-			//text
-			{
-				'selector':'.chart-title text, .chart-title tspan',
-				'attributes':{
-					'font-family': 'BentonSans, sans-serif',
-					'font-size':18,
-					'fill':'rgba(0, 0, 0, 0.8)'
-				}
-			},{
-				'selector':'.chart-subtitle text, .chart-subtitle tspan',
-				'attributes':{
-					'font-family': 'BentonSans, sans-serif',
-					'font-size': 12,
-					'fill':'rgba(0, 0, 0, 0.5)'
-				}
-			},{
-				'selector':'.chart-source text, .chart-source tspan',
-				'attributes':{
-					'font-family': 'BentonSans, sans-serif',
-					'font-size': 10,
-					'fill': 'rgba(0, 0, 0, 0.5)'
-				}
-			},{
-				'selector':'.chart-footnote text, .chart-footnote tspan',
-				'attributes':{
-					'font-family': 'BentonSans, sans-serif',
-					'font-size': 12,
-					'fill': 'rgba(0, 0, 0, 0.5)'
-				}
-			},{
-				'selector':'text.key-label',
-				'attributes':{
-					'font-family': 'BentonSans, sans-serif',
-					'font-size': 12,
-					'fill': 'rgba(0, 0, 0, 0.5)'
-				}
-			}
-		];
+        {
+            'selector': '.y.axis .tick line',
+            'attributes': {
+                'stroke-dasharray': '2 2'
+            }
+        },
+        {
+            'selector': '.y.axis .origin line',
+            'attributes': {
+                'stroke': '#333',
+                'stroke-dasharray': 'none'
+            }
+        }, {
+            'selector': '.y.axis .origin.tick line',
+            'attributes': {
+                'stroke': '#333',
+                'stroke-dasharray': 'none'
+            }
+        }, {
+            'selector': '.primary .tick text',
+            'attributes': {
+                'font-size': 12,
+                'fill': '#757470'
+            }
+        }, {
+            'selector': '.secondary .tick text',
+            'attributes': {
+                'font-size': 10,
+                'fill': '#757470'
+            }
+        }, {
+            'selector': '.primary .tick line',
+            'attributes': {
+                'stroke': '#a7a59b'
+            }
+        }, {
+            'selector': '.y.axis.right text',
+            'attributes': {
+                'text-anchor': 'start'
+            }
+        }, {
+            'selector': '.y.axis.left text',
+            'attributes': {
+                'text-anchor': 'end'
+            }
+        }, {
+            'selector': '.x.axis .primary path.domain',
+            'attributes': {
+                'stroke': '#757470'
+            }
+        },
+        //lines
+        {
+            'selector': 'path.line, line.key-line',
+            'attributes': {
+                'fill': 'none',
+                'stroke-linejoin': 'round',
+                'stroke-linecap': 'round'
+            }
+        }, {
+            'selector': 'path.series1, line.series1',
+            'attributes': {
+                'stroke': '#af516c'
+            }
+        }, {
+            'selector': 'path.series2, line.series2',
+            'attributes': {
+                'stroke': '#ecafaf'
+            }
+        }, {
+            'selector': 'path.series3, line.series3',
+            'attributes': {
+                'stroke': '#d7706c'
+            }
+        }, {
+            'selector': 'path.series4, line.series4',
+            'attributes': {
+                'stroke': '#76acb8'
+            }
+        }, {
+            'selector': 'path.series5, line.series5',
+            'attributes': {
+                'stroke': '#81d0e6'
+            }
+        }, {
+            'selector': 'path.series6, line.series6',
+            'attributes': {
+                'stroke': '#4086b6'
+            }
+        }, {
+            'selector': 'path.series7, line.series7',
+            'attributes': {
+                'stroke': '#b8b1a9'
+            }
+        }, {
+            'selector': 'path.accent, line.accent',
+            'attributes': {
+                'stroke': 'rgb(184,177,169)'
+            }
+        },
+        //text
+        {
+            'selector': '.chart-title text, .chart-title tspan',
+            'attributes': {
+                'font-family': 'BentonSans, sans-serif',
+                'font-size': 18,
+                'fill': 'rgba(0, 0, 0, 0.8)'
+            }
+        }, {
+            'selector': '.chart-subtitle text, .chart-subtitle tspan',
+            'attributes': {
+                'font-family': 'BentonSans, sans-serif',
+                'font-size': 12,
+                'fill': 'rgba(0, 0, 0, 0.5)'
+            }
+        }, {
+            'selector': '.chart-source text, .chart-source tspan',
+            'attributes': {
+                'font-family': 'BentonSans, sans-serif',
+                'font-size': 10,
+                'fill': 'rgba(0, 0, 0, 0.5)'
+            }
+        }, {
+            'selector': '.chart-footnote text, .chart-footnote tspan',
+            'attributes': {
+                'font-family': 'BentonSans, sans-serif',
+                'font-size': 12,
+                'fill': 'rgba(0, 0, 0, 0.5)'
+            }
+        }, {
+            'selector': 'text.key-label',
+            'attributes': {
+                'font-family': 'BentonSans, sans-serif',
+                'font-size': 12,
+                'fill': 'rgba(0, 0, 0, 0.5)'
+            }
+        }
+    ];
 
-	(g || d3).selectAll('*').attr('style', null);
-    styleList.forEach(function(style, i){
+    (g || d3).selectAll('*').attr('style', null);
+    styleList.forEach(function (style, i) {
         (g || d3).selectAll(style.selector).attr(style.attributes);
     });
-	return true;
+    return true;
 }
 
 module.exports = applyAttributes;
@@ -1475,175 +1506,183 @@ var ratios = require('../util/aspect-ratios.js');
 var seriesOptions = require('../util/series-options.js');
 
 function isDate(d) {
-	return d && d instanceof Date && !isNaN(+d);
+    return d && d instanceof Date && !isNaN(+d);
 }
 
 function translate(margin) {
-	return function(position) {
-		var left = position.left || 0;
-		var top = position.top || 0;
-		return 'translate(' + (margin + left) + ',' + top + ')';
-	};
+    return function (position) {
+        var left = position.left || 0;
+        var top = position.top || 0;
+        return 'translate(' + (margin + left) + ',' + top + ')';
+    };
 }
 
-function setChartWidth(model){
-	if (model.chartWidth) { return model.chartWidth; }
-	var rightGutter = model.contentWidth < 260 ? 16 : 26;
-	return  model.contentWidth - rightGutter;
+function setChartWidth(model) {
+    if (model.chartWidth) {
+        return model.chartWidth;
+    }
+    var rightGutter = model.contentWidth < 260 ? 16 : 26;
+    return model.contentWidth - rightGutter;
 }
 
-function setExtents(model){
-	var extents = [];
-	model.y.series.forEach(function (l, i) {
-		var key = l.key;
-		model.data = model.data.map(function (d, j) {
-			var value = d[key];
-			var isValidNumber = value === null || typeof value === 'number';
-			if (!isValidNumber) {
-				model.error({
-					node: null,
-					message: 'Value is not a number',
-					value: value,
-					row: j,
-					column: key
-				});
-			}
-			return d;
-		});
-		var ext = d3.extent(model.data, function(d){
-			return d[key];
-		});
-		extents = extents.concat (ext);
-	});
-	return extents;
+function setExtents(model) {
+    var extents = [];
+    model.y.series.forEach(function (l, i) {
+        var key = l.key;
+        model.data = model.data.map(function (d, j) {
+            var value = d[key];
+            var isValidNumber = value === null || typeof value === 'number';
+            if (!isValidNumber) {
+                model.error({
+                    node: null,
+                    message: 'Value is not a number',
+                    value: value,
+                    row: j,
+                    column: key
+                });
+            }
+            return d;
+        });
+        var ext = d3.extent(model.data, function (d) {
+            return d[key];
+        });
+        extents = extents.concat(ext);
+    });
+    return extents;
 }
 
-function setTimeDomain(model){
-	if (model.timeDomain) { return model.timeDomain; }
-	return d3.extent(model.data, function (d) {
-		return d[model.x.series.key];
-	});
+function setTimeDomain(model) {
+    if (model.timeDomain) {
+        return model.timeDomain;
+    }
+    return d3.extent(model.data, function (d) {
+        return d[model.x.series.key];
+    });
 }
 
-function setValueDomain(model){
-	if (model.valueDomain) { return model.valueDomain; }
-	var extents = setExtents(model);
-	var valueDomain = d3.extent(extents);
-	if (!model.falseOrigin && valueDomain[0] > 0) {
-		valueDomain[0] = 0;
-	}
-	return valueDomain;
+function setValueDomain(model) {
+    if (model.valueDomain) {
+        return model.valueDomain;
+    }
+    var extents = setExtents(model);
+    var valueDomain = d3.extent(extents);
+    if (!model.falseOrigin && valueDomain[0] > 0) {
+        valueDomain[0] = 0;
+    }
+    return valueDomain;
 }
 
-function setChartHeight(model){
-	if (model.chartHeight) { return model.chartHeight; }
-	var isNarrow = model.chartWidth < 220;
-	var isWide = model.chartWidth > 400;
-	var ratio = isNarrow ? 1.1 : (isWide ? ratios.commonRatios.widescreen : ratios.commonRatios.standard);
-	return ratios.heightFromWidth(model.chartWidth, ratio);
+function setChartHeight(model) {
+    if (model.chartHeight) {
+        return model.chartHeight;
+    }
+    var isNarrow = model.chartWidth < 220;
+    var isWide = model.chartWidth > 400;
+    var ratio = isNarrow ? 1.1 : (isWide ? ratios.commonRatios.widescreen : ratios.commonRatios.standard);
+    return ratios.heightFromWidth(model.chartWidth, ratio);
 }
 
-function verifyData(model){
-	return !Array.isArray(model.data) ? [] : model.data.map(function (dataItem, i) {
+function verifyData(model) {
+    return !Array.isArray(model.data) ? [] : model.data.map(function (dataItem, i) {
 
-		var s = dataItem[model.x.series.key];
-		var error = {
-			node: null,
-			message: '',
-			row: i,
-			column: model.x.series.key,
-			value: s
-		};
+        var s = dataItem[model.x.series.key];
+        var error = {
+            node: null,
+            message: '',
+            row: i,
+            column: model.x.series.key,
+            value: s
+        };
 
-		if (!dataItem) {
-			error.message = 'Empty row';
-		} else if (!s) {
-			error.message = 'X axis value is empty or null';
-		} else if (!isDate(s)) {
-			error.message = 'Value is not a valid date';
-		}
+        if (!dataItem) {
+            error.message = 'Empty row';
+        } else if (!s) {
+            error.message = 'X axis value is empty or null';
+        } else if (!isDate(s)) {
+            error.message = 'Value is not a valid date';
+        }
 
-		if (error.message) {
-			model.error(error);
-			dataItem[model.x.series.key] = null;
-		}
+        if (error.message) {
+            model.error(error);
+            dataItem[model.x.series.key] = null;
+        }
 
-		return dataItem;
+        return dataItem;
 
-	});
+    });
 }
 
-function setKey(model){
-	var key = model.key;
-	if (typeof model.key !== 'boolean') {
-		key = model.y.series.length > 1;
-	} else if (model.key && !model.y.series.length) {
-		key = false;
-	}
-	return key;
+function setKey(model) {
+    var key = model.key;
+    if (typeof model.key !== 'boolean') {
+        key = model.y.series.length > 1;
+    } else if (model.key && !model.y.series.length) {
+        key = false;
+    }
+    return key;
 }
 
 
 function Model(opts) {
-	var lineClasses = ['series1', 'series2', 'series3', 'series4', 'series5', 'series6', 'series7', 'accent'];
-	var m = {
-		//layout stuff
-		height: undefined,
-		width: 300,
-		chartHeight: undefined,
-		chartWidth: undefined,
-		simpleDate: false,
-		simpleValue: false,
-		logoSize: 28,
-		//data stuff
-		falseOrigin: false, //TODO, find out if there's a standard 'pipeline' temr for this
-		error: this.error,
-		lineClasses: {},
-		niceValue: true,
-		hideSource: false,
-		numberAxisOrient: 'left',
-		margin: 2,
-		lineThickness: undefined,
-		x: {
-			series: '&'
-		},
-		y: {
-			series: []
-		},
-		labelLookup: null,
-		sourcePrefix: 'Source: '
-	};
+    var lineClasses = ['series1', 'series2', 'series3', 'series4', 'series5', 'series6', 'series7', 'accent'];
+    var m = {
+        //layout stuff
+        height: undefined,
+        width: 300,
+        chartHeight: undefined,
+        chartWidth: undefined,
+        simpleDate: false,
+        simpleValue: false,
+        logoSize: 28,
+        //data stuff
+        falseOrigin: false, //TODO, find out if there's a standard 'pipeline' temr for this
+        error: this.error,
+        lineClasses: {},
+        niceValue: true,
+        hideSource: false,
+        numberAxisOrient: 'left',
+        margin: 2,
+        lineThickness: undefined,
+        x: {
+            series: '&'
+        },
+        y: {
+            series: []
+        },
+        labelLookup: null,
+        sourcePrefix: 'Source: '
+    };
 
-	for (var key in opts) {
-		m[key] = opts[key];
-	}
+    for (var key in opts) {
+        m[key] = opts[key];
+    }
 
-	m.x.series = seriesOptions.normalise(m.x.series);
-	m.y.series = seriesOptions.normaliseY(m.y.series)
-		.filter(function (d) {
-			return !!d.key && d.key !== m.x.series.key;
-		})
-		.map(function (d, i) {
-			d.index = i;
-			d.className = lineClasses[i];
-			return d;
-		});
+    m.x.series = seriesOptions.normalise(m.x.series);
+    m.y.series = seriesOptions.normaliseY(m.y.series)
+        .filter(function (d) {
+            return !!d.key && d.key !== m.x.series.key;
+        })
+        .map(function (d, i) {
+            d.index = i;
+            d.className = lineClasses[i];
+            return d;
+        });
 
-	m.data = verifyData(m);
-	m.contentWidth = m.width - (m.margin * 2);
-	m.translate = translate(0);
-	m.chartWidth = setChartWidth(m);
-	m.chartHeight = setChartHeight(m);
-	m.timeDomain = setTimeDomain(m);
-	m.valueDomain = setValueDomain(m);
-	m.lineStrokeWidth = lineThickness(m.lineThickness);
-	m.key = setKey(m);
+    m.data = verifyData(m);
+    m.contentWidth = m.width - (m.margin * 2);
+    m.translate = translate(0);
+    m.chartWidth = setChartWidth(m);
+    m.chartHeight = setChartHeight(m);
+    m.timeDomain = setTimeDomain(m);
+    m.valueDomain = setValueDomain(m);
+    m.lineStrokeWidth = lineThickness(m.lineThickness);
+    m.key = setKey(m);
 
-	return m;
+    return m;
 }
 
-Model.prototype.error = function(err) {
-	console.log('ERROR: ', err);
+Model.prototype.error = function (err) {
+    console.log('ERROR: ', err);
 };
 module.exports = Model;
 
@@ -1653,94 +1692,94 @@ var dateAxis = require('../axis/date.js');
 var numberAxis = require('../axis/number.js');
 
 function getHeight(selection) {
-	return Math.ceil(selection.node().getBoundingClientRect().height);
+    return Math.ceil(selection.node().getBoundingClientRect().height);
 }
 
 function getWidth(selection) {
-	return Math.ceil(selection.node().getBoundingClientRect().width);
+    return Math.ceil(selection.node().getBoundingClientRect().width);
 }
 
-function Axes(svg, model){
-	this.model = model;
-	this.svg = svg;
+function Axes(svg, model) {
+    this.model = model;
+    this.svg = svg;
 }
 
-Axes.prototype.addTimeScale = function(){
-	var model = this.model;
-	var timeScale = d3.time.scale()
-		.domain(model.timeDomain)
-		.range([0, model.chartWidth]);
-	var timeAxis = dateAxis()
-		.simple(model.simpleDate)
-		.yOffset(model.chartHeight)	//position the axis at the bottom of the chart
-		.scale(timeScale);
-	this.svg.call(timeAxis);
+Axes.prototype.addTimeScale = function () {
+    var model = this.model;
+    var timeScale = d3.time.scale()
+        .domain(model.timeDomain)
+        .range([0, model.chartWidth]);
+    var timeAxis = dateAxis()
+        .simple(model.simpleDate)
+        .yOffset(model.chartHeight)	//position the axis at the bottom of the chart
+        .scale(timeScale);
+    this.svg.call(timeAxis);
 
-	var yLabelWidth = getWidth(this.svg) - model.chartWidth;
-	var plotWidth = model.chartWidth - yLabelWidth;
-	timeScale.range([timeScale.range()[0], plotWidth]);
+    var yLabelWidth = getWidth(this.svg) - model.chartWidth;
+    var plotWidth = model.chartWidth - yLabelWidth;
+    timeScale.range([timeScale.range()[0], plotWidth]);
 
-	this.plotWidth = plotWidth;
-	this.yLabelWidth = yLabelWidth;
-	this.timeScale = timeScale;
-	this.timeAxis = timeAxis;
+    this.plotWidth = plotWidth;
+    this.yLabelWidth = yLabelWidth;
+    this.timeScale = timeScale;
+    this.timeAxis = timeAxis;
 };
 
-Axes.prototype.repositionAxis = function(){
-	var model = this.model;
-	var xLabelHeight = getHeight(this.svg) - model.chartHeight;
-	var plotHeight = model.chartHeight - xLabelHeight;
-	this.valueScale.range([this.valueScale.range()[0], plotHeight]);
+Axes.prototype.repositionAxis = function () {
+    var model = this.model;
+    var xLabelHeight = getHeight(this.svg) - model.chartHeight;
+    var plotHeight = model.chartHeight - xLabelHeight;
+    this.valueScale.range([this.valueScale.range()[0], plotHeight]);
 
-	var yLabelWidth = getWidth(this.svg) - model.chartWidth;
-	var plotWidth = model.chartWidth - yLabelWidth;
-	this.timeScale.range([this.timeScale.range()[0], plotWidth]);
-	this.timeAxis.yOffset(plotHeight);
+    var yLabelWidth = getWidth(this.svg) - model.chartWidth;
+    var plotWidth = model.chartWidth - yLabelWidth;
+    this.timeScale.range([this.timeScale.range()[0], plotWidth]);
+    this.timeAxis.yOffset(plotHeight);
 
-	this.vAxis.tickSize(this.plotWidth).tickExtension(this.yLabelWidth);
+    this.vAxis.tickSize(this.plotWidth).tickExtension(this.yLabelWidth);
 
-	this.svg.selectAll('*').remove();
-	this.svg.call(this.vAxis);
-	this.svg.call(this.timeAxis);
+    this.svg.selectAll('*').remove();
+    this.svg.call(this.vAxis);
+    this.svg.call(this.timeAxis);
 
-	model.chartPosition.top += (getHeight(this.svg.select('.y.axis')) - plotHeight);
-	this.svg.attr('transform', model.translate(model.chartPosition));
+    model.chartPosition.top += (getHeight(this.svg.select('.y.axis')) - plotHeight);
+    this.svg.attr('transform', model.translate(model.chartPosition));
     model.plotWidth = plotWidth;
     model.plotHeight = plotHeight;
 };
 
-Axes.prototype.addValueScale = function(){
-	var model = this.model;
-	var valueScale = d3.scale.linear()
-		.domain(model.valueDomain.reverse())
-		.range([0, model.chartHeight ]);
-	if (model.niceValue) {
-		valueScale.nice();
-	}
+Axes.prototype.addValueScale = function () {
+    var model = this.model;
+    var valueScale = d3.scale.linear()
+        .domain(model.valueDomain.reverse())
+        .range([0, model.chartHeight]);
+    if (model.niceValue) {
+        valueScale.nice();
+    }
 
-	var vAxis = numberAxis()
-		.tickFormat(model.numberAxisFormatter)
-		.simple(model.simpleValue)
-		.tickSize(model.chartWidth)	//make the ticks the width of the chart
-		.scale(valueScale);
-	if (model.numberAxisOrient !== 'right' && model.numberAxisOrient !== 'left') {
-		vAxis.noLabels(true);
-	} else {
-		vAxis.orient(model.numberAxisOrient);
-	}
-	this.svg.call(vAxis);
+    var vAxis = numberAxis()
+        .tickFormat(model.numberAxisFormatter)
+        .simple(model.simpleValue)
+        .tickSize(model.chartWidth)	//make the ticks the width of the chart
+        .scale(valueScale);
+    if (model.numberAxisOrient !== 'right' && model.numberAxisOrient !== 'left') {
+        vAxis.noLabels(true);
+    } else {
+        vAxis.orient(model.numberAxisOrient);
+    }
+    this.svg.call(vAxis);
 
-	if (model.numberAxisOrient !== 'right') {
-		//figure out how much of the extra width is the vertical axis lables
-		var vLabelWidth = 0;
-		this.svg.selectAll('.y.axis text').each(function(){
-			vLabelWidth = Math.max(vLabelWidth, getWidth(d3.select(this)));
-		});
-		model.chartPosition.left += vLabelWidth + 4;//NOTE magic number 4
-	}
+    if (model.numberAxisOrient !== 'right') {
+        //figure out how much of the extra width is the vertical axis lables
+        var vLabelWidth = 0;
+        this.svg.selectAll('.y.axis text').each(function () {
+            vLabelWidth = Math.max(vLabelWidth, getWidth(d3.select(this)));
+        });
+        model.chartPosition.left += vLabelWidth + 4;//NOTE magic number 4
+    }
 
-	this.valueScale = valueScale;
-	this.vAxis = vAxis;
+    this.valueScale = valueScale;
+    this.vAxis = vAxis;
 };
 
 module.exports = Axes;
@@ -1754,7 +1793,7 @@ function getHeight(selection) {
     return Math.ceil(selection.node().getBoundingClientRect().height);
 }
 
-function Dressing(svg, model){
+function Dressing(svg, model) {
     // TODO: don't hard-code the fontsize, get from CSS somehow.
     // TODO: move calculation of lineheight to the textarea component;
     this.svg = svg;
@@ -1772,25 +1811,25 @@ function Dressing(svg, model){
     this.sourceFontOffset = 0;
 }
 
-Dressing.prototype.addHeader = function(){
+Dressing.prototype.addHeader = function () {
     this.addTitle();
     this.addSubTitle();
     this.addSeriesKey();
     this.setPosition();
 };
 
-Dressing.prototype.addFooter = function(){
+Dressing.prototype.addFooter = function () {
     this.addFootNotes();
     this.addSource();
     this.setHeight();
     this.addLogo();
 };
 
-Dressing.prototype.addLogo = function(){
+Dressing.prototype.addLogo = function () {
     var svg = this.svg;
     var model = this.model;
 
-    var logo = svg.append('g').attr('class','chart-logo').call(ftLogo, model.logoSize);
+    var logo = svg.append('g').attr('class', 'chart-logo').call(ftLogo, model.logoSize);
     var heightOfFontDescenders = 3;
     var baselineOfLastSourceLine = model.height - getHeight(logo) - heightOfFontDescenders - this.getSourceFontOffset();
 
@@ -1800,7 +1839,7 @@ Dressing.prototype.addLogo = function(){
     }));
 };
 
-Dressing.prototype.addSubTitle = function(){
+Dressing.prototype.addSubTitle = function () {
     var svg = this.svg;
     var model = this.model;
 
@@ -1808,7 +1847,7 @@ Dressing.prototype.addSubTitle = function(){
     var subtitleLineHeightActual = Math.ceil(this.subtitleFontSize * subtitleLineHeight);
     var subtitleLineSpacing = subtitleLineHeightActual - this.subtitleFontSize;
     var subtitleTextWrapper = textArea().width(model.contentWidth).lineHeight(subtitleLineHeightActual);
-    var subtitle = svg.append('g').attr('class','chart-subtitle').datum(model.subtitle).call(subtitleTextWrapper);
+    var subtitle = svg.append('g').attr('class', 'chart-subtitle').datum(model.subtitle).call(subtitleTextWrapper);
     if (!this.subtitlePosition) {
         if (model.subtitle) {
             this.subtitlePosition = {top: this.headerHeight + this.subtitleFontSize, left: 0};
@@ -1820,7 +1859,7 @@ Dressing.prototype.addSubTitle = function(){
     subtitle.attr('transform', model.translate(this.subtitlePosition));
 };
 
-Dressing.prototype.addTitle = function(){
+Dressing.prototype.addTitle = function () {
     var svg = this.svg;
     var model = this.model;
 
@@ -1829,7 +1868,7 @@ Dressing.prototype.addTitle = function(){
     var titleLineSpacing = titleLineHeightActual - this.titleFontSize;
     var titleTextWrapper = textArea().width(model.contentWidth).lineHeight(titleLineHeightActual);
 
-    var title = svg.append('g').attr('class','chart-title').datum(model.title).call(titleTextWrapper);
+    var title = svg.append('g').attr('class', 'chart-title').datum(model.title).call(titleTextWrapper);
     if (!this.titlePosition) {
         if (model.title) {
             this.titlePosition = {top: this.headerHeight + this.titleFontSize, left: 0};
@@ -1841,11 +1880,13 @@ Dressing.prototype.addTitle = function(){
     title.attr('transform', model.translate(this.titlePosition));
 };
 
-Dressing.prototype.addSeriesKey = function(){
+Dressing.prototype.addSeriesKey = function () {
     var svg = this.svg;
     var model = this.model;
 
-    if (!model.key) { return; }
+    if (!model.key) {
+        return;
+    }
     var chartKey = lineKey({lineThickness: model.lineStrokeWidth})
         .style(function (d) {
             return d.value;
@@ -1866,33 +1907,33 @@ Dressing.prototype.addSeriesKey = function(){
 };
 
 
-Dressing.prototype.addFootNotes = function(){
+Dressing.prototype.addFootNotes = function () {
     var svg = this.svg;
     var model = this.model;
 
     var text = textArea().width(this.model.contentWidth - this.model.logoSize).lineHeight(this.footerLineHeight);
-    var footnotes = svg.append('g').attr('class','chart-footnote').datum(model.footnote).call(text);
+    var footnotes = svg.append('g').attr('class', 'chart-footnote').datum(model.footnote).call(text);
     var footnotesHeight = getHeight(footnotes);
 
     var footerHeight = Math.max(footnotesHeight + (this.blockPadding * 2), model.logoSize);
     var currentPosition = model.chartPosition.top + model.chartHeight;
 
-    footnotes.attr('transform', model.translate({ top: currentPosition + this.footerLineHeight + this.blockPadding }));
+    footnotes.attr('transform', model.translate({top: currentPosition + this.footerLineHeight + this.blockPadding}));
     this.footerHeight += (footerHeight + this.blockPadding);
 };
 
-Dressing.prototype.addSource = function(){
+Dressing.prototype.addSource = function () {
     var svg = this.svg;
     var model = this.model;
 
     var text = textArea().width(this.model.contentWidth - this.model.logoSize).lineHeight(this.footerLineHeight);
     var sourceLineHeight = this.defaultLineHeight;
     var sourceLineHeightActual = this.sourceFontSize * sourceLineHeight;
-    var source = svg.append('g').attr('class','chart-source').datum(model.sourcePrefix + model.source).call(text);
+    var source = svg.append('g').attr('class', 'chart-source').datum(model.sourcePrefix + model.source).call(text);
     var sourceHeight = getHeight(source);
     var currentPosition = model.chartPosition.top + model.chartHeight;
 
-    source.attr('transform', model.translate({ top: currentPosition + this.footerHeight + sourceLineHeightActual + this.blockPadding }));
+    source.attr('transform', model.translate({top: currentPosition + this.footerHeight + sourceLineHeightActual + this.blockPadding}));
     if (model.hideSource) {
         source.remove();
     }
@@ -1900,11 +1941,11 @@ Dressing.prototype.addSource = function(){
     this.footerHeight += sourceHeight;
 };
 
-Dressing.prototype.getSourceFontOffset = function(){
+Dressing.prototype.getSourceFontOffset = function () {
     return this.sourceFontOffset;
 };
 
-Dressing.prototype.setHeight = function(){
+Dressing.prototype.setHeight = function () {
     var model = this.model;
     if (!model.height) {
         model.height = this.headerHeight + model.chartHeight + this.footerHeight;
@@ -1912,14 +1953,14 @@ Dressing.prototype.setHeight = function(){
         model.chartHeight = model.height - this.headerHeight - this.footerHeight;
         if (model.chartHeight < 0) {
             model.error({
-                message:'calculated plot height is less than zero'
+                message: 'calculated plot height is less than zero'
             });
         }
     }
     this.svg.attr('height', Math.ceil(model.height));
 };
 
-Dressing.prototype.setPosition = function(){
+Dressing.prototype.setPosition = function () {
     this.model.chartPosition = {
         top: this.headerHeight + this.halfLineStrokeWidth,
         left: (this.model.numberAxisOrient === 'left' ? 0 : this.halfLineStrokeWidth)
@@ -1927,67 +1968,67 @@ Dressing.prototype.setPosition = function(){
 };
 
 module.exports = Dressing;
+
 },{"../element/line-key.js":15,"../element/logo.js":16,"../element/text-area.js":17}],24:[function(require,module,exports){
 //a place to define custom line interpolators
 
 var d3 = require('d3');
 
-function gappedLineInterpolator(points){  //interpolate straight lines with gaps for NaN
+function gappedLineInterpolator(points) {  //interpolate straight lines with gaps for NaN
     'use strict';
 
-  var section = 0;
-  var arrays = [[]];
-  points.forEach(function(d,i){
-    if(isNaN(d[1])){
-      if(arrays[section].length==1){
-          console.log('warning: Found a line fragment which is a single point this won\'t be drawn');
-      }
-      section++;
-      arrays[section] = [];
-    }else{
-      arrays[section].push(d);
-    }
-  });
+    var section = 0;
+    var arrays = [[]];
+    points.forEach(function (d, i) {
+        if (isNaN(d[1])) {
+            if (arrays[section].length == 1) {
+                console.log('warning: Found a line fragment which is a single point this won\'t be drawn');
+            }
+            section++;
+            arrays[section] = [];
+        } else {
+            arrays[section].push(d);
+        }
+    });
 
-  var pathSections = [];
-  arrays.forEach(function(points){
-    pathSections.push(d3.svg.line()(points));
-  });
-  var joined = pathSections.join('');
-  return joined.substr(1); //substring becasue D£ always adds an M to a path so we end up with MM at the start
+    var pathSections = [];
+    arrays.forEach(function (points) {
+        pathSections.push(d3.svg.line()(points));
+    });
+    var joined = pathSections.join('');
+    return joined.substr(1); //substring becasue D£ always adds an M to a path so we end up with MM at the start
 }
 
 module.exports = {
-  gappedLine:gappedLineInterpolator
+    gappedLine: gappedLineInterpolator
 };
 
 },{"d3":"d3"}],25:[function(require,module,exports){
 var thicknesses = {
-  small: 2,
-  medium: 4,
-  large: 6
+    small: 2,
+    medium: 4,
+    large: 6
 };
 
 var defaultThickness = thicknesses.medium;
 
-module.exports = function(value) {
+module.exports = function (value) {
 
-  // fail fast
-  if (!value) {
-    return defaultThickness;
-  }
+    // fail fast
+    if (!value) {
+        return defaultThickness;
+    }
 
-  var lineThicknessIsNumber = value &&
-      typeof value === 'number' &&
-      !isNaN(value);
+    var lineThicknessIsNumber = value &&
+        typeof value === 'number' && !isNaN(value);
 
-  if (lineThicknessIsNumber) {
-    return value;
-  } else if (typeof value === 'string' && value.toLowerCase() in thicknesses) {
-    return thicknesses[value];
-  } else {
-    return defaultThickness;
-  }
+    if (lineThicknessIsNumber) {
+        return value;
+    } else if (typeof value === 'string' && value.toLowerCase() in thicknesses) {
+        return thicknesses[value];
+    } else {
+        return defaultThickness;
+    }
 };
 
 },{}],26:[function(require,module,exports){
@@ -1999,7 +2040,7 @@ var xmlnsSchema = 'http://www.w3.org/2000/xmlns/';
 var rdfSchema = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
 var dcSchema = 'http://purl.org/dc/elements/1.1/';
 var ccSchema = 'http://creativecommons.org/ns#';
-var prismSchema = "http://prismstandard.org/namespaces/1.0/basic/" ;
+var prismSchema = "http://prismstandard.org/namespaces/1.0/basic/";
 var rdfsSchema = "http://www.w3.org/2000/01/rdf-schema#";
 
 function create(svg, model) {
@@ -2040,79 +2081,91 @@ function create(svg, model) {
 module.exports = {
     create: create
 };
+
 },{}],27:[function(require,module,exports){
 function isTruthy(value) {
-	return !!value;
+    return !!value;
 }
 
 function normalise(value) {
-	var d = {key: null, label: null};
+    var d = {key: null, label: null};
 
-	if (!value) {
-		return d;
-	}
+    if (!value) {
+        return d;
+    }
 
-	if (typeof value === 'string') {
-		d.key = d.label = value;
-	} else if (Array.isArray(value) && value.length <= 2 && typeof value[0] === 'string') {
-		d.key = value[0];
-		d.label = (typeof value[1] === 'string') ? value[1] : d.key;
-	} else if (typeof value === 'function') {
-		d = value();
-	} else if (value.key) {
-		d.key = value.key;
-		d.label = value.label || d.key;
-	}
+    if (typeof value === 'string') {
+        d.key = d.label = value;
+    } else if (Array.isArray(value) && value.length <= 2 && typeof value[0] === 'string') {
+        d.key = value[0];
+        d.label = (typeof value[1] === 'string') ? value[1] : d.key;
+    } else if (typeof value === 'function') {
+        d = value();
+    } else if (value.key) {
+        d.key = value.key;
+        d.label = value.label || d.key;
+    }
 
-	if (typeof d.key === 'function') {
-		d.key = d.key();
-	}
+    if (typeof d.key === 'function') {
+        d.key = d.key();
+    }
 
-	if (typeof d.label === 'function') {
-		d.label = d.label();
-	}
+    if (typeof d.label === 'function') {
+        d.label = d.label();
+    }
 
-	return d;
+    return d;
 }
 
 function normaliseY(value) {
-	if (!value) return [];
-	return (!Array.isArray(value) ? [normalise(value)] : value.map(normalise)).filter(isTruthy);
+    if (!value) return [];
+    return (!Array.isArray(value) ? [normalise(value)] : value.map(normalise)).filter(isTruthy);
 }
 
 module.exports = {
-	normaliseY: normaliseY,
-	normalise: normalise
+    normaliseY: normaliseY,
+    normalise: normalise
 };
 
 },{}],28:[function(require,module,exports){
 module.exports = "0.0.7";
 },{}],"line-chart":[function(require,module,exports){
-
 var oCharts = require('../../src/scripts/o-charts');
 var d3 = require('d3');
 
 var y = [
-    { series: ['value', 'value2']},
-    { series: [{key:'value', label:'String Value'},
-              {key:'value2', label:'Another String Value'}]},
-    { series: [{key:'value', label:function(){ return 'Function Value';}},
-              {key:'value2', label:function(){ return 'Another function Value';}}]}
+    {series: ['value', 'value2']},
+    {
+        series: [{key: 'value', label: 'String Value'},
+            {key: 'value2', label: 'Another String Value'}]
+    },
+    {
+        series: [{
+            key: 'value', label: function () {
+                return 'Function Value';
+            }
+        },
+            {
+                key: 'value2', label: function () {
+                return 'Another function Value';
+            }
+            }]
+    }
 ];
 var hideSource = [true, true, false];
-var numberAxisOrient = ['left','right','left'];
+var numberAxisOrient = ['left', 'right', 'left'];
 
-function getChartData(i){
+function getChartData(i) {
     return {
         comment: "Line chart",
         footnote: "this is just for testing!",
         source: "tbc",
-        title: "Some Simple Lines: " + (i+1),
+        title: "Some Simple Lines: " + (i + 1),
         subtitle: "Drawn for you",
         numberAxisOrient: numberAxisOrient[i], //todo: refactor onto y object
         hideSource: hideSource[i],
-        x:{
-          series: {key:'date', label:'year'}
+        x: {
+            series: {key: 'date', label: 'year'}
         },
         y: y[i],
         data: [
@@ -2126,10 +2179,10 @@ function getChartData(i){
 
 module.exports = {
     getChartData: getChartData,
-    init: function(){
-        for(var i=0;i<3;i++){
-            d3.select('body').append('div').attr('id','line-chart' + (i+1));
-            d3.select('#line-chart'+ (i+1)).data([getChartData(i)]).call( oCharts.chart.line );
+    init: function () {
+        for (var i = 0; i < 3; i++) {
+            d3.select('body').append('div').attr('id', 'line-chart' + (i + 1));
+            d3.select('#line-chart' + (i + 1)).data([getChartData(i)]).call(oCharts.chart.line);
         }
     }
 };

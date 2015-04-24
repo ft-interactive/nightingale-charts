@@ -1,23 +1,23 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><link rel=stylesheet href="styles/main.css"><link rel=stylesheet href="styles/demo.css"><title>Line Key</title></head><body class=ft><h1>Line Key</h1><div id=views><svg></svg></div><script src=scripts/vendor.js></script><script src=scripts/o-charts.js></script><script>var lib = require('o-charts');
-var d3 = require('d3');
+    var d3 = require('d3');
 
-var data = [ 
-	{style:"series1", label:"Family in feud with Zuckerbergs"}, 
-	{style:"series2", label:"Committed 671 birthdays to memory"}, 
-	{style:"series3", label:"Ex is doing too well"}, 
-	{style:"series4", label:"High school friends all dead now"}, 
-	{style:"series5", label:"Discovered how to “like” things mentally"}, 
-	{style:"series6", label:"Not enough politics"} 
-];
+    var data = [
+        {style: "series1", label: "Family in feud with Zuckerbergs"},
+        {style: "series2", label: "Committed 671 birthdays to memory"},
+        {style: "series3", label: "Ex is doing too well"},
+        {style: "series4", label: "High school friends all dead now"},
+        {style: "series5", label: "Discovered how to “like” things mentally"},
+        {style: "series6", label: "Not enough politics"}
+    ];
 
-var key = lib.element.lineKey()
-	.width(100)
-	.lineHeight(19);
+    var key = lib.element.lineKey()
+        .width(100)
+        .lineHeight(19);
 
-d3.select('svg')
-	.attr('width',800)
-	.attr('height',800)
-		.datum(data)
-		.call(key);
-			
-lib.util.attributeStyler();</script></body></html>
+    d3.select('svg')
+        .attr('width', 800)
+        .attr('height', 800)
+        .datum(data)
+        .call(key);
+
+    lib.util.attributeStyler();</script></body></html>

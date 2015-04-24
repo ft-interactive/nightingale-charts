@@ -68,7 +68,7 @@ path.line {
   stroke: #b8b1a9; }
 
 .forecast {
-  stroke-dasharray: 4,5; }
+  stroke-dasharray: 4, 5; }
 
 line.key-line {
   fill: none;
