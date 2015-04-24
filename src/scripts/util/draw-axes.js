@@ -24,7 +24,7 @@ Axes.prototype.rearrangeLabels = function(){
 	var allPositiveValues = Math.min.apply(null,this.valueScale.domain())>=0;
 	if (showsAllLabels && allPositiveValues){
 		this.timeAxis.tickSize(0).scale(this.timeScale, this.units);
-	} else if (!showsAllLabels) {
+	} else if (!showsAllLabels) { //todo: should/can this be in category.js?
 		this.timeAxis.tickSize(model.tickSize * this.tickExtender)
 			.scale(this.timeScale, ['yearly']);
 		this.svg.call(this.timeAxis);
