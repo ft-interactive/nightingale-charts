@@ -106,46 +106,6 @@ var fixtures = {
         { date: new Date('12/30/05'), value:     1.348}
     ],
     multiple:[
-        /*
-        {
-            group:'Q1',
-            items:[
-                {label:'S&P 500', value:310504},
-                {label:'3 Month', value:552339},
-                {label:'6 Month', value:259034},
-                {label:'1 Year', value:450818},
-                {label:'3 Year', value:1231572},
-                {label:'10 Year', value:1215966},
-                {label:'20 Year', value:641667}
-            ]
-        },
-        {
-            group:'Q2',
-            items:[
-                {label:'S&P 500', value:52083},
-                {label:'3 Month', value:185640},
-                {label:'6 Month', value:1002153},
-                {label:'1 Year', value:1074257},
-                {label:'3 Year', value:198724},
-                {label:'10 Year', value:783159},
-                {label:'20 Year', value:50277}
-            ]
-        },
-        {
-            group:'Q3',
-            items:[
-                {label:'S&P 500', value:515910},
-                {label:'3 Month', value:828669},
-                {label:'6 Month', value:362642},
-                {label:'1 Year', value:601943},
-                {label:'3 Year', value:1804762},
-                {label:'10 Year', value:1523681},
-                {label:'20 Year', value:862573}
-            ]
-        }
-
-        */
-
         {
             date: new Date('3/31/05'), value: Math.floor(Math.random() * 40) + 10, value2: 99, value3: 26
         },
@@ -164,7 +124,7 @@ var fixtures = {
 var units = {
     month: ['monthly', 'yearly']
 }
-var widths = [600]; //set this back to 600, 300 - I simply wanted to read fewer console logs
+var widths = [600, 300];
 var series = {
     multiple: ['value', 'value2', 'value3']
 }
@@ -201,9 +161,6 @@ module.exports = {
             widths.forEach(function (width){
                 var data = getChartData(timeFrame);
                 data.width = width;
-                
-                data.originalData = data.data;
-
                 d3.select('#column-chart__' + timeFrame).append('span')
                     .attr('class', 'width' + width)
                     .data([data]).call(oCharts.chart.column);

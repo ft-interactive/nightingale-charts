@@ -9,29 +9,17 @@ function plotSeries(plotSVG, model, axes, series, i){
 	var s = plotSVG.append('g')
 		.attr('class', 'series');
 
-	var rb;
-
-	if(axes.timeScale.rangeBand){
-		rb = axes.timeScale.rangeBand();
-	}else{
-		rb = 104;
-	}
-
-	console.log(rb);
 
     s.selectAll('rect')
         .data(data)
         .enter()
         .append('rect')
         .attr('class', function (d){return 'column column--'  + series.className + (d.value < 0 ? ' negative' : ' positive');})
-        .attr('data-value', function (d){
-        	return d.value;
-
-        })
-        .attr('x', function (d){return axes.timeScale(d.key) + ((rb / model.y.series.length) * i);}) //adjust the x position based on the series number
-        .attr('y', function (d){return axes.valueScale(Math.max(0, d.value));})
-        .attr('height', function (d){return Math.abs(axes.valueScale(d.value) - axes.valueScale(0));})
-        .attr('width', rb / model.y.series.length); //width is divided by series length
+        .attr('data-value', function (d){	return d.value;})
+		.attr('x', function (d){return axes.timeScale(d.key) + ((axes.timeScale.rangeBand() / model.y.series.length) * i);}) //adjust the x position based on the series number
+		.attr('y', function (d){return axes.valueScale(Math.max(0, d.value));})
+        .attr('height', function (d){return 	Math.abs(axes.valueScale(d.value) - axes.valueScale(0));})
+        .attr('width', axes.timeScale.rangeBand() / model.y.series.length); //width is divided by series length
 }
 
 function formatData(model, series){
@@ -40,7 +28,7 @@ function formatData(model, series){
     var data = model.data.map(function (d){
         return{
             key:d[model.x.series.key],
-            value:d[series.key]
+            value: d.values[0][series.key]
         };
     }).filter(function(d){
         return (d.y !== null);
@@ -73,14 +61,11 @@ function columnChart(g){
 	var axes = new Axes(chartSVG, model);
 		axes.addValueScale();
 	
-	//model.groupDates && model.seriesLength === 1 ? axes.addGroupedTimeScale(model.groupDates) : axes.addTimeScale(); //leaving this here for now
-	
-	if(model.groupDates && model.seriesLength === 1){ //it's NOT multiple series columns
+	if(model.groupDates){
 		axes.addGroupedTimeScale(model.groupDates);
-	}else{ //it's multiple series columns - will need to figure out a axis labeling re-write here!
+	}else{
 		axes.addTimeScale();
 	}
-
 	axes.repositionAxis();
 
 	var plotSVG = chartSVG.append('g').attr('class', 'plot');

@@ -27,7 +27,7 @@ function setExtents(model){
 	model.y.series.forEach(function (l) {
 		var key = l.key;
 		model.data = model.data.map(function (d, j) {
-			var value = d[key];
+			var value = (model.groupDates) ? d.values[0][key] : d[key];
 			var isValidNumber = value === null || typeof value === 'number';
 			if (!isValidNumber) {
 				model.error({
@@ -41,7 +41,7 @@ function setExtents(model){
 			return d;
 		});
 		var ext = d3.extent(model.data, function(d){
-			return d[key];
+			return (model.groupDates) ? d.values[0][key] : d[key];
 		});
 		extents = extents.concat (ext);
 	});
@@ -128,12 +128,8 @@ function groupDates(m, units){
 			firstDate = firstDate || d.date;
 			return dateUtil.formatter[units[0]](d.date, i++, firstDate);
 		})
-		.rollup(function(d) { return d3.mean(d, function(d) { return d.value; }); })
 		.entries(m.data);
 	m.x.series.key = 'key';
-	m.y.series.forEach(function(s){
-		s.key = 'values';
-	});
 	return m.data;
 }
 
@@ -188,21 +184,16 @@ function Model(opts) {
 	m.translate = translate(0);
 	m.data = verifyData(m);
 
-	//console.log('ben', m.seriesLength);
-
-	if(m.groupDates && m.seriesLength === 1){
+	if(m.groupDates){
 		m.data = groupDates(m, m.groupDates);
 		m.timeDomain = groupedTimeDomain(m);
 	}else{
 		m.timeDomain = timeDomain(m);
-		console.log('ben', m.seriesLength);
 	}
 
 	m.valueDomain = valueDomain(m);
 	m.lineStrokeWidth = lineThickness(m.lineThickness);
 	m.key = setKey(m);
-
-	//console.log('after?', m);
 
 	return m;
 }
