@@ -2,11 +2,6 @@
 var oCharts = require('../../src/scripts/o-charts');
 var d3 = require('d3');
 
-var y = [
-    { series: ['value']},
-    { series: [{key:'value', label:'String Value'}]},
-    { series: [{key:'value', label:function(){ return 'Function Value';}}]}
-];
 var hideSource = [true, true, false];
 var numberAxisOrient = ['left','right','left'];
 
@@ -170,8 +165,11 @@ var units = {
     month: ['monthly', 'yearly']
 }
 var widths = [600]; //set this back to 600, 300 - I simply wanted to read fewer console logs
-
+var series = {
+    multiple: ['value', 'value2', 'value3']
+}
 function getChartData(timeFrame){
+    var ySeries = series[timeFrame] || ['value'];
     return {
         comment: 'Column chart',
         footnote: 'this is just for testing!',
@@ -184,25 +182,11 @@ function getChartData(timeFrame){
           series: {key:'date', label:'yearly'}
         },
         tickSize: 5,
-        y: yKey(timeFrame),
-        seriesLength: yKey(timeFrame).series.length,
+        y: { series: ySeries} ,
+        seriesLength: ySeries.length,
         groupDates: units[timeFrame] || ['quarterly', 'yearly'],
         data: fixtures[timeFrame]
     };
-}
-
-function yKey(timeFrame){ //this just makes it easier to add values and not have to recode static info
-    var o = {series:[]};
-
-    if(timeFrame !== 'multiple'){
-        o.series.push('value');
-    }else{
-        for(var k in fixtures[timeFrame][0]){
-            k !== 'date' ? o.series.push(k) : 0; 
-        }       
-    }
-
-    return o;
 }
 
 module.exports = {
