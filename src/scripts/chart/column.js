@@ -9,6 +9,13 @@ function plotSeries(plotSVG, model, axes, series, i){
 	var s = plotSVG.append('g')
 		.attr('class', 'series');
 
+//todo:  sort out scale so you dont have to do the maths for width & x-position
+//	http://bl.ocks.org/mbostock/3887051
+//console.log(data)
+//	var x1= d3.scale.ordinal()
+//	var bars = d3.keys(data).filter(function(key) { return key !== "State"; });
+//	console.log(bars)
+//	x1.domain(bars).rangeRoundBands([0, axes.timeScale.rangeBand()]);
 
     s.selectAll('rect')
         .data(data)
@@ -17,8 +24,10 @@ function plotSeries(plotSVG, model, axes, series, i){
         .attr('class', function (d){return 'column column--'  + series.className + (d.value < 0 ? ' negative' : ' positive');})
         .attr('data-value', function (d){	return d.value;})
 		.attr('x', function (d){return axes.timeScale(d.key) + ((axes.timeScale.rangeBand() / model.y.series.length) * i);}) //adjust the x position based on the series number
+		//.attr("x", function(d) { return x1(d.key); })
 		.attr('y', function (d){return axes.valueScale(Math.max(0, d.value));})
         .attr('height', function (d){return 	Math.abs(axes.valueScale(d.value) - axes.valueScale(0));})
+		//.attr("width", x1.rangeBand())
         .attr('width', axes.timeScale.rangeBand() / model.y.series.length); //width is divided by series length
 }
 
