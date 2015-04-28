@@ -1,4 +1,3 @@
-
 var oCharts = require('../../src/scripts/o-charts');
 var d3 = require('d3');
 
@@ -8,7 +7,7 @@ var y = [
     { series: [{key:'value', label:function(){ return 'Function Value';}}]}
 ];
 var hideSource = [true, true, false];
-var numberAxisOrient = ['left','right','left'];
+var numberAxisOrient = ['left', 'right', 'left'];
 
 var fixtures = {
     year : [

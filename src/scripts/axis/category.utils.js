@@ -1,6 +1,6 @@
 var formatter = {
     unknown: function (d, i) {
-        return  d;
+        return d;
     },
     yearly: function (d, i) {
         return d.split(' ')[1];
@@ -14,5 +14,5 @@ var formatter = {
 };
 
 module.exports = {
-    formatter : formatter
+    formatter: formatter
 };
