@@ -47,8 +47,8 @@ module.exports = {
         var axes = [];
         for (var i = 0; i < units.length; i++) {
             var unit = units[i];
-            if (this.formatter[unit]) {
-                var customTicks = (simple) ? scale.domain() : this.createDetailedTicks(scale, unit);
+            if (utils.formatter[unit]) {
+                var customTicks = (simple) ? scale.domain() : this.customTicks(scale, unit);
                 var axis = d3.svg.axis()
                     .scale(scale)
                     .tickValues(customTicks)
