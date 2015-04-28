@@ -22,13 +22,33 @@ function plotSeries(plotSVG, model, axes, series, i){
         .enter()
         .append('rect')
         .attr('class', function (d){return 'column column--'  + series.className + (d.value < 0 ? ' negative' : ' positive');})
-        .attr('data-value', function (d){	return d.value;})
-		.attr('x', function (d){return axes.timeScale(d.key) + ((axes.timeScale.rangeBand() / model.y.series.length) * i);}) //adjust the x position based on the series number
-		//.attr("x", function(d) { return x1(d.key); })
-		.attr('y', function (d){return axes.valueScale(Math.max(0, d.value));})
-        .attr('height', function (d){return 	Math.abs(axes.valueScale(d.value) - axes.valueScale(0));})
+        .attr('data-value', function (d){return d.value;})
+		.attr('x', function (d){
+			if(model.chartSubtype === 'multiple'){
+				return axes.timeScale(d.key) + ((axes.timeScale.rangeBand() / model.y.series.length) * i);
+			}else{ //stacked and anything other than multiple
+				return axes.timeScale(d.key);
+			}
+		}) //adjust the x position based on the series number
+		//.attr('x', function(d) { return x1(d.key); })
+		.attr('y', function (d, j){
+			if(model.chartSubtype === 'stacked'){
+				!model.stacks ? model.stacks = model.initStacks(model.data.length, 0) : 0;
+				model.stacks[j].push(d.value);
+				return axes.valueScale(Math.max(0, d3.sum(model.stacks[j])));
+			}else{
+				return axes.valueScale(Math.max(0, d.value));
+			}
+		})
+        .attr('height', function (d){return Math.abs(axes.valueScale(d.value) - axes.valueScale(0));})
 		//.attr("width", x1.rangeBand())
-        .attr('width', axes.timeScale.rangeBand() / model.y.series.length); //width is divided by series length
+        .attr('width', function(){
+			if(model.chartSubtype === 'multiple'){
+				return axes.timeScale.rangeBand() / model.y.series.length;
+			}else{ //stacked and anything other than multiple
+				return axes.timeScale.rangeBand();
+			}
+    	});
 }
 
 function formatData(model, series){
@@ -49,7 +69,7 @@ function columnChart(g){
 	'use strict';
 
 	var model = new DataModel(Object.create(g.data()[0]));
-	var i = model.y.series.length;
+	var i = 0;
 	var svg = g.append('svg')
 		.attr({
 			'class': 'graphic line-chart',
@@ -79,8 +99,9 @@ function columnChart(g){
 
 	var plotSVG = chartSVG.append('g').attr('class', 'plot');
 
-	while(i--){
+	while(i < model.y.series.length){ //changed to order stacked colors
 		plotSeries(plotSVG, model, axes, model.y.series[i], i);
+		i++;
 	}
 }
 

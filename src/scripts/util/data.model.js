@@ -45,6 +45,7 @@ function setExtents(model){
 		});
 		extents = extents.concat (ext);
 	});
+
 	return extents;
 }
 
@@ -63,11 +64,28 @@ function timeDomain(model){
 }
 
 function valueDomain(model){
-	if (model.valueDomain) { return model.valueDomain; }
-	var extents = setExtents(model);
-	var domain = d3.extent(extents);
-	if (!model.falseOrigin && domain[0] > 0) {
-		domain[0] = 0;
+	if(model.valueDomain){return model.valueDomain;}
+	if(model.chartSubtype !== 'stacked'){
+		var extents = setExtents(model);
+		var domain = d3.extent(extents);
+		if(!model.falseOrigin && domain[0] > 0){
+			domain[0] = 0; //see line 86
+		}
+	}else{
+		var vals = [];
+
+		model.data.map(function (d, j){
+			var k, s = 0;
+			for(k in d.values[0]){
+				if(k !== 'date'){
+					s += d.values[0][k];
+				}
+			}
+			vals.push(s);
+		});
+
+		domain = d3.extent(vals);
+		domain[0] > 0 ? domain[0] = 0 : 0; //if we do a chart where we don't want the start of the Y-axis to be 0, we'll want to be able to specify a lowest value other than 0
 	}
 	return domain;
 }
@@ -133,6 +151,17 @@ function groupDates(m, units){
 	return m.data;
 }
 
+function setStacks(quantity, defaultValue){
+	var a = [];
+	
+	while(quantity--){
+		a.push([defaultValue]);
+	}
+
+	this.stacks = a;
+	return a;
+}
+
 function Model(opts) {
 	var lineClasses = ['series1', 'series2', 'series3', 'series4', 'series5', 'series6', 'series7', 'accent'];
 	var m = {
@@ -194,6 +223,7 @@ function Model(opts) {
 	m.valueDomain = valueDomain(m);
 	m.lineStrokeWidth = lineThickness(m.lineThickness);
 	m.key = setKey(m);
+	m.initStacks = setStacks;
 
 	return m;
 }

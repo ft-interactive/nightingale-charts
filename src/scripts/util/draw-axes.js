@@ -62,9 +62,14 @@ Axes.prototype.addTimeScale = function(){
 
 Axes.prototype.addValueScale = function(){
 	var model = this.model;
+
+	//console.log('before', model.valueDomain);
+
 	this.valueScale = d3.scale.linear()
 		.domain(model.valueDomain.reverse())
 		.range([0, model.chartHeight ]);
+
+	//console.log('ben', model.valueDomain);
 
 	if (model.niceValue) {
 		this.valueScale.nice();
