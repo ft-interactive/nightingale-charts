@@ -69,7 +69,7 @@ function valueDomain(model){
 		var extents = setExtents(model);
 		var domain = d3.extent(extents);
 		if(!model.falseOrigin && domain[0] > 0){
-			domain[0] = 0; //see line 86
+			domain[0] = 0; //see line 88
 		}
 	}else{
 		var vals = [];
