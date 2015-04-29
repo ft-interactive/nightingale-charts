@@ -145,5 +145,33 @@ fdescribe('column-chart.js', function(){
             expect(txt[2].textContent).toBe('May');
             expect(txt[3].textContent).toBe('Jun');
         });
+
+        it('are less than the y axis maximum', function(){
+            var cols = document.querySelectorAll('.width600 svg')[7].querySelectorAll('.plot rect');
+            var ticks = document.querySelectorAll('.width600 svg')[7].querySelectorAll('.y.axis .tick text');
+            var lastTick = ticks[ticks.length - 1];
+
+            console.log(cols);
+
+            for(var i = 0; i < cols.length; i++){
+                expect(cols[i].__data__.value).toBeLessThan(Number(lastTick.textContent));
+            }
+        });
+    });
+
+    xdescribe('column heights ', function(){ //still working on this one, had to leave a bit early
+        it('are less than the chart height', function(){
+            var cols = document.querySelectorAll('.width600 svg')[7].querySelectorAll('.plot rect');
+            var ticks = document.querySelectorAll('.width600 svg')[7].querySelectorAll('.y.axis .tick text');
+            var lastTick = ticks[ticks.length - 1];
+
+            console.log(cols);
+
+            for(var i = 0; i < cols.length; i++){
+                //expect(cols[i].__data__.value).toBeLessThan(Number(lastTick.textContent));
+
+                Number(cols[i].getAttribute('height'))
+            }
+        });
     });
 });
