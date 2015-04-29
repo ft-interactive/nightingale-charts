@@ -31,7 +31,7 @@ function plotSeries(plotSVG, model, axes, series, i){
         .attr('width', axes.timeScale.rangeBand() / model.y.series.length); //width is divided by series length
 }
 
-function formatData(model, series){
+function formatData(model, series) {
     //null values in the data are interpolated over, filter these out
     //NaN values are represented by line breaks
     var data = model.data.map(function (d){
@@ -39,7 +39,7 @@ function formatData(model, series){
             key:d[model.x.series.key],
             value: d.values[0][series.key]
         };
-    }).filter(function(d){
+    }).filter(function (d) {
         return (d.y !== null);
     });
     return data;
@@ -69,7 +69,7 @@ function columnChart(g){
 
 	var axes = new Axes(chartSVG, model);
 		axes.addValueScale();
-	
+
 	if(model.groupDates){
 		axes.addGroupedTimeScale(model.groupDates);
 	}else{

@@ -6,7 +6,7 @@ function getHeight(selection) {
     return Math.ceil(selection.node().getBoundingClientRect().height);
 }
 
-function Dressing(svg, model){
+function Dressing(svg, model) {
     // TODO: don't hard-code the fontsize, get from CSS somehow.
     // TODO: move calculation of lineheight to the textarea component;
     this.svg = svg;
@@ -24,25 +24,25 @@ function Dressing(svg, model){
     this.sourceFontOffset = 0;
 }
 
-Dressing.prototype.addHeader = function(){
+Dressing.prototype.addHeader = function () {
     this.addTitle();
     this.addSubTitle();
     this.addSeriesKey();
     this.setPosition();
 };
 
-Dressing.prototype.addFooter = function(){
+Dressing.prototype.addFooter = function () {
     this.addFootNotes();
     this.addSource();
     this.setHeight();
     this.addLogo();
 };
 
-Dressing.prototype.addLogo = function(){
+Dressing.prototype.addLogo = function () {
     var svg = this.svg;
     var model = this.model;
 
-    var logo = svg.append('g').attr('class','chart-logo').call(ftLogo, model.logoSize);
+    var logo = svg.append('g').attr('class', 'chart-logo').call(ftLogo, model.logoSize);
     var heightOfFontDescenders = 3;
     var baselineOfLastSourceLine = model.height - getHeight(logo) - heightOfFontDescenders - this.getSourceFontOffset();
 
@@ -52,14 +52,14 @@ Dressing.prototype.addLogo = function(){
     }));
 };
 
-Dressing.prototype.addSubTitle = function(){
+Dressing.prototype.addSubTitle = function () {
     var svg = this.svg;
     var model = this.model;
 
     var subtitleLineHeight = this.defaultLineHeight;
     var subtitleLineHeightActual = Math.ceil(this.subtitleFontSize * subtitleLineHeight);
     var subtitleTextWrapper = textArea().width(model.contentWidth).lineHeight(subtitleLineHeightActual);
-    var subtitle = svg.append('g').attr('class','chart-subtitle').datum(model.subtitle).call(subtitleTextWrapper);
+    var subtitle = svg.append('g').attr('class', 'chart-subtitle').datum(model.subtitle).call(subtitleTextWrapper);
     if (!this.subtitlePosition) {
         if (model.subtitle) {
             this.subtitlePosition = {top: this.headerHeight + this.subtitleFontSize, left: 0};
@@ -71,7 +71,7 @@ Dressing.prototype.addSubTitle = function(){
     subtitle.attr('transform', model.translate(this.subtitlePosition));
 };
 
-Dressing.prototype.addTitle = function(){
+Dressing.prototype.addTitle = function () {
     var svg = this.svg;
     var model = this.model;
 
@@ -80,7 +80,7 @@ Dressing.prototype.addTitle = function(){
     var titleLineSpacing = titleLineHeightActual - this.titleFontSize;
     var titleTextWrapper = textArea().width(model.contentWidth).lineHeight(titleLineHeightActual);
 
-    var title = svg.append('g').attr('class','chart-title').datum(model.title).call(titleTextWrapper);
+    var title = svg.append('g').attr('class', 'chart-title').datum(model.title).call(titleTextWrapper);
     if (!this.titlePosition) {
         if (model.title) {
             this.titlePosition = {top: this.headerHeight + this.titleFontSize, left: 0};
@@ -92,11 +92,13 @@ Dressing.prototype.addTitle = function(){
     title.attr('transform', model.translate(this.titlePosition));
 };
 
-Dressing.prototype.addSeriesKey = function(){
+Dressing.prototype.addSeriesKey = function () {
     var svg = this.svg;
     var model = this.model;
 
-    if (!model.key) { return; }
+    if (!model.key) {
+        return;
+    }
     var chartKey = lineKey({lineThickness: model.lineStrokeWidth})
         .style(function (d) {
             return d.value;
@@ -117,33 +119,33 @@ Dressing.prototype.addSeriesKey = function(){
 };
 
 
-Dressing.prototype.addFootNotes = function(){
+Dressing.prototype.addFootNotes = function () {
     var svg = this.svg;
     var model = this.model;
 
     var text = textArea().width(this.model.contentWidth - this.model.logoSize).lineHeight(this.footerLineHeight);
-    var footnotes = svg.append('g').attr('class','chart-footnote').datum(model.footnote).call(text);
+    var footnotes = svg.append('g').attr('class', 'chart-footnote').datum(model.footnote).call(text);
     var footnotesHeight = getHeight(footnotes);
 
     var footerHeight = Math.max(footnotesHeight + (this.blockPadding * 2), model.logoSize);
     var currentPosition = model.chartPosition.top + model.chartHeight;
 
-    footnotes.attr('transform', model.translate({ top: currentPosition + this.footerLineHeight + this.blockPadding }));
+    footnotes.attr('transform', model.translate({top: currentPosition + this.footerLineHeight + this.blockPadding}));
     this.footerHeight += (footerHeight + this.blockPadding);
 };
 
-Dressing.prototype.addSource = function(){
+Dressing.prototype.addSource = function () {
     var svg = this.svg;
     var model = this.model;
 
     var text = textArea().width(this.model.contentWidth - this.model.logoSize).lineHeight(this.footerLineHeight);
     var sourceLineHeight = this.defaultLineHeight;
     var sourceLineHeightActual = this.sourceFontSize * sourceLineHeight;
-    var source = svg.append('g').attr('class','chart-source').datum(model.sourcePrefix + model.source).call(text);
+    var source = svg.append('g').attr('class', 'chart-source').datum(model.sourcePrefix + model.source).call(text);
     var sourceHeight = getHeight(source);
     var currentPosition = model.chartPosition.top + model.chartHeight;
 
-    source.attr('transform', model.translate({ top:  this.footerHeight + currentPosition + this.blockPadding }));
+    source.attr('transform', model.translate({top: this.footerHeight + currentPosition + this.blockPadding}));
     if (model.hideSource) {
         source.remove();
     }
@@ -151,11 +153,11 @@ Dressing.prototype.addSource = function(){
     this.footerHeight += sourceHeight;
 };
 
-Dressing.prototype.getSourceFontOffset = function(){
+Dressing.prototype.getSourceFontOffset = function () {
     return this.sourceFontOffset;
 };
 
-Dressing.prototype.setHeight = function(){
+Dressing.prototype.setHeight = function () {
     var model = this.model;
     if (!model.height) {
         model.height = this.headerHeight + model.chartHeight + this.footerHeight;
@@ -163,14 +165,14 @@ Dressing.prototype.setHeight = function(){
         model.chartHeight = model.height - this.headerHeight - this.footerHeight;
         if (model.chartHeight < 0) {
             model.error({
-                message:'calculated plot height is less than zero'
+                message: 'calculated plot height is less than zero'
             });
         }
     }
     this.svg.attr('height', Math.ceil(model.height));
 };
 
-Dressing.prototype.setPosition = function(){
+Dressing.prototype.setPosition = function () {
     this.model.chartPosition = {
         top: this.headerHeight + this.halfLineStrokeWidth,
         left: (this.model.numberAxisOrient === 'left' ? 0 : this.halfLineStrokeWidth)

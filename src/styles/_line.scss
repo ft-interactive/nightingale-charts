@@ -1,39 +1,47 @@
-path.line{
-	fill:none;
-	stroke-linejoin: round;
-	stroke-linecap: round;
+path.line {
+    fill: none;
+    stroke-linejoin: round;
+    stroke-linecap: round;
 }
 
-.line--series1{
-	stroke: $chart-series1-line-color;
-}
-.line--series2{
-	stroke: $chart-series2-line-color;
-}
-.line--series3{
-	stroke: $chart-series3-line-color;
-}
-.line--series4{
-	stroke: $chart-series4-line-color;
-}
-.line--series5{
-	stroke: $chart-series5-line-color;
-}
-.line--series6{
-	stroke: $chart-series6-line-color;
-}
-.line--series7{
-	stroke: $chart-series7-line-color;
-}
-.accent{
-	stroke: rgb(184,177,169);
-}
-.forecast{
-	stroke-dasharray:4,5;
+.line--series1 {
+    stroke: $chart-series1-line-color;
 }
 
-line.key-line{
-	fill:none;
-	stroke-linejoin:round;
-	stroke-linecap:round;
+.line--series2 {
+    stroke: $chart-series2-line-color;
+}
+
+.line--series3 {
+    stroke: $chart-series3-line-color;
+}
+
+.line--series4 {
+    stroke: $chart-series4-line-color;
+}
+
+.line--series5 {
+    stroke: $chart-series5-line-color;
+}
+
+.line--series6 {
+    stroke: $chart-series6-line-color;
+}
+
+.line--series7 {
+    stroke: $chart-series7-line-color;
+}
+
+.accent {
+    stroke: rgb(184, 177, 169);
+}
+
+.forecast {
+    stroke-dasharray: 4, 5;
+}
+
+line.key-line {
+    fill: none;
+    stroke-linejoin: round;
+    stroke-linecap: round;
 }

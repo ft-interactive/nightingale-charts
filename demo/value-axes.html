@@ -1,133 +1,138 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8" />
-<link rel="stylesheet" href="styles/main.css" />
-<link rel="stylesheet" href="styles/demo.css" />
-<title>Value Axes</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="styles/main.css"/>
+    <link rel="stylesheet" href="styles/demo.css"/>
+    <title>Value Axes</title>
 </head>
 <body class="ft">
 <h1>Value axes</h1>
+
 <div id="v-views"></div>
 <div id="h-views"></div>
 <script src="scripts/vendor.js"></script>
 <script src="scripts/o-charts.js"></script>
 <script>
 
-var lib = require('o-charts');
-var d3 = require('d3');
+    var lib = require('o-charts');
+    var d3 = require('d3');
 
-var margin = {
-	top: 50, left: 50, bottom: 50, right: 50
-};
+    var margin = {
+        top: 50, left: 50, bottom: 50, right: 50
+    };
 
-var axesDefinitions = [
-	{
-		title:'smallest',
-		scale:d3.scale.linear()
-			.range([0,400])
-			.domain([-0.1, 0.36])
-	},
-	{
-		title:'smaller',
-		scale:d3.scale.linear()
-			.range([0,400])
-			.domain([0,33])
-	},
-	{
-		title:'medium',
-		scale:d3.scale.linear()
-			.range([0,400])
-			.domain([-100,100])
-	},
-	{
-		title:'bigger',
-		scale:d3.scale.linear()
-			.range([0,400])
-			.domain([0, 1000])
-	},
-	{
-		title:'MASSIVE(ish)',
-		scale:d3.scale.linear()
-			.range([0,400])
-			.domain([-1000, 3000000])
-	},
-	{
-		title:'non zero',
-		scale:d3.scale.linear()
-			.range([0,400])
-			.domain([30, 130])
-	}
-];
+    var axesDefinitions = [
+        {
+            title: 'smallest',
+            scale: d3.scale.linear()
+                .range([0, 400])
+                .domain([-0.1, 0.36])
+        },
+        {
+            title: 'smaller',
+            scale: d3.scale.linear()
+                .range([0, 400])
+                .domain([0, 33])
+        },
+        {
+            title: 'medium',
+            scale: d3.scale.linear()
+                .range([0, 400])
+                .domain([-100, 100])
+        },
+        {
+            title: 'bigger',
+            scale: d3.scale.linear()
+                .range([0, 400])
+                .domain([0, 1000])
+        },
+        {
+            title: 'MASSIVE(ish)',
+            scale: d3.scale.linear()
+                .range([0, 400])
+                .domain([-1000, 3000000])
+        },
+        {
+            title: 'non zero',
+            scale: d3.scale.linear()
+                .range([0, 400])
+                .domain([30, 130])
+        }
+    ];
 
-//vertical axes
-d3.select('#v-views').append('h2').text('Veritcal');
+    //vertical axes
+    d3.select('#v-views').append('h2').text('Veritcal');
 
-var divs = d3.select('#v-views')
-	.selectAll('div')
-	.data(axesDefinitions)
-		.enter().append('div')
-			.attr('class','axis-test');
+    var divs = d3.select('#v-views')
+        .selectAll('div')
+        .data(axesDefinitions)
+        .enter().append('div')
+        .attr('class', 'axis-test');
 
-divs.append('h2')
-	.text(function (d) { return d.title });
+    divs.append('h2')
+        .text(function (d) {
+            return d.title
+        });
 
-divs.append('svg')
-	.attr('width', function (d) { 
-		var r = d.scale.range(); 
-		return (r[1] - r[0]) + margin.left + margin.right; 
-	})
-	.attr('class','ft-chart')
-	.attr('height', function (d) {
-		var r = d.scale.range(); 
-		return (r[1] - r[0]) + margin.top + margin.bottom;
-	})
-	.each(function (d, i) {
-		//vertical axes require a reversed scale domain
-		var vScale = d.scale.copy();
-		vScale.domain( [d.scale.domain()[1], d.scale.domain()[0]]  )
-		var axis = modestCharts.valueAxis()
-			.tickSize(300)
+    divs.append('svg')
+        .attr('width', function (d) {
+            var r = d.scale.range();
+            return (r[1] - r[0]) + margin.left + margin.right;
+        })
+        .attr('class', 'ft-chart')
+        .attr('height', function (d) {
+            var r = d.scale.range();
+            return (r[1] - r[0]) + margin.top + margin.bottom;
+        })
+        .each(function (d, i) {
+            //vertical axes require a reversed scale domain
+            var vScale = d.scale.copy();
+            vScale.domain([d.scale.domain()[1], d.scale.domain()[0]])
+            var axis = modestCharts.valueAxis()
+                .tickSize(300)
 //			.tickFormat(function(d){ return d + ' :) '; })
-			//.simple(true)
-			.scale( vScale )
-			.orient('left');
+                //.simple(true)
+                .scale(vScale)
+                .orient('left');
 
-		var g = d3.select(this).append('g').attr('transform','translate(' + margin.left + ',' + margin.top + ')');
-		
-		g.call(axis);
+            var g = d3.select(this).append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-	});
+            g.call(axis);
+
+        });
 
 
-//horizontal axes
-d3.select('#h-views').append('h2').text('Horizontal')
-var divs = d3.select('#h-views')
-	.selectAll('div')
-	.data(axesDefinitions)
-		.enter().append('div')
-			.attr('class','axis-test');
+    //horizontal axes
+    d3.select('#h-views').append('h2').text('Horizontal')
+    var divs = d3.select('#h-views')
+        .selectAll('div')
+        .data(axesDefinitions)
+        .enter().append('div')
+        .attr('class', 'axis-test');
 
-divs.append('h2')
-	.text(function (d) { return d.title });
+    divs.append('h2')
+        .text(function (d) {
+            return d.title
+        });
 
-divs.append('svg')
-	.attr('width', function (d) { 
-		var r = d.scale.range(); 
-		return (r[1] - r[0]) + margin.left + margin.right; 
-	})
-	.attr('class','ft-chart')
-	.attr('height', margin.top + margin.bottom)
-	.each(function (d, i) {
-		var axis = modestCharts.valueAxis()
-			.scale(d.scale)
-			.orient('bottom');
+    divs.append('svg')
+        .attr('width', function (d) {
+            var r = d.scale.range();
+            return (r[1] - r[0]) + margin.left + margin.right;
+        })
+        .attr('class', 'ft-chart')
+        .attr('height', margin.top + margin.bottom)
+        .each(function (d, i) {
+            var axis = modestCharts.valueAxis()
+                .scale(d.scale)
+                .orient('bottom');
 
-		var g = d3.select(this).append('g').attr('transform','translate(' + margin.left + ',' + margin.top + ')');
+            var g = d3.select(this).append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-		g.call(axis);
+            g.call(axis);
 
-	});
+        });
 
 </script>
 </body>

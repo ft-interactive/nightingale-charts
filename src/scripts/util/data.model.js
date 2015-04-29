@@ -5,21 +5,23 @@ var seriesOptions = require('../util/series-options.js');
 var dateUtil = require('../util/dates.js');
 
 function isDate(d) {
-	return d && d instanceof Date && !isNaN(+d);
+    return d && d instanceof Date && !isNaN(+d);
 }
 
 function translate(margin) {
-	return function(position) {
-		var left = position.left || 0;
-		var top = position.top || 0;
-		return 'translate(' + (margin + left) + ',' + top + ')';
-	};
+    return function (position) {
+        var left = position.left || 0;
+        var top = position.top || 0;
+        return 'translate(' + (margin + left) + ',' + top + ')';
+    };
 }
 
-function chartWidth(model){
-	if (model.chartWidth) { return model.chartWidth; }
-	var rightGutter = model.contentWidth < 260 ? 16 : 26;
-	return  model.contentWidth - rightGutter;
+function chartWidth(model) {
+    if (model.chartWidth) {
+        return model.chartWidth;
+    }
+    var rightGutter = model.contentWidth < 260 ? 16 : 26;
+    return model.contentWidth - rightGutter;
 }
 
 function setExtents(model){
@@ -48,76 +50,84 @@ function setExtents(model){
 	return extents;
 }
 
-function groupedTimeDomain(model){
-	if (model.timeDomain) { return model.timeDomain; }
-	return model.data.map(function(d){
-		return d[model.x.series.key];
-	});
+function groupedTimeDomain(model) {
+    if (model.timeDomain) {
+        return model.timeDomain;
+    }
+    return model.data.map(function (d) {
+        return d[model.x.series.key];
+    });
 }
 
-function timeDomain(model){
-	if (model.timeDomain) { return model.timeDomain; }
-	return d3.extent(model.data, function (d) {
-		return d[model.x.series.key];
-	});
+function timeDomain(model) {
+    if (model.timeDomain) {
+        return model.timeDomain;
+    }
+    return d3.extent(model.data, function (d) {
+        return d[model.x.series.key];
+    });
 }
 
-function valueDomain(model){
-	if (model.valueDomain) { return model.valueDomain; }
-	var extents = setExtents(model);
-	var domain = d3.extent(extents);
-	if (!model.falseOrigin && domain[0] > 0) {
-		domain[0] = 0;
-	}
-	return domain;
+function valueDomain(model) {
+    if (model.valueDomain) {
+        return model.valueDomain;
+    }
+    var extents = setExtents(model);
+    var domain = d3.extent(extents);
+    if (!model.falseOrigin && domain[0] > 0) {
+        domain[0] = 0;
+    }
+    return domain;
 }
 
-function chartHeight(model){
-	if (model.chartHeight) { return model.chartHeight; }
-	var isNarrow = model.chartWidth < 220;
-	var isWide = model.chartWidth > 400;
-	var ratio = isNarrow ? 1.1 : (isWide ? ratios.commonRatios.widescreen : ratios.commonRatios.standard);
-	return ratios.heightFromWidth(model.chartWidth, ratio);
+function chartHeight(model) {
+    if (model.chartHeight) {
+        return model.chartHeight;
+    }
+    var isNarrow = model.chartWidth < 220;
+    var isWide = model.chartWidth > 400;
+    var ratio = isNarrow ? 1.1 : (isWide ? ratios.commonRatios.widescreen : ratios.commonRatios.standard);
+    return ratios.heightFromWidth(model.chartWidth, ratio);
 }
 
-function verifyData(model){
-	return !Array.isArray(model.data) ? [] : model.data.map(function (dataItem, i) {
+function verifyData(model) {
+    return !Array.isArray(model.data) ? [] : model.data.map(function (dataItem, i) {
 
-		var s = dataItem[model.x.series.key];
-		var error = {
-			node: null,
-			message: '',
-			row: i,
-			column: model.x.series.key,
-			value: s
-		};
+        var s = dataItem[model.x.series.key];
+        var error = {
+            node: null,
+            message: '',
+            row: i,
+            column: model.x.series.key,
+            value: s
+        };
 
-		if (!dataItem) {
-			error.message = 'Empty row';
-		} else if (!s) {
-			error.message = 'X axis value is empty or null';
-		} else if (!isDate(s)) {
-			error.message = 'Value is not a valid date';
-		}
+        if (!dataItem) {
+            error.message = 'Empty row';
+        } else if (!s) {
+            error.message = 'X axis value is empty or null';
+        } else if (!isDate(s)) {
+            error.message = 'Value is not a valid date';
+        }
 
-		if (error.message) {
-			model.error(error);
-			dataItem[model.x.series.key] = null;
-		}
+        if (error.message) {
+            model.error(error);
+            dataItem[model.x.series.key] = null;
+        }
 
-		return dataItem;
+        return dataItem;
 
-	});
+    });
 }
 
-function setKey(model){
-	var key = model.key;
-	if (typeof model.key !== 'boolean') {
-		key = model.y.series.length > 1;
-	} else if (model.key && !model.y.series.length) {
-		key = false;
-	}
-	return key;
+function setKey(model) {
+    var key = model.key;
+    if (typeof model.key !== 'boolean') {
+        key = model.y.series.length > 1;
+    } else if (model.key && !model.y.series.length) {
+        key = false;
+    }
+    return key;
 }
 
 function groupDates(m, units){
@@ -134,49 +144,49 @@ function groupDates(m, units){
 }
 
 function Model(opts) {
-	var lineClasses = ['series1', 'series2', 'series3', 'series4', 'series5', 'series6', 'series7', 'accent'];
-	var m = {
-		//layout stuff
-		height: undefined,
-		width: 300,
-		chartHeight: undefined,
-		chartWidth: undefined,
-		simpleDate: false,
-		simpleValue: false,
-		logoSize: 28,
-		//data stuff
-		falseOrigin: false, //TODO, find out if there's a standard 'pipeline' temr for this
-		error: this.error,
-		lineClasses: {},
-		niceValue: true,
-		hideSource: false,
-		numberAxisOrient: 'left',
-		margin: 2,
-		lineThickness: undefined,
-		x: {
-			series: '&'
-		},
-		y: {
-			series: []
-		},
-		labelLookup: null,
-		sourcePrefix: 'Source: '
-	};
+    var lineClasses = ['series1', 'series2', 'series3', 'series4', 'series5', 'series6', 'series7', 'accent'];
+    var m = {
+        //layout stuff
+        height: undefined,
+        width: 300,
+        chartHeight: undefined,
+        chartWidth: undefined,
+        simpleDate: false,
+        simpleValue: false,
+        logoSize: 28,
+        //data stuff
+        falseOrigin: false, //TODO, find out if there's a standard 'pipeline' temr for this
+        error: this.error,
+        lineClasses: {},
+        niceValue: true,
+        hideSource: false,
+        numberAxisOrient: 'left',
+        margin: 2,
+        lineThickness: undefined,
+        x: {
+            series: '&'
+        },
+        y: {
+            series: []
+        },
+        labelLookup: null,
+        sourcePrefix: 'Source: '
+    };
 
-	for (var key in opts) {
-		m[key] = opts[key];
-	}
+    for (var key in opts) {
+        m[key] = opts[key];
+    }
 
-	m.x.series = seriesOptions.normalise(m.x.series);
-	m.y.series = seriesOptions.normaliseY(m.y.series)
-		.filter(function (d) {
-			return !!d.key && d.key !== m.x.series.key;
-		})
-		.map(function (d, i) {
-			d.index = i;
-			d.className = lineClasses[i];
-			return d;
-		});
+    m.x.series = seriesOptions.normalise(m.x.series);
+    m.y.series = seriesOptions.normaliseY(m.y.series)
+        .filter(function (d) {
+            return !!d.key && d.key !== m.x.series.key;
+        })
+        .map(function (d, i) {
+            d.index = i;
+            d.className = lineClasses[i];
+            return d;
+        });
 
 	m.contentWidth = m.width - (m.margin * 2);
 	m.chartWidth = chartWidth(m);
@@ -195,10 +205,10 @@ function Model(opts) {
 	m.lineStrokeWidth = lineThickness(m.lineThickness);
 	m.key = setKey(m);
 
-	return m;
+    return m;
 }
 
-Model.prototype.error = function(err) {
-	console.log('ERROR: ', err);
+Model.prototype.error = function (err) {
+    console.log('ERROR: ', err);
 };
 module.exports = Model;
