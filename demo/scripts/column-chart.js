@@ -106,35 +106,17 @@ var fixtures = {
         { date: new Date('12/30/05'), value:     1.348}
     ],
     multiple:[
-        {
-            date: new Date('3/31/05'), value: Math.floor(Math.random() * 40) + 10, value2: 99, value3: 26
-        },
-        {
-            date: new Date('6/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 10, value3: 21
-        },
-        {
-            date: new Date('9/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 70, value3: 13
-        },
-        {
-            date: new Date('12/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 10, value3: 29
-        }
+        {date: new Date('3/31/05'), value: Math.floor(Math.random() * 40) + 10, value2: 99, value3: 26},
+        {date: new Date('6/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 10, value3: 21},
+        {date: new Date('9/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 70, value3: 13},
+        {date: new Date('12/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 10, value3: 29}
     ],
     stacked:[
-        {
-            date: new Date('3/31/05'), value: 50, value2: 99, value3: 26, value4: 40, value5: 15
-        },
-        {
-            date: new Date('6/30/05'), value: 25, value2: 10, value3: 21, value4: 36, value5: 22
-        },
-        {
-            date: new Date('9/30/05'), value: 75, value2: 70, value3: 13, value4: 12, value5: 110
-        },
-        {
-            date: new Date('12/30/05'), value: 125, value2: 10, value3: 29, value4: 31, value5: 40
-        },
-        {
-            date: new Date('5/30/06'), value: 133, value2: 25, value3: 72, value4: 105, value5: 200
-        }
+        {date: new Date('3/31/05'), value: 50, value2: 99, value3: 26, value4: 40, value5: 15},
+        {date: new Date('6/30/05'), value: 25, value2: 10, value3: 21, value4: 36, value5: 22},
+        {date: new Date('9/30/05'), value: 75, value2: 70, value3: 13, value4: 12, value5: 110},
+        {date: new Date('12/30/05'), value: 125, value2: 10, value3: 29, value4: 31, value5: 40},
+        {date: new Date('5/30/06'), value: 133, value2: 25, value3: 72, value4: 105, value5: 200}
     ]
 };
 
