@@ -138,9 +138,7 @@ function getChartData(timeFrame){
         subtitle: 'Drawn for you',
         numberAxisOrient: 'left', //todo: refactor onto y object
         hideSource: false,
-        x:{
-          series: {key:'date', label:'yearly'}
-        },
+        x:{series: {key:'date', label:'yearly'}},
         tickSize: 5,
         y: { series: ySeries} ,
         seriesLength: ySeries.length,

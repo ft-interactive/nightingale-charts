@@ -151,15 +151,19 @@ function groupDates(m, units){
 	return m.data;
 }
 
-function setStacks(quantity, defaultValue){
-	var a = [];
-	
-	while(quantity--){
-		a.push([defaultValue]);
-	}
+function setStacks(stackObj, defaultValue){
+	if(!this.stacks && this.chartSubtype === 'stacked'){
+		var a = [], l = this.data.length;
+		while(l--){a.push([defaultValue]);}
 
-	this.stacks = a;
-	return a;
+		this.stacks = a;
+		this.stacks[stackObj.stack][0] = stackObj.value;
+	}else if(this.stacks){
+		this.stacks[stackObj.stack].push(stackObj.value);
+	}else{ //multiple series and single series use stacks of 1, and the value of 1 stack === stackObj.value
+		return stackObj.value;
+	}
+	return d3.sum(this.stacks[stackObj.stack]);
 }
 
 function Model(opts) {
@@ -223,7 +227,7 @@ function Model(opts) {
 	m.valueDomain = valueDomain(m);
 	m.lineStrokeWidth = lineThickness(m.lineThickness);
 	m.key = setKey(m);
-	m.initStacks = setStacks;
+	m.stackSeries = setStacks;
 
 	return m;
 }
