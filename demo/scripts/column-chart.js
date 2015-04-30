@@ -140,9 +140,7 @@ function getChartData(timeFrame){
         x:{
           series: {key:'date', label:'yearly'}
         },
-        tickSize: 5,
         y: { series: ySeries} ,
-        seriesLength: ySeries.length,
         groupDates: units[timeFrame] || ['quarterly', 'yearly'],
         data: fixtures[timeFrame]
     };

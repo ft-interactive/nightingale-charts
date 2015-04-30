@@ -148,6 +148,7 @@ function Model(opts) {
     var m = {
         //layout stuff
         height: undefined,
+        tickSize: 5,
         width: 300,
         chartHeight: undefined,
         chartWidth: undefined,
