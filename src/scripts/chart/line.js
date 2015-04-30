@@ -65,6 +65,7 @@ function lineChart(g) {
 
     var plotSVG = chartSVG.append('g').attr('class', 'plot');
     var i = model.y.series.length;
+
     while (i--) {
         plotSeries(plotSVG, model, axes, model.y.series[i]);
     }

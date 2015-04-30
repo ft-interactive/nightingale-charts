@@ -1,11 +1,6 @@
 var oCharts = require('../../src/scripts/o-charts');
 var d3 = require('d3');
 
-var y = [
-    { series: ['value']},
-    { series: [{key:'value', label:'String Value'}]},
-    { series: [{key:'value', label:function(){ return 'Function Value';}}]}
-];
 var hideSource = [true, true, false];
 var numberAxisOrient = ['left', 'right', 'left'];
 
@@ -108,6 +103,20 @@ var fixtures = {
         { date: new Date('6/30/05'), value: 1.027},
         { date: new Date('9/30/05'), value: 1.03},
         { date: new Date('12/30/05'), value:     1.348}
+    ],
+    multiple:[
+        {
+            date: new Date('3/31/05'), value: Math.floor(Math.random() * 40) + 10, value2: 99, value3: 26
+        },
+        {
+            date: new Date('6/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 10, value3: 21
+        },
+        {
+            date: new Date('9/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 70, value3: 13
+        },
+        {
+            date: new Date('12/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 10, value3: 29
+        }
     ]
 };
 
@@ -115,21 +124,23 @@ var units = {
     month: ['monthly', 'yearly']
 }
 var widths = [600, 300];
-
+var series = {
+    multiple: ['value', 'value2', 'value3']
+}
 function getChartData(timeFrame){
+    var ySeries = series[timeFrame] || ['value'];
     return {
-        comment: "Column chart",
-        footnote: "this is just for testing!",
-        source: "tbc",
-        title: "Columns: " + timeFrame,
-        subtitle: "Drawn for you",
+        comment: 'Column chart',
+        footnote: 'this is just for testing!',
+        source: 'tbc',
+        title: 'Columns: ' + timeFrame,
+        subtitle: 'Drawn for you',
         numberAxisOrient: 'left', //todo: refactor onto y object
         hideSource: false,
         x:{
           series: {key:'date', label:'yearly'}
         },
-        tickSize: 5,
-        y: { series: ['value'] },
+        y: { series: ySeries} ,
         groupDates: units[timeFrame] || ['quarterly', 'yearly'],
         data: fixtures[timeFrame]
     };
@@ -138,17 +149,18 @@ function getChartData(timeFrame){
 module.exports = {
     getChartData: getChartData,
     init: function(){
-        var demos = ['year','yearWithNegative','years','yearsWithNegative','decade', 'month'];
+        var demos = ['year','yearWithNegative','years','yearsWithNegative','decade', 'month', 'multiple'];
+        //var demos = ['multiple'];
         demos.forEach(function(timeFrame){
             d3.select('#views').append('div').attr({
                 'id':'column-chart__' + timeFrame
             });
-            widths.forEach(function(width){
+            widths.forEach(function (width){
                 var data = getChartData(timeFrame);
                 data.width = width;
-                d3.select('#column-chart__' + timeFrame).append('span').attr({
-                    'class':'width' + width
-                }).data([data]).call( oCharts.chart.column );
+                d3.select('#column-chart__' + timeFrame).append('span')
+                    .attr('class', 'width' + width)
+                    .data([data]).call(oCharts.chart.column);
             });
         });
     }

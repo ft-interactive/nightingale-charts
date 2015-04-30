@@ -24,30 +24,30 @@ function chartWidth(model) {
     return model.contentWidth - rightGutter;
 }
 
-function setExtents(model) {
-    var extents = [];
-    model.y.series.forEach(function (l) {
-        var key = l.key;
-        model.data = model.data.map(function (d, j) {
-            var value = d[key];
-            var isValidNumber = value === null || typeof value === 'number';
-            if (!isValidNumber) {
-                model.error({
-                    node: null,
-                    message: 'Value is not a number',
-                    value: value,
-                    row: j,
-                    column: key
-                });
-            }
-            return d;
-        });
-        var ext = d3.extent(model.data, function (d) {
-            return d[key];
-        });
-        extents = extents.concat(ext);
-    });
-    return extents;
+function setExtents(model){
+	var extents = [];
+	model.y.series.forEach(function (l) {
+		var key = l.key;
+		model.data = model.data.map(function (d, j) {
+			var value = (model.groupDates) ? d.values[0][key] : d[key];
+			var isValidNumber = value === null || typeof value === 'number';
+			if (!isValidNumber) {
+				model.error({
+					node: null,
+					message: 'Value is not a number',
+					value: value,
+					row: j,
+					column: key
+				});
+			}
+			return d;
+		});
+		var ext = d3.extent(model.data, function(d){
+			return (model.groupDates) ? d.values[0][key] : d[key];
+		});
+		extents = extents.concat (ext);
+	});
+	return extents;
 }
 
 function groupedTimeDomain(model) {
@@ -130,25 +130,17 @@ function setKey(model) {
     return key;
 }
 
-function groupDates(m, units) {
-    var i = 0;
-    var firstDate;
-    m.data = d3.nest()
-        .key(function (d) {
-            firstDate = firstDate || d.date;
-            return dateUtil.formatter[units[0]](d.date, i++, firstDate);
-        })
-        .rollup(function (d) {
-            return d3.mean(d, function (d) {
-                return d.value;
-            });
-        })
-        .entries(m.data);
-    m.x.series.key = 'key';
-    m.y.series.forEach(function (s) {
-        s.key = 'values';
-    });
-    return m.data;
+function groupDates(m, units){
+	var i=0;
+	var firstDate;
+	m.data = d3.nest()
+		.key(function(d)  {
+			firstDate = firstDate || d.date;
+			return dateUtil.formatter[units[0]](d.date, i++, firstDate);
+		})
+		.entries(m.data);
+	m.x.series.key = 'key';
+	return m.data;
 }
 
 function Model(opts) {
@@ -156,6 +148,7 @@ function Model(opts) {
     var m = {
         //layout stuff
         height: undefined,
+        tickSize: 5,
         width: 300,
         chartHeight: undefined,
         chartWidth: undefined,
@@ -196,20 +189,22 @@ function Model(opts) {
             return d;
         });
 
-    m.contentWidth = m.width - (m.margin * 2);
-    m.chartWidth = chartWidth(m);
-    m.chartHeight = chartHeight(m);
-    m.translate = translate(0);
-    m.data = verifyData(m);
-    if (m.groupDates) {
-        m.data = groupDates(m, m.groupDates);
-        m.timeDomain = groupedTimeDomain(m);
-    } else {
-        m.timeDomain = timeDomain(m);
-    }
-    m.valueDomain = valueDomain(m);
-    m.lineStrokeWidth = lineThickness(m.lineThickness);
-    m.key = setKey(m);
+	m.contentWidth = m.width - (m.margin * 2);
+	m.chartWidth = chartWidth(m);
+	m.chartHeight = chartHeight(m);
+	m.translate = translate(0);
+	m.data = verifyData(m);
+
+	if(m.groupDates){
+		m.data = groupDates(m, m.groupDates);
+		m.timeDomain = groupedTimeDomain(m);
+	}else{
+		m.timeDomain = timeDomain(m);
+	}
+
+	m.valueDomain = valueDomain(m);
+	m.lineStrokeWidth = lineThickness(m.lineThickness);
+	m.key = setKey(m);
 
     return m;
 }
