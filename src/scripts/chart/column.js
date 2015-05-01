@@ -3,6 +3,7 @@ var Axes = require('../util/draw-axes.js');
 var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');
 var Dressing = require('../util/dressing.js');
+var styler = require('../util/chart-attribute-styles');
 
 function plotSeries(plotSVG, model, axes, series, i){
 	var data = formatData(model, series);
@@ -21,7 +22,7 @@ function plotSeries(plotSVG, model, axes, series, i){
         .data(data)
         .enter()
         .append('rect')
-        .attr('class', function (d){return 'column column--'  + series.className + (d.value < 0 ? ' negative' : ' positive');})
+        .attr('class', function (d){return 'column '  + series.className + (d.value < 0 ? ' negative' : ' positive');})
         .attr('data-value', function (d){	return d.value;})
 		.attr('x', function (d){return axes.timeScale(d.key) + ((axes.timeScale.rangeBand() / model.y.series.length) * i);}) //adjust the x position based on the series number
 		//.attr("x", function(d) { return x1(d.key); })
@@ -29,6 +30,8 @@ function plotSeries(plotSVG, model, axes, series, i){
         .attr('height', function (d){return 	Math.abs(axes.valueScale(d.value) - axes.valueScale(0));})
 		//.attr("width", x1.rangeBand())
         .attr('width', axes.timeScale.rangeBand() / model.y.series.length); //width is divided by series length
+
+    styler(plotSVG);
 }
 
 function formatData(model, series) {
@@ -48,7 +51,7 @@ function formatData(model, series) {
 function columnChart(g){
 	'use strict';
 
-	var model = new DataModel(Object.create(g.data()[0]));
+	var model = new DataModel('column',Object.create(g.data()[0]));
 	var i = model.y.series.length;
 	var svg = g.append('svg')
 		.attr({

@@ -25,11 +25,11 @@ function lineKey(options) {
     };
 
     function key(g) {
-        g = g.append('g').attr('class', 'chart-linekey');
+        g = g.append('g').attr('class', 'key');
         var keyItems = g.selectAll('g').data(g.datum().filter(filter))
             .enter()
             .append('g').attr({
-                'class': 'key-item',
+                'class': 'key__item',
                 'transform': function (d, i) {
                     return 'translate(0,' + (lineHeight + i * lineHeight) + ')';
                 }
@@ -43,10 +43,10 @@ function lineKey(options) {
             y2: -5
         })
             .attr('stroke-width', strokeWidth)
-            .classed('key-line', true);
+            .classed('key__line', true);
 
         keyItems.append('text').attr({
-            'class': 'key-label',
+            'class': 'key__label',
             x: strokeLength + 10
         }).text(label);
         styler(g);

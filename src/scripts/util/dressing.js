@@ -110,7 +110,7 @@ Dressing.prototype.addSeriesKey = function () {
         return {key: d.label, value: d.className};
     });
 
-    var key = svg.append('g').attr('class', 'chart-key').datum(entries).call(chartKey);
+    var key = svg.append('g').attr('class', 'chart__key').datum(entries).call(chartKey);
     if (!this.keyPosition) {
         this.keyPosition = {top: this.headerHeight, left: this.halfLineStrokeWidth};
         this.headerHeight += (getHeight(key) + this.blockPadding);

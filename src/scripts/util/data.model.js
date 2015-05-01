@@ -143,8 +143,11 @@ function groupDates(m, units){
 	return m.data;
 }
 
-function Model(opts) {
-    var lineClasses = ['series1', 'series2', 'series3', 'series4', 'series5', 'series6', 'series7', 'accent'];
+function Model(chartType, opts) {
+    var classes = {
+        line: ['line--series1', 'line--series2', 'line--series3', 'line--series4', 'line--series5', 'line--series6', 'line--series7', 'accent'],
+        column: ['column--series1', 'column--series2', 'column--series3', 'column--series4', 'column--series5', 'column--series6', 'column--series7', 'accent']
+    };
     var m = {
         //layout stuff
         height: undefined,
@@ -159,6 +162,7 @@ function Model(opts) {
         falseOrigin: false, //TODO, find out if there's a standard 'pipeline' temr for this
         error: this.error,
         lineClasses: {},
+        columnClasses: {},
         niceValue: true,
         hideSource: false,
         numberAxisOrient: 'left',
@@ -185,7 +189,7 @@ function Model(opts) {
         })
         .map(function (d, i) {
             d.index = i;
-            d.className = lineClasses[i];
+            d.className = classes[chartType][i];
             return d;
         });
 

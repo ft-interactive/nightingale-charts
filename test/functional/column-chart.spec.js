@@ -146,4 +146,13 @@ fdescribe('column-chart.js', function(){
             expect(txt[3].textContent).toBe('Jun');
         });
     });
+
+    it('attaches style attributes to html elements', function () {
+
+        var yAxis = document.querySelectorAll('.width600 svg')[1].querySelector('.chart .plot rect');
+        expect(yAxis.getAttribute('stroke-width')).toBe(null);
+        expect(yAxis.getAttribute('stroke')).toBe('none');
+        expect(yAxis.getAttribute('fill')).toBeTruthy();
+
+    });
 });

@@ -1,6 +1,13 @@
 @import "variables";
 @import "axes";
-@import "line";
-@import "column";
 @import "textarea";
+
+
+.accent {
+    stroke: rgb(184, 177, 169);
+}
+
+.forecast {
+    stroke-dasharray: 4, 5;
+}
 
