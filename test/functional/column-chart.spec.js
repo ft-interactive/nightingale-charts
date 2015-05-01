@@ -147,12 +147,22 @@ fdescribe('column-chart.js', function(){
         });
     });
 
-    it('attaches style attributes to html elements', function () {
+    describe('attaches style attributes to', function () {
+        it('the columns', function () {
 
-        var yAxis = document.querySelectorAll('.width600 svg')[1].querySelector('.chart .plot rect');
-        expect(yAxis.getAttribute('stroke-width')).toBe(null);
-        expect(yAxis.getAttribute('stroke')).toBe('none');
-        expect(yAxis.getAttribute('fill')).toBeTruthy();
+            var plot = document.querySelectorAll('.width600 svg')[1].querySelector('.chart .plot rect');
+            expect(plot.getAttribute('stroke-width')).toBe(null);
+            expect(plot.getAttribute('stroke')).toBe('none');
+            expect(plot.getAttribute('fill')).toBeTruthy();
 
+        });
+        it('the column series key', function () {
+
+            var plot = document.querySelectorAll('.width600 svg')[6].querySelector('.chart__key rect');
+            expect(plot.getAttribute('stroke-width')).toBe(null);
+            expect(plot.getAttribute('stroke')).toBe('none');
+            expect(plot.getAttribute('fill')).toBeTruthy();
+
+        });
     });
 });

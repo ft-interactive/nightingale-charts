@@ -150,6 +150,7 @@ function Model(chartType, opts) {
     };
     var m = {
         //layout stuff
+        chartType: chartType,
         height: undefined,
         tickSize: 5,
         width: 300,

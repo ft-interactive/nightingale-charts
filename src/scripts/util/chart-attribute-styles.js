@@ -131,7 +131,7 @@ function applyAttributes(g, keepD3Styles) {
         },
         //Columns
         {
-            'selector': '.column',
+            'selector': '.column, .key__column',
             'attributes': {
                 'stroke': 'none'
             }

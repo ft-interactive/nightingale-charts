@@ -4,16 +4,17 @@
     <meta charset="utf-8"/>
     <link rel="stylesheet" href="styles/main.css"/>
     <link rel="stylesheet" href="styles/demo.css"/>
-    <title>Line Key</title>
+    <title>Series Key</title>
 </head>
 <body class="ft">
-	<h1>Line Key</h1>
+	<h1>Series Key</h1>
 
-	<div id="views"><svg></svg></div>
+	<div><svg id="line"></svg></div>
+	<div><svg id="column"></svg></div>
 	<script src=scripts/vendor.js></script>
-	<script src=scripts/line-key.js></script>
+	<script src=scripts/series-key.js></script>
 	<script>
-		require('line-key').init()
+		require('series-key').init()
 	</script>
 </body>
 </html>

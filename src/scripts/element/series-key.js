@@ -12,6 +12,11 @@ function lineKey(options) {
     var lineHeight = 16;
     var strokeWidth = lineThickness(options.lineThickness);
 
+    var charts = {
+        'line' : addLineKeys,
+        'column' : addColumnKeys
+    };
+
     var style = function (d) {
         return d.style;
     };
@@ -24,17 +29,7 @@ function lineKey(options) {
         return true;
     };
 
-    function key(g) {
-        g = g.append('g').attr('class', 'key');
-        var keyItems = g.selectAll('g').data(g.datum().filter(filter))
-            .enter()
-            .append('g').attr({
-                'class': 'key__item',
-                'transform': function (d, i) {
-                    return 'translate(0,' + (lineHeight + i * lineHeight) + ')';
-                }
-            });
-
+    function addLineKeys(keyItems, label){
         keyItems.append('line').attr({
             'class': style,
             x1: 1,
@@ -45,10 +40,39 @@ function lineKey(options) {
             .attr('stroke-width', strokeWidth)
             .classed('key__line', true);
 
+    }
+
+    function addColumnKeys(keyItems, label){
+        keyItems.append('rect').attr({
+            'class': style,
+            x: 1,
+            y: -10,
+            width: strokeLength,
+            height: 10
+        })
+        .classed('key__column', true);
+
+    }
+
+    function key(g) {
+        var addKey = charts[options.chartType];
+        g = g.append('g').attr('class', 'key');
+        var keyItems = g.selectAll('g').data(g.datum().filter(filter))
+            .enter()
+            .append('g').attr({
+                'class': 'key__item',
+                'transform': function (d, i) {
+                    return 'translate(0,' + (lineHeight + i * lineHeight) + ')';
+                }
+            });
+
+        addKey(keyItems, label);
+
         keyItems.append('text').attr({
             'class': 'key__label',
             x: strokeLength + 10
         }).text(label);
+
         styler(g);
 
     }

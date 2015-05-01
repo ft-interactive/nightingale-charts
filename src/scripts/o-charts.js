@@ -4,7 +4,7 @@ module.exports = {
     axis: require('./axis/index.js'),
 
     element: {
-        lineKey: require('./element/line-key.js'),
+        seriesKey: require('./element/series-key.js'),
         textArea: require('./element/text-area.js')
     },
 
