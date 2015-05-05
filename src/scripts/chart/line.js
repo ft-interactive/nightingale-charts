@@ -21,8 +21,8 @@ function plotSeries(plotSVG, model, axes, series) {
 
     var line = d3.svg.line()
         .interpolate(interpolator.gappedLine)
-        .x(function (d) { console.log(axes.timeScale(d.x));return axes.timeScale(d.x); })
-        .y(function (d) { console.log(axes.timeScale(d.y));return axes.valueScale(d.y);});
+        .x(function (d) { return axes.timeScale(d.x); })
+        .y(function (d) { return axes.valueScale(d.y);});
 
     plotSVG.append('path')
         .datum(data)
