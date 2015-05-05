@@ -123,7 +123,7 @@ fdescribe('line-chart  ', function () {
             expect(labels[2].textContent).toBe('Q3');
             expect(labels[3].textContent).toBe('Q4');
         });
-
+        //todo: test: get line in middle of groupedTimeScale tick
         xit('first plot lines up with first tick', function () {
             //var labels = lineChart4.querySelector('.chart .x text');
             //expect(labels[0].textContent).toBe('Q1');

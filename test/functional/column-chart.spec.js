@@ -177,6 +177,7 @@ describe('column-chart.js', function(){
             expect(labels[3].textContent).toBe('Sep');
         });
 
+        //todo: test: get columns fitting within chart
         xit('bars don\'t straggle over month labels on the axis', function () {
             //var labels = lineChart4.querySelector('.chart .x text');
             //expect(labels[0].textContent).toBe('Q1');
