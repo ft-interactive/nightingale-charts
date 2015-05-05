@@ -13,7 +13,7 @@ function plotSeries(plotSVG, model, axes, series) {
     var data = model.data.map(function (d) {
         return {
             x: d[model.x.series.key],
-            y: d[series.key]
+            y: d[series.key] || d.values[0][series.key]
         };
     }).filter(function (d) {
         return (d.y !== null);
@@ -21,12 +21,8 @@ function plotSeries(plotSVG, model, axes, series) {
 
     var line = d3.svg.line()
         .interpolate(interpolator.gappedLine)
-        .x(function (d) {
-            return axes.timeScale(d.x);
-        })
-        .y(function (d) {
-            return axes.valueScale(d.y);
-        });
+        .x(function (d) { console.log(axes.timeScale(d.x));return axes.timeScale(d.x); })
+        .y(function (d) { console.log(axes.timeScale(d.y));return axes.valueScale(d.y);});
 
     plotSVG.append('path')
         .datum(data)
@@ -62,7 +58,11 @@ function lineChart(g) {
 
     var axes = new Axes(chartSVG, model);
     axes.addValueScale();
-    axes.addTimeScale();
+    if(model.groupDates){
+        axes.addGroupedTimeScale(model.groupDates);
+    }else{
+        axes.addTimeScale();
+    }
     axes.repositionAxis();
 
     var plotSVG = chartSVG.append('g').attr('class', 'plot');
