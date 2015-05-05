@@ -26,9 +26,23 @@ Axes.prototype.rearrangeLabels = function () {
         this.timeAxis.tickSize(0).scale(this.timeScale, this.units);
     } else if (!showsAllLabels) { //todo: should/can this be in category.js?
         this.timeAxis.tickSize(model.tickSize * this.tickExtender)
-            .scale(this.timeScale, ['yearly']);
+            .scale(this.timeScale, ['yearly']);//todo: pm: swap for groupDates[1]
         this.svg.call(this.timeAxis);
     }
+};
+
+Axes.prototype.getColumnWidth = function () {
+    var model = this.model;
+    var plotWidth = model.chartWidth - (getWidth(this.svg) - model.chartWidth);
+    var range = this.timeScale.rangeBand ?
+        this.timeScale.rangeBand() :
+        d3.scale.ordinal()
+            .domain(model.data.map(function(d) {
+                return d[model.x.series.key];
+            }))
+            .rangeRoundBands([0, plotWidth], 0, this.margin)
+            .rangeBand();
+    return range / model.y.series.length;
 };
 
 Axes.prototype.addGroupedTimeScale = function (units) {
@@ -38,6 +52,8 @@ Axes.prototype.addGroupedTimeScale = function (units) {
     this.timeScale = d3.scale.ordinal()
         .domain(model.timeDomain)
         .rangeRoundBands([0, plotWidth], 0, this.margin);
+
+    this.columnWidth = this.getColumnWidth();
 
     this.timeAxis = categoryAxis()
         .simple(model.simpleDate)
@@ -53,6 +69,9 @@ Axes.prototype.addTimeScale = function () {
     this.timeScale = d3.time.scale()
         .domain(model.timeDomain)
         .range([0, model.chartWidth]);
+
+    this.columnWidth = this.getColumnWidth();
+
     this.timeAxis = dateAxis()
         .simple(model.simpleDate)
         .yOffset(model.chartHeight)	//position the axis at the bottom of the chart
@@ -112,6 +131,7 @@ Axes.prototype.repositionAxis = function () {
         this.timeScale.range([this.timeScale.range()[0], plotWidth]);
     }
 
+    this.columnWidth = this.getColumnWidth();
     this.svg.selectAll('*').remove();
     this.svg.call(this.vAxis);
     this.svg.call(this.timeAxis);
