@@ -3,28 +3,29 @@ require('../helper').loadAssets('line-chart');
 
 require('../../demo/scripts/line-chart').init();
 
-describe('line-chart  ', function () {
+fdescribe('line-chart  ', function () {
 
     var lineChart1 = document.querySelector('#line-chart1 svg');
     var lineChart2 = document.querySelector('#line-chart2 svg');
     var lineChart3 = document.querySelector('#line-chart3 svg');
+    var lineChart4 = document.querySelector('#line-chart4 svg');
 
     describe('shows line keys as ', function () {
 
         it('Strings', function () {
-            var labels = lineChart1.querySelectorAll('.chart-linekey text');
+            var labels = lineChart1.querySelectorAll('.chart__key text');
             expect(labels[0].textContent).toBe('value');
             expect(labels[1].textContent).toBe('value2');
         });
 
         it('key value pair', function () {
-            var labels = lineChart2.querySelectorAll('.chart-linekey text');
+            var labels = lineChart2.querySelectorAll('.chart__key text');
             expect(labels[0].textContent).toBe('String Value');
             expect(labels[1].textContent).toBe('Another String Value');
         });
 
         it('result of a function', function () {
-            var labels = lineChart3.querySelectorAll('.chart-linekey text');
+            var labels = lineChart3.querySelectorAll('.chart__key text');
             expect(labels[0].textContent).toBe('Function Value');
             expect(labels[1].textContent).toBe('Another function Value');
         });
@@ -109,6 +110,26 @@ describe('line-chart  ', function () {
             expect(yAxis.getAttribute('stroke')).toBeTruthy();
             expect(yAxis.getAttribute('fill')).toBeTruthy();
 
+        });
+
+    });
+
+    describe('Quarterly Axis ', function () {
+
+        it('Can be displayed', function () {
+            var labels = lineChart4.querySelectorAll('.chart .x text');
+            expect(labels[0].textContent).toBe('Q1');
+            expect(labels[1].textContent).toBe('Q2');
+            expect(labels[2].textContent).toBe('Q3');
+            expect(labels[3].textContent).toBe('Q4');
+        });
+
+        xit('first plot lines up with first tick', function () {
+            //var labels = lineChart4.querySelector('.chart .x text');
+            //expect(labels[0].textContent).toBe('Q1');
+            //expect(labels[1].textContent).toBe('Q2');
+            //expect(labels[2].textContent).toBe('Q3');
+            //expect(labels[3].textContent).toBe('Q4');
         });
 
     });
