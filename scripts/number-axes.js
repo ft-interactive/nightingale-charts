@@ -667,29 +667,20 @@ var styler = require('../util/chart-attribute-styles');
 
 function plotSeries(plotSVG, model, axes, series, i){
 	var data = formatData(model, series);
-	var s = plotSVG.append('g')
-		.attr('class', 'series');
+    var colWidth = axes.columnWidth || 1;
+    var adjustX = (axes.timeScale.rangeBand) ? (axes.timeScale.rangeBand() / model.y.series.length) : colWidth;
 
-//todo:  sort out scale so you dont have to do the maths for width & x-position
-//	http://bl.ocks.org/mbostock/3887051
-//console.log(data)
-//	var x1= d3.scale.ordinal()
-//	var bars = d3.keys(data).filter(function(key) { return key !== "State"; });
-//	console.log(bars)
-//	x1.domain(bars).rangeRoundBands([0, axes.timeScale.rangeBand()]);
-
+    var s = plotSVG.append('g').attr('class', 'series');
     s.selectAll('rect')
         .data(data)
         .enter()
         .append('rect')
         .attr('class', function (d){return 'column '  + series.className + (d.value < 0 ? ' negative' : ' positive');})
         .attr('data-value', function (d){	return d.value;})
-		.attr('x', function (d){return axes.timeScale(d.key) + ((axes.timeScale.rangeBand() / model.y.series.length) * i);}) //adjust the x position based on the series number
-		//.attr("x", function(d) { return x1(d.key); })
-		.attr('y', function (d){return axes.valueScale(Math.max(0, d.value));})
-        .attr('height', function (d){return 	Math.abs(axes.valueScale(d.value) - axes.valueScale(0));})
-		//.attr("width", x1.rangeBand())
-        .attr('width', axes.timeScale.rangeBand() / model.y.series.length); //width is divided by series length
+		.attr('x', function (d){ return axes.timeScale(d.key) + (adjustX * i); })
+		.attr('y', function (d){ return axes.valueScale(Math.max(0, d.value));})
+        .attr('height', function (d){return Math.abs(axes.valueScale(d.value) - axes.valueScale(0));})
+		.attr("width", colWidth);
 
     styler(plotSVG);
 }
@@ -700,7 +691,7 @@ function formatData(model, series) {
     var data = model.data.map(function (d){
         return{
             key:d[model.x.series.key],
-            value: d.values[0][series.key]
+            value: d[series.key] || d.values[0][series.key]
         };
     }).filter(function (d) {
         return (d.y !== null);
@@ -773,7 +764,7 @@ function plotSeries(plotSVG, model, axes, series) {
     var data = model.data.map(function (d) {
         return {
             x: d[model.x.series.key],
-            y: d[series.key]
+            y: d[series.key] || d.values[0][series.key]
         };
     }).filter(function (d) {
         return (d.y !== null);
@@ -781,12 +772,8 @@ function plotSeries(plotSVG, model, axes, series) {
 
     var line = d3.svg.line()
         .interpolate(interpolator.gappedLine)
-        .x(function (d) {
-            return axes.timeScale(d.x);
-        })
-        .y(function (d) {
-            return axes.valueScale(d.y);
-        });
+        .x(function (d) { return axes.timeScale(d.x); })
+        .y(function (d) { return axes.valueScale(d.y);});
 
     plotSVG.append('path')
         .datum(data)
@@ -822,7 +809,11 @@ function lineChart(g) {
 
     var axes = new Axes(chartSVG, model);
     axes.addValueScale();
-    axes.addTimeScale();
+    if(model.groupDates){
+        axes.addGroupedTimeScale(model.groupDates);
+    }else{
+        axes.addTimeScale();
+    }
     axes.repositionAxis();
 
     var plotSVG = chartSVG.append('g').attr('class', 'plot');
@@ -1822,9 +1813,23 @@ Axes.prototype.rearrangeLabels = function () {
         this.timeAxis.tickSize(0).scale(this.timeScale, this.units);
     } else if (!showsAllLabels) { //todo: should/can this be in category.js?
         this.timeAxis.tickSize(model.tickSize * this.tickExtender)
-            .scale(this.timeScale, ['yearly']);
+            .scale(this.timeScale, ['yearly']);//todo: pm: swap for groupDates[1]
         this.svg.call(this.timeAxis);
     }
+};
+
+Axes.prototype.getColumnWidth = function () {
+    var model = this.model;
+    var plotWidth = model.chartWidth - (getWidth(this.svg) - model.chartWidth);
+    var range = this.timeScale.rangeBand ?
+        this.timeScale.rangeBand() :
+        d3.scale.ordinal()
+            .domain(model.data.map(function(d) {
+                return d[model.x.series.key];
+            }))
+            .rangeRoundBands([0, plotWidth], 0, this.margin)
+            .rangeBand() / 2;
+    return range / model.y.series.length;
 };
 
 Axes.prototype.addGroupedTimeScale = function (units) {
@@ -1834,6 +1839,8 @@ Axes.prototype.addGroupedTimeScale = function (units) {
     this.timeScale = d3.scale.ordinal()
         .domain(model.timeDomain)
         .rangeRoundBands([0, plotWidth], 0, this.margin);
+
+    this.columnWidth = this.getColumnWidth();
 
     this.timeAxis = categoryAxis()
         .simple(model.simpleDate)
@@ -1849,6 +1856,9 @@ Axes.prototype.addTimeScale = function () {
     this.timeScale = d3.time.scale()
         .domain(model.timeDomain)
         .range([0, model.chartWidth]);
+
+    this.columnWidth = this.getColumnWidth();
+
     this.timeAxis = dateAxis()
         .simple(model.simpleDate)
         .yOffset(model.chartHeight)	//position the axis at the bottom of the chart
@@ -1908,6 +1918,7 @@ Axes.prototype.repositionAxis = function () {
         this.timeScale.range([this.timeScale.range()[0], plotWidth]);
     }
 
+    this.columnWidth = this.getColumnWidth();
     this.svg.selectAll('*').remove();
     this.svg.call(this.vAxis);
     this.svg.call(this.timeAxis);
@@ -2364,7 +2375,7 @@ module.exports = {
 };
 
 },{}],29:[function(require,module,exports){
-module.exports = "0.0.9";
+module.exports = "0.1.0";
 },{}],"number-axes":[function(require,module,exports){
 var oCharts = require('../../src/scripts/o-charts');
 var d3 = require('d3');
