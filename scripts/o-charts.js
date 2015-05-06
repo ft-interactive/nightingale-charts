@@ -663,6 +663,7 @@ var Axes = require('../util/draw-axes.js');
 var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');
 var Dressing = require('../util/dressing.js');
+var styler = require('../util/chart-attribute-styles');
 
 function plotSeries(plotSVG, model, axes, series, i){
 	var data = formatData(model, series);
@@ -681,7 +682,7 @@ function plotSeries(plotSVG, model, axes, series, i){
         .data(data)
         .enter()
         .append('rect')
-        .attr('class', function (d){return 'column column--'  + series.className + (d.value < 0 ? ' negative' : ' positive');})
+        .attr('class', function (d){return 'column '  + series.className + (d.value < 0 ? ' negative' : ' positive');})
         .attr('data-value', function (d){	return d.value;})
 		.attr('x', function (d){return axes.timeScale(d.key) + ((axes.timeScale.rangeBand() / model.y.series.length) * i);}) //adjust the x position based on the series number
 		//.attr("x", function(d) { return x1(d.key); })
@@ -689,6 +690,8 @@ function plotSeries(plotSVG, model, axes, series, i){
         .attr('height', function (d){return 	Math.abs(axes.valueScale(d.value) - axes.valueScale(0));})
 		//.attr("width", x1.rangeBand())
         .attr('width', axes.timeScale.rangeBand() / model.y.series.length); //width is divided by series length
+
+    styler(plotSVG);
 }
 
 function formatData(model, series) {
@@ -708,7 +711,7 @@ function formatData(model, series) {
 function columnChart(g){
 	'use strict';
 
-	var model = new DataModel(Object.create(g.data()[0]));
+	var model = new DataModel('column',Object.create(g.data()[0]));
 	var i = model.y.series.length;
 	var svg = g.append('svg')
 		.attr({
@@ -746,7 +749,7 @@ function columnChart(g){
 
 module.exports = columnChart;
 
-},{"../util/data.model.js":19,"../util/draw-axes.js":21,"../util/dressing.js":22,"../util/metadata.js":26,"d3":"d3"}],11:[function(require,module,exports){
+},{"../util/chart-attribute-styles":18,"../util/data.model.js":19,"../util/draw-axes.js":21,"../util/dressing.js":22,"../util/metadata.js":26,"d3":"d3"}],11:[function(require,module,exports){
 module.exports = {
     line: require('./line.js'),
     blank: require('./blank.js'),
@@ -761,6 +764,7 @@ var interpolator = require('../util/line-interpolators.js');
 var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');
 var Dressing = require('../util/dressing.js');
+var styler = require('../util/chart-attribute-styles');
 
 //null values in the data are interpolated over, filter these out
 //NaN values are represented by line breaks
@@ -786,18 +790,19 @@ function plotSeries(plotSVG, model, axes, series) {
 
     plotSVG.append('path')
         .datum(data)
-        .attr('class', 'line line--' + series.className)
+        .attr('class', 'line ' + series.className)
         .attr('stroke-width', model.lineStrokeWidth)
         .attr('d', function (d) {
             //console.log('datum ', d);//todo: log function that can be mocked in tests
             return line(d);
         });
+    styler(plotSVG);
 }
 
 function lineChart(g) {
     'use strict';
 
-    var model = new DataModel(Object.create(g.data()[0]));
+    var model = new DataModel('line',Object.create(g.data()[0]));
     var svg = g.append('svg')
         .attr({
             'class': 'graphic line-chart',
@@ -830,7 +835,7 @@ function lineChart(g) {
 
 module.exports = lineChart;
 
-},{"../util/data.model.js":19,"../util/draw-axes.js":21,"../util/dressing.js":22,"../util/line-interpolators.js":24,"../util/metadata.js":26,"d3":"d3"}],13:[function(require,module,exports){
+},{"../util/chart-attribute-styles":18,"../util/data.model.js":19,"../util/draw-axes.js":21,"../util/dressing.js":22,"../util/line-interpolators.js":24,"../util/metadata.js":26,"d3":"d3"}],13:[function(require,module,exports){
 var d3 = require('d3');
 
 function pieChart() {
@@ -915,91 +920,6 @@ function pieChart() {
 module.exports = pieChart;
 
 },{"d3":"d3"}],14:[function(require,module,exports){
-var d3 = require('d3');
-var lineThickness = require('../util/line-thickness.js');
-var styler = require('../util/chart-attribute-styles');
-
-function lineKey(options) {
-    'use strict';
-
-    options = options || {};
-
-    var width = 300;
-    var strokeLength = 15;
-    var lineHeight = 16;
-    var strokeWidth = lineThickness(options.lineThickness);
-
-    var style = function (d) {
-        return d.style;
-    };
-
-    var label = function (d) {
-        return d.label;
-    };
-
-    var filter = function () {
-        return true;
-    };
-
-    function key(g) {
-        g = g.append('g').attr('class', 'chart-linekey');
-        var keyItems = g.selectAll('g').data(g.datum().filter(filter))
-            .enter()
-            .append('g').attr({
-                'class': 'key-item',
-                'transform': function (d, i) {
-                    return 'translate(0,' + (lineHeight + i * lineHeight) + ')';
-                }
-            });
-
-        keyItems.append('line').attr({
-            'class': style,
-            x1: 1,
-            y1: -5,
-            x2: strokeLength,
-            y2: -5
-        })
-            .attr('stroke-width', strokeWidth)
-            .classed('key-line', true);
-
-        keyItems.append('text').attr({
-            'class': 'key-label',
-            x: strokeLength + 10
-        }).text(label);
-        styler(g);
-
-    }
-
-    key.label = function (f) {
-        if (!arguments.length) return label;
-        label = f;
-        return key;
-    };
-
-    key.style = function (f) {
-        if (!arguments.length) return style;
-        style = f;
-        return key;
-    };
-
-    key.width = function (x) {
-        if (!arguments.length) return width;
-        width = x;
-        return key;
-    };
-
-    key.lineHeight = function (x) {
-        if (!arguments.length) return lineHeight;
-        lineHeight = x;
-        return key;
-    };
-
-    return key;
-}
-
-module.exports = lineKey;
-
-},{"../util/chart-attribute-styles":18,"../util/line-thickness.js":25,"d3":"d3"}],15:[function(require,module,exports){
 //the ft logo there's probably an easier ay to do this...
 var d3 = require('d3');
 
@@ -1033,7 +953,116 @@ module.exports = ftLogo;
  h3.075L110.955,1.959z"/>
  */
 
-},{"d3":"d3"}],16:[function(require,module,exports){
+},{"d3":"d3"}],15:[function(require,module,exports){
+var d3 = require('d3');
+var lineThickness = require('../util/line-thickness.js');
+var styler = require('../util/chart-attribute-styles');
+
+function lineKey(options) {
+    'use strict';
+
+    options = options || {};
+
+    var width = 300;
+    var strokeLength = 15;
+    var lineHeight = 16;
+    var strokeWidth = lineThickness(options.lineThickness);
+
+    var charts = {
+        'line' : addLineKeys,
+        'column' : addColumnKeys
+    };
+
+    var style = function (d) {
+        return d.style;
+    };
+
+    var label = function (d) {
+        return d.label;
+    };
+
+    var filter = function () {
+        return true;
+    };
+
+    function addLineKeys(keyItems, label){
+        keyItems.append('line').attr({
+            'class': style,
+            x1: 1,
+            y1: -5,
+            x2: strokeLength,
+            y2: -5
+        })
+            .attr('stroke-width', strokeWidth)
+            .classed('key__line', true);
+
+    }
+
+    function addColumnKeys(keyItems, label){
+        keyItems.append('rect').attr({
+            'class': style,
+            x: 1,
+            y: -10,
+            width: strokeLength,
+            height: 10
+        })
+        .classed('key__column', true);
+
+    }
+
+    function key(g) {
+        var addKey = charts[options.chartType];
+        g = g.append('g').attr('class', 'key');
+        var keyItems = g.selectAll('g').data(g.datum().filter(filter))
+            .enter()
+            .append('g').attr({
+                'class': 'key__item',
+                'transform': function (d, i) {
+                    return 'translate(0,' + (lineHeight + i * lineHeight) + ')';
+                }
+            });
+
+        addKey(keyItems, label);
+
+        keyItems.append('text').attr({
+            'class': 'key__label',
+            x: strokeLength + 10
+        }).text(label);
+
+        styler(g);
+
+    }
+
+    key.label = function (f) {
+        if (!arguments.length) return label;
+        label = f;
+        return key;
+    };
+
+    key.style = function (f) {
+        if (!arguments.length) return style;
+        style = f;
+        return key;
+    };
+
+    key.width = function (x) {
+        if (!arguments.length) return width;
+        width = x;
+        return key;
+    };
+
+    key.lineHeight = function (x) {
+        if (!arguments.length) return lineHeight;
+        lineHeight = x;
+        return key;
+    };
+
+    return key;
+}
+
+module.exports = lineKey;
+
+},{"../util/chart-attribute-styles":18,"../util/line-thickness.js":25,"d3":"d3"}],16:[function(require,module,exports){
 /*jshint -W084 */
 //text area provides a wrapping text block of a given type
 var d3 = require('d3');
@@ -1289,46 +1318,93 @@ function applyAttributes(g, keepD3Styles) {
         },
         //lines
         {
-            'selector': 'path.line, line.key-line',
+            'selector': 'path.line, line.key__line',
             'attributes': {
                 'fill': 'none',
                 'stroke-linejoin': 'round',
                 'stroke-linecap': 'round'
             }
         }, {
-            'selector': 'path.series1, line.series1',
+            'selector': '.line--series1',
             'attributes': {
                 'stroke': '#af516c'
             }
         }, {
-            'selector': 'path.series2, line.series2',
+            'selector': '.line--series2',
             'attributes': {
                 'stroke': '#ecafaf'
             }
         }, {
-            'selector': 'path.series3, line.series3',
+            'selector': '.line--series3',
             'attributes': {
                 'stroke': '#d7706c'
             }
         }, {
-            'selector': 'path.series4, line.series4',
+            'selector': '.line--series4',
             'attributes': {
                 'stroke': '#76acb8'
             }
         }, {
-            'selector': 'path.series5, line.series5',
+            'selector': '.line--series5',
             'attributes': {
                 'stroke': '#81d0e6'
             }
         }, {
-            'selector': 'path.series6, line.series6',
+            'selector': '.line--series6',
             'attributes': {
                 'stroke': '#4086b6'
             }
         }, {
-            'selector': 'path.series7, line.series7',
+            'selector': '.line--series7',
             'attributes': {
                 'stroke': '#b8b1a9'
+            }
+        }, {
+            'selector': 'path.accent, line.accent',
+            'attributes': {
+                'stroke': 'rgb(184,177,169)'
+            }
+        },
+        //Columns
+        {
+            'selector': '.column, .key__column',
+            'attributes': {
+                'stroke': 'none'
+            }
+        }, {
+            'selector': '.column--series1',
+            'attributes': {
+                'fill': '#af516c'
+            }
+        }, {
+            'selector': '.column--series2',
+            'attributes': {
+                'fill': '#ecafaf'
+            }
+        }, {
+            'selector': '.column--series3',
+            'attributes': {
+                'fill': '#d7706c'
+            }
+        }, {
+            'selector': '.column--series4',
+            'attributes': {
+                'fill': '#76acb8'
+            }
+        }, {
+            'selector': '.column--series5',
+            'attributes': {
+                'fill': '#81d0e6'
+            }
+        }, {
+            'selector': '.column--series6',
+            'attributes': {
+                'fill': '#4086b6'
+            }
+        }, {
+            'selector': '.column--series7',
+            'attributes': {
+                'fill': '#b8b1a9'
             }
         }, {
             'selector': 'path.accent, line.accent',
@@ -1366,7 +1442,7 @@ function applyAttributes(g, keepD3Styles) {
                 'fill': 'rgba(0, 0, 0, 0.5)'
             }
         }, {
-            'selector': 'text.key-label',
+            'selector': 'text.key__label',
             'attributes': {
                 'font-family': 'BentonSans, sans-serif',
                 'font-size': 12,
@@ -1531,10 +1607,14 @@ function groupDates(m, units){
 	return m.data;
 }
 
-function Model(opts) {
-    var lineClasses = ['series1', 'series2', 'series3', 'series4', 'series5', 'series6', 'series7', 'accent'];
+function Model(chartType, opts) {
+    var classes = {
+        line: ['line--series1', 'line--series2', 'line--series3', 'line--series4', 'line--series5', 'line--series6', 'line--series7', 'accent'],
+        column: ['column--series1', 'column--series2', 'column--series3', 'column--series4', 'column--series5', 'column--series6', 'column--series7', 'accent']
+    };
     var m = {
         //layout stuff
+        chartType: chartType,
         height: undefined,
         tickSize: 5,
         width: 300,
@@ -1547,6 +1627,7 @@ function Model(opts) {
         falseOrigin: false, //TODO, find out if there's a standard 'pipeline' temr for this
         error: this.error,
         lineClasses: {},
+        columnClasses: {},
         niceValue: true,
         hideSource: false,
         numberAxisOrient: 'left',
@@ -1573,7 +1654,7 @@ function Model(opts) {
         })
         .map(function (d, i) {
             d.index = i;
-            d.className = lineClasses[i];
+            d.className = classes[chartType][i];
             return d;
         });
 
@@ -1831,7 +1912,7 @@ module.exports = Axes;
 
 },{"../axis/category.js":1,"../axis/date.js":3,"../axis/number.js":6,"d3":"d3"}],22:[function(require,module,exports){
 var textArea = require('../element/text-area.js');
-var lineKey = require('../element/line-key.js');
+var seriesKey = require('../element/series-key.js');
 var ftLogo = require('../element/logo.js');
 
 function getHeight(selection) {
@@ -1931,7 +2012,10 @@ Dressing.prototype.addSeriesKey = function () {
     if (!model.key) {
         return;
     }
-    var chartKey = lineKey({lineThickness: model.lineStrokeWidth})
+    var chartKey = seriesKey({
+        lineThickness: model.lineStrokeWidth,
+        chartType: model.chartType
+    })
         .style(function (d) {
             return d.value;
         })
@@ -1942,12 +2026,12 @@ Dressing.prototype.addSeriesKey = function () {
         return {key: d.label, value: d.className};
     });
 
-    var key = svg.append('g').attr('class', 'chart-key').datum(entries).call(chartKey);
+    var svgKey = svg.append('g').attr('class', 'chart__key').datum(entries).call(chartKey);
     if (!this.keyPosition) {
         this.keyPosition = {top: this.headerHeight, left: this.halfLineStrokeWidth};
-        this.headerHeight += (getHeight(key) + this.blockPadding);
+        this.headerHeight += (getHeight(svgKey) + this.blockPadding);
     }
-    key.attr('transform', model.translate(this.keyPosition));
+    svgKey.attr('transform', model.translate(this.keyPosition));
 };
 
 
@@ -2013,7 +2097,7 @@ Dressing.prototype.setPosition = function () {
 
 module.exports = Dressing;
 
-},{"../element/line-key.js":14,"../element/logo.js":15,"../element/text-area.js":16}],23:[function(require,module,exports){
+},{"../element/logo.js":14,"../element/series-key.js":15,"../element/text-area.js":16}],23:[function(require,module,exports){
 var d3 = require('d3');
 
 module.exports = {
@@ -2269,7 +2353,7 @@ module.exports = {
     axis: require('./axis/index.js'),
 
     element: {
-        lineKey: require('./element/line-key.js'),
+        seriesKey: require('./element/series-key.js'),
         textArea: require('./element/text-area.js')
     },
 
@@ -2281,4 +2365,4 @@ module.exports = {
 
 };
 
-},{"./axis/index.js":5,"./chart/index.js":11,"./element/line-key.js":14,"./element/text-area.js":16,"./util/chart-attribute-styles.js":18,"./util/version":28}]},{},["o-charts"]);
+},{"./axis/index.js":5,"./chart/index.js":11,"./element/series-key.js":15,"./element/text-area.js":16,"./util/chart-attribute-styles.js":18,"./util/version":28}]},{},["o-charts"]);
