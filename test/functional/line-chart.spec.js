@@ -92,4 +92,25 @@ describe('line-chart  ', function () {
 
     });
 
+
+    describe('attaches style attributes to html elements', function () {
+
+        it('line series', function () {
+            var yAxis = lineChart2.querySelector('.chart .plot path');
+            expect(yAxis.getAttribute('stroke-width')).toBeTruthy();
+            expect(yAxis.getAttribute('stroke')).toBeTruthy();
+            expect(yAxis.getAttribute('fill')).toBeTruthy();
+        });
+
+        it('line series key', function () {
+
+            var yAxis = lineChart2.querySelector('.chart__key line');
+            expect(yAxis.getAttribute('stroke-width')).toBeTruthy();
+            expect(yAxis.getAttribute('stroke')).toBeTruthy();
+            expect(yAxis.getAttribute('fill')).toBeTruthy();
+
+        });
+
+    });
+
 });

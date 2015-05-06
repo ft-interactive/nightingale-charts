@@ -82,46 +82,93 @@ function applyAttributes(g, keepD3Styles) {
         },
         //lines
         {
-            'selector': 'path.line, line.key-line',
+            'selector': 'path.line, line.key__line',
             'attributes': {
                 'fill': 'none',
                 'stroke-linejoin': 'round',
                 'stroke-linecap': 'round'
             }
         }, {
-            'selector': 'path.series1, line.series1',
+            'selector': '.line--series1',
             'attributes': {
                 'stroke': '#af516c'
             }
         }, {
-            'selector': 'path.series2, line.series2',
+            'selector': '.line--series2',
             'attributes': {
                 'stroke': '#ecafaf'
             }
         }, {
-            'selector': 'path.series3, line.series3',
+            'selector': '.line--series3',
             'attributes': {
                 'stroke': '#d7706c'
             }
         }, {
-            'selector': 'path.series4, line.series4',
+            'selector': '.line--series4',
             'attributes': {
                 'stroke': '#76acb8'
             }
         }, {
-            'selector': 'path.series5, line.series5',
+            'selector': '.line--series5',
             'attributes': {
                 'stroke': '#81d0e6'
             }
         }, {
-            'selector': 'path.series6, line.series6',
+            'selector': '.line--series6',
             'attributes': {
                 'stroke': '#4086b6'
             }
         }, {
-            'selector': 'path.series7, line.series7',
+            'selector': '.line--series7',
             'attributes': {
                 'stroke': '#b8b1a9'
+            }
+        }, {
+            'selector': 'path.accent, line.accent',
+            'attributes': {
+                'stroke': 'rgb(184,177,169)'
+            }
+        },
+        //Columns
+        {
+            'selector': '.column, .key__column',
+            'attributes': {
+                'stroke': 'none'
+            }
+        }, {
+            'selector': '.column--series1',
+            'attributes': {
+                'fill': '#af516c'
+            }
+        }, {
+            'selector': '.column--series2',
+            'attributes': {
+                'fill': '#ecafaf'
+            }
+        }, {
+            'selector': '.column--series3',
+            'attributes': {
+                'fill': '#d7706c'
+            }
+        }, {
+            'selector': '.column--series4',
+            'attributes': {
+                'fill': '#76acb8'
+            }
+        }, {
+            'selector': '.column--series5',
+            'attributes': {
+                'fill': '#81d0e6'
+            }
+        }, {
+            'selector': '.column--series6',
+            'attributes': {
+                'fill': '#4086b6'
+            }
+        }, {
+            'selector': '.column--series7',
+            'attributes': {
+                'fill': '#b8b1a9'
             }
         }, {
             'selector': 'path.accent, line.accent',
@@ -159,7 +206,7 @@ function applyAttributes(g, keepD3Styles) {
                 'fill': 'rgba(0, 0, 0, 0.5)'
             }
         }, {
-            'selector': 'text.key-label',
+            'selector': 'text.key__label',
             'attributes': {
                 'font-family': 'BentonSans, sans-serif',
                 'font-size': 12,

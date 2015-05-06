@@ -1,9 +1,9 @@
-var LineModel = require('../../../src/scripts/util/data.model');
+var DataModel = require('../../../src/scripts/util/data.model');
 
-describe('line model', function () {
+describe('data model', function () {
 
     it('returns a set of defaults when nothing is defined', function(){
-        var model = new LineModel();
+        var model = new DataModel('line');
 
         expect(model.height).toBe(undefined);
         expect(model.width).toBe(300);
@@ -21,7 +21,7 @@ describe('line model', function () {
     });
 
     it('returns values as set in options', function(){
-        var model = new LineModel({
+        var model = new DataModel('line', {
             height: 100,
             width: 100,
             key: true,
@@ -54,10 +54,10 @@ describe('line model', function () {
     });
 
     it('handles errs', function(){
-        spyOn(LineModel.prototype,'error').and.callFake(function(msg){
+        spyOn(DataModel.prototype,'error').and.callFake(function(msg){
             return msg;
         });
-        var model = new LineModel({
+        var model = new DataModel('line', {
             chartHeight: 100,
             chartWidth: 100,
             key: false,
@@ -73,29 +73,29 @@ describe('line model', function () {
             y: { series: [{key:'value', label:'String Value'},
                 {key:'value2', label:'Another String Value'}]}
         });
-        expect(LineModel.prototype.error.calls.count()).toBe(6);
-        expect(LineModel.prototype.error).toHaveBeenCalledWith(jasmine.objectContaining({
+        expect(DataModel.prototype.error.calls.count()).toBe(6);
+        expect(DataModel.prototype.error).toHaveBeenCalledWith(jasmine.objectContaining({
             node: null,
             message: "Value is not a valid date",
             row: 0,
             column: 'date',
             value: '2000-01-01T00:00:00.000Z'
         }));
-        expect(LineModel.prototype.error).toHaveBeenCalledWith(jasmine.objectContaining({
+        expect(DataModel.prototype.error).toHaveBeenCalledWith(jasmine.objectContaining({
             node: null,
             message: "Value is not a number",
             row: 1,
             column: 'value',
             value: 't'
         }));
-        expect(LineModel.prototype.error).toHaveBeenCalledWith(jasmine.objectContaining({
+        expect(DataModel.prototype.error).toHaveBeenCalledWith(jasmine.objectContaining({
             node: null,
             message: "X axis value is empty or null",
             row: 2,
             column: 'date',
             value: undefined
         }));
-        expect(LineModel.prototype.error).toHaveBeenCalledWith(jasmine.objectContaining({
+        expect(DataModel.prototype.error).toHaveBeenCalledWith(jasmine.objectContaining({
             message: "Value is not a number",
             row: 2,
             column: 'value2',

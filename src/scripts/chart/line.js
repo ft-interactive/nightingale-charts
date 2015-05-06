@@ -4,6 +4,7 @@ var interpolator = require('../util/line-interpolators.js');
 var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');
 var Dressing = require('../util/dressing.js');
+var styler = require('../util/chart-attribute-styles');
 
 //null values in the data are interpolated over, filter these out
 //NaN values are represented by line breaks
@@ -29,18 +30,19 @@ function plotSeries(plotSVG, model, axes, series) {
 
     plotSVG.append('path')
         .datum(data)
-        .attr('class', 'line line--' + series.className)
+        .attr('class', 'line ' + series.className)
         .attr('stroke-width', model.lineStrokeWidth)
         .attr('d', function (d) {
             //console.log('datum ', d);//todo: log function that can be mocked in tests
             return line(d);
         });
+    styler(plotSVG);
 }
 
 function lineChart(g) {
     'use strict';
 
-    var model = new DataModel(Object.create(g.data()[0]));
+    var model = new DataModel('line',Object.create(g.data()[0]));
     var svg = g.append('svg')
         .attr({
             'class': 'graphic line-chart',

@@ -1,5 +1,5 @@
 var textArea = require('../element/text-area.js');
-var lineKey = require('../element/line-key.js');
+var seriesKey = require('../element/series-key.js');
 var ftLogo = require('../element/logo.js');
 
 function getHeight(selection) {
@@ -99,7 +99,10 @@ Dressing.prototype.addSeriesKey = function () {
     if (!model.key) {
         return;
     }
-    var chartKey = lineKey({lineThickness: model.lineStrokeWidth})
+    var chartKey = seriesKey({
+        lineThickness: model.lineStrokeWidth,
+        chartType: model.chartType
+    })
         .style(function (d) {
             return d.value;
         })
@@ -110,12 +113,12 @@ Dressing.prototype.addSeriesKey = function () {
         return {key: d.label, value: d.className};
     });
 
-    var key = svg.append('g').attr('class', 'chart-key').datum(entries).call(chartKey);
+    var svgKey = svg.append('g').attr('class', 'chart__key').datum(entries).call(chartKey);
     if (!this.keyPosition) {
         this.keyPosition = {top: this.headerHeight, left: this.halfLineStrokeWidth};
-        this.headerHeight += (getHeight(key) + this.blockPadding);
+        this.headerHeight += (getHeight(svgKey) + this.blockPadding);
     }
-    key.attr('transform', model.translate(this.keyPosition));
+    svgKey.attr('transform', model.translate(this.keyPosition));
 };
 
 
