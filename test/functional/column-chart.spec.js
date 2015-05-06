@@ -1,4 +1,4 @@
-fdescribe('column-chart.js', function(){
+describe('column-chart.js', function(){
 
     beforeEach(function(){
         //pm: hack to stop spec rewriting dom too early :(
@@ -164,5 +164,27 @@ fdescribe('column-chart.js', function(){
             expect(plot.getAttribute('fill')).toBeTruthy();
 
         });
+    });
+
+
+    describe('Time Axis ', function () {
+
+        it('Can be displayed', function () {
+            var labels = document.querySelectorAll('.width600 svg')[7].querySelectorAll('.x text');
+            expect(labels[0].textContent).toBe('Mar');
+            expect(labels[1].textContent).toBe('May');
+            expect(labels[2].textContent).toBe('Jul');
+            expect(labels[3].textContent).toBe('Sep');
+        });
+
+        //todo: test: get columns fitting within chart
+        xit('bars don\'t straggle over month labels on the axis', function () {
+            //var labels = lineChart4.querySelector('.chart .x text');
+            //expect(labels[0].textContent).toBe('Q1');
+            //expect(labels[1].textContent).toBe('Q2');
+            //expect(labels[2].textContent).toBe('Q3');
+            //expect(labels[3].textContent).toBe('Q4');
+        });
+
     });
 });

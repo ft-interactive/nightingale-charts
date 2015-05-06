@@ -117,11 +117,24 @@ var fixtures = {
         {
             date: new Date('12/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 10, value3: 29
         }
+    ],
+    time: [
+        {date: new Date('3/31/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
+        {date: new Date('6/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
+        {date: new Date('9/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
+        {date: new Date('12/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66}
     ]
 };
 
 var units = {
-    month: ['monthly', 'yearly']
+    year: ['quarterly', 'yearly'],
+    yearWithNegative: ['quarterly', 'yearly'],
+    years: ['quarterly', 'yearly'],
+    yearsWithNegative: ['quarterly', 'yearly'],
+    decade: ['quarterly', 'yearly'],
+    multiple: ['quarterly', 'yearly'],
+    month: ['monthly', 'yearly'],
+    time : false
 }
 var widths = [600, 300];
 var series = {
@@ -141,7 +154,7 @@ function getChartData(timeFrame){
           series: {key:'date', label:'yearly'}
         },
         y: { series: ySeries} ,
-        groupDates: units[timeFrame] || ['quarterly', 'yearly'],
+        groupDates: units[timeFrame],
         data: fixtures[timeFrame]
     };
 }
@@ -149,7 +162,7 @@ function getChartData(timeFrame){
 module.exports = {
     getChartData: getChartData,
     init: function(){
-        var demos = ['year','yearWithNegative','years','yearsWithNegative','decade', 'month', 'multiple'];
+        var demos = ['year','yearWithNegative','years','yearsWithNegative','decade', 'month', 'multiple', 'time'];
         //var demos = ['multiple'];
         demos.forEach(function(timeFrame){
             d3.select('#views').append('div').attr({
