@@ -7,23 +7,20 @@ var styler = require('../util/chart-attribute-styles');
 
 function plotSeries(plotSVG, model, axes, series, i){
 	var data = formatData(model, series);
-	var s = plotSVG.append('g')
-		.attr('class', 'series');
+    var colWidth = axes.columnWidth || 1;
+    var adjustX = (axes.timeScale.rangeBand) ? (axes.timeScale.rangeBand() / model.y.series.length) : colWidth;
 
+    var s = plotSVG.append('g').attr('class', 'series');
     s.selectAll('rect')
         .data(data)
         .enter()
         .append('rect')
         .attr('class', function (d){return 'column '  + series.className + (d.value < 0 ? ' negative' : ' positive');})
         .attr('data-value', function (d){	return d.value;})
-		.attr('x', function (d){
-            return (axes.timeScale.rangeBand) ?
-                    axes.timeScale(d.key) + ((axes.timeScale.rangeBand() / model.y.series.length) * i) :
-                    axes.timeScale(d.key);
-        })
-		.attr('y', function (d){return axes.valueScale(Math.max(0, d.value));})
+		.attr('x', function (d){ return axes.timeScale(d.key) + (adjustX * i) })
+		.attr('y', function (d){ return axes.valueScale(Math.max(0, d.value));})
         .attr('height', function (d){return Math.abs(axes.valueScale(d.value) - axes.valueScale(0));})
-		.attr("width", axes.columnWidth || 1);
+		.attr("width", colWidth);
 
     styler(plotSVG);
 }

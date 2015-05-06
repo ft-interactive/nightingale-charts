@@ -41,7 +41,7 @@ Axes.prototype.getColumnWidth = function () {
                 return d[model.x.series.key];
             }))
             .rangeRoundBands([0, plotWidth], 0, this.margin)
-            .rangeBand();
+            .rangeBand() / 2;
     return range / model.y.series.length;
 };
 
