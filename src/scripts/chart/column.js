@@ -17,7 +17,7 @@ function plotSeries(plotSVG, model, axes, series, i){
         .append('rect')
         .attr('class', function (d){return 'column '  + series.className + (d.value < 0 ? ' negative' : ' positive');})
         .attr('data-value', function (d){	return d.value;})
-		.attr('x', function (d){ return axes.timeScale(d.key) + (adjustX * i) })
+		.attr('x', function (d){ return axes.timeScale(d.key) + (adjustX * i); })
 		.attr('y', function (d){ return axes.valueScale(Math.max(0, d.value));})
         .attr('height', function (d){return Math.abs(axes.valueScale(d.value) - axes.valueScale(0));})
 		.attr("width", colWidth);
