@@ -2364,7 +2364,7 @@ module.exports = {
 };
 
 },{}],29:[function(require,module,exports){
-module.exports = "0.0.8";
+module.exports = "0.0.9";
 },{}],"text-area":[function(require,module,exports){
 
 var oCharts = require('../../src/scripts/o-charts');
