@@ -58,11 +58,7 @@ function lineChart(g) {
 
     var axes = new Axes(chartSVG, model);
     axes.addValueScale();
-    if(model.groupDates){
-        axes.addGroupedTimeScale(model.groupDates);
-    }else{
-        axes.addTimeScale();
-    }
+    axes.addTimeScale(model.units);
     axes.repositionAxis();
 
     var plotSVG = chartSVG.append('g').attr('class', 'plot');

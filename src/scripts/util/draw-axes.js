@@ -64,7 +64,7 @@ Axes.prototype.addGroupedTimeScale = function (units) {
     this.rearrangeLabels();
 };
 
-Axes.prototype.addTimeScale = function () {
+Axes.prototype.addTimeScale = function (units) {
     var model = this.model;
     this.timeScale = d3.time.scale()
         .domain(model.timeDomain)
@@ -75,7 +75,7 @@ Axes.prototype.addTimeScale = function () {
     this.timeAxis = dateAxis()
         .simple(model.simpleDate)
         .yOffset(model.chartHeight)	//position the axis at the bottom of the chart
-        .scale(this.timeScale);
+        .scale(this.timeScale, units);
     this.svg.call(this.timeAxis);
 };
 
