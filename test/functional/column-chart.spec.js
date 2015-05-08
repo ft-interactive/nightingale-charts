@@ -171,7 +171,7 @@ fdescribe('column-chart.js', function(){
         });
     });
 
-    describe('column chart ', function(){ //still working on this one, had to leave a bit early
+    describe('stacked column chart ', function(){ //still working on this one, had to leave a bit early
         it('has the same number of stacks in each grouping', function(){
             var g = document.querySelectorAll('.width600 svg')[9].querySelectorAll('.plot g.series');
             var i = g.length;
