@@ -5,6 +5,7 @@ describe('data model', function () {
     it('returns a set of defaults when nothing is defined', function(){
         var model = new DataModel('line');
 
+        expect(model.chartType).toBe('line');
         expect(model.height).toBe(undefined);
         expect(model.width).toBe(300);
         expect(model.chartHeight).toBe(203);
@@ -50,6 +51,32 @@ describe('data model', function () {
         expect(model.valueDomain[1]).toBe(39.23);
         expect(model.key).toBe(true);
         expect(model.lineStrokeWidth).toBe(10);
+
+    });
+
+    it('groups dates with the correct key', function(){
+        var model = new DataModel('column', {
+            height: 100,
+            width: 100,
+            key: true,
+            falseOrigin: false,
+            lineThickness: 10,
+            data: [
+                {quartersCol: new Date('2000-01-01T00:00:00.000Z'), qValue: 10.23, value2: 12},
+                {quartersCol: new Date('2001-01-01T00:00:00.000Z'), qValue: 29.23, value2: 29},
+                {quartersCol: new Date('2002-01-01T00:00:00.000Z'), qValue: 32.23, value2: 32},
+                {quartersCol: new Date('2003-01-01T00:00:00.000Z'), qValue: 39.23, value2: 37}
+            ],
+            groupDates: ['quarterly','yearly'],
+            x: { series:{key:'quartersCol',label:'myValue'}},
+            y: { series: [{key:'qValue', label:'String Value'},
+                {key:'value2', label:'Another String Value'}]}
+        });
+
+        expect(model.chartType).toBe('column');
+        expect(model.timeDomain.length).toBe(4);
+        expect(model.timeDomain[0]).toBe('Q1 2000');
+        expect(model.timeDomain[1]).toBe('Q1 01');
 
     });
 
