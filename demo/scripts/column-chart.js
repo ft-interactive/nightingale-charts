@@ -105,6 +105,18 @@ var fixtures = {
         { date: new Date('9/30/05'), value: 1.03},
         { date: new Date('12/30/05'), value:     1.348}
     ],
+    day : [
+        { date: new Date('3/02/05'), value:      0.583},
+        { date: new Date('3/03/05'), value: 1.027},
+        { date: new Date('3/04/05'), value: 1.03},
+        { date: new Date('3/05/05'), value:     1.348}
+    ],
+    hour : [
+        { date: new Date('3/02/05'), value:      0.583},
+        { date: new Date('3/03/05'), value: 1.027},
+        { date: new Date('3/04/05'), value: 1.03},
+        { date: new Date('3/05/05'), value:     1.348}
+    ],
     multiple:[
         {date: new Date('3/31/05'), value: Math.floor(Math.random() * 40) + 10, value2: 99, value3: 26},
         {date: new Date('6/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 10, value3: 21},
@@ -151,7 +163,12 @@ function getChartData(timeFrame){
 module.exports = {
     getChartData: getChartData,
     init: function(){
-        var demos = ['year','yearWithNegative','years','yearsWithNegative','decade', 'month', 'multiple', 'stacked'];
+        //var demos = ['year','yearWithNegative','years','yearsWithNegative','decade', 'month', 'multiple', 'stacked'];
+        var demos = [];
+        for(var k in fixtures){
+            demos.push(k);
+        }
+
         demos.forEach(function(timeFrame){
             d3.select('#views').append('div').attr({
                 'id':'column-chart__' + timeFrame
