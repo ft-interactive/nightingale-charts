@@ -65,9 +65,11 @@ function timeDomain(model){
 
 function valueDomain(model){
 	if(model.valueDomain){return model.valueDomain;}
+
+	var domain, extents;
 	if(model.chartSubtype !== 'stacked'){
-		var extents = setExtents(model);
-		var domain = d3.extent(extents);
+		extents = setExtents(model);
+		domain = d3.extent(extents);
 		if(!model.falseOrigin && domain[0] > 0){
 			domain[0] = 0; //see line 88
 		}

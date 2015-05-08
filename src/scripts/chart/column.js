@@ -9,6 +9,8 @@ function plotSeries(plotSVG, model, axes, series, i){
 	var s = plotSVG.append('g')
 		.attr('class', 'series');
 
+//@Peter, I left this stuff in here and made some additional comments. They can be removed whenever you're comfortable
+
 //todo:  sort out scale so you dont have to do the maths for width & x-position
 //	http://bl.ocks.org/mbostock/3887051
 //console.log(data)
@@ -26,18 +28,19 @@ function plotSeries(plotSVG, model, axes, series, i){
 		.attr('x', function (d){
 			var adjustmentIfMultipleSeries = model.chartSubtype === 'multiple' ? ((axes.timeScale.rangeBand() / model.y.series.length) * i) : 0;
 			return axes.timeScale(d.key) + adjustmentIfMultipleSeries;
-		}) //adjust the x position based on the series number
-		//.attr('x', function(d) { return x1(d.key); })
+		})
 		.attr('y', function (d, j){
 			var stackY = model.stackSeries({stack:j, value:d.value}, 0); //all series are now stacks
 			return axes.valueScale(Math.max(0, stackY));
 		})
         .attr('height', function (d){return Math.abs(axes.valueScale(d.value) - axes.valueScale(0));})
-		//.attr("width", x1.rangeBand())
         .attr('width', function(){
         	var adjustmentIfMultipleSeries = model.chartSubtype === 'multiple' ? model.y.series.length : 1;
 			return axes.timeScale.rangeBand() / adjustmentIfMultipleSeries;
     	});
+
+        //.attr('x', function(d) { return x1(d.key); })
+    	//.attr("width", x1.rangeBand())
 }
 
 function formatData(model, series){

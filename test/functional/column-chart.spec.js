@@ -139,7 +139,7 @@ fdescribe('column-chart.js', function(){
 
         xit('to display empty month columns even if date is missing', function(){
             var txt = document.querySelectorAll('.width600 svg')[2].querySelectorAll('g.x.axis .primary text');
-//todo: Months card is later!
+            //todo: Months card is later!
             expect(txt[0].textContent).toBe('Mar');
             expect(txt[1].textContent).toBe('Apr');
             expect(txt[2].textContent).toBe('May');
@@ -151,26 +151,35 @@ fdescribe('column-chart.js', function(){
             var ticks = document.querySelectorAll('.width600 svg')[7].querySelectorAll('.y.axis .tick text');
             var lastTick = ticks[ticks.length - 1];
 
-            console.log(cols);
-
             for(var i = 0; i < cols.length; i++){
                 expect(cols[i].__data__.value).toBeLessThan(Number(lastTick.textContent));
             }
         });
     });
 
-    xdescribe('column heights ', function(){ //still working on this one, had to leave a bit early
-        it('are less than the chart height', function(){
-            var cols = document.querySelectorAll('.width600 svg')[7].querySelectorAll('.plot rect');
-            var ticks = document.querySelectorAll('.width600 svg')[7].querySelectorAll('.y.axis .tick text');
-            var lastTick = ticks[ticks.length - 1];
+    xdescribe('number of columns ', function(){
+        it('in day chart is correct', function(){ //this should fail because the number of columns showing in a day is 1 and should be 4
+            var cols = document.querySelectorAll('.width600 svg')[6].querySelectorAll('rect');
 
-            console.log(cols);
+            expect(cols.length).toBe(4);
+        });
 
-            for(var i = 0; i < cols.length; i++){
-                //expect(cols[i].__data__.value).toBeLessThan(Number(lastTick.textContent));
+        it('in hour chart is correct', function(){ //this should fail because the number of columns showing in a hour is 1 and should be 4
+            var cols = document.querySelectorAll('.width600 svg')[7].querySelectorAll('rect');
 
-                Number(cols[i].getAttribute('height'))
+            expect(cols.length).toBe(4);
+        });
+    });
+
+    describe('column chart ', function(){ //still working on this one, had to leave a bit early
+        it('has the same number of stacks in each grouping', function(){
+            var g = document.querySelectorAll('.width600 svg')[9].querySelectorAll('.plot g.series');
+            var i = g.length;
+            var firstGroup = g[0].querySelectorAll('rect');
+
+            while(i--){
+                var thisGroup = g[i].querySelectorAll('rect');
+                expect(thisGroup.length).toBe(firstGroup.length);
             }
         });
     });

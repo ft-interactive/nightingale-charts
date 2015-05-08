@@ -105,13 +105,13 @@ var fixtures = {
         { date: new Date('9/30/05'), value: 1.03},
         { date: new Date('12/30/05'), value:     1.348}
     ],
-    day : [
+    day : [ //this one doesn't work - only graphs 1 day. Not sure we should be using this anyway for days...
         { date: new Date('3/02/05'), value:      0.583},
         { date: new Date('3/03/05'), value: 1.027},
         { date: new Date('3/04/05'), value: 1.03},
         { date: new Date('3/05/05'), value:     1.348}
     ],
-    hour : [
+    hour : [ //this one doesn't work - only graphs 1 day. Not sure we should be using this anyway for hours...
         { date: new Date('3/02/05'), value:      0.583},
         { date: new Date('3/03/05'), value: 1.027},
         { date: new Date('3/04/05'), value: 1.03},
