@@ -29,7 +29,9 @@ var formatter = {
         return formatter.years(d, i);
     },
     quarterly: function (d, i, firstDate) {
-        var years = (firstDate && formatter.years(firstDate, i) == formatter.years(d, i)) ? 'fullYears' : 'years';
+        var years = (firstDate && !Array.isArray(firstDate) &&
+            (formatter.years(firstDate, i) == formatter.years(d, i))) ?
+            'fullYears' : 'years';
         return 'Q' + Math.floor((d.getMonth() + 3) / 3) + ' ' + formatter[years](d, i);
     },
     monthly: function (d, i) {
