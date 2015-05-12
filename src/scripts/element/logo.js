@@ -1,5 +1,5 @@
 //the ft logo there's probably an easier ay to do this...
-var d3 = require('d3');
+//var d3 = require('d3');
 
 function ftLogo(g, dim) {
     'use strict';

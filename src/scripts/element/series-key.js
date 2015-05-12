@@ -1,4 +1,4 @@
-var d3 = require('d3');
+//var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
 var styler = require('../util/chart-attribute-styles');
 
