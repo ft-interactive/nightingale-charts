@@ -77,13 +77,13 @@ function valueDomain(model){
 		var vals = [];
 
 		model.data.map(function (d, j){
-			var k, s = 0;
+			var k, sum = 0;
 			for(k in d.values[0]){
 				if(k !== 'date'){
-					s += d.values[0][k];
+					sum += d.values[0][k];
 				}
 			}
-			vals.push(s);
+			vals.push(sum);
 		});
 
 		domain = d3.extent(vals);

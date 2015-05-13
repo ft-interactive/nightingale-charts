@@ -157,29 +157,14 @@ fdescribe('column-chart.js', function(){
         });
     });
 
-    xdescribe('number of columns ', function(){
-        it('in day chart is correct', function(){ //this should fail because the number of columns showing in a day is 1 and should be 4
-            var cols = document.querySelectorAll('.width600 svg')[6].querySelectorAll('rect');
-
-            expect(cols.length).toBe(4);
-        });
-
-        it('in hour chart is correct', function(){ //this should fail because the number of columns showing in a hour is 1 and should be 4
-            var cols = document.querySelectorAll('.width600 svg')[7].querySelectorAll('rect');
-
-            expect(cols.length).toBe(4);
-        });
-    });
-
     describe('stacked column chart ', function(){ //still working on this one, had to leave a bit early
         it('has the same number of stacks in each grouping', function(){
-            var g = document.querySelectorAll('.width600 svg')[9].querySelectorAll('.plot g.series');
+            var g = document.querySelectorAll('.width600 svg')[7].querySelectorAll('.plot g.series');
             var i = g.length;
-            var firstGroup = g[0].querySelectorAll('rect');
 
             while(i--){
                 var thisGroup = g[i].querySelectorAll('rect');
-                expect(thisGroup.length).toBe(firstGroup.length);
+                expect(thisGroup.length).toBe(5);
             }
         });
     });

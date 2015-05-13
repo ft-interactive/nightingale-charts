@@ -91,9 +91,8 @@ function columnChart(g){
 
 	var plotSVG = chartSVG.append('g').attr('class', 'plot');
 
-	while(i < model.y.series.length){ //changed to order stacked colors
+	for(i = 0; i < model.y.series.length; i++){ //changed to order stacked colors
 		plotSeries(plotSVG, model, axes, model.y.series[i], i);
-		i++;
 	}
 }
 
