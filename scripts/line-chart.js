@@ -263,6 +263,7 @@ var interval = {
     decades: d3.time.year,
     years: d3.time.year,
     fullYears: d3.time.year,
+    quarterly: d3.time.month,
     months: d3.time.month,
     weeks: d3.time.week,
     days: d3.time.day,
@@ -274,6 +275,7 @@ var increment = {
     decades: 10,
     years: 1,
     fullYears: 1,
+    quarterly: 3,
     months: 1,
     weeks: 1,
     days: 1,
@@ -809,11 +811,7 @@ function lineChart(g) {
 
     var axes = new Axes(chartSVG, model);
     axes.addValueScale();
-    if(model.groupDates){
-        axes.addGroupedTimeScale(model.groupDates);
-    }else{
-        axes.addTimeScale();
-    }
+    axes.addTimeScale(model.units);
     axes.repositionAxis();
 
     var plotSVG = chartSVG.append('g').attr('class', 'plot');
@@ -1725,7 +1723,9 @@ var formatter = {
         return formatter.years(d, i);
     },
     quarterly: function (d, i, firstDate) {
-        var years = (firstDate && formatter.years(firstDate, i) == formatter.years(d, i)) ? 'fullYears' : 'years';
+        var years = (firstDate && !Array.isArray(firstDate) &&
+            (formatter.years(firstDate, i) == formatter.years(d, i))) ?
+            'fullYears' : 'years';
         return 'Q' + Math.floor((d.getMonth() + 3) / 3) + ' ' + formatter[years](d, i);
     },
     monthly: function (d, i) {
@@ -1851,7 +1851,7 @@ Axes.prototype.addGroupedTimeScale = function (units) {
     this.rearrangeLabels();
 };
 
-Axes.prototype.addTimeScale = function () {
+Axes.prototype.addTimeScale = function (units) {
     var model = this.model;
     this.timeScale = d3.time.scale()
         .domain(model.timeDomain)
@@ -1862,7 +1862,7 @@ Axes.prototype.addTimeScale = function () {
     this.timeAxis = dateAxis()
         .simple(model.simpleDate)
         .yOffset(model.chartHeight)	//position the axis at the bottom of the chart
-        .scale(this.timeScale);
+        .scale(this.timeScale, units);
     this.svg.call(this.timeAxis);
 };
 
@@ -2375,7 +2375,8 @@ module.exports = {
 };
 
 },{}],29:[function(require,module,exports){
-module.exports = "0.1.0";
+module.exports = "0.1.6";
+
 },{}],"line-chart":[function(require,module,exports){
 var oCharts = require('../../src/scripts/o-charts');
 var d3 = require('d3');
@@ -2392,10 +2393,19 @@ var hideSource = [true, true, false];
 var numberAxisOrient = ['left', 'right', 'left', 'right'];
 
 var quarterlyData =  [
-    { date: new Date('3/31/05'), value: 0.583},
-    { date: new Date('6/30/05'), value: -1.027},
-    { date: new Date('9/30/05'), value: 1.03},
-    { date: new Date('12/30/05'), value: 1.348}
+    //note (pm):
+    //Should we manipulate the data to be start of the quarter instead of the end?
+    //Should this be done here in o-charts or in nightingale?
+    //or is there another cleaner way?
+
+    //{ date: new Date('3/31/05'), value: 0.583},
+    //{ date: new Date('6/30/05'), value: -1.027},
+    //{ date: new Date('9/30/05'), value: 1.03},
+    //{ date: new Date('12/30/05'), value: 1.348}
+    { date: new Date('1/1/05'), value: 0.583},
+    { date: new Date('4/01/05'), value: -1.027},
+    { date: new Date('7/01/05'), value: 1.03},
+    { date: new Date('10/01/05'), value: 1.348}
 ];
 var timeData = [
     {date: new Date('2000-01-01T00:00:00.000Z'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
@@ -2405,21 +2415,27 @@ var timeData = [
 ];
 
 function getChartData(i) {
-    return {
+    var defaultData = {
         comment: "Line chart",
         footnote: "this is just for testing!",
         source: "tbc",
         title: "Some Simple Lines: " + (i + 1),
-        subtitle: i===3 ? "Quarterly Axis" : "Drawn for you",
+        subtitle: "Drawn for you",
         numberAxisOrient: numberAxisOrient[i], //todo: refactor onto y object
         hideSource: hideSource[i],
         x: {
             series: {key: 'date', label: 'year'}
         },
         y: y[i],
-        data: i===3 ? quarterlyData : timeData,
-        groupDates: i===3 ? ['quarterly', 'yearly'] : false
+        data: timeData,
+        groupDates: false
     };
+    if (i===3){
+        defaultData.subtitle = "Quarterly Axis";
+        defaultData.data = quarterlyData;
+        defaultData.units = ['quarterly', 'yearly'];
+    }
+    return defaultData;
 }
 
 module.exports = {

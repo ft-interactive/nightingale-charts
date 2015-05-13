@@ -263,6 +263,7 @@ var interval = {
     decades: d3.time.year,
     years: d3.time.year,
     fullYears: d3.time.year,
+    quarterly: d3.time.month,
     months: d3.time.month,
     weeks: d3.time.week,
     days: d3.time.day,
@@ -274,6 +275,7 @@ var increment = {
     decades: 10,
     years: 1,
     fullYears: 1,
+    quarterly: 3,
     months: 1,
     weeks: 1,
     days: 1,
@@ -809,11 +811,7 @@ function lineChart(g) {
 
     var axes = new Axes(chartSVG, model);
     axes.addValueScale();
-    if(model.groupDates){
-        axes.addGroupedTimeScale(model.groupDates);
-    }else{
-        axes.addTimeScale();
-    }
+    axes.addTimeScale(model.units);
     axes.repositionAxis();
 
     var plotSVG = chartSVG.append('g').attr('class', 'plot');
@@ -1725,7 +1723,9 @@ var formatter = {
         return formatter.years(d, i);
     },
     quarterly: function (d, i, firstDate) {
-        var years = (firstDate && formatter.years(firstDate, i) == formatter.years(d, i)) ? 'fullYears' : 'years';
+        var years = (firstDate && !Array.isArray(firstDate) &&
+            (formatter.years(firstDate, i) == formatter.years(d, i))) ?
+            'fullYears' : 'years';
         return 'Q' + Math.floor((d.getMonth() + 3) / 3) + ' ' + formatter[years](d, i);
     },
     monthly: function (d, i) {
@@ -1851,7 +1851,7 @@ Axes.prototype.addGroupedTimeScale = function (units) {
     this.rearrangeLabels();
 };
 
-Axes.prototype.addTimeScale = function () {
+Axes.prototype.addTimeScale = function (units) {
     var model = this.model;
     this.timeScale = d3.time.scale()
         .domain(model.timeDomain)
@@ -1862,7 +1862,7 @@ Axes.prototype.addTimeScale = function () {
     this.timeAxis = dateAxis()
         .simple(model.simpleDate)
         .yOffset(model.chartHeight)	//position the axis at the bottom of the chart
-        .scale(this.timeScale);
+        .scale(this.timeScale, units);
     this.svg.call(this.timeAxis);
 };
 
@@ -2375,7 +2375,8 @@ module.exports = {
 };
 
 },{}],29:[function(require,module,exports){
-module.exports = "0.1.0";
+module.exports = "0.1.6";
+
 },{}],"series-key":[function(require,module,exports){
 
 var oCharts = require('../../src/scripts/o-charts');
