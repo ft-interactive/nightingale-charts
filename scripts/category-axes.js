@@ -263,7 +263,6 @@ var interval = {
     decades: d3.time.year,
     years: d3.time.year,
     fullYears: d3.time.year,
-    quarterly: d3.time.month,
     months: d3.time.month,
     weeks: d3.time.week,
     days: d3.time.day,
@@ -275,7 +274,6 @@ var increment = {
     decades: 10,
     years: 1,
     fullYears: 1,
-    quarterly: 3,
     months: 1,
     weeks: 1,
     days: 1,
@@ -588,7 +586,7 @@ module.exports = {
 };
 
 },{}],9:[function(require,module,exports){
-var d3 = require('d3');
+//var d3 = require('d3');
 
 function blankChart() {
     'use strict';
@@ -659,8 +657,8 @@ function blankChart() {
 
 module.exports = blankChart;
 
-},{"d3":"d3"}],10:[function(require,module,exports){
-var d3 = require('d3');
+},{}],10:[function(require,module,exports){
+//var d3 = require('d3');
 var Axes = require('../util/draw-axes.js');
 var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');
@@ -742,7 +740,7 @@ function columnChart(g){
 
 module.exports = columnChart;
 
-},{"../util/chart-attribute-styles":19,"../util/data.model.js":20,"../util/draw-axes.js":22,"../util/dressing.js":23,"../util/metadata.js":27,"d3":"d3"}],11:[function(require,module,exports){
+},{"../util/chart-attribute-styles":19,"../util/data.model.js":20,"../util/draw-axes.js":22,"../util/dressing.js":23,"../util/metadata.js":27}],11:[function(require,module,exports){
 module.exports = {
     line: require('./line.js'),
     blank: require('./blank.js'),
@@ -811,7 +809,11 @@ function lineChart(g) {
 
     var axes = new Axes(chartSVG, model);
     axes.addValueScale();
-    axes.addTimeScale(model.units);
+    if(model.groupDates){
+        axes.addGroupedTimeScale(model.groupDates);
+    }else{
+        axes.addTimeScale();
+    }
     axes.repositionAxis();
 
     var plotSVG = chartSVG.append('g').attr('class', 'plot');
@@ -825,7 +827,7 @@ function lineChart(g) {
 module.exports = lineChart;
 
 },{"../util/chart-attribute-styles":19,"../util/data.model.js":20,"../util/draw-axes.js":22,"../util/dressing.js":23,"../util/line-interpolators.js":25,"../util/metadata.js":27,"d3":"d3"}],13:[function(require,module,exports){
-var d3 = require('d3');
+//var d3 = require('d3');
 
 function pieChart() {
     'use strict';
@@ -908,9 +910,9 @@ function pieChart() {
 
 module.exports = pieChart;
 
-},{"d3":"d3"}],14:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 //the ft logo there's probably an easier ay to do this...
-var d3 = require('d3');
+//var d3 = require('d3');
 
 function ftLogo(g, dim) {
     'use strict';
@@ -942,8 +944,8 @@ module.exports = ftLogo;
  h3.075L110.955,1.959z"/>
  */
 
-},{"d3":"d3"}],15:[function(require,module,exports){
-var d3 = require('d3');
+},{}],15:[function(require,module,exports){
+//var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
 var styler = require('../util/chart-attribute-styles');
 
@@ -1051,7 +1053,7 @@ function lineKey(options) {
 
 module.exports = lineKey;
 
-},{"../util/chart-attribute-styles":19,"../util/line-thickness.js":26,"d3":"d3"}],16:[function(require,module,exports){
+},{"../util/chart-attribute-styles":19,"../util/line-thickness.js":26}],16:[function(require,module,exports){
 /*jshint -W084 */
 //text area provides a wrapping text block of a given type
 var d3 = require('d3');
@@ -1723,9 +1725,7 @@ var formatter = {
         return formatter.years(d, i);
     },
     quarterly: function (d, i, firstDate) {
-        var years = (firstDate && !Array.isArray(firstDate) &&
-            (formatter.years(firstDate, i) == formatter.years(d, i))) ?
-            'fullYears' : 'years';
+        var years = (firstDate && formatter.years(firstDate, i) == formatter.years(d, i)) ? 'fullYears' : 'years';
         return 'Q' + Math.floor((d.getMonth() + 3) / 3) + ' ' + formatter[years](d, i);
     },
     monthly: function (d, i) {
@@ -1851,7 +1851,7 @@ Axes.prototype.addGroupedTimeScale = function (units) {
     this.rearrangeLabels();
 };
 
-Axes.prototype.addTimeScale = function (units) {
+Axes.prototype.addTimeScale = function () {
     var model = this.model;
     this.timeScale = d3.time.scale()
         .domain(model.timeDomain)
@@ -1862,7 +1862,7 @@ Axes.prototype.addTimeScale = function (units) {
     this.timeAxis = dateAxis()
         .simple(model.simpleDate)
         .yOffset(model.chartHeight)	//position the axis at the bottom of the chart
-        .scale(this.timeScale, units);
+        .scale(this.timeScale);
     this.svg.call(this.timeAxis);
 };
 
@@ -2375,7 +2375,7 @@ module.exports = {
 };
 
 },{}],29:[function(require,module,exports){
-module.exports = "0.1.6";
+module.exports = "0.1.0";
 
 },{}],"category-axes":[function(require,module,exports){
 
