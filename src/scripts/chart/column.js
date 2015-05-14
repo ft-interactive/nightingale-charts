@@ -26,8 +26,7 @@ function plotSeries(plotSVG, model, axes, series, i){
         .attr('class', function (d){return 'column column--'  + series.className + (d.value < 0 ? ' negative' : ' positive');})
         .attr('data-value', function (d){return d.value;})
 		.attr('x', function (d){
-			var adjustmentIfMultipleSeries = model.chartSubtype === 'multiple' ? ((axes.timeScale.rangeBand() / model.y.series.length) * i) : 0;
-			return axes.timeScale(d.key) + adjustmentIfMultipleSeries;
+			return adjustRangeToX(axes.timeScale(d.key), axes.timeScale.rangeBand(), model, i);
 		})
 		.attr('y', function (d, j){
 			var stackY = model.stackSeries({stack:j, value:d.value}, 0); //all series are now stacks
@@ -35,12 +34,24 @@ function plotSeries(plotSVG, model, axes, series, i){
 		})
         .attr('height', function (d){return Math.abs(axes.valueScale(d.value) - axes.valueScale(0));})
         .attr('width', function(){
-        	var adjustmentIfMultipleSeries = model.chartSubtype === 'multiple' ? model.y.series.length : 1;
-			return axes.timeScale.rangeBand() / adjustmentIfMultipleSeries;
+			return adjustRangeToWidth(axes.timeScale.rangeBand(), model);
     	});
+}
 
-        //.attr('x', function(d) { return x1(d.key); })
-    	//.attr("width", x1.rangeBand())
+function adjustRangeToX(timeScale, rangeBand, model, i){
+	if(model.chartSubtype === 'multiple'){
+		return (rangeBand / model.y.series.length) * i;
+	}else{
+		return timeScale;
+	}
+}
+
+function adjustRangeToWidth(rangeBand, model){
+	if(model.chartSubtype === 'multiple'){
+		return rangeBand / model.y.series.length;
+	}else{
+		return rangeBand;
+	}
 }
 
 function formatData(model, series){
@@ -61,7 +72,7 @@ function columnChart(g){
 	'use strict';
 
 	var model = new DataModel(Object.create(g.data()[0]));
-	var i = 0;
+	var i;
 	var svg = g.append('svg')
 		.attr({
 			'class': 'graphic line-chart',
