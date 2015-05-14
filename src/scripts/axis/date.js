@@ -48,9 +48,10 @@ function dateAxis() {
 
         if (dates.unitGenerator(config.scale.domain())[0] == 'days') {
             labels.removeDays(g, '.primary text');
-        } else {
-            labels.removeOverlapping(g, '.primary text');
         }
+        labels.removeDuplicates(g, '.primary text');
+        labels.removeDuplicates(g, '.secondary text');
+        labels.removeOverlapping(g, '.primary text');
         labels.removeOverlapping(g, '.secondary text');
     }
 
