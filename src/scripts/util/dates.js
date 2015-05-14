@@ -32,7 +32,7 @@ var formatter = {
         var years = (firstDate && !Array.isArray(firstDate) &&
             (formatter.years(firstDate, i) == formatter.years(d, i))) ?
             'fullYears' : 'years';
-        return 'Q' + Math.floor((d.getMonth() + 3) / 3) + ' ' + formatter[years](d, i);
+        return 'Q' + Math.floor((d.getMonth() + 3) / 3);
     },
     monthly: function (d, i) {
         return formatter.months(d, i) + ' ' + formatter.fullYears(d, i);

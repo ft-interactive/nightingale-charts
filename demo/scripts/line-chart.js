@@ -13,19 +13,11 @@ var hideSource = [true, true, false];
 var numberAxisOrient = ['left', 'right', 'left', 'right'];
 
 var quarterlyData =  [
-    //note (pm):
-    //Should we manipulate the data to be start of the quarter instead of the end?
-    //Should this be done here in o-charts or in nightingale?
-    //or is there another cleaner way?
-
-    //{ date: new Date('3/31/05'), value: 0.583},
-    //{ date: new Date('6/30/05'), value: -1.027},
-    //{ date: new Date('9/30/05'), value: 1.03},
-    //{ date: new Date('12/30/05'), value: 1.348}
     { date: new Date('1/1/05'), value: 0.583},
     { date: new Date('4/01/05'), value: -1.027},
     { date: new Date('7/01/05'), value: 1.03},
-    { date: new Date('10/01/05'), value: 1.348}
+    { date: new Date('10/01/05'), value: 1.348},
+    { date: new Date('01/01/06'), value: 1.348}
 ];
 var timeData = [
     {date: new Date('2000-01-01T00:00:00.000Z'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},

@@ -136,7 +136,9 @@ function groupDates(m, units){
 	m.data = d3.nest()
 		.key(function(d)  {
             firstDate = firstDate || d[m.x.series.key];
-            return dateUtil.formatter[units[0]](d[m.x.series.key], i++, firstDate);
+            var dateStr = [dateUtil.formatter[units[0]](d[m.x.series.key], i++, firstDate)];
+            units[1] && dateStr.push(dateUtil.formatter[units[1]](d[m.x.series.key], i++, firstDate));
+            return  dateStr.join(' ');
 		})
 		.entries(m.data);
 	m.x.series.key = 'key';
