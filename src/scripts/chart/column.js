@@ -1,4 +1,4 @@
-var d3 = require('d3');
+//var d3 = require('d3');
 var Axes = require('../util/draw-axes.js');
 var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');
