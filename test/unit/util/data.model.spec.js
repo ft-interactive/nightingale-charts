@@ -67,7 +67,7 @@ describe('data model', function () {
                 {quartersCol: new Date('2002-01-01T00:00:00.000Z'), qValue: 32.23, value2: 32},
                 {quartersCol: new Date('2003-01-01T00:00:00.000Z'), qValue: 39.23, value2: 37}
             ],
-            groupDates: ['quarterly','yearly'],
+            units: ['quarterly','yearly'],
             x: { series:{key:'quartersCol',label:'myValue'}},
             y: { series: [{key:'qValue', label:'String Value'},
                 {key:'value2', label:'Another String Value'}]}

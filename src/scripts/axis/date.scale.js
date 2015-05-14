@@ -1,5 +1,6 @@
 var d3 = require('d3');
 var utils = require('../util/dates.js');
+require('./../polyfill/bind');
 
 var interval = {
     centuries: d3.time.year,
@@ -54,7 +55,7 @@ module.exports = {
                 var axis = d3.svg.axis()
                     .scale(scale)
                     .tickValues(customTicks)
-                    .tickFormat(utils.formatter[unit])
+                    .tickFormat(utils.formatter[unit].bind({firstDate:0}))
                     .tickSize(tickSize, 0);
                 axes.push(axis);
             }

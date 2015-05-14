@@ -154,7 +154,7 @@ function getChartData(timeFrame){
           series: {key:'date', label:'yearly'}
         },
         y: { series: ySeries} ,
-        groupDates: units[timeFrame],
+        units: units[timeFrame],
         data: fixtures[timeFrame]
     };
 }

@@ -2,6 +2,7 @@ var d3 = require('d3');
 var categoryAxis = require('../axis/category.js');
 var dateAxis = require('../axis/date.js');
 var numberAxis = require('../axis/number.js');
+var dateFormatter = require('./dates').formatter;
 
 function getHeight(selection) {
     return Math.ceil(selection.node().getBoundingClientRect().height);
@@ -20,13 +21,17 @@ function Axes(svg, model) {
 
 Axes.prototype.rearrangeLabels = function () {
     var model = this.model;
-    var showsAllLabels = this.timeScale.domain().length === this.svg.selectAll('.x.axis .primary text')[0].length;
+    var showsAllLabels = this.svg.selectAll('.x.axis .primary line')[0].length === this.svg.selectAll('.x.axis .primary text')[0].length;
     var allPositiveValues = Math.min.apply(null, this.valueScale.domain()) >= 0;
-    if (showsAllLabels && allPositiveValues) {
+
+    if (showsAllLabels && allPositiveValues && model.chartType == 'column') {
+        this.svg.selectAll('.x.axis').remove();
         this.timeAxis.tickSize(0).scale(this.timeScale, this.units);
+        this.svg.call(this.timeAxis);
     } else if (!showsAllLabels) { //todo: should/can this be in category.js?
+        this.svg.selectAll('.x.axis').remove();
         this.timeAxis.tickSize(model.tickSize * this.tickExtender)
-            .scale(this.timeScale, ['yearly']);//todo: pm: swap for groupDates[1]
+            .scale(this.timeScale, [model.units[1]]);//todo: pm: swap for groupDates[1]
         this.svg.call(this.timeAxis);
     }
 };
@@ -61,7 +66,6 @@ Axes.prototype.addGroupedTimeScale = function (units) {
         .tickSize(model.tickSize)
         .scale(this.timeScale, units);
     this.svg.call(this.timeAxis);
-    this.rearrangeLabels();
 };
 
 Axes.prototype.addTimeScale = function (units) {
@@ -75,6 +79,7 @@ Axes.prototype.addTimeScale = function (units) {
     this.timeAxis = dateAxis()
         .simple(model.simpleDate)
         .yOffset(model.chartHeight)	//position the axis at the bottom of the chart
+        .tickSize(model.tickSize)
         .scale(this.timeScale, units);
     this.svg.call(this.timeAxis);
 };
@@ -107,10 +112,17 @@ Axes.prototype.reduceExtendedTicks = function () {
     var model = this.model;
     var self = this;
     var extendedTicks_selector = ".x.axis .tick line[y2=\"" + (model.tickSize * this.tickExtender) + "\"]";
+    var ticks_selector = ".x.axis .tick line";
     this.svg.selectAll(extendedTicks_selector)
         .attr("y2", function (d) {
-            return (d.toString().indexOf('Q1') < 0 ) ? model.tickSize : (model.tickSize * self.tickExtender);
+            var quarter = d.getMonth ? dateFormatter[model.units[0]](d) : d.toString();
+            return (quarter.indexOf('Q1') < 0) ? model.tickSize : (model.tickSize * self.tickExtender);
         });
+    var tickCount = this.svg.selectAll(ticks_selector)[0].length;
+    var extendedCount = this.svg.selectAll(extendedTicks_selector)[0].length;
+    if (extendedCount+1 >= tickCount){
+        this.svg.selectAll(extendedTicks_selector).attr("y2", model.tickSize);
+    }
 };
 
 Axes.prototype.repositionAxis = function () {
@@ -136,7 +148,10 @@ Axes.prototype.repositionAxis = function () {
     this.svg.call(this.vAxis);
     this.svg.call(this.timeAxis);
 
-    this.reduceExtendedTicks();
+    if (model.groupData) {
+        this.rearrangeLabels();
+        this.reduceExtendedTicks();
+    }
 
     if (model.numberAxisOrient !== 'right') {
         this.svg.selectAll('.y.axis text').each(function () {
