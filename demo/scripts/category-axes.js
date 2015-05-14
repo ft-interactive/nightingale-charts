@@ -90,7 +90,7 @@ function drawDemo(timeFrame){
             .ordinal()
             .rangeRoundBands([0, 400], 0, 0)
             .domain(nestedFixture.map(function (d){return d.key;})),
-        groupDates: units[timeFrame] || ['quarterly', 'yearly']
+        units: units[timeFrame] || ['quarterly', 'yearly']
     };
 
     d3.select('#views')
@@ -108,7 +108,7 @@ function drawDemo(timeFrame){
         .each(function (d, i) {
             var axis = oCharts.axis.category()
                 .tickSize(d.tickSize)
-                .scale(d.scale, d.groupDates);
+                .scale(d.scale, d.units);
 
             d3.select(this)
                 .append('g')

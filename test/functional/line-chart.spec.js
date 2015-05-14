@@ -1,14 +1,22 @@
 /* Add HTML + CSS to setup page for functional testing */
-require('../helper').loadAssets('line-chart');
 
-require('../../demo/scripts/line-chart').init();
+describe('line-chart  ', function () {
 
-fdescribe('line-chart  ', function () {
+    var lineChart1;
+    var lineChart2;
+    var lineChart3;
+    var lineChart4;
 
-    var lineChart1 = document.querySelector('#line-chart1 svg');
-    var lineChart2 = document.querySelector('#line-chart2 svg');
-    var lineChart3 = document.querySelector('#line-chart3 svg');
-    var lineChart4 = document.querySelector('#line-chart4 svg');
+    beforeEach(function(){
+        //pm: hack to stop spec rewriting dom too early :(
+        require('../helper').loadAssets('line-chart');
+        require('../../demo/scripts/line-chart').init();
+
+        lineChart1 = document.querySelector('#line-chart1 svg');
+        lineChart2 = document.querySelector('#line-chart2 svg');
+        lineChart3 = document.querySelector('#line-chart3 svg');
+        lineChart4 = document.querySelector('#line-chart4 svg');
+    });
 
     describe('shows line keys as ', function () {
 
@@ -134,4 +142,43 @@ fdescribe('line-chart  ', function () {
 
     });
 
+
+    describe('has ticks ', function(){
+
+        it('displayed even when no labels have been removed and there are no negative value', function(){
+            var quarterlyTicksGraphA = document.querySelectorAll('svg')[4].querySelectorAll('.x.axis .primary line');
+            expect(quarterlyTicksGraphA.length).toBe(5);
+            expect(quarterlyTicksGraphA[0].getAttribute('y2')).toBe('5');
+            expect(quarterlyTicksGraphA[1].getAttribute('y2')).toBe('5');
+            expect(quarterlyTicksGraphA[2].getAttribute('y2')).toBe('5');
+            expect(quarterlyTicksGraphA[3].getAttribute('y2')).toBe('5');
+        });
+
+        it('extended when quarter labels are removed', function(){
+            var quarterlyTicksGraphC = document.querySelectorAll('svg')[5].querySelectorAll('.x.axis .primary line');
+            expect(quarterlyTicksGraphC[0].getAttribute('y2')).toBe('7.5');
+            expect(quarterlyTicksGraphC[1].getAttribute('y2')).toBe('5');
+            expect(quarterlyTicksGraphC[2].getAttribute('y2')).toBe('5');
+            expect(quarterlyTicksGraphC[3].getAttribute('y2')).toBe('5');
+            expect(quarterlyTicksGraphC[4].getAttribute('y2')).toBe('7.5');
+            expect(quarterlyTicksGraphC[5].getAttribute('y2')).toBe('5');
+            expect(quarterlyTicksGraphC[6].getAttribute('y2')).toBe('5');
+            expect(quarterlyTicksGraphC[7].getAttribute('y2')).toBe('5');
+            expect(quarterlyTicksGraphC[8].getAttribute('y2')).toBe('7.5');
+        });
+
+        it('small when quarter ticks are removed', function(){
+            var quarterlyTicksGraphC = document.querySelectorAll('svg')[6].querySelectorAll('.x.axis .primary line');
+            expect(quarterlyTicksGraphC[0].getAttribute('y2')).toBe('5');
+            expect(quarterlyTicksGraphC[1].getAttribute('y2')).toBe('5');
+            expect(quarterlyTicksGraphC[2].getAttribute('y2')).toBe('5');
+            expect(quarterlyTicksGraphC[3].getAttribute('y2')).toBe('5');
+            expect(quarterlyTicksGraphC[4].getAttribute('y2')).toBe('5');
+            expect(quarterlyTicksGraphC[5].getAttribute('y2')).toBe('5');
+            expect(quarterlyTicksGraphC[6].getAttribute('y2')).toBe('5');
+            expect(quarterlyTicksGraphC[7].getAttribute('y2')).toBe('5');
+            expect(quarterlyTicksGraphC[8].getAttribute('y2')).toBe('5');
+        });
+
+    });
 });

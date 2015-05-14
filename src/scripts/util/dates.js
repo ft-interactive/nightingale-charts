@@ -25,13 +25,16 @@ var formatter = {
     fullYears: function (d, i) {
         return d3.time.format('%Y')(d);
     },
-    yearly: function (d, i) {
-        return formatter.years(d, i);
-    },
-    quarterly: function (d, i, firstDate) {
+    yearly: function (d, i, firstDate) {
+        if (!this.firstDate) this.firstDate = d;
+        firstDate = firstDate || this.firstDate;
         var years = (firstDate && !Array.isArray(firstDate) &&
-            (formatter.years(firstDate, i) == formatter.years(d, i))) ?
+        (formatter.years(firstDate, i) == formatter.years(d, i))) ?
             'fullYears' : 'years';
+
+        return formatter[years](d, i);
+    },
+    quarterly: function (d, i) {
         return 'Q' + Math.floor((d.getMonth() + 3) / 3);
     },
     monthly: function (d, i) {

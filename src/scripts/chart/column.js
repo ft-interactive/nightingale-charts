@@ -64,8 +64,8 @@ function columnChart(g){
 	var axes = new Axes(chartSVG, model);
 		axes.addValueScale();
 
-	if(model.groupDates){
-		axes.addGroupedTimeScale(model.groupDates);
+	if(model.groupData){
+		axes.addGroupedTimeScale(model.units);
 	}else{
 		axes.addTimeScale();
 	}

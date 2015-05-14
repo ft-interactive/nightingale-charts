@@ -8,17 +8,82 @@ var y = [   { series: ['value', 'value2', 'value3'] },
             { series: [ {key:'value', label:function(){ return 'Function Value';}},
                         {key:'value2', label:function(){ return 'Another function Value';}} ]
             },
+            { series: ['value'] },
+            { series: ['value'] },
+            { series: ['value'] },
             { series: ['value'] }];
 var hideSource = [true, true, false];
-var numberAxisOrient = ['left', 'right', 'left', 'right'];
+var numberAxisOrient = ['left', 'right', 'left', 'right', 'right'];
 
-var quarterlyData =  [
+var quarterlyDataPlus =  [
+    { date: new Date('1/1/05'), value: 0.583},
+    { date: new Date('4/01/05'), value: 1.027},
+    { date: new Date('7/01/05'), value: 1.03},
+    { date: new Date('10/01/05'), value: 1.348},
+    { date: new Date('01/01/06'), value: 1.348}
+];
+var quarterlyData5Months =  [
     { date: new Date('1/1/05'), value: 0.583},
     { date: new Date('4/01/05'), value: -1.027},
     { date: new Date('7/01/05'), value: 1.03},
     { date: new Date('10/01/05'), value: 1.348},
     { date: new Date('01/01/06'), value: 1.348}
 ];
+var quarterlyDataMany =  [
+    { date: new Date('1/1/05'), value: 0.583},
+    { date: new Date('4/01/05'), value: -1.027},
+    { date: new Date('7/01/05'), value: 1.03},
+    { date: new Date('10/01/05'), value: 1.348},
+    { date: new Date('1/1/06'), value: 0.583},
+    { date: new Date('4/01/06'), value: -1.027},
+    { date: new Date('7/01/06'), value: 1.03},
+    { date: new Date('10/01/06'), value: 1.348},
+    { date: new Date('1/1/07'), value: 0.583},
+    { date: new Date('4/01/07'), value: -1.027},
+    { date: new Date('7/01/07'), value: 1.03},
+    { date: new Date('10/01/07'), value: 1.348},
+    { date: new Date('1/1/08'), value: 0.583},
+    { date: new Date('4/01/08'), value: -1.027},
+    { date: new Date('7/01/08'), value: 1.03},
+    { date: new Date('10/01/08'), value: 1.348},
+    { date: new Date('01/01/09'), value: 1.348}
+];
+var quarterlyDataDecade =  [
+    { date: new Date('1/1/05'), value: 0.583},
+    { date: new Date('4/01/05'), value: -1.027},
+    { date: new Date('7/01/05'), value: 1.03},
+    { date: new Date('10/01/05'), value: 1.348},
+    { date: new Date('1/1/06'), value: 0.583},
+    { date: new Date('4/01/06'), value: -1.027},
+    { date: new Date('7/01/06'), value: 1.03},
+    { date: new Date('10/01/06'), value: 1.348},
+    { date: new Date('1/1/07'), value: 0.583},
+    { date: new Date('4/01/07'), value: -1.027},
+    { date: new Date('7/01/07'), value: 1.03},
+    { date: new Date('10/01/07'), value: 1.348},
+    { date: new Date('1/1/08'), value: 0.583},
+    { date: new Date('4/01/08'), value: -1.027},
+    { date: new Date('7/01/08'), value: 1.03},
+    { date: new Date('10/01/08'), value: 1.348},
+    { date: new Date('01/01/09'), value: 1.348},
+    { date: new Date('4/01/09'), value: -1.027},
+    { date: new Date('7/01/09'), value: 1.03},
+    { date: new Date('10/01/09'), value: 1.348},
+    { date: new Date('1/1/10'), value: 0.583},
+    { date: new Date('4/01/10'), value: -1.027},
+    { date: new Date('7/01/10'), value: 1.03},
+    { date: new Date('10/01/10'), value: 1.348},
+    { date: new Date('1/1/11'), value: 0.583},
+    { date: new Date('4/01/11'), value: -1.027},
+    { date: new Date('7/01/11'), value: 1.03},
+    { date: new Date('10/01/11'), value: 1.348},
+    { date: new Date('1/1/12'), value: 0.583},
+    { date: new Date('4/01/12'), value: -1.027},
+    { date: new Date('7/01/12'), value: 1.03},
+    { date: new Date('10/01/12'), value: 1.348},
+    { date: new Date('01/01/13'), value: 1.348}
+];
+var quarterlyData = [0,0,0,quarterlyDataPlus, quarterlyData5Months, quarterlyDataMany, quarterlyDataDecade]
 var timeData = [
     {date: new Date('2000-01-01T00:00:00.000Z'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
     {date: new Date('2001-01-01T00:00:00.000Z'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
@@ -40,11 +105,11 @@ function getChartData(i) {
         },
         y: y[i],
         data: timeData,
-        groupDates: false
+        units: false
     };
-    if (i===3){
+    if (i>=3){
         defaultData.subtitle = "Quarterly Axis";
-        defaultData.data = quarterlyData;
+        defaultData.data = quarterlyData[i];
         defaultData.units = ['quarterly', 'yearly'];
     }
     return defaultData;
@@ -53,7 +118,7 @@ function getChartData(i) {
 module.exports = {
     getChartData: getChartData,
     init: function () {
-        for (var i = 0; i < 4; i++) {
+        for (var i = 0; i < 7; i++) {
             d3.select('body').append('div').attr('id', 'line-chart' + (i + 1));
             d3.select('#line-chart' + (i + 1)).data([getChartData(i)]).call(oCharts.chart.line);
         }
