@@ -1,4 +1,4 @@
-var d3 = require('d3');
+//var d3 = require('d3');
 var Axes = require('../util/draw-axes.js');
 var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');
@@ -64,8 +64,8 @@ function columnChart(g){
 	var axes = new Axes(chartSVG, model);
 		axes.addValueScale();
 
-	if(model.groupDates){
-		axes.addGroupedTimeScale(model.groupDates);
+	if(model.groupData){
+		axes.addGroupedTimeScale(model.units);
 	}else{
 		axes.addTimeScale();
 	}

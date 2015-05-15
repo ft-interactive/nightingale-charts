@@ -29,7 +29,7 @@ function setExtents(model){
 	model.y.series.forEach(function (l) {
 		var key = l.key;
 		model.data = model.data.map(function (d, j) {
-			var value = (model.groupDates) ? d.values[0][key] : d[key];
+			var value = (Array.isArray(d.values)) ? d.values[0][key] : d[key];
 			var isValidNumber = value === null || typeof value === 'number';
 			if (!isValidNumber) {
 				model.error({
@@ -43,7 +43,7 @@ function setExtents(model){
 			return d;
 		});
 		var ext = d3.extent(model.data, function(d){
-			return (model.groupDates) ? d.values[0][key] : d[key];
+			return (Array.isArray(d.values)) ? d.values[0][key] : d[key];
 		});
 		extents = extents.concat (ext);
 	});
@@ -136,11 +136,23 @@ function groupDates(m, units){
 	m.data = d3.nest()
 		.key(function(d)  {
             firstDate = firstDate || d[m.x.series.key];
-            return dateUtil.formatter[units[0]](d[m.x.series.key], i++, firstDate);
+            var dateStr = [dateUtil.formatter[units[0]](d[m.x.series.key], i++, firstDate)];
+            units[1] && dateStr.push(dateUtil.formatter[units[1]](d[m.x.series.key], i++, firstDate));
+            return  dateStr.join(' ');
 		})
 		.entries(m.data);
 	m.x.series.key = 'key';
 	return m.data;
+}
+
+function needsGrouping(units){
+    if (!units) return false;
+    var isGroupingUnit = false;
+    units.forEach(function(unit){
+        var groupThis = ['quarterly', 'monthly', 'yearly'].indexOf(unit);
+        isGroupingUnit = isGroupingUnit || (groupThis>-1);
+    });
+    return isGroupingUnit;
 }
 
 function Model(chartType, opts) {
@@ -199,9 +211,10 @@ function Model(chartType, opts) {
 	m.chartHeight = chartHeight(m);
 	m.translate = translate(0);
 	m.data = verifyData(m);
+    m.groupData = needsGrouping(m.units);
 
-	if(m.groupDates){
-		m.data = groupDates(m, m.groupDates);
+    if(m.groupData && chartType == 'column'){
+        m.data = groupDates(m, m.units);
 		m.timeDomain = groupedTimeDomain(m);
 	}else{
 		m.timeDomain = timeDomain(m);

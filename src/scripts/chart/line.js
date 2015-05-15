@@ -52,17 +52,13 @@ function lineChart(g) {
     var dressing = new Dressing(svg, model);
     dressing.addHeader();
     dressing.addFooter();
-
     var chartSVG = svg.append('g').attr('class', 'chart');
     chartSVG.attr('transform', model.translate(model.chartPosition));
 
     var axes = new Axes(chartSVG, model);
+
     axes.addValueScale();
-    if(model.groupDates){
-        axes.addGroupedTimeScale(model.groupDates);
-    }else{
-        axes.addTimeScale();
-    }
+    axes.addTimeScale(model.units);
     axes.repositionAxis();
 
     var plotSVG = chartSVG.append('g').attr('class', 'plot');
