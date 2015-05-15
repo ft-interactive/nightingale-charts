@@ -7,22 +7,46 @@ var styler = require('../util/chart-attribute-styles');
 
 function plotSeries(plotSVG, model, axes, series, i){
 	var data = formatData(model, series);
-    var colWidth = axes.columnWidth || 1;
-    var adjustX = (axes.timeScale.rangeBand) ? (axes.timeScale.rangeBand() / model.y.series.length) : colWidth;
-
     var s = plotSVG.append('g').attr('class', 'series');
     s.selectAll('rect')
         .data(data)
         .enter()
         .append('rect')
         .attr('class', function (d){return 'column '  + series.className + (d.value < 0 ? ' negative' : ' positive');})
-        .attr('data-value', function (d){	return d.value;})
-		.attr('x', function (d){ return axes.timeScale(d.key) + (adjustX * i); })
-		.attr('y', function (d){ return axes.valueScale(Math.max(0, d.value));})
-        .attr('height', function (d){return Math.abs(axes.valueScale(d.value) - axes.valueScale(0));})
-		.attr("width", colWidth);
+        .attr('data-value', function (d){return d.value;})
+		.attr('x', function (d){
+			return adjustRangeToX(axes.timeScale(d.key), axes.timeScale.rangeBand(), model, i);
+		}).attr('y', function (d, j){
+			//return axes.valueScale(Math.max(0, d.value));})
+			return adjustYIfStack(axes, model, d.value, j);})
+        .attr('height', function (d){
+        	return Math.abs(axes.valueScale(d.value) - axes.valueScale(0));})
+		.attr('width', function (d){
+			return adjustRangeToWidth(axes.timeScale.rangeBand(), model);
+		});
 
     styler(plotSVG);
+}
+
+function adjustYIfStack(axes, model, value, j){
+	var stackY = model.stackSeries({stack:j, value:value}, 0);
+ 	return axes.valueScale(Math.max(0, stackY));
+}
+
+function adjustRangeToX(timeScale, rangeBand, model, i){
+	if(model.type === 'multiple'){
+		return timeScale + (rangeBand / model.y.series.length) * i;
+	}else{
+		return timeScale;
+	}
+}
+
+function adjustRangeToWidth(rangeBand, model){
+	if(model.type === 'multiple'){
+		return rangeBand / model.y.series.length;
+	}else{
+		return rangeBand;
+	}
 }
 
 function formatData(model, series) {
@@ -42,14 +66,14 @@ function formatData(model, series) {
 function columnChart(g){
 	'use strict';
 
-	var model = new DataModel('column',Object.create(g.data()[0]));
-	var i = model.y.series.length;
+	var model = new DataModel('column', Object.create(g.data()[0]));
+	var i;
 	var svg = g.append('svg')
 		.attr({
 			'class': 'graphic line-chart',
 			height: model.height,
 			width: model.width,
-			xmlns: "http://www.w3.org/2000/svg",
+			xmlns: 'http://www.w3.org/2000/svg',
 			version: "1.2"
 		});
 	metadata.create(svg, model);
@@ -73,7 +97,7 @@ function columnChart(g){
 
 	var plotSVG = chartSVG.append('g').attr('class', 'plot');
 
-	while(i--){
+	for(i = 0 ; i < model.y.series.length; i++){
 		plotSeries(plotSVG, model, axes, model.y.series[i], i);
 	}
 }
