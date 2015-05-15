@@ -49,7 +49,6 @@ function lineChart(g) {
         });
     metadata.create(svg, model);
 
-    debugger;
     var dressing = new Dressing(svg, model);
     dressing.addHeader();
     dressing.addFooter();
@@ -61,7 +60,6 @@ function lineChart(g) {
     axes.addValueScale();
     axes.addTimeScale(model.units);
     axes.repositionAxis();
-    debugger;
 
     var plotSVG = chartSVG.append('g').attr('class', 'plot');
     var i = model.y.series.length;
