@@ -1,6 +1,5 @@
 var d3 = require('d3');
 var utils = require('../util/dates.js');
-require('./../polyfill/bind');
 
 var interval = {
     centuries: d3.time.year,
@@ -43,6 +42,19 @@ module.exports = {
     dateSort: function (a, b) {
         return (a.getTime() - b.getTime());
     },
+    createAxes: function(scale, unit, tickSize, simple){
+        var firstDate ;
+        var customTicks = (simple) ? scale.domain() : this.customTicks(scale, unit);
+        var axis = d3.svg.axis()
+            .scale(scale)
+            .tickValues(customTicks)
+            .tickFormat(function(d,i){
+                firstDate = firstDate || d;
+                return utils.formatter[unit](d,i, firstDate);
+            })
+            .tickSize(tickSize, 0);
+        return axis;
+    },
     render: function (scale, units, tickSize, simple) {
         if (!units) {
             units = utils.unitGenerator(scale.domain(), simple);
@@ -51,13 +63,7 @@ module.exports = {
         for (var i = 0; i < units.length; i++) {
             var unit = units[i];
             if (utils.formatter[unit]) {
-                var customTicks = (simple) ? scale.domain() : this.customTicks(scale, unit);
-                var axis = d3.svg.axis()
-                    .scale(scale)
-                    .tickValues(customTicks)
-                    .tickFormat(utils.formatter[unit].bind({firstDate:0}))
-                    .tickSize(tickSize, 0);
-                axes.push(axis);
+                axes.push(this.createAxes(scale, unit, tickSize, simple));
             }
         }
         axes.forEach(function (axis) {

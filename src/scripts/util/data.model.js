@@ -29,7 +29,7 @@ function setExtents(model){
 	model.y.series.forEach(function (l) {
 		var key = l.key;
 		model.data = model.data.map(function (d, j) {
-			var value = (d.values) ? d.values[0][key] : d[key];
+			var value = (Array.isArray(d.values)) ? d.values[0][key] : d[key];
 			var isValidNumber = value === null || typeof value === 'number';
 			if (!isValidNumber) {
 				model.error({
@@ -43,7 +43,7 @@ function setExtents(model){
 			return d;
 		});
 		var ext = d3.extent(model.data, function(d){
-			return (d.values) ? d.values[0][key] : d[key];
+			return (Array.isArray(d.values)) ? d.values[0][key] : d[key];
 		});
 		extents = extents.concat (ext);
 	});
