@@ -1934,6 +1934,10 @@ Axes.prototype.extendedTicks = function () {
 Axes.prototype.repositionAxis = function () {
     var model = this.model;
 
+    if (model.groupData) { //todo: grr. two places!
+        this.rearrangeLabels();
+    }
+
     var xLabelHeight = getHeight(this.svg) - model.chartHeight;
     var yLabelWidth = getWidth(this.svg) - model.chartWidth;
     var plotHeight = model.chartHeight - xLabelHeight;
@@ -2409,7 +2413,7 @@ module.exports = {
 };
 
 },{}],28:[function(require,module,exports){
-module.exports = "0.1.1";
+module.exports = "0.1.2";
 },{}],"o-charts":[function(require,module,exports){
 module.exports = {
     chart: require('./chart/index.js'),

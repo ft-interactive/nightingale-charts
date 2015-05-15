@@ -1954,6 +1954,10 @@ Axes.prototype.extendedTicks = function () {
 Axes.prototype.repositionAxis = function () {
     var model = this.model;
 
+    if (model.groupData) { //todo: grr. two places!
+        this.rearrangeLabels();
+    }
+
     var xLabelHeight = getHeight(this.svg) - model.chartHeight;
     var yLabelWidth = getWidth(this.svg) - model.chartWidth;
     var plotHeight = model.chartHeight - xLabelHeight;
@@ -2429,7 +2433,7 @@ module.exports = {
 };
 
 },{}],29:[function(require,module,exports){
-module.exports = "0.1.1";
+module.exports = "0.1.2";
 },{}],"column-chart":[function(require,module,exports){
 var oCharts = require('../../src/scripts/o-charts');
 var d3 = require('d3');
