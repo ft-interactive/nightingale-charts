@@ -30,8 +30,7 @@ Axes.prototype.rearrangeLabels = function () {
         this.svg.call(this.timeAxis);
     } else if (!showsAllLabels) { //todo: should/can this be in category.js?
         this.svg.selectAll('.x.axis').remove();
-        this.timeAxis.tickSize(model.tickSize * this.tickExtender)
-            .scale(this.timeScale, [model.units[1]]);//todo: pm: swap for groupDates[1]
+        this.timeAxis.scale(this.timeScale, [model.units[1]]);
         this.svg.call(this.timeAxis);
     }
 };
@@ -108,13 +107,13 @@ Axes.prototype.addValueScale = function () {
     this.svg.call(this.vAxis);
 };
 
-Axes.prototype.reduceExtendedTicks = function () {
+Axes.prototype.extendedTicks = function () {
     var model = this.model;
     var self = this;
     var extendedTicks_selector = ".x.axis .tick line[y2=\"" + (model.tickSize * this.tickExtender) + "\"]";
     var ticks_selector = ".x.axis .tick line";
-    //todo: work out if there are all going to be extend and return (to save time);
-    this.svg.selectAll(extendedTicks_selector)
+
+    this.svg.selectAll(ticks_selector)
         .attr("y2", function (d) {
             var quarter = d.getMonth ? dateFormatter[model.units[0]](d) : d.toString();
             return (quarter.indexOf('Q1') === 0) ? (model.tickSize * self.tickExtender) : model.tickSize ;
@@ -128,6 +127,10 @@ Axes.prototype.reduceExtendedTicks = function () {
 
 Axes.prototype.repositionAxis = function () {
     var model = this.model;
+
+    if (model.groupData) {
+        this.rearrangeLabels();
+    }
     var xLabelHeight = getHeight(this.svg) - model.chartHeight;
     var yLabelWidth = getWidth(this.svg) - model.chartWidth;
     var plotHeight = model.chartHeight - xLabelHeight;
@@ -150,8 +153,7 @@ Axes.prototype.repositionAxis = function () {
     this.svg.call(this.timeAxis);
 
     if (model.groupData) {
-        this.rearrangeLabels();
-        this.reduceExtendedTicks();
+        this.extendedTicks();
     }
 
     if (model.numberAxisOrient !== 'right') {
