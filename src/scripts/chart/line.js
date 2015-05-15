@@ -49,17 +49,19 @@ function lineChart(g) {
         });
     metadata.create(svg, model);
 
+    debugger;
     var dressing = new Dressing(svg, model);
     dressing.addHeader();
     dressing.addFooter();
-
     var chartSVG = svg.append('g').attr('class', 'chart');
     chartSVG.attr('transform', model.translate(model.chartPosition));
 
     var axes = new Axes(chartSVG, model);
+
     axes.addValueScale();
     axes.addTimeScale(model.units);
     axes.repositionAxis();
+    debugger;
 
     var plotSVG = chartSVG.append('g').attr('class', 'plot');
     var i = model.y.series.length;
