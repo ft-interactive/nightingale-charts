@@ -10,6 +10,9 @@ var formatter = {
     },
     monthly: function (d, i) {
         return d.split(' ')[0];
+    },
+    decades: function (d, i) {
+        return d.split(' ')[1];
     }
 };
 
