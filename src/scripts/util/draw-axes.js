@@ -132,6 +132,10 @@ Axes.prototype.extendedTicks = function () {
 Axes.prototype.repositionAxis = function () {
     var model = this.model;
 
+    if (model.groupData) { //todo: grr. two places!
+        this.rearrangeLabels();
+    }
+
     var xLabelHeight = getHeight(this.svg) - model.chartHeight;
     var yLabelWidth = getWidth(this.svg) - model.chartWidth;
     var plotHeight = model.chartHeight - xLabelHeight;
