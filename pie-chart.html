@@ -1,18 +1,4 @@
-<html>
-<head>
-    <meta charset="utf-8"/>
-    <link rel="stylesheet" href="styles/main.css"/>
-    <link rel="stylesheet" href="styles/demo.css"/>
-    <title>Pie Chart</title>
-</head>
-<body>
-<div id="view1"></div>
-<div id="view2"></div>
-<script src="scripts/vendor.js"></script>
-<script src="scripts/o-charts.js"></script>
-<script>
-
-    var lib = require('o-charts');
+<html><head><meta charset="utf-8"><link rel=stylesheet href="styles/main.css"><link rel=stylesheet href="styles/demo.css"><title>Pie Chart</title></head><body><div id=view1></div><div id=view2></div><script src=scripts/vendor.js></script><script src=scripts/o-charts.js></script><script>var lib = require('o-charts');
     var d3 = require('d3');
 
     var pieData1 = {
@@ -35,8 +21,4 @@
     }
 
     d3.select('#view1').datum(pieData1).call(lib.chart.pie());
-    d3.select('#view2').datum(pieData2).call(lib.chart.pie());
-
-</script>
-</body>
-</html>
+    d3.select('#view2').datum(pieData2).call(lib.chart.pie());</script></body></html>

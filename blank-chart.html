@@ -1,23 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8"/>
-    <link rel="stylesheet" href="styles/main.css"/>
-    <link rel="stylesheet" href="styles/demo.css"/>
-    <title>Noop Chart</title>
-</head>
-<body class="ft">
-<h1>null chart</h1>
-
-<div id="view1">
-</div>
-<div id="view2">
-</div>
-<script src="scripts/vendor.js"></script>
-<script src="scripts/o-charts.js"></script>
-<script>
-
-    var lib = require('o-charts');
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel=stylesheet href="styles/main.css"><link rel=stylesheet href="styles/demo.css"><title>Noop Chart</title></head><body class=ft><h1>null chart</h1><div id=view1></div><div id=view2></div><script src=scripts/vendor.js></script><script src=scripts/o-charts.js></script><script>var lib = require('o-charts');
     var chart = lib.chart.blank();
 
 
@@ -29,8 +10,4 @@
         .datum({title: "test 2", subTitle: "sub-testing the second", width: 200, height: 500});
 
 
-    chart.call(chart);
-
-</script>
-</body>
-</html>
+    chart.call(chart);</script></body></html>
