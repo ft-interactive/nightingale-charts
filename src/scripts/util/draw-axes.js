@@ -25,6 +25,7 @@ Axes.prototype.rearrangeLabels = function () {
     var allPositiveValues = Math.min.apply(null, this.valueScale.domain()) >= 0;
 
     if (showsAllLabels && allPositiveValues && model.chartType == 'column') {
+        model.tickSize = 0;
         this.svg.selectAll('.x.axis').remove();
         this.timeAxis.tickSize(0).scale(this.timeScale, this.units);
         this.svg.call(this.timeAxis);
@@ -108,6 +109,8 @@ Axes.prototype.addValueScale = function () {
 };
 
 Axes.prototype.extendedTicks = function () {
+    var showsAllLabels = this.svg.selectAll('.x.axis .primary line')[0].length === this.svg.selectAll('.x.axis .primary text')[0].length;
+    if (showsAllLabels) return;
     var model = this.model;
     var self = this;
     var extendedTicks_selector = ".x.axis .tick line[y2=\"" + (model.tickSize * this.tickExtender) + "\"]";
@@ -120,7 +123,8 @@ Axes.prototype.extendedTicks = function () {
         });
     var tickCount = this.svg.selectAll(ticks_selector)[0].length;
     var extendedCount = this.svg.selectAll(extendedTicks_selector)[0].length;
-    if (extendedCount+1 >= tickCount){
+    if (extendedCount+2 >= tickCount){
+        //take into account of first + last starting on something not q1
         this.svg.selectAll(extendedTicks_selector).attr("y2", model.tickSize);
     }
 };
@@ -128,9 +132,6 @@ Axes.prototype.extendedTicks = function () {
 Axes.prototype.repositionAxis = function () {
     var model = this.model;
 
-    if (model.groupData) {
-        this.rearrangeLabels();
-    }
     var xLabelHeight = getHeight(this.svg) - model.chartHeight;
     var yLabelWidth = getWidth(this.svg) - model.chartWidth;
     var plotHeight = model.chartHeight - xLabelHeight;
@@ -152,7 +153,8 @@ Axes.prototype.repositionAxis = function () {
     this.svg.call(this.vAxis);
     this.svg.call(this.timeAxis);
 
-    if (model.groupData) {
+    if (model.groupData && model.tickSize>0) {
+        this.rearrangeLabels();
         this.extendedTicks();
     }
 

@@ -9,7 +9,8 @@ module.exports = {
     },
 
     util: {
-        attributeStyler: require('./util/chart-attribute-styles.js')
+        attributeStyler: require('./util/chart-attribute-styles.js'),
+        dates: require('./util/dates.js')
     },
 
     version: require('./util/version')

@@ -181,4 +181,33 @@ describe('line-chart  ', function () {
         });
 
     });
+
+    describe('has labels ', function(){
+
+        it('hidden when any quarter overlaps', function(){
+            var quarterlyTicksGraphA = document.querySelectorAll('svg')[5].querySelectorAll('.x.axis .primary line');
+            var quarterlyLabelsGraphA = document.querySelectorAll('svg')[5].querySelectorAll('.x.axis .primary text');
+            var yearlyLabelsGraphA = document.querySelectorAll('svg')[5].querySelectorAll('.x.axis .secondary text');
+            expect(quarterlyTicksGraphA.length).toBe(17);
+            expect(quarterlyLabelsGraphA.length).toBe(5);
+            expect(quarterlyLabelsGraphA[0].textContent).toBe('2005');
+            expect(yearlyLabelsGraphA.length).toBe(0);
+        });
+
+        it('hidden when there are duplicate year labels', function(){
+            var yearlyLabelsGraphA = document.querySelectorAll('svg')[4].querySelectorAll('.x.axis .secondary text');
+            expect(yearlyLabelsGraphA.length).toBe(2);
+            expect(yearlyLabelsGraphA[0].textContent).toBe('2005');
+            expect(yearlyLabelsGraphA[1].textContent).toBe('06');
+        });
+
+        xit('shortened to 2 digits on the year that is not significant (ie. not the millenium)', function(){
+            var yearlyLabelsGraphA = document.querySelectorAll('svg')[2].querySelectorAll('.x.axis .primary text');
+            expect(yearlyLabelsGraphA[0].textContent).toBe('2005');
+            expect(yearlyLabelsGraphA[1].textContent).toBe('06');
+            expect(yearlyLabelsGraphA[2].textContent).toBe('07');
+            expect(yearlyLabelsGraphA[3].textContent).toBe('08');
+        });
+
+    });
 });
