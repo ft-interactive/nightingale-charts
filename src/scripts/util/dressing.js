@@ -129,12 +129,9 @@ Dressing.prototype.addFootNotes = function () {
     var text = textArea().width(this.model.contentWidth - this.model.logoSize).lineHeight(this.footerLineHeight);
     var footnotes = svg.append('g').attr('class', 'chart-footnote').datum(model.footnote).call(text);
     var footnotesHeight = getHeight(footnotes);
-
-    var footerHeight = Math.max(footnotesHeight + (this.blockPadding * 2), model.logoSize);
     var currentPosition = model.chartPosition.top + model.chartHeight;
-
     footnotes.attr('transform', model.translate({top: currentPosition + this.footerLineHeight + this.blockPadding}));
-    this.footerHeight += (footerHeight + this.blockPadding);
+    this.footerHeight += footnotesHeight;
 };
 
 Dressing.prototype.addSource = function () {
@@ -148,9 +145,10 @@ Dressing.prototype.addSource = function () {
     var sourceHeight = getHeight(source);
     var currentPosition = model.chartPosition.top + model.chartHeight;
 
-    source.attr('transform', model.translate({top: this.footerHeight + currentPosition + this.blockPadding}));
+    source.attr('transform', model.translate({top: this.footerHeight + currentPosition + sourceLineHeightActual + (this.blockPadding * 2)}));
     if (model.hideSource) {
         source.remove();
+        sourceHeight = 0;
     }
     this.sourceFontOffset = sourceLineHeightActual - this.sourceFontSize;
     this.footerHeight += sourceHeight;
@@ -162,10 +160,11 @@ Dressing.prototype.getSourceFontOffset = function () {
 
 Dressing.prototype.setHeight = function () {
     var model = this.model;
+    var footerHeight = Math.max(this.footerHeight + (this.blockPadding * 2), model.logoSize) + this.blockPadding;
     if (!model.height) {
-        model.height = this.headerHeight + model.chartHeight + this.footerHeight;
+        model.height = this.headerHeight + model.chartHeight + footerHeight;
     } else {
-        model.chartHeight = model.height - this.headerHeight - this.footerHeight;
+        model.chartHeight = model.height - this.headerHeight - footerHeight;
         if (model.chartHeight < 0) {
             model.error({
                 message: 'calculated plot height is less than zero'
