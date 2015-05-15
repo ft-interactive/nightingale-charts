@@ -113,10 +113,11 @@ Axes.prototype.reduceExtendedTicks = function () {
     var self = this;
     var extendedTicks_selector = ".x.axis .tick line[y2=\"" + (model.tickSize * this.tickExtender) + "\"]";
     var ticks_selector = ".x.axis .tick line";
+    //todo: work out if there are all going to be extend and return (to save time);
     this.svg.selectAll(extendedTicks_selector)
         .attr("y2", function (d) {
             var quarter = d.getMonth ? dateFormatter[model.units[0]](d) : d.toString();
-            return (quarter.indexOf('Q1') < 0) ? model.tickSize : (model.tickSize * self.tickExtender);
+            return (quarter.indexOf('Q1') === 0) ? (model.tickSize * self.tickExtender) : model.tickSize ;
         });
     var tickCount = this.svg.selectAll(ticks_selector)[0].length;
     var extendedCount = this.svg.selectAll(extendedTicks_selector)[0].length;

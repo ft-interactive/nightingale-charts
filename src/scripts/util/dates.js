@@ -26,8 +26,6 @@ var formatter = {
         return d3.time.format('%Y')(d);
     },
     yearly: function (d, i, firstDate) {
-        if (!this.firstDate) this.firstDate = d;
-        firstDate = firstDate || this.firstDate;
         var years = (firstDate && !Array.isArray(firstDate) &&
         (formatter.years(firstDate, i) == formatter.years(d, i))) ?
             'fullYears' : 'years';
