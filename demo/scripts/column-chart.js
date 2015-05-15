@@ -164,10 +164,14 @@ module.exports = {
     init: function(){
         var demos = ['year','yearWithNegative','years','yearsWithNegative','decade', 'month', 'multiple', 'time'];
         //var demos = ['multiple'];
-        demos.forEach(function(timeFrame){
-            d3.select('#views').append('div').attr({
+        demos.forEach(function(timeFrame, i){
+            var textContent = '';
+            if (i===7){
+                textContent = 'NOTE: This chart highlights how columns should rarely be used for time-data. This is not a bug in o-charts'
+            }
+            d3.select('#views').append('p').attr({
                 'id':'column-chart__' + timeFrame
-            });
+            }).text(textContent);
             widths.forEach(function (width){
                 var data = getChartData(timeFrame);
                 data.width = width;
