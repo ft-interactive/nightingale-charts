@@ -70,7 +70,7 @@ function sumStackedValues(model){
     model.data.map(function (d, j) {
         var key, sum = 0;
         for (key in d.values[0]) {
-            if (key !== 'date') {
+            if (key !== model.x.series.originalKey) {
                 sum += d.values[0][key];
             }
         }
@@ -151,6 +151,7 @@ function groupDates(m, units){
             return  dateStr.join(' ');
 		})
 		.entries(m.data);
+	m.x.series.originalKey = m.x.series.key;
 	m.x.series.key = 'key';
 	return m.data;
 }
