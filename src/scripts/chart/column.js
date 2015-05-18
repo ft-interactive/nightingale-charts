@@ -5,7 +5,7 @@ var metadata = require('../util/metadata.js');
 var Dressing = require('../util/dressing.js');
 var styler = require('../util/chart-attribute-styles');
 
-function plotSeries(plotSVG, model, axes, series, i){
+function plotSeries(plotSVG, model, axes, series, seriesNumber){
 	var data = formatData(model, series);
     var s = plotSVG.append('g').attr('class', 'series');
     s.selectAll('rect')
@@ -14,39 +14,12 @@ function plotSeries(plotSVG, model, axes, series, i){
         .append('rect')
         .attr('class', function (d){return 'column '  + series.className + (d.value < 0 ? ' negative' : ' positive');})
         .attr('data-value', function (d){return d.value;})
-		.attr('x', function (d){
-			return adjustRangeToX(axes.timeScale(d.key), axes.timeScale.rangeBand(), model, i);
-		}).attr('y', function (d, j){
-			//return axes.valueScale(Math.max(0, d.value));})
-			return adjustYIfStack(axes, model, d.value, j);})
-        .attr('height', function (d){
-        	return Math.abs(axes.valueScale(d.value) - axes.valueScale(0));})
-		.attr('width', function (d){
-			return adjustRangeToWidth(axes.timeScale.rangeBand(), model);
-		});
+		.attr('x',      function (d, i){ return axes.xPositions(d, seriesNumber); })
+        .attr('y',      function (d, i){ return axes.yPositions(d, i); })
+        .attr('height', function (d, i){ return Math.abs(axes.valueScale(d.value) - axes.valueScale(0));})
+		.attr('width',  function (d, i){ return axes.columnWidth(d, i); });
 
     styler(plotSVG);
-}
-
-function adjustYIfStack(axes, model, value, j){
-	var stackY = model.stackSeries({stack:j, value:value}, 0);
- 	return axes.valueScale(Math.max(0, stackY));
-}
-
-function adjustRangeToX(timeScale, rangeBand, model, i){
-	if(model.type === 'multiple'){
-		return timeScale + (rangeBand / model.y.series.length) * i;
-	}else{
-		return timeScale;
-	}
-}
-
-function adjustRangeToWidth(rangeBand, model){
-	if(model.type === 'multiple'){
-		return rangeBand / model.y.series.length;
-	}else{
-		return rangeBand;
-	}
 }
 
 function formatData(model, series) {

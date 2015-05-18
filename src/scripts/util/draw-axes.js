@@ -36,18 +36,31 @@ Axes.prototype.rearrangeLabels = function () {
     }
 };
 
-Axes.prototype.getColumnWidth = function () {
+Axes.prototype.columnWidth = function (){
+    var columnWidth = this.timeScale.rangeBand();
+    if(this.model.type !== 'stacked'){
+        columnWidth = columnWidth / this.model.y.series.length;
+    }
+    return columnWidth;
+};
+
+Axes.prototype.xPositions = function(d, seriesNumber){
+    var timeScale = this.timeScale(d.key);
+    var adjustX = (this.timeScale.rangeBand && this.model.type!=='stacked') ? (this.timeScale.rangeBand() / this.model.y.series.length) : 0;
+    return timeScale + (adjustX * seriesNumber);
+};
+
+Axes.prototype.yPositions = function(d, i){
+    var maxYValue = (this.model.type === 'stacked') ? this.stackSeries(d, i) : d.value;
+    return this.valueScale(Math.max(0, maxYValue));
+};
+
+Axes.prototype.stackSeries = function(d, stack){
     var model = this.model;
-    var plotWidth = model.chartWidth - (getWidth(this.svg) - model.chartWidth);
-    var range = this.timeScale.rangeBand ?
-        this.timeScale.rangeBand() :
-        d3.scale.ordinal()
-            .domain(model.data.map(function(d) {
-                return d[model.x.series.key];
-            }))
-            .rangeRoundBands([0, plotWidth], 0, this.margin)
-            .rangeBand() / 2;
-    return range / model.y.series.length;
+    if(!model.stacks )        model.stacks = [];
+    if (!model.stacks[stack]) model.stacks[stack] = [];
+    model.stacks[stack].push(d.value);
+    return d3.sum(model.stacks[stack]);
 };
 
 Axes.prototype.addGroupedTimeScale = function (units) {
@@ -57,8 +70,6 @@ Axes.prototype.addGroupedTimeScale = function (units) {
     this.timeScale = d3.scale.ordinal()
         .domain(model.timeDomain)
         .rangeRoundBands([0, plotWidth], 0, this.margin);
-
-    this.columnWidth = this.getColumnWidth();
 
     this.timeAxis = categoryAxis()
         .simple(model.simpleDate)
@@ -73,8 +84,6 @@ Axes.prototype.addTimeScale = function (units) {
     this.timeScale = d3.time.scale()
         .domain(model.timeDomain)
         .range([0, model.chartWidth]);
-
-    this.columnWidth = this.getColumnWidth();
 
     this.timeAxis = dateAxis()
         .simple(model.simpleDate)
@@ -152,7 +161,6 @@ Axes.prototype.repositionAxis = function () {
         this.timeScale.range([this.timeScale.range()[0], plotWidth]);
     }
 
-    this.columnWidth = this.getColumnWidth();
     this.svg.selectAll('*').remove();
     this.svg.call(this.vAxis);
     this.svg.call(this.timeAxis);
