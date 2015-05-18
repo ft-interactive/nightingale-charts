@@ -59,13 +59,8 @@ function columnChart(g){
 		chartSVG.attr('transform', model.translate(model.chartPosition));
 
 	var axes = new Axes(chartSVG, model);
-		axes.addValueScale();
-
-	if(model.groupData){
-		axes.addGroupedTimeScale(model.units);
-	}else{
-		axes.addTimeScale();
-	}
+    axes.addValueScale();
+    axes.addIndependentScale(model.groupData ? 'ordinal' : 'time');
 	axes.repositionAxis();
 
 	var plotSVG = chartSVG.append('g').attr('class', 'plot');
