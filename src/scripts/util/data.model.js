@@ -67,50 +67,30 @@ function timeDomain(model) {
         return d[model.x.series.key];
     });
 }
-/*
-function valueDomain(model) {
-    if (model.valueDomain) {
-        return model.valueDomain;
-    }
-    var extents = setExtents(model);
+
+function sumStackedValues(model){
+    var extents = [];
+    model.data.map(function (d, j) {
+        var key, sum = 0;
+        for (key in d.values[0]) {
+            if (key !== 'date') {
+                sum += d.values[0][key];
+            }
+        }
+        extents.push(sum);
+    });
+    return extents;
+}
+
+function valueDomain(model){
+    if(model.valueDomain){ return model.valueDomain; }
+
+    var extents = (model.type === 'stacked') ? sumStackedValues(model) : setExtents(model);
     var domain = d3.extent(extents);
-    if (!model.falseOrigin && domain[0] > 0) {
+    if(!model.falseOrigin && domain[0] > 0){
         domain[0] = 0;
     }
     return domain;
-}
-*/
-
-function valueDomain(model){
-    if(model.valueDomain){return model.valueDomain;}
-
-    var domain, extents;
-    if(model.type !== 'stacked'){
-        var extents = setExtents(model);
-        var domain = d3.extent(extents);
-        extents = setExtents(model);
-        domain = d3.extent(extents);
-
-        if(!model.falseOrigin && domain[0] > 0){
-            domain[0] = 0; //see line 88
-        }
-    }else{
-        var vals = [];
-
-        model.data.map(function (d, j){
-        var k, sum = 0;
-        for(k in d.values[0]){
-        if(k !== 'date'){
-            sum += d.values[0][k];
-        }
-    }
-    vals.push(sum);
-});
-
-domain = d3.extent(vals);
-domain[0] > 0 ? domain[0] = 0 : 0; //if we do a chart where we don't want the start of the Y-axis to be 0, we'll want to be able to specify a lowest value other than 0
-}
-return domain;
 }
 
 function chartHeight(model) {
