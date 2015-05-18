@@ -4,9 +4,11 @@ var utils = require('../util/dates.js');
 var interval = {
     centuries: d3.time.year,
     decades: d3.time.year,
+    yearly: d3.time.year,
     years: d3.time.year,
     fullYears: d3.time.year,
     quarterly: d3.time.month,
+    monthly: d3.time.month,
     months: d3.time.month,
     weeks: d3.time.week,
     days: d3.time.day,
@@ -16,9 +18,11 @@ var interval = {
 var increment = {
     centuries: 100,
     decades: 10,
+    yearly: 1,
     years: 1,
     fullYears: 1,
     quarterly: 3,
+    monthly: 1,
     months: 1,
     weeks: 1,
     days: 1,
