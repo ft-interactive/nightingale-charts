@@ -36,7 +36,7 @@ var formatter = {
         return 'Q' + Math.floor((d.getMonth() + 3) / 3);
     },
     monthly: function (d, i) {
-        return formatter.months(d, i) + ' ' + formatter.fullYears(d, i);
+        return formatter.months(d, i);
     },
     shortmonths: function (d, i) {
         return d3.time.format('%b')(d)[0];

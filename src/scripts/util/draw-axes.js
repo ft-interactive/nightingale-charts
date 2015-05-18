@@ -29,7 +29,7 @@ Axes.prototype.rearrangeLabels = function () {
         this.svg.selectAll('.x.axis').remove();
         this.timeAxis.tickSize(0).scale(this.timeScale, this.units);
         this.svg.call(this.timeAxis);
-    } else if (!showsAllLabels) { //todo: should/can this be in category.js?
+    } else if (!showsAllLabels && model.units[0] === 'quarterly' && model.units[1]) { //todo: should/can this be in category.js?
         this.svg.selectAll('.x.axis').remove();
         this.timeAxis.scale(this.timeScale, [model.units[1]]);
         this.svg.call(this.timeAxis);
