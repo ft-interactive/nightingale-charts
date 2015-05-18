@@ -110,14 +110,12 @@ var fixtures = {
         {date: new Date('9/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 70, value3: 13},
         {date: new Date('12/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 10, value3: 99}
     ],
-    /*
     time: [
         {date: new Date('3/31/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
         {date: new Date('6/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
         {date: new Date('9/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
         {date: new Date('12/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66}
     ],
-    */
     stack:[
         {myDateColumn: new Date('3/31/05'), value: 50, value2: 99, value3: 26, value4: 40, value5: 15},
         {myDateColumn: new Date('6/30/05'), value: 25, value2: 10, value3: 21, value4: 36, value5: 22},
@@ -135,7 +133,7 @@ var units = {
     decade: ['quarterly', 'yearly'],
     multiple: ['quarterly', 'yearly'],
     month: ['monthly', 'yearly'],
-    //time : false
+    time : false,
     stack: ['monthly', 'yearly']
 };
 var ySeriesData = {
@@ -168,7 +166,7 @@ var widths = [600, 300];
 module.exports = {
     getChartData: getChartData,
     init: function(){
-        var demos = ['year','yearWithNegative','years','yearsWithNegative','decade', 'month', 'multiple', 'stack'];
+        var demos = ['year','yearWithNegative','years','yearsWithNegative','decade', 'month', 'multiple', 'time', 'stack'];
         demos.forEach(function(timeFrame){
             d3.select('#views').append('div').attr({
                 'id':'column-chart__' + timeFrame

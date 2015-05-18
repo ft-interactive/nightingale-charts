@@ -34,8 +34,22 @@ Axes.prototype.rearrangeLabels = function () {
     }
 };
 
+Axes.prototype.getColumnWidth = function () {
+    //todo: work out how to get proportional column width i.e. width to fit data = histogram!
+    var model = this.model;
+    var plotWidth = model.chartWidth - (getWidth(this.svg) - model.chartWidth);
+    var range = d3.scale.ordinal()
+        .domain(model.data.map(function(d) {
+            return d[model.x.series.key];
+        }))
+        .rangeRoundBands([0, plotWidth], 0, this.margin)
+        .rangeBand() / 2;
+    var width = range / model.y.series.length;
+    return (width<1) ? 1 : width;
+};
+
 Axes.prototype.columnWidth = function (){
-    var columnWidth = this.timeScale.rangeBand();
+    var columnWidth = (this.timeScale.rangeBand) ? this.timeScale.rangeBand(): this.getColumnWidth();
     if(!this.model.stack){
         columnWidth = columnWidth / this.model.y.series.length;
     }

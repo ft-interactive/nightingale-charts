@@ -53,7 +53,7 @@ function setExtents(model){
 function timeDomain(model, chartType) {
     if (model.timeDomain) { return model.timeDomain;  }
 
-    if (chartType === 'column'){
+    if (model.groupData && chartType === 'column'){
         model.data = groupDates(model, model.units);
         return model.data.map(function (d) {
             return d[model.x.series.key];
