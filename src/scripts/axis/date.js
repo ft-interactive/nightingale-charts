@@ -9,6 +9,7 @@ function dateAxis() {
         axes: [d3.svg.axis().orient('bottom')],
         scale: false,
         lineHeight: 20,
+        stack: false,
         tickSize: 5,
         simple: false,//axis has only first and last points as ticks, i.e. the scale's domain extent
         nice: false,
@@ -97,13 +98,19 @@ function dateAxis() {
         return render;
     };
 
+    render.stack = function (bool) {
+        if (!arguments.length) return config.stack;
+        config.stack = bool;
+        return render;
+    };
+
     render.scale = function (scale, units) {
         if (!arguments.length) return config.axes[0].scale();
         if (config.nice) {
             scale.nice((scale.range()[1] - scale.range()[0]) / config.pixelsPerTick);
         }
         config.scale = scale;
-        config.axes = dateScale.render(scale, units, config.tickSize, config.simple);
+        config.axes = dateScale.render(scale, units, config);
         return render;
     };
 
