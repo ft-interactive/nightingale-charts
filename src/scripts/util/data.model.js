@@ -82,7 +82,7 @@ function sumStackedValues(model){
 function valueDomain(model){
     if(model.valueDomain){ return model.valueDomain; }
 
-    var extents = (model.type === 'stacked') ? sumStackedValues(model) : setExtents(model);
+    var extents = (model.stack) ? sumStackedValues(model) : setExtents(model);
     var domain = d3.extent(extents);
     if(!model.falseOrigin && domain[0] > 0){
         domain[0] = 0;
@@ -188,6 +188,7 @@ function Model(chartType, opts) {
         columnClasses: {},
         niceValue: true,
         hideSource: false,
+        stack: false,
         numberAxisOrient: 'left',
         margin: 2,
         lineThickness: undefined,

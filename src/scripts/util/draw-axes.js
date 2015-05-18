@@ -36,7 +36,7 @@ Axes.prototype.rearrangeLabels = function () {
 
 Axes.prototype.columnWidth = function (){
     var columnWidth = this.timeScale.rangeBand();
-    if(this.model.type !== 'stacked'){
+    if(!this.model.stack){
         columnWidth = columnWidth / this.model.y.series.length;
     }
     return columnWidth;
@@ -44,12 +44,12 @@ Axes.prototype.columnWidth = function (){
 
 Axes.prototype.xPositions = function(d, seriesNumber){ //seriesNumber: grrr.
     var timeScale = this.timeScale(d.key);
-    var adjustX = (this.timeScale.rangeBand && this.model.type!=='stacked') ? (this.timeScale.rangeBand() / this.model.y.series.length) : 0;
+    var adjustX = (this.timeScale.rangeBand && !this.model.stack) ? (this.timeScale.rangeBand() / this.model.y.series.length) : 0;
     return timeScale + (adjustX * seriesNumber);
 };
 
 Axes.prototype.yPositions = function(d, i){
-    var maxYValue = (this.model.type === 'stacked') ? this.stackSeries(d, i) : d.value;
+    var maxYValue = (this.model.stack) ? this.stackSeries(d, i) : d.value;
     return this.valueScale(Math.max(0, maxYValue));
 };
 
