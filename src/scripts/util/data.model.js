@@ -143,22 +143,6 @@ function setKey(model) {
     return key;
 }
 
-function setStacks(stackObj, defaultValue){
-    if(!this.stacks && this.type === 'stacked'){
-        var a = [], l = this.data.length;
-        while(l--){a.push([defaultValue]);}
-
-        this.stacks = a;
-        this.stacks[stackObj.stack][0] = stackObj.value;
-    }else if(this.stacks){
-        this.stacks[stackObj.stack].push(stackObj.value);
-    }else{ //multiple series and single series use stacks of 1, and the value of 1 stack === stackObj.value
-        return stackObj.value;
-    }
-
-    return d3.sum(this.stacks[stackObj.stack]);
-}
-
 function groupDates(m, units){
 	var i=0;
 	var firstDate;
@@ -240,7 +224,6 @@ function Model(chartType, opts) {
 	m.chartHeight = chartHeight(m);
 	m.translate = translate(0);
 	m.data = verifyData(m);
-    m.stackSeries = setStacks;
     m.groupData = needsGrouping(m.units);
 
     if(m.groupData && chartType == 'column'){
