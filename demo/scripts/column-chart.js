@@ -5,15 +5,21 @@ var hideSource = [true, true, false];
 var numberAxisOrient = ['left', 'right', 'left'];
 
 var fixtures = {
-    year : [
+    quarters : [
         { date: new Date('3/31/05'), value:      0.583},
         { date: new Date('6/30/05'), value: 1.027},
         { date: new Date('9/30/05'), value: 1.03},
         { date: new Date('12/30/05'), value:     1.348}
     ],
-    yearWithNegative : [
+    quartersWithNegative : [
         { date: new Date('3/31/05'), value:      0.583},
         { date: new Date('6/30/05'), value: -1.027},
+        { date: new Date('9/30/05'), value: 1.03},
+        { date: new Date('12/30/05'), value:     1.348}
+    ],
+    quartersWithZero : [
+        { date: new Date('3/31/05'), value:      0.583},
+        { date: new Date('6/30/05'), value: 0},
         { date: new Date('9/30/05'), value: 1.03},
         { date: new Date('12/30/05'), value:     1.348}
     ],
@@ -105,10 +111,18 @@ var fixtures = {
         { date: new Date('12/30/05'), value:     1.348}
     ],
     multiple:[
-        {date: new Date('3/31/05'), value: Math.floor(Math.random() * 40) + 10, value2: 99, value3: 26},
-        {date: new Date('6/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 10, value3: 21},
-        {date: new Date('9/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 70, value3: 13},
-        {date: new Date('12/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 10, value3: 99}
+        {
+            date: new Date('3/31/05'), value: Math.floor(Math.random() * 40) + 10, value2: 99, value3: 26
+        },
+        {
+            date: new Date('6/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 10, value3: 21
+        },
+        {
+            date: new Date('9/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 70, value3: 13
+        },
+        {
+            date: new Date('12/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 10, value3: 29
+        }
     ],
     time: [
         {date: new Date('3/31/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
@@ -116,37 +130,30 @@ var fixtures = {
         {date: new Date('9/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
         {date: new Date('12/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66}
     ],
-    stack:[
-        {myDateColumn: new Date('3/31/05'), value: 50, value2: 99, value3: 26, value4: 40, value5: 15},
-        {myDateColumn: new Date('6/30/05'), value: 25, value2: 10, value3: 21, value4: 36, value5: 22},
-        {myDateColumn: new Date('9/30/05'), value: 75, value2: 70, value3: 13, value4: 12, value5: 110},
-        {myDateColumn: new Date('12/30/05'), value: 125, value2: 10, value3: 29, value4: 31, value5: 40},
-        {myDateColumn: new Date('5/30/06'), value: 133, value2: 25, value3: 72, value4: 105, value5: 200}
+    time: [
+        {date: new Date('3/31/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
+        {date: new Date('6/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
+        {date: new Date('9/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
+        {date: new Date('12/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66}
     ]
 };
 
 var units = {
-    year: ['quarterly', 'yearly'],
-    yearWithNegative: ['quarterly', 'yearly'],
+    quarters: ['quarterly', 'yearly'],
+    quartersWithNegative: ['quarterly', 'yearly'],
     years: ['quarterly', 'yearly'],
     yearsWithNegative: ['quarterly', 'yearly'],
     decade: ['quarterly', 'yearly'],
     multiple: ['quarterly', 'yearly'],
-    month: ['monthly', 'yearly'],
-    time : false,
-    stack: ['monthly', 'yearly']
-};
-var ySeriesData = {
-    multiple: ['value', 'value2', 'value3'],
-    stack: ['value', 'value2', 'value3', 'value4', 'value5']
-};
-var xSeriesData = {
-    stack: {key:'myDateColumn', label:'yearly'}
-};
+    month: ['monthly', 'yearly']
+}
+var widths = [600, 300];
+var series = {
+    multiple: ['value', 'value2', 'value3']
+}
 function getChartData(timeFrame){
-    var ySeries = ySeriesData[timeFrame] || ['value'];
-    var xSeries = xSeriesData[timeFrame] ||  {key:'date', label:'yearly'};
-    return{
+    var ySeries = series[timeFrame] || ['value'];
+    return {
         comment: 'Column chart',
         footnote: 'this is just for testing!',
         source: 'tbc',
@@ -154,19 +161,19 @@ function getChartData(timeFrame){
         subtitle: 'Drawn for you',
         numberAxisOrient: 'left', //todo: refactor onto y object
         hideSource: false,
-        x: { series: xSeries },
-        y: { series: ySeries },
+        x:{
+          series: {key:'date', label:'yearly'}
+        },
+        y: { series: ySeries} ,
         units: units[timeFrame],
-        data: fixtures[timeFrame],
-        stack: timeFrame == 'stack'
+        data: fixtures[timeFrame]
     };
 }
-var widths = [600, 300];
 
 module.exports = {
     getChartData: getChartData,
     init: function(){
-        var demos = ['year','yearWithNegative','years','yearsWithNegative','decade', 'month', 'multiple', 'time', 'stack'];
+        var demos = ['quarters','quartersWithNegative','years','yearsWithNegative','decade', 'month', 'multiple', 'quartersWithZero', 'time'];
         demos.forEach(function(timeFrame){
             d3.select('#views').append('div').attr({
                 'id':'column-chart__' + timeFrame

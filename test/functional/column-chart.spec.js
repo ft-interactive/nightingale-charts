@@ -94,6 +94,12 @@ describe('column-chart.js', function(){
     });
 
     describe('column values ', function(){
+
+        it('Can handle zero\s', function () {
+            var columns = document.querySelectorAll('.width600 svg')[7].querySelectorAll('.plot rect');
+            expect(columns.length).toBe(4);
+        });
+
         it('match d3 and >= 0', function(){
             var cols = document.querySelectorAll('.width600 svg')[0].querySelectorAll('rect');
             var max = 0;
@@ -170,7 +176,7 @@ describe('column-chart.js', function(){
     describe('Time Axis ', function () {
 
         it('Can be displayed', function () {
-            var labels = document.querySelectorAll('.width600 svg')[7].querySelectorAll('.x text');
+            var labels = document.querySelectorAll('.width600 svg')[8].querySelectorAll('.x text');
             expect(labels[0].textContent).toBe('Mar');
             expect(labels[1].textContent).toBe('May');
             expect(labels[2].textContent).toBe('Jul');
