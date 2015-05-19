@@ -713,7 +713,7 @@ function formatData(model, series) {
     var data = model.data.map(function (d){
         return{
             key:d[model.x.series.key],
-            value: d[series.key] || d.values[0][series.key]
+            value: (Array.isArray(d.values)) ? d.values[0][series.key] : d[series.key]
         };
     }).filter(function (d) {
         return (d.y !== null);
@@ -786,7 +786,7 @@ function plotSeries(plotSVG, model, axes, series) {
     var data = model.data.map(function (d) {
         return {
             x: d[model.x.series.key],
-            y: d[series.key] || d.values[0][series.key]
+            y: (Array.isArray(d.values)) ? d.values[0][series.key] : d[series.key]
         };
     }).filter(function (d) {
         return (d.y !== null);
@@ -2433,7 +2433,7 @@ module.exports = {
 };
 
 },{}],29:[function(require,module,exports){
-module.exports = "0.1.2";
+module.exports = "0.1.3";
 },{}],"column-chart":[function(require,module,exports){
 var oCharts = require('../../src/scripts/o-charts');
 var d3 = require('d3');
@@ -2442,15 +2442,21 @@ var hideSource = [true, true, false];
 var numberAxisOrient = ['left', 'right', 'left'];
 
 var fixtures = {
-    year : [
+    quarters : [
         { date: new Date('3/31/05'), value:      0.583},
         { date: new Date('6/30/05'), value: 1.027},
         { date: new Date('9/30/05'), value: 1.03},
         { date: new Date('12/30/05'), value:     1.348}
     ],
-    yearWithNegative : [
+    quartersWithNegative : [
         { date: new Date('3/31/05'), value:      0.583},
         { date: new Date('6/30/05'), value: -1.027},
+        { date: new Date('9/30/05'), value: 1.03},
+        { date: new Date('12/30/05'), value:     1.348}
+    ],
+    quartersWithZero : [
+        { date: new Date('3/31/05'), value:      0.583},
+        { date: new Date('6/30/05'), value: 0},
         { date: new Date('9/30/05'), value: 1.03},
         { date: new Date('12/30/05'), value:     1.348}
     ],
@@ -2560,18 +2566,23 @@ var fixtures = {
         {date: new Date('6/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
         {date: new Date('9/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
         {date: new Date('12/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66}
+    ],
+    time: [
+        {date: new Date('3/31/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
+        {date: new Date('6/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
+        {date: new Date('9/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
+        {date: new Date('12/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66}
     ]
 };
 
 var units = {
-    year: ['quarterly', 'yearly'],
-    yearWithNegative: ['quarterly', 'yearly'],
+    quarters: ['quarterly', 'yearly'],
+    quartersWithNegative: ['quarterly', 'yearly'],
     years: ['quarterly', 'yearly'],
     yearsWithNegative: ['quarterly', 'yearly'],
     decade: ['quarterly', 'yearly'],
     multiple: ['quarterly', 'yearly'],
-    month: ['monthly', 'yearly'],
-    time : false
+    month: ['monthly', 'yearly']
 }
 var widths = [600, 300];
 var series = {
@@ -2599,8 +2610,7 @@ function getChartData(timeFrame){
 module.exports = {
     getChartData: getChartData,
     init: function(){
-        var demos = ['year','yearWithNegative','years','yearsWithNegative','decade', 'month', 'multiple', 'time'];
-        //var demos = ['multiple'];
+        var demos = ['quarters','quartersWithNegative','years','yearsWithNegative','decade', 'month', 'multiple', 'quartersWithZero', 'time'];
         demos.forEach(function(timeFrame){
             d3.select('#views').append('div').attr({
                 'id':'column-chart__' + timeFrame
