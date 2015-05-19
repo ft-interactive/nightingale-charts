@@ -1,6 +1,10 @@
 var d3 = require('d3');
-var axis = require('../axis/index.js');
-var dateFormatter = require('./dates').formatter;
+var axis = {
+    category: require('./category.js'),
+    date: require('./date.js'),
+    number: require('./number.js')
+};
+var dateFormatter = require('../util/dates').formatter;
 
 function getHeight(selection) {
     return Math.ceil(selection.node().getBoundingClientRect().height);
@@ -10,14 +14,27 @@ function getWidth(selection) {
     return Math.ceil(selection.node().getBoundingClientRect().width);
 }
 
-function Axes(svg, model) {
+function ordinalScale(model, options) {
+    var plotWidth = model.chartWidth - (getWidth(options.svg) - model.chartWidth);
+    return d3.scale.ordinal()
+        .domain(model.timeDomain)
+        .rangeRoundBands([0, plotWidth], 0, options.margin);
+}
+
+function timeScale(model) {
+    return d3.time.scale()
+        .domain(model.timeDomain)
+        .range([0, model.chartWidth]);
+}
+
+function Create(svg, model) {
     this.model = model;
     this.svg = svg;
     this.margin = 0.2;
     this.tickExtender = 1.5;
 }
 
-Axes.prototype.rearrangeLabels = function () {
+Create.prototype.rearrangeLabels = function () {
     var model = this.model;
     var showsAllLabels = this.svg.selectAll('.x.axis .primary line')[0].length === this.svg.selectAll('.x.axis .primary text')[0].length;
     var allPositiveValues = Math.min.apply(null, this.valueScale.domain()) >= 0;
@@ -34,102 +51,7 @@ Axes.prototype.rearrangeLabels = function () {
     }
 };
 
-Axes.prototype.getColumnWidth = function () {
-    //todo: work out how to get proportional column width i.e. width to fit data = histogram!
-    var model = this.model;
-    var plotWidth = model.chartWidth - (getWidth(this.svg) - model.chartWidth);
-    var range = d3.scale.ordinal()
-        .domain(model.data.map(function(d) {
-            return d[model.x.series.key];
-        }))
-        .rangeRoundBands([0, plotWidth], 0, this.margin)
-        .rangeBand() / 2;
-    var width = range / model.y.series.length;
-    return (width<1) ? 1 : width;
-};
-
-Axes.prototype.columnWidth = function (){
-    var columnWidth = (this.timeScale.rangeBand) ? this.timeScale.rangeBand(): this.getColumnWidth();
-    if(!this.model.stack){
-        columnWidth = columnWidth / this.model.y.series.length;
-    }
-    return columnWidth;
-};
-
-Axes.prototype.xPositions = function(d, seriesNumber){ //seriesNumber: grrr.
-    var timeScale = this.timeScale(d.key);
-    var adjustX = (this.timeScale.rangeBand && !this.model.stack) ? (this.timeScale.rangeBand() / this.model.y.series.length) : 0;
-    return timeScale + (adjustX * seriesNumber);
-};
-
-Axes.prototype.yPositions = function(d, i){
-    var maxYValue = (this.model.stack) ? this.stackSeries(d, i) : d.value;
-    return this.valueScale(Math.max(0, maxYValue));
-};
-
-Axes.prototype.stackSeries = function(d, stack){
-    var model = this.model;
-    if(!model.stacks )        model.stacks = [];
-    if (!model.stacks[stack]) model.stacks[stack] = [];
-    model.stacks[stack].push(d.value);
-    return d3.sum(model.stacks[stack]);
-};
-
-Axes.prototype.ordinalScale = function (model) {
-    var plotWidth = model.chartWidth - (getWidth(this.svg) - model.chartWidth);
-    return d3.scale.ordinal()
-        .domain(model.timeDomain)
-        .rangeRoundBands([0, plotWidth], 0, this.margin);
-};
-
-Axes.prototype.timeScale = function (model) {
-    return d3.time.scale()
-        .domain(model.timeDomain)
-        .range([0, model.chartWidth]);
-};
-
-Axes.prototype.addIndependentScale = function (scale) {
-    var model = this.model;
-    if(scale == 'ordinal'){
-        this.timeScale = this.ordinalScale(model);
-        this.timeAxis = axis.category();
-    } else {
-        this.timeScale = this.timeScale(model);
-        this.timeAxis = axis.date();
-    }
-    this.timeAxis
-        .simple(model.simpleDate)
-        .yOffset(model.chartHeight)	//position the axis at the bottom of the chart
-        .tickSize(model.tickSize)
-        .scale(this.timeScale, this.model.units);
-    this.svg.call(this.timeAxis);
-};
-
-Axes.prototype.addValueScale = function () {
-    var model = this.model;
-    this.valueScale = d3.scale.linear()
-        .domain(model.valueDomain.reverse())
-        .range([0, model.chartHeight]);
-
-    if (model.niceValue) {
-        this.valueScale.nice();
-    }
-
-    this.vAxis = axis.number()
-        .tickFormat(model.numberAxisFormatter)
-        .simple(model.simpleValue)
-        .tickSize(model.chartWidth)	//make the ticks the width of the chart
-        .scale(this.valueScale);
-
-    if (model.numberAxisOrient !== 'right' && model.numberAxisOrient !== 'left') {
-        this.vAxis.noLabels(true);
-    } else {
-        this.vAxis.orient(model.numberAxisOrient);
-    }
-    this.svg.call(this.vAxis);
-};
-
-Axes.prototype.extendedTicks = function () {
+Create.prototype.extendedTicks = function () {
     var showsAllLabels = this.svg.selectAll('.x.axis .primary line')[0].length === this.svg.selectAll('.x.axis .primary text')[0].length;
     if (showsAllLabels) return;
     var model = this.model;
@@ -150,7 +72,8 @@ Axes.prototype.extendedTicks = function () {
     }
 };
 
-Axes.prototype.repositionAxis = function () {
+Create.prototype.repositionAxis = function () {
+    if (!this.independentScaleCreated || !this.dependentScaleCreated) return;
     var model = this.model;
 
     if (model.groupData) { //todo: grr. two places!
@@ -195,4 +118,50 @@ Axes.prototype.repositionAxis = function () {
     this.svg.attr('transform', model.translate(model.chartPosition));
 };
 
-module.exports = Axes;
+
+Create.prototype.independentScale = function (scale) {
+    var model = this.model;
+    if(scale == 'ordinal'){
+        this.timeScale = ordinalScale(model, this);
+        this.timeAxis = axis.category();
+    } else {
+        this.timeScale = timeScale(model);
+        this.timeAxis = axis.date();
+    }
+    this.timeAxis
+        .simple(model.simpleDate)
+        .yOffset(model.chartHeight)	//position the axis at the bottom of the chart
+        .tickSize(model.tickSize)
+        .scale(this.timeScale, this.model.units);
+    this.svg.call(this.timeAxis);
+    this.independentScaleCreated = true;
+    this.repositionAxis();
+};
+
+Create.prototype.dependentScale = function (scale) {
+    var model = this.model;
+    this.valueScale = d3.scale.linear()
+        .domain(model.valueDomain.reverse())
+        .range([0, model.chartHeight]);
+
+    if (model.niceValue) {
+        this.valueScale.nice();
+    }
+
+    this.vAxis = axis.number()
+        .tickFormat(model.numberAxisFormatter)
+        .simple(model.simpleValue)
+        .tickSize(model.chartWidth)	//make the ticks the width of the chart
+        .scale(this.valueScale);
+
+    if (model.numberAxisOrient !== 'right' && model.numberAxisOrient !== 'left') {
+        this.vAxis.noLabels(true);
+    } else {
+        this.vAxis.orient(model.numberAxisOrient);
+    }
+    this.svg.call(this.vAxis);
+    this.dependentScaleCreated = true;
+    this.repositionAxis();
+};
+
+module.exports = Create;
