@@ -86,7 +86,35 @@ function unitGenerator(domain, simple) {	//which units are most appropriate
     return units;
 }
 
+var groups = {
+    unknown: function (d, i) {
+        return d;
+    },
+    years: function (d, i) {
+        return d.split(' ')[1];
+    },
+    yearly: function (d, i) {
+        return d.split(' ')[1];
+    },
+    quarterly: function (d, i) {
+        return d.split(' ')[0];
+    },
+    monthly: function (d, i) {
+        return d.split(' ')[0];
+    },
+    months: function (d, i) {
+        return d.split(' ')[0];
+    },
+    decades: function (d, i) {
+        return d.split(' ')[1];
+    },
+    centuries: function (d, i) {
+        return d.split(' ')[1];
+    }
+};
+
 module.exports = {
+    formatGroups: groups,
     formatter: formatter,
     unitGenerator: unitGenerator
 };

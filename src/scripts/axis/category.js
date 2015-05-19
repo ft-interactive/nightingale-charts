@@ -1,7 +1,7 @@
 var d3 = require('d3');
 var styler = require('../util/chart-attribute-styles');
 var labels = require('../util/labels.js');
-var utils = require('./category.utils.js');
+var dates = require('../util/dates.js');
 
 function categoryAxis() {
 
@@ -101,7 +101,7 @@ function categoryAxis() {
         var axes = [];
         for (var i = 0; i < units.length; i++) {
             var unit = units[i];
-            if (utils.formatter[unit]) {
+            if (dates.formatGroups[unit]) {
                 var axis = d3.svg.axis()
                     .scale(scale)
                     .tickFormat(utils.formatter[unit])
