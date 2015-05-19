@@ -21,15 +21,17 @@ function Axes(svg, model) {
 
 Axes.prototype.rearrangeLabels = function () {
     var model = this.model;
-    var showsAllLabels = this.svg.selectAll('.x.axis .primary line')[0].length === this.svg.selectAll('.x.axis .primary text')[0].length;
+    var tickCount = this.svg.selectAll('.x.axis .primary line')[0].length;
+    var labelCount= this.svg.selectAll('.x.axis .primary text')[0].length;
+    var labelsShownRatio = labelCount/tickCount;
     var allPositiveValues = Math.min.apply(null, this.valueScale.domain()) >= 0;
 
-    if (showsAllLabels && allPositiveValues && model.chartType == 'column') {
+    if (labelsShownRatio===1 && allPositiveValues && model.chartType == 'column') {
         model.tickSize = 0;
         this.svg.selectAll('.x.axis').remove();
         this.timeAxis.tickSize(0).scale(this.timeScale, this.units);
         this.svg.call(this.timeAxis);
-    } else if (!showsAllLabels && model.units[0] === 'quarterly' && model.units[1]) { //todo: should/can this be in category.js?
+    } else if (labelsShownRatio<=0.75 && model.units[1]) { //todo: should/can this be in category.js?
         this.svg.selectAll('.x.axis').remove();
         this.timeAxis.scale(this.timeScale, [model.units[1]]);
         this.svg.call(this.timeAxis);
