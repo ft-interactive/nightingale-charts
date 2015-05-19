@@ -5,21 +5,15 @@ var hideSource = [true, true, false];
 var numberAxisOrient = ['left', 'right', 'left'];
 
 var fixtures = {
-    quarters : [
+    year : [
         { date: new Date('3/31/05'), value:      0.583},
         { date: new Date('6/30/05'), value: 1.027},
         { date: new Date('9/30/05'), value: 1.03},
         { date: new Date('12/30/05'), value:     1.348}
     ],
-    quartersWithNegative : [
+    yearWithNegative : [
         { date: new Date('3/31/05'), value:      0.583},
         { date: new Date('6/30/05'), value: -1.027},
-        { date: new Date('9/30/05'), value: 1.03},
-        { date: new Date('12/30/05'), value:     1.348}
-    ],
-    quartersWithZero : [
-        { date: new Date('3/31/05'), value:      0.583},
-        { date: new Date('6/30/05'), value: 0},
         { date: new Date('9/30/05'), value: 1.03},
         { date: new Date('12/30/05'), value:     1.348}
     ],
@@ -129,23 +123,18 @@ var fixtures = {
         {date: new Date('6/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
         {date: new Date('9/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
         {date: new Date('12/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66}
-    ],
-    time: [
-        {date: new Date('3/31/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
-        {date: new Date('6/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
-        {date: new Date('9/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
-        {date: new Date('12/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66}
     ]
 };
 
 var units = {
-    quarters: ['quarterly', 'yearly'],
-    quartersWithNegative: ['quarterly', 'yearly'],
+    year: ['quarterly', 'yearly'],
+    yearWithNegative: ['quarterly', 'yearly'],
     years: ['quarterly', 'yearly'],
     yearsWithNegative: ['quarterly', 'yearly'],
     decade: ['quarterly', 'yearly'],
     multiple: ['quarterly', 'yearly'],
-    month: ['monthly', 'yearly']
+    month: ['monthly', 'yearly'],
+    time : false
 }
 var widths = [600, 300];
 var series = {
@@ -173,11 +162,16 @@ function getChartData(timeFrame){
 module.exports = {
     getChartData: getChartData,
     init: function(){
-        var demos = ['quarters','quartersWithNegative','years','yearsWithNegative','decade', 'month', 'multiple', 'quartersWithZero', 'time'];
-        demos.forEach(function(timeFrame){
-            d3.select('#views').append('div').attr({
+        var demos = ['year','yearWithNegative','years','yearsWithNegative','decade', 'month', 'multiple', 'time'];
+        //var demos = ['multiple'];
+        demos.forEach(function(timeFrame, i){
+            var textContent = '';
+            if (i===7){
+                textContent = 'NOTE: This chart highlights how columns should rarely be used for time-data. This example should check that charts of this form render but not that they should look good.'
+            }
+            d3.select('#views').append('p').attr({
                 'id':'column-chart__' + timeFrame
-            });
+            }).text(textContent);
             widths.forEach(function (width){
                 var data = getChartData(timeFrame);
                 data.width = width;
