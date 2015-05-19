@@ -8,12 +8,13 @@ var y = [   { series: ['value', 'value2', 'value3'] },
             { series: [ {key:'value', label:function(){ return 'Function Value';}},
                         {key:'value2', label:function(){ return 'Another function Value';}} ]
             },
+            { series: ['value','value2','value3'] },
             { series: ['value'] },
             { series: ['value'] },
             { series: ['value'] },
             { series: ['value'] }];
 var hideSource = [true, true, false];
-var numberAxisOrient = ['left', 'right', 'left', 'right', 'right'];
+var numberAxisOrient = ['left', 'right', 'left', 'right', 'right', 'right', 'right', 'right'];
 
 var quarterlyDataPlus =  [
     { date: new Date('1/1/05'), value: 0.583},
@@ -83,13 +84,19 @@ var quarterlyDataDecade =  [
     { date: new Date('10/01/12'), value: 1.348},
     { date: new Date('01/01/13'), value: 1.348}
 ];
-var quarterlyData = [0,0,0,quarterlyDataPlus, quarterlyData5Months, quarterlyDataMany, quarterlyDataDecade]
 var timeData = [
     {date: new Date('2000-01-01T00:00:00.000Z'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
-    {date: new Date('2001-01-01T00:00:00.000Z'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
+    {date: new Date('2001-01-01T00:00:00.000Z'), value: 0, value2: Math.random() * 40, value3:66},
     {date: new Date('2002-01-01T00:00:00.000Z'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
     {date: new Date('2003-01-01T00:00:00.000Z'), value: Math.random() * 40, value2: Math.random() * 40, value3:66}
 ];
+var dataWithZeros = [
+    {date: new Date('2000-01-01T00:00:00.000Z'), value: 1, value2: 0, value3:1},
+    {date: new Date('2001-01-01T00:00:00.000Z'), value: 0, value2: 1, value3:2},
+    {date: new Date('2002-01-01T00:00:00.000Z'), value: -1, value2: 1.5, value3:0},
+    {date: new Date('2003-01-01T00:00:00.000Z'), value: 1.5, value2: -1, value3:1}
+];
+var data = [timeData,timeData,timeData,dataWithZeros,quarterlyDataPlus, quarterlyData5Months, quarterlyDataMany, quarterlyDataDecade]
 
 function getChartData(i) {
     var defaultData = {
@@ -104,12 +111,11 @@ function getChartData(i) {
             series: {key: 'date', label: 'year'}
         },
         y: y[i],
-        data: timeData,
+        data: data[i],
         units: false
     };
-    if (i>=3){
+    if (i>=4){
         defaultData.subtitle = "Quarterly Axis";
-        defaultData.data = quarterlyData[i];
         defaultData.units = ['quarterly', 'yearly'];
     }
     return defaultData;
@@ -118,7 +124,7 @@ function getChartData(i) {
 module.exports = {
     getChartData: getChartData,
     init: function () {
-        for (var i = 0; i < 7; i++) {
+        for (var i = 0; i < 8; i++) {
             d3.select('body').append('div').attr('id', 'line-chart' + (i + 1));
             d3.select('#line-chart' + (i + 1)).data([getChartData(i)]).call(oCharts.chart.line);
         }

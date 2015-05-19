@@ -13,7 +13,7 @@ function plotSeries(plotSVG, model, axes, series) {
     var data = model.data.map(function (d) {
         return {
             x: d[model.x.series.key],
-            y: d[series.key] || d.values[0][series.key]
+            y: (Array.isArray(d.values)) ? d.values[0][series.key] : d[series.key]
         };
     }).filter(function (d) {
         return (d.y !== null);
