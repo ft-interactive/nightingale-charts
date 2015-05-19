@@ -111,7 +111,7 @@ function categoryAxis() {
             if (dates.formatGroups[unit]) {
                 var axis = d3.svg.axis()
                     .scale(scale)
-                    .tickFormat(utils.formatter[unit])
+                    .tickFormat(dates.formatGroups[unit])
                     .tickSize(config.tickSize, 0);
                 axes.push(axis);
             }
