@@ -167,7 +167,7 @@ module.exports = {
         demos.forEach(function(timeFrame, i){
             var textContent = '';
             if (i===7){
-                textContent = 'NOTE: This chart highlights how columns should rarely be used for time-data. This is not a bug in o-charts'
+                textContent = 'NOTE: This chart highlights how columns should rarely be used for time-data. This example should check that charts of this form render but not that they should look good.'
             }
             d3.select('#views').append('p').attr({
                 'id':'column-chart__' + timeFrame
