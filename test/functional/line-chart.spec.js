@@ -2,10 +2,7 @@
 
 describe('line-chart  ', function () {
 
-    var lineChart1;
-    var lineChart2;
-    var lineChart3;
-    var lineChart4;
+    var lineChart1, lineChart2, lineChart3, lineChart4, lineChart5;
 
     beforeEach(function(){
         //pm: hack to stop spec rewriting dom too early :(
@@ -16,6 +13,7 @@ describe('line-chart  ', function () {
         lineChart2 = document.querySelector('#line-chart2 svg');
         lineChart3 = document.querySelector('#line-chart3 svg');
         lineChart4 = document.querySelector('#line-chart4 svg');
+        lineChart5 = document.querySelector('#line-chart5 svg');
     });
 
     describe('shows line keys as ', function () {
@@ -77,6 +75,11 @@ describe('line-chart  ', function () {
             expect(visibleSource[0].textContent).toBe('Source: tbc');
         });
 
+        it('Can handle zero\s', function () {
+            var lines = lineChart4.querySelectorAll('.plot path');
+            expect(lines.length).toBe(3);
+        });
+
     });
 
     describe('positions y axis ', function () {
@@ -125,7 +128,7 @@ describe('line-chart  ', function () {
     describe('Quarterly Axis ', function () {
 
         it('Can be displayed', function () {
-            var labels = lineChart4.querySelectorAll('.chart .x text');
+            var labels = lineChart5.querySelectorAll('.chart .x text');
             expect(labels[0].textContent).toBe('Q1');
             expect(labels[1].textContent).toBe('Q2');
             expect(labels[2].textContent).toBe('Q3');
@@ -146,7 +149,7 @@ describe('line-chart  ', function () {
     describe('has ticks ', function(){
 
         it('displayed even when no labels have been removed and there are no negative value', function(){
-            var quarterlyTicksGraphA = document.querySelectorAll('svg')[4].querySelectorAll('.x.axis .primary line');
+            var quarterlyTicksGraphA = document.querySelectorAll('svg')[5].querySelectorAll('.x.axis .primary line');
             expect(quarterlyTicksGraphA.length).toBe(5);
             expect(quarterlyTicksGraphA[0].getAttribute('y2')).toBe('5');
             expect(quarterlyTicksGraphA[1].getAttribute('y2')).toBe('5');
@@ -155,7 +158,7 @@ describe('line-chart  ', function () {
         });
 
         it('extended when quarter labels are removed', function(){
-            var quarterlyTicksGraphC = document.querySelectorAll('svg')[5].querySelectorAll('.x.axis .primary line');
+            var quarterlyTicksGraphC = document.querySelectorAll('svg')[6].querySelectorAll('.x.axis .primary line');
             expect(quarterlyTicksGraphC[0].getAttribute('y2')).toBe('7.5');
             expect(quarterlyTicksGraphC[1].getAttribute('y2')).toBe('5');
             expect(quarterlyTicksGraphC[2].getAttribute('y2')).toBe('5');
@@ -168,7 +171,7 @@ describe('line-chart  ', function () {
         });
 
         it('small when quarter ticks are removed', function(){
-            var quarterlyTicksGraphC = document.querySelectorAll('svg')[6].querySelectorAll('.x.axis .primary line');
+            var quarterlyTicksGraphC = document.querySelectorAll('svg')[7].querySelectorAll('.x.axis .primary line');
             expect(quarterlyTicksGraphC[0].getAttribute('y2')).toBe('5');
             expect(quarterlyTicksGraphC[1].getAttribute('y2')).toBe('5');
             expect(quarterlyTicksGraphC[2].getAttribute('y2')).toBe('5');
@@ -185,9 +188,9 @@ describe('line-chart  ', function () {
     describe('has labels ', function(){
 
         it('hidden when any quarter overlaps', function(){
-            var quarterlyTicksGraphA = document.querySelectorAll('svg')[5].querySelectorAll('.x.axis .primary line');
-            var quarterlyLabelsGraphA = document.querySelectorAll('svg')[5].querySelectorAll('.x.axis .primary text');
-            var yearlyLabelsGraphA = document.querySelectorAll('svg')[5].querySelectorAll('.x.axis .secondary text');
+            var quarterlyTicksGraphA = document.querySelectorAll('svg')[6].querySelectorAll('.x.axis .primary line');
+            var quarterlyLabelsGraphA = document.querySelectorAll('svg')[6].querySelectorAll('.x.axis .primary text');
+            var yearlyLabelsGraphA = document.querySelectorAll('svg')[6].querySelectorAll('.x.axis .secondary text');
             expect(quarterlyTicksGraphA.length).toBe(17);
             expect(quarterlyLabelsGraphA.length).toBe(5);
             expect(quarterlyLabelsGraphA[0].textContent).toBe('2005');
@@ -195,7 +198,7 @@ describe('line-chart  ', function () {
         });
 
         it('hidden when there are duplicate year labels', function(){
-            var yearlyLabelsGraphA = document.querySelectorAll('svg')[4].querySelectorAll('.x.axis .secondary text');
+            var yearlyLabelsGraphA = document.querySelectorAll('svg')[5].querySelectorAll('.x.axis .secondary text');
             expect(yearlyLabelsGraphA.length).toBe(2);
             expect(yearlyLabelsGraphA[0].textContent).toBe('2005');
             expect(yearlyLabelsGraphA[1].textContent).toBe('06');
