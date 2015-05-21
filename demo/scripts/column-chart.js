@@ -129,12 +129,6 @@ var fixtures = {
         {date: new Date('6/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
         {date: new Date('9/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
         {date: new Date('12/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66}
-    ],
-    time: [
-        {date: new Date('3/31/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
-        {date: new Date('6/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
-        {date: new Date('9/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
-        {date: new Date('12/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66}
     ]
 };
 
@@ -174,10 +168,14 @@ module.exports = {
     getChartData: getChartData,
     init: function(){
         var demos = ['quarters','quartersWithNegative','years','yearsWithNegative','decade', 'month', 'multiple', 'quartersWithZero', 'time'];
-        demos.forEach(function(timeFrame){
-            d3.select('#views').append('div').attr({
+        demos.forEach(function(timeFrame, i){
+            var textContent = '';
+            if (i===7){
+                textContent = 'NOTE: This chart highlights how columns should rarely be used for time-data. This example should check that charts of this form render but not that they should look good.'
+            }
+            d3.select('#views').append('p').attr({
                 'id':'column-chart__' + timeFrame
-            });
+            }).text(textContent);
             widths.forEach(function (width){
                 var data = getChartData(timeFrame);
                 data.width = width;
