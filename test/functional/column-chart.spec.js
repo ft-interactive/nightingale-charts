@@ -151,9 +151,33 @@ describe('column-chart.js', function(){
             expect(txt[2].textContent).toBe('May');
             expect(txt[3].textContent).toBe('Jun');
         });
+
+        it('are less than the y axis maximum', function(){
+            var cols = document.querySelectorAll('.width600 svg')[8].querySelectorAll('.plot rect');
+            var ticks = document.querySelectorAll('.width600 svg')[8].querySelectorAll('.y.axis .tick text');
+            var lastTick = ticks[ticks.length - 1];
+
+            for(var i = 0; i < cols.length; i++){
+                expect(cols[i].__data__.value).toBeLessThan(Number(lastTick.textContent));
+            }
+        });
+    });
+
+    describe('stacked column chart ', function(){ //still working on this one, had to leave a bit early
+        it('has the same number of stacks in each grouping', function(){
+            var g = document.querySelectorAll('.width600 svg')[8].querySelectorAll('.plot g.series');
+            var i = g.length;
+
+            expect(i).toBe(5);//5 groups
+            while(i--){
+                var thisGroup = g[i].querySelectorAll('rect');
+                expect(thisGroup.length).toBe(5);
+            }
+        });
     });
 
     describe('attaches style attributes to', function () {
+
         it('the columns', function () {
 
             var plot = document.querySelectorAll('.width600 svg')[1].querySelector('.chart .plot rect');
@@ -162,6 +186,7 @@ describe('column-chart.js', function(){
             expect(plot.getAttribute('fill')).toBeTruthy();
 
         });
+
         it('the column series key', function () {
 
             var plot = document.querySelectorAll('.width600 svg')[6].querySelector('.chart__key rect');
@@ -176,7 +201,7 @@ describe('column-chart.js', function(){
     describe('Time Axis ', function () {
 
         it('Can be displayed', function () {
-            var labels = document.querySelectorAll('.width600 svg')[8].querySelectorAll('.x text');
+            var labels = document.querySelectorAll('.width600 svg')[7].querySelectorAll('.x text');
             expect(labels[0].textContent).toBe('Mar');
             expect(labels[1].textContent).toBe('May');
             expect(labels[2].textContent).toBe('Jul');
