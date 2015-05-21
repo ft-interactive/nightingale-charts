@@ -1,6 +1,59 @@
 var d3 = require('d3');
+var dates = require('../util/dates');
+var dateFormatter = dates.formatter;
 
 module.exports = {
+    extendedTicks : function (g, config) {
+        var tickExtender = 1.5;
+        var extendedTicks_selector = ".tick line[y2=\"" + (config.tickSize * tickExtender) + "\"]";
+        var ticks_selector = ".tick line";
+
+        g.selectAll(ticks_selector)
+            .attr("y2", function (d) {
+                var quarter = d.getMonth ? dateFormatter[config.units[0]](d) : d.toString();
+                return (quarter.indexOf('Q1') === 0) ? (config.tickSize * tickExtender) : config.tickSize ;
+            });
+        var tickCount = g.selectAll(ticks_selector)[0].length;
+        var extendedCount = g.selectAll(extendedTicks_selector)[0].length;
+        if (extendedCount+2 >= tickCount){
+            //take into account of first + last starting on something not q1
+            g.selectAll(extendedTicks_selector).attr("y2", config.tickSize);
+        }
+    },
+    add: function(g, config){
+        var self = this, labelsAddedRatio, row = 0;
+        config.axes.forEach(function (a, i) {
+            if (config.units[0] === 'quarterly'){
+                if (i===0){
+                    labelsAddedRatio = self.addRow(g, a, row, 'primary', config);
+                } else if (i>0 && labelsAddedRatio < 1) {
+                    row--;
+                    g.select('.primary').remove();
+                    labelsAddedRatio = self.addRow(g, a, row, 'primary', config);
+                    self.extendedTicks(g, config);
+                } else if (i>0){
+                    self.addRow(g, a, row, 'secondary', config);
+                }
+                row++;
+            } else {
+                self.addRow(g, a, i, (i===0) ? 'primary' : 'secondary', config);
+            }
+        });
+    },
+    addRow: function(g, a, i, scaleClass, config){
+        g.append('g')
+            .attr('class', scaleClass)
+            .attr('transform', 'translate(0,' + (i * config.lineHeight) + ')')
+            .call(a);
+        if (dates.unitGenerator(config.scale.domain())[0] == 'days') {
+            this.removeDays(g, '.primary text');
+        }
+        this.removeDuplicates(g, '.' + scaleClass + ' text');
+        this.removeOverlapping(g, '.' + scaleClass + ' text');
+        var labelsAddedRatio = g.selectAll('text')[0].length / g.selectAll('line')[0].length;
+        return labelsAddedRatio;
+    },
+
     intersection: function (a, b) {
         var overlap = (
         a.left <= b.right &&

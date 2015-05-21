@@ -1,7 +1,8 @@
 var d3 = require('d3');
 var styler = require('../util/chart-attribute-styles');
 var labels = require('../util/labels.js');
-var utils = require('./category.utils.js');
+var dates = require('../util/dates.js');
+var timeDiff = dates.timeDiff;
 
 function categoryAxis() {
 
@@ -28,12 +29,7 @@ function categoryAxis() {
 
         g.append('g').attr('class', 'x axis').each(function () {
             var g = d3.select(this);
-            config.axes.forEach(function (a, i) {
-                g.append('g')
-                    .attr('class', ((i === 0) ? 'primary' : 'secondary'))
-                    .attr('transform', 'translate(0,' + (i * config.lineHeight) + ')')
-                    .call(a);
-            });
+            labels.add(g, config);
             //remove text-anchor attribute from year positions
             g.selectAll('.primary text').attr({
                 x: null,
@@ -46,10 +42,6 @@ function categoryAxis() {
         if (!config.showDomain) {
             g.select('path.domain').remove();
         }
-        labels.removeDuplicates(g, '.primary text');
-        labels.removeDuplicates(g, '.secondary text');
-        labels.removeOverlapping(g, '.primary text');
-        labels.removeOverlapping(g, '.secondary text');
     }
 
     render.simple = function (bool) {
@@ -104,14 +96,15 @@ function categoryAxis() {
         if (!arguments.length) return config.axes[0].scale();
         units = units || ['unknown'];
         config.scale = scale;
+        config.units = units;
 
         var axes = [];
         for (var i = 0; i < units.length; i++) {
             var unit = units[i];
-            if (utils.formatter[unit]) {
+            if (dates.formatGroups[unit]) {
                 var axis = d3.svg.axis()
                     .scale(scale)
-                    .tickFormat(utils.formatter[unit])
+                    .tickFormat(dates.formatGroups[unit])
                     .tickSize(config.tickSize, 0);
                 axes.push(axis);
             }

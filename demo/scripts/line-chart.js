@@ -82,7 +82,16 @@ var quarterlyDataDecade =  [
     { date: new Date('4/01/12'), value: -1.027},
     { date: new Date('7/01/12'), value: 1.03},
     { date: new Date('10/01/12'), value: 1.348},
-    { date: new Date('01/01/13'), value: 1.348}
+    { date: new Date('01/01/13'), value: 1.348},
+    { date: new Date('4/01/13'), value: -1.027},
+    { date: new Date('7/01/13'), value: 1.03},
+    { date: new Date('10/01/13'), value: 1.348},
+    { date: new Date('01/01/14'), value: 1.348},
+    { date: new Date('4/01/14'), value: -1.027},
+    { date: new Date('7/01/14'), value: 1.03},
+    { date: new Date('10/01/14'), value: 1.348},
+    { date: new Date('01/01/15'), value: 1.348},
+    { date: new Date('04/01/15'), value: 1.348}
 ];
 var timeData = [
     {date: new Date('2000-01-01T00:00:00.000Z'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
