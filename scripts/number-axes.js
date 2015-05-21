@@ -2,7 +2,8 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 var d3 = require('d3');
 var styler = require('../util/chart-attribute-styles');
 var labels = require('../util/labels.js');
-var utils = require('./category.utils.js');
+var dates = require('../util/dates.js');
+var timeDiff = dates.timeDiff;
 
 function categoryAxis() {
 
@@ -29,12 +30,7 @@ function categoryAxis() {
 
         g.append('g').attr('class', 'x axis').each(function () {
             var g = d3.select(this);
-            config.axes.forEach(function (a, i) {
-                g.append('g')
-                    .attr('class', ((i === 0) ? 'primary' : 'secondary'))
-                    .attr('transform', 'translate(0,' + (i * config.lineHeight) + ')')
-                    .call(a);
-            });
+            labels.add(g, config);
             //remove text-anchor attribute from year positions
             g.selectAll('.primary text').attr({
                 x: null,
@@ -47,10 +43,6 @@ function categoryAxis() {
         if (!config.showDomain) {
             g.select('path.domain').remove();
         }
-        labels.removeDuplicates(g, '.primary text');
-        labels.removeDuplicates(g, '.secondary text');
-        labels.removeOverlapping(g, '.primary text');
-        labels.removeOverlapping(g, '.secondary text');
     }
 
     render.simple = function (bool) {
@@ -105,14 +97,15 @@ function categoryAxis() {
         if (!arguments.length) return config.axes[0].scale();
         units = units || ['unknown'];
         config.scale = scale;
+        config.units = units;
 
         var axes = [];
         for (var i = 0; i < units.length; i++) {
             var unit = units[i];
-            if (utils.formatter[unit]) {
+            if (dates.formatGroups[unit]) {
                 var axis = d3.svg.axis()
                     .scale(scale)
-                    .tickFormat(utils.formatter[unit])
+                    .tickFormat(dates.formatGroups[unit])
                     .tickSize(config.tickSize, 0);
                 axes.push(axis);
             }
@@ -127,46 +120,13 @@ function categoryAxis() {
 
 module.exports = categoryAxis;
 
-},{"../util/chart-attribute-styles":21,"../util/labels.js":25,"./category.utils.js":2,"d3":"d3"}],2:[function(require,module,exports){
-var formatter = {
-    unknown: function (d, i) {
-        return d;
-    },
-    years: function (d, i) {
-        return d.split(' ')[1];
-    },
-    yearly: function (d, i) {
-        return d.split(' ')[1];
-    },
-    quarterly: function (d, i) {
-        return d.split(' ')[0];
-    },
-    monthly: function (d, i) {
-        return d.split(' ')[0];
-    },
-    months: function (d, i) {
-        return d.split(' ')[0];
-    },
-    decades: function (d, i) {
-        return d.split(' ')[1];
-    },
-    centuries: function (d, i) {
-        return d.split(' ')[1];
-    }
-};
-
-module.exports = {
-    formatter: formatter
-};
-
-},{}],3:[function(require,module,exports){
+},{"../util/chart-attribute-styles":20,"../util/dates.js":22,"../util/labels.js":24,"d3":"d3"}],2:[function(require,module,exports){
 var d3 = require('d3');
 var axis = {
     category: require('./category.js'),
     date: require('./date.js'),
     number: require('./number.js')
 };
-var dateFormatter = require('../util/dates').formatter;
 
 function getHeight(selection) {
     return Math.ceil(selection.node().getBoundingClientRect().height);
@@ -193,64 +153,26 @@ function Create(svg, model) {
     this.model = model;
     this.svg = svg;
     this.margin = 0.2;
-    this.tickExtender = 1.5;
 }
 
-Create.prototype.rearrangeLabels = function () {
-    var model = this.model;
-    var showsAllLabels = this.svg.selectAll('.x.axis .primary line')[0].length === this.svg.selectAll('.x.axis .primary text')[0].length;
+Create.prototype.hideTicks = function () {
+    var tickCount = this.svg.selectAll('.x.axis .primary line')[0].length;
+    var labelCount= this.svg.selectAll('.x.axis .primary text')[0].length;
+    var labelsShownRatio = labelCount/tickCount;
     var allPositiveValues = Math.min.apply(null, this.valueScale.domain()) >= 0;
-
-    if (showsAllLabels && allPositiveValues && model.chartType == 'column') {
-        model.tickSize = 0;
-        this.svg.selectAll('.x.axis').remove();
-        this.timeAxis.tickSize(0).scale(this.timeScale, this.model.units);
-        this.svg.call(this.timeAxis);
-    } else if (!showsAllLabels) { //todo: should/can this be in category.js?
-        this.svg.selectAll('.x.axis').remove();
-        this.timeAxis.scale(this.timeScale, [model.units[1]]);
-        this.svg.call(this.timeAxis);
-    }
-};
-
-Create.prototype.extendedTicks = function () {
-    var showsAllLabels = this.svg.selectAll('.x.axis .primary line')[0].length === this.svg.selectAll('.x.axis .primary text')[0].length;
-    if (showsAllLabels) return;
-    var model = this.model;
-    var self = this;
-    var extendedTicks_selector = ".x.axis .tick line[y2=\"" + (model.tickSize * this.tickExtender) + "\"]";
-    var ticks_selector = ".x.axis .tick line";
-
-    this.svg.selectAll(ticks_selector)
-        .attr("y2", function (d) {
-            var quarter = d.getMonth ? dateFormatter[model.units[0]](d) : d.toString();
-            return (quarter.indexOf('Q1') === 0) ? (model.tickSize * self.tickExtender) : model.tickSize ;
-        });
-    var tickCount = this.svg.selectAll(ticks_selector)[0].length;
-    var extendedCount = this.svg.selectAll(extendedTicks_selector)[0].length;
-    if (extendedCount+2 >= tickCount){
-        //take into account of first + last starting on something not q1
-        this.svg.selectAll(extendedTicks_selector).attr("y2", model.tickSize);
-    }
+    return labelsShownRatio===1 && allPositiveValues;
 };
 
 Create.prototype.repositionAxis = function () {
     if (!this.independentScaleCreated || !this.dependentScaleCreated) return;
     var model = this.model;
 
-    if (model.groupData) { //todo: grr. two places!
-        this.rearrangeLabels();
-    }
-
     var xLabelHeight = getHeight(this.svg) - model.chartHeight;
     var yLabelWidth = getWidth(this.svg) - model.chartWidth;
     var plotHeight = model.chartHeight - xLabelHeight;
     var plotWidth = model.chartWidth - yLabelWidth;
     var vLabelWidth = 0;
-
-    this.valueScale.range([this.valueScale.range()[0], plotHeight]);
-    this.timeAxis.yOffset(plotHeight);
-    this.vAxis.tickSize(plotWidth).tickExtension(yLabelWidth);
+    model.tickSize = (model.chartType == 'column' && this.hideTicks()) ? 0 : model.tickSize;
 
     if (this.timeScale.rangeRoundBands) {
         this.timeScale.rangeRoundBands([0, plotWidth], this.margin);
@@ -258,14 +180,12 @@ Create.prototype.repositionAxis = function () {
         this.timeScale.range([this.timeScale.range()[0], plotWidth]);
     }
 
+    this.valueScale.range([this.valueScale.range()[0], plotHeight]);
+    this.timeAxis.yOffset(plotHeight).tickSize(model.tickSize).scale(this.timeScale, model.units);
+    this.vAxis.tickSize(plotWidth).tickExtension(yLabelWidth);
     this.svg.selectAll('*').remove();
     this.svg.call(this.vAxis);
     this.svg.call(this.timeAxis);
-
-    if (model.groupData && model.tickSize>0) {
-        this.rearrangeLabels();
-        this.extendedTicks();
-    }
 
     if (model.numberAxisOrient !== 'right') {
         this.svg.selectAll('.y.axis text').each(function () {
@@ -328,12 +248,13 @@ Create.prototype.dependentScale = function (scale) {
 
 module.exports = Create;
 
-},{"../util/dates":23,"./category.js":1,"./date.js":4,"./number.js":7,"d3":"d3"}],4:[function(require,module,exports){
+},{"./category.js":1,"./date.js":3,"./number.js":6,"d3":"d3"}],3:[function(require,module,exports){
 var d3 = require('d3');
 var labels = require('../util/labels.js');
 var dates = require('../util/dates.js');
 var dateScale = require('./date.scale.js');
 var styler = require('../util/chart-attribute-styles');
+var timeDiff = dates.timeDiff;
 
 function dateAxis() {
     var config = {
@@ -359,12 +280,7 @@ function dateAxis() {
 
         g.append('g').attr('class', 'x axis').each(function () {
             var g = d3.select(this);
-            config.axes.forEach(function (a, i) {
-                g.append('g')
-                    .attr('class', ((i === 0) ? 'primary' : 'secondary'))
-                    .attr('transform', 'translate(0,' + (i * config.lineHeight) + ')')
-                    .call(a);
-            });
+            labels.add(g, config);
             //remove text-anchor attribute from year positions
             g.selectAll('.primary text').attr({
                 x: null,
@@ -377,14 +293,6 @@ function dateAxis() {
         if (!config.showDomain) {
             g.select('path.domain').remove();
         }
-
-        if (dates.unitGenerator(config.scale.domain())[0] == 'days') {
-            labels.removeDays(g, '.primary text');
-        }
-        labels.removeDuplicates(g, '.primary text');
-        labels.removeDuplicates(g, '.secondary text');
-        labels.removeOverlapping(g, '.primary text');
-        labels.removeOverlapping(g, '.secondary text');
     }
 
     render.simple = function (bool) {
@@ -437,9 +345,14 @@ function dateAxis() {
 
     render.scale = function (scale, units) {
         if (!arguments.length) return config.axes[0].scale();
+        if (!units ||
+            (units[0] === 'quarterly' && timeDiff(scale.domain()).decades > 1)){
+            units = dates.unitGenerator(scale.domain(), config.simple);
+        }
         if (config.nice) {
             scale.nice((scale.range()[1] - scale.range()[0]) / config.pixelsPerTick);
         }
+        config.units = units;
         config.scale = scale;
         config.axes = dateScale.render(scale, units, config);
         return render;
@@ -450,16 +363,18 @@ function dateAxis() {
 
 module.exports = dateAxis;
 
-},{"../util/chart-attribute-styles":21,"../util/dates.js":23,"../util/labels.js":25,"./date.scale.js":5,"d3":"d3"}],5:[function(require,module,exports){
+},{"../util/chart-attribute-styles":20,"../util/dates.js":22,"../util/labels.js":24,"./date.scale.js":4,"d3":"d3"}],4:[function(require,module,exports){
 var d3 = require('d3');
 var utils = require('../util/dates.js');
 
 var interval = {
     centuries: d3.time.year,
     decades: d3.time.year,
+    yearly: d3.time.month,
     years: d3.time.year,
     fullYears: d3.time.year,
     quarterly: d3.time.month,
+    monthly: d3.time.month,
     months: d3.time.month,
     weeks: d3.time.week,
     days: d3.time.day,
@@ -469,9 +384,11 @@ var interval = {
 var increment = {
     centuries: 100,
     decades: 10,
+    yearly: 3,
     years: 1,
     fullYears: 1,
     quarterly: 3,
+    monthly: 1,
     months: 1,
     weeks: 1,
     days: 1,
@@ -509,9 +426,6 @@ module.exports = {
         return axis;
     },
     render: function (scale, units, config) {
-        if (!units) {
-            units = utils.unitGenerator(scale.domain(), config.simple);
-        }
         var axes = [];
         for (var i = 0; i < units.length; i++) {
             var unit = units[i];
@@ -526,7 +440,7 @@ module.exports = {
     }
 };
 
-},{"../util/dates.js":23,"d3":"d3"}],6:[function(require,module,exports){
+},{"../util/dates.js":22,"d3":"d3"}],5:[function(require,module,exports){
 module.exports = {
     Create: require('./create.js'),
     Plot: require('./plot.js'),
@@ -535,7 +449,7 @@ module.exports = {
     number: require('./number.js')
 };
 
-},{"./category.js":1,"./create.js":3,"./date.js":4,"./number.js":7,"./plot.js":10}],7:[function(require,module,exports){
+},{"./category.js":1,"./create.js":2,"./date.js":3,"./number.js":6,"./plot.js":9}],6:[function(require,module,exports){
 //this is wrapper for d3.svg.axis
 //for a standard FT styled numeric axis
 //usually these are vertical
@@ -658,7 +572,7 @@ function numericAxis() {
 
 module.exports = numericAxis;
 
-},{"../util/chart-attribute-styles":21,"./number.labels":8,"./number.scale":9,"d3":"d3"}],8:[function(require,module,exports){
+},{"../util/chart-attribute-styles":20,"./number.labels":7,"./number.scale":8,"d3":"d3"}],7:[function(require,module,exports){
 module.exports = {
 
     isVertical: function (axis) {
@@ -722,7 +636,7 @@ module.exports = {
 
 };
 
-},{}],9:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 module.exports = {
     removeDuplicateTicks: function (scale, ticks) {
         var formatted = [];
@@ -792,7 +706,7 @@ module.exports = {
     }
 };
 
-},{}],10:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 var d3 = require('d3');
 
 function stackSeries(model, value, stack){
@@ -834,7 +748,7 @@ Plot.prototype.y = function(value, stack){
 
 module.exports = Plot;
 
-},{"d3":"d3"}],11:[function(require,module,exports){
+},{"d3":"d3"}],10:[function(require,module,exports){
 //var d3 = require('d3');
 
 function blankChart() {
@@ -906,7 +820,7 @@ function blankChart() {
 
 module.exports = blankChart;
 
-},{}],12:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 var axes = require('../axis');
 var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');
@@ -978,7 +892,7 @@ function columnChart(g){
 
 module.exports = columnChart;
 
-},{"../axis":6,"../util/chart-attribute-styles":21,"../util/data.model.js":22,"../util/dressing.js":24,"../util/metadata.js":28}],13:[function(require,module,exports){
+},{"../axis":5,"../util/chart-attribute-styles":20,"../util/data.model.js":21,"../util/dressing.js":23,"../util/metadata.js":27}],12:[function(require,module,exports){
 module.exports = {
     line: require('./line.js'),
     blank: require('./blank.js'),
@@ -986,7 +900,7 @@ module.exports = {
     column: require('./column.js')
 };
 
-},{"./blank.js":11,"./column.js":12,"./line.js":14,"./pie.js":15}],14:[function(require,module,exports){
+},{"./blank.js":10,"./column.js":11,"./line.js":13,"./pie.js":14}],13:[function(require,module,exports){
 var d3 = require('d3');
 var axes = require('../axis');
 var interpolator = require('../util/line-interpolators.js');
@@ -1060,7 +974,7 @@ function lineChart(g) {
 
 module.exports = lineChart;
 
-},{"../axis":6,"../util/chart-attribute-styles":21,"../util/data.model.js":22,"../util/dressing.js":24,"../util/line-interpolators.js":26,"../util/metadata.js":28,"d3":"d3"}],15:[function(require,module,exports){
+},{"../axis":5,"../util/chart-attribute-styles":20,"../util/data.model.js":21,"../util/dressing.js":23,"../util/line-interpolators.js":25,"../util/metadata.js":27,"d3":"d3"}],14:[function(require,module,exports){
 //var d3 = require('d3');
 
 function pieChart() {
@@ -1144,7 +1058,7 @@ function pieChart() {
 
 module.exports = pieChart;
 
-},{}],16:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 //the ft logo there's probably an easier ay to do this...
 //var d3 = require('d3');
 
@@ -1178,7 +1092,7 @@ module.exports = ftLogo;
  h3.075L110.955,1.959z"/>
  */
 
-},{}],17:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 //var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
 var styler = require('../util/chart-attribute-styles');
@@ -1287,7 +1201,7 @@ function lineKey(options) {
 
 module.exports = lineKey;
 
-},{"../util/chart-attribute-styles":21,"../util/line-thickness.js":27}],18:[function(require,module,exports){
+},{"../util/chart-attribute-styles":20,"../util/line-thickness.js":26}],17:[function(require,module,exports){
 /*jshint -W084 */
 //text area provides a wrapping text block of a given type
 var d3 = require('d3');
@@ -1387,7 +1301,7 @@ function textArea() {
 
 module.exports = textArea;
 
-},{"d3":"d3"}],19:[function(require,module,exports){
+},{"d3":"d3"}],18:[function(require,module,exports){
 module.exports = {
     chart: require('./chart/index.js'),
 
@@ -1407,7 +1321,7 @@ module.exports = {
 
 };
 
-},{"./axis/index.js":6,"./chart/index.js":13,"./element/series-key.js":17,"./element/text-area.js":18,"./util/chart-attribute-styles.js":21,"./util/dates.js":23,"./util/version":30}],20:[function(require,module,exports){
+},{"./axis/index.js":5,"./chart/index.js":12,"./element/series-key.js":16,"./element/text-area.js":17,"./util/chart-attribute-styles.js":20,"./util/dates.js":22,"./util/version":29}],19:[function(require,module,exports){
 // More info:
 // http://en.wikipedia.org/wiki/Aspect_ratio_%28image%29
 
@@ -1478,7 +1392,7 @@ module.exports = {
     }
 };
 
-},{}],21:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 // because of the need to export and convert browser rendered SVGs
 // we need a simple way to attach styles as attributes if necessary,
 // so, heres a list of attributes and the selectors to which they should be applied
@@ -1706,7 +1620,7 @@ function applyAttributes(g, keepD3Styles) {
 
 module.exports = applyAttributes;
 
-},{"d3":"d3"}],22:[function(require,module,exports){
+},{"d3":"d3"}],21:[function(require,module,exports){
 var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
 var ratios = require('../util/aspect-ratios.js');
@@ -1946,7 +1860,7 @@ Model.prototype.error = function (err) {
 };
 module.exports = Model;
 
-},{"../util/aspect-ratios.js":20,"../util/dates.js":23,"../util/line-thickness.js":27,"../util/series-options.js":29,"d3":"d3"}],23:[function(require,module,exports){
+},{"../util/aspect-ratios.js":19,"../util/dates.js":22,"../util/line-thickness.js":26,"../util/series-options.js":28,"d3":"d3"}],22:[function(require,module,exports){
 var d3 = require('d3');
 
 var formatter = {
@@ -1985,7 +1899,7 @@ var formatter = {
         return 'Q' + Math.floor((d.getMonth() + 3) / 3);
     },
     monthly: function (d, i) {
-        return formatter.months(d, i) ;
+        return formatter.months(d, i);
     },
     shortmonths: function (d, i) {
         return d3.time.format('%b')(d)[0];
@@ -2007,21 +1921,34 @@ var formatter = {
     }
 };
 
-function unitGenerator(domain, simple) {	//which units are most appropriate
-    var timeDif = domain[1].getTime() - domain[0].getTime();
+function timeDiff(domain){
+    if (!domain[0].getTime || !domain[1].getTime) return {};
+    var jsTimeDiff = domain[1].getTime() - domain[0].getTime();
     var dayLength = 86400000;
+    return {
+        days: jsTimeDiff / dayLength,
+        months: jsTimeDiff / (dayLength * 30),
+        years: jsTimeDiff / (dayLength * 365.25),
+        decades: jsTimeDiff / (dayLength * 365.25 * 10),
+        centuries: jsTimeDiff / (dayLength * 365.25 * 100)
+    };
+}
+
+function unitGenerator(domain, simple) {	//which units are most appropriate
+    if (!domain[0].getTime || !domain[1].getTime) return [];
+    var timeDif = timeDiff(domain);
     var units;
-    if (timeDif < dayLength * 2) {
+    if (timeDif.days < 2) {
         units = ['hours', 'days', 'months'];
-    } else if (timeDif < dayLength * 60) {
+    } else if (timeDif.days < 60) {
         units = ['days', 'months'];
-    } else if (timeDif < dayLength * 365.25) {
+    } else if (timeDif.years < 1) {
         units = ['months', 'years'];
-    } else if (timeDif < dayLength * 365.25 * 15) {
+    } else if (timeDif.decades < 1.5) {
         units = ['years'];
-    } else if (timeDif < dayLength * 365.25 * 150) {
+    } else if (timeDif.centuries < 1.5) {
         units = ['decades'];
-    } else if (timeDif < dayLength * 365.25 * 1000) {
+    } else if (timeDif.centuries < 10) {
         units = ['centuries'];
     } else {
         units = ['multi'];
@@ -2035,12 +1962,41 @@ function unitGenerator(domain, simple) {	//which units are most appropriate
     return units;
 }
 
+var groups = {
+    unknown: function (d, i) {
+        return d;
+    },
+    years: function (d, i) {
+        return d.split(' ')[1];
+    },
+    yearly: function (d, i) {
+        return d.split(' ')[1];
+    },
+    quarterly: function (d, i) {
+        return d.split(' ')[0];
+    },
+    monthly: function (d, i) {
+        return d.split(' ')[0];
+    },
+    months: function (d, i) {
+        return d.split(' ')[0];
+    },
+    decades: function (d, i) {
+        return d.split(' ')[1];
+    },
+    centuries: function (d, i) {
+        return d.split(' ')[1];
+    }
+};
+
 module.exports = {
+    timeDiff: timeDiff,
+    formatGroups: groups,
     formatter: formatter,
     unitGenerator: unitGenerator
 };
 
-},{"d3":"d3"}],24:[function(require,module,exports){
+},{"d3":"d3"}],23:[function(require,module,exports){
 var textArea = require('../element/text-area.js');
 var seriesKey = require('../element/series-key.js');
 var ftLogo = require('../element/logo.js');
@@ -2226,10 +2182,63 @@ Dressing.prototype.setPosition = function () {
 
 module.exports = Dressing;
 
-},{"../element/logo.js":16,"../element/series-key.js":17,"../element/text-area.js":18}],25:[function(require,module,exports){
+},{"../element/logo.js":15,"../element/series-key.js":16,"../element/text-area.js":17}],24:[function(require,module,exports){
 var d3 = require('d3');
+var dates = require('../util/dates');
+var dateFormatter = dates.formatter;
 
 module.exports = {
+    extendedTicks : function (g, config) {
+        var tickExtender = 1.5;
+        var extendedTicks_selector = ".tick line[y2=\"" + (config.tickSize * tickExtender) + "\"]";
+        var ticks_selector = ".tick line";
+
+        g.selectAll(ticks_selector)
+            .attr("y2", function (d) {
+                var quarter = d.getMonth ? dateFormatter[config.units[0]](d) : d.toString();
+                return (quarter.indexOf('Q1') === 0) ? (config.tickSize * tickExtender) : config.tickSize ;
+            });
+        var tickCount = g.selectAll(ticks_selector)[0].length;
+        var extendedCount = g.selectAll(extendedTicks_selector)[0].length;
+        if (extendedCount+2 >= tickCount){
+            //take into account of first + last starting on something not q1
+            g.selectAll(extendedTicks_selector).attr("y2", config.tickSize);
+        }
+    },
+    add: function(g, config){
+        var self = this, labelsAddedRatio, row = 0;
+        config.axes.forEach(function (a, i) {
+            if (config.units[0] === 'quarterly'){
+                if (i===0){
+                    labelsAddedRatio = self.addRow(g, a, row, 'primary', config);
+                } else if (i>0 && labelsAddedRatio < 1) {
+                    row--;
+                    g.select('.primary').remove();
+                    labelsAddedRatio = self.addRow(g, a, row, 'primary', config);
+                    self.extendedTicks(g, config);
+                } else if (i>0){
+                    self.addRow(g, a, row, 'secondary', config);
+                }
+                row++;
+            } else {
+                self.addRow(g, a, i, (i===0) ? 'primary' : 'secondary', config);
+            }
+        });
+    },
+    addRow: function(g, a, i, scaleClass, config){
+        g.append('g')
+            .attr('class', scaleClass)
+            .attr('transform', 'translate(0,' + (i * config.lineHeight) + ')')
+            .call(a);
+        if (dates.unitGenerator(config.scale.domain())[0] == 'days') {
+            this.removeDays(g, '.primary text');
+        }
+        this.removeDuplicates(g, '.' + scaleClass + ' text');
+        this.removeOverlapping(g, '.' + scaleClass + ' text');
+        var labelsAddedRatio = g.selectAll('text')[0].length / g.selectAll('line')[0].length;
+        return labelsAddedRatio;
+    },
+
     intersection: function (a, b) {
         var overlap = (
         a.left <= b.right &&
@@ -2315,7 +2324,7 @@ module.exports = {
     }
 };
 
-},{"d3":"d3"}],26:[function(require,module,exports){
+},{"../util/dates":22,"d3":"d3"}],25:[function(require,module,exports){
 //a place to define custom line interpolators
 
 var d3 = require('d3');
@@ -2349,7 +2358,7 @@ module.exports = {
     gappedLine: gappedLineInterpolator
 };
 
-},{"d3":"d3"}],27:[function(require,module,exports){
+},{"d3":"d3"}],26:[function(require,module,exports){
 var thicknesses = {
     small: 2,
     medium: 4,
@@ -2377,7 +2386,7 @@ module.exports = function (value) {
     }
 };
 
-},{}],28:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 //example:
 //http://codinginparadise.org/projects/svgweb-staging/tests/htmlObjectHarness/basic-metadata-example-01-b.html
 var svgSchema = 'http://www.w3.org/2000/svg';
@@ -2428,7 +2437,7 @@ module.exports = {
     create: create
 };
 
-},{}],29:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 function isTruthy(value) {
     return !!value;
 }
@@ -2473,7 +2482,7 @@ module.exports = {
     normalise: normalise
 };
 
-},{}],30:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 module.exports = "0.2.0";
 },{}],"number-axes":[function(require,module,exports){
 var oCharts = require('../../src/scripts/o-charts');
@@ -2594,4 +2603,4 @@ module.exports = {
     }
 };
 
-},{"../../src/scripts/o-charts":19,"d3":"d3"}]},{},["number-axes"]);
+},{"../../src/scripts/o-charts":18,"d3":"d3"}]},{},["number-axes"]);
