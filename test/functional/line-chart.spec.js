@@ -134,14 +134,6 @@ describe('line-chart  ', function () {
             expect(labels[2].textContent).toBe('Q3');
             expect(labels[3].textContent).toBe('Q4');
         });
-        //todo: test: get line in middle of groupedTimeScale tick
-        xit('first plot lines up with first tick', function () {
-            //var labels = lineChart4.querySelector('.chart .x text');
-            //expect(labels[0].textContent).toBe('Q1');
-            //expect(labels[1].textContent).toBe('Q2');
-            //expect(labels[2].textContent).toBe('Q3');
-            //expect(labels[3].textContent).toBe('Q4');
-        });
 
     });
 
@@ -157,7 +149,7 @@ describe('line-chart  ', function () {
             expect(quarterlyTicksGraphA[3].getAttribute('y2')).toBe('5');
         });
 
-        it('extended when quarter labels are removed', function(){
+        it('extended when quarter `labels` are removed', function(){
             var quarterlyTicksGraphC = document.querySelectorAll('svg')[6].querySelectorAll('.x.axis .primary line');
             expect(quarterlyTicksGraphC[0].getAttribute('y2')).toBe('7.5');
             expect(quarterlyTicksGraphC[1].getAttribute('y2')).toBe('5');
@@ -170,7 +162,12 @@ describe('line-chart  ', function () {
             expect(quarterlyTicksGraphC[8].getAttribute('y2')).toBe('7.5');
         });
 
-        it('small when quarter ticks are removed', function(){
+        it('removed when timeframe is over a decade', function(){
+            var quarterlyTicksGraphC = document.querySelectorAll('svg')[7].querySelectorAll('.x.axis .primary line');
+            expect(quarterlyTicksGraphC.length).toBe(11);
+        });
+
+        it('small when quarter `ticks` are removed', function(){
             var quarterlyTicksGraphC = document.querySelectorAll('svg')[7].querySelectorAll('.x.axis .primary line');
             expect(quarterlyTicksGraphC[0].getAttribute('y2')).toBe('5');
             expect(quarterlyTicksGraphC[1].getAttribute('y2')).toBe('5');

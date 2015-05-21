@@ -58,21 +58,34 @@ var formatter = {
     }
 };
 
-function unitGenerator(domain, simple) {	//which units are most appropriate
-    var timeDif = domain[1].getTime() - domain[0].getTime();
+function timeDiff(domain){
+    if (!domain[0].getTime || !domain[1].getTime) return {};
+    var jsTimeDiff = domain[1].getTime() - domain[0].getTime();
     var dayLength = 86400000;
+    return {
+        days: jsTimeDiff / dayLength,
+        months: jsTimeDiff / (dayLength * 30),
+        years: jsTimeDiff / (dayLength * 365.25),
+        decades: jsTimeDiff / (dayLength * 365.25 * 10),
+        centuries: jsTimeDiff / (dayLength * 365.25 * 100)
+    };
+}
+
+function unitGenerator(domain, simple) {	//which units are most appropriate
+    if (!domain[0].getTime || !domain[1].getTime) return [];
+    var timeDif = timeDiff(domain);
     var units;
-    if (timeDif < dayLength * 2) {
+    if (timeDif.days < 2) {
         units = ['hours', 'days', 'months'];
-    } else if (timeDif < dayLength * 60) {
+    } else if (timeDif.days < 60) {
         units = ['days', 'months'];
-    } else if (timeDif < dayLength * 365.25) {
+    } else if (timeDif.years < 1) {
         units = ['months', 'years'];
-    } else if (timeDif < dayLength * 365.25 * 15) {
+    } else if (timeDif.decades < 1.5) {
         units = ['years'];
-    } else if (timeDif < dayLength * 365.25 * 150) {
+    } else if (timeDif.centuries < 1.5) {
         units = ['decades'];
-    } else if (timeDif < dayLength * 365.25 * 1000) {
+    } else if (timeDif.centuries < 10) {
         units = ['centuries'];
     } else {
         units = ['multi'];
@@ -114,6 +127,7 @@ var groups = {
 };
 
 module.exports = {
+    timeDiff: timeDiff,
     formatGroups: groups,
     formatter: formatter,
     unitGenerator: unitGenerator

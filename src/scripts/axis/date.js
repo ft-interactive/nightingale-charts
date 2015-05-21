@@ -3,6 +3,7 @@ var labels = require('../util/labels.js');
 var dates = require('../util/dates.js');
 var dateScale = require('./date.scale.js');
 var styler = require('../util/chart-attribute-styles');
+var timeDiff = dates.timeDiff;
 
 function dateAxis() {
     var config = {
@@ -28,12 +29,7 @@ function dateAxis() {
 
         g.append('g').attr('class', 'x axis').each(function () {
             var g = d3.select(this);
-            config.axes.forEach(function (a, i) {
-                g.append('g')
-                    .attr('class', ((i === 0) ? 'primary' : 'secondary'))
-                    .attr('transform', 'translate(0,' + (i * config.lineHeight) + ')')
-                    .call(a);
-            });
+            labels.add(g, config);
             //remove text-anchor attribute from year positions
             g.selectAll('.primary text').attr({
                 x: null,
@@ -46,14 +42,6 @@ function dateAxis() {
         if (!config.showDomain) {
             g.select('path.domain').remove();
         }
-
-        if (dates.unitGenerator(config.scale.domain())[0] == 'days') {
-            labels.removeDays(g, '.primary text');
-        }
-        labels.removeDuplicates(g, '.primary text');
-        labels.removeDuplicates(g, '.secondary text');
-        labels.removeOverlapping(g, '.primary text');
-        labels.removeOverlapping(g, '.secondary text');
     }
 
     render.simple = function (bool) {
@@ -106,9 +94,14 @@ function dateAxis() {
 
     render.scale = function (scale, units) {
         if (!arguments.length) return config.axes[0].scale();
+        if (!units ||
+            (units[0] === 'quarterly' && timeDiff(scale.domain()).decades > 1)){
+            units = dates.unitGenerator(scale.domain(), config.simple);
+        }
         if (config.nice) {
             scale.nice((scale.range()[1] - scale.range()[0]) / config.pixelsPerTick);
         }
+        config.units = units;
         config.scale = scale;
         config.axes = dateScale.render(scale, units, config);
         return render;
