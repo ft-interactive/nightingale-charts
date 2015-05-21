@@ -173,14 +173,14 @@ module.exports = {
     getChartData: getChartData,
     init: function(){
         var demos = ['quarters','quartersWithNegative','years','yearsWithNegative','decade', 'month', 'multiple', 'time', 'stack'];
-        demos.forEach(function(timeFrame){
+        demos.forEach(function(timeFrame, i){
             var textContent = '';
             if (i===7){
                 textContent = 'NOTE: This chart highlights how columns should rarely be used for time-data. This example should check that charts of this form render but not that they should look good.'
             }
-            d3.select('#views').append('p').attr({
+            d3.select('#views').append('p').text(textContent).append('div').attr({
                 'id':'column-chart__' + timeFrame
-            }).text(textContent);
+            });
             widths.forEach(function (width){
                 var data = getChartData(timeFrame);
                 data.width = width;

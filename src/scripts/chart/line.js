@@ -28,7 +28,7 @@ function formatData(model, series) {
     var data = model.data.map(function (d) {
         return {
             key: d[model.x.series.key],
-            value: (Array.isArray(d.values)) ? d.values[0][series.key] : d[series.key];
+            value: (Array.isArray(d.values)) ? d.values[0][series.key] : d[series.key]
         };
     }).filter(function (d) {
         return (d.value !== null);
