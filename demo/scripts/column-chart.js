@@ -96,7 +96,11 @@ var fixtures = {
         { date: new Date('3/31/14'), value:      0.882},
         { date: new Date('6/30/14'), value:      0.833},
         { date: new Date('9/30/14'), value:      0.619},
-        { date: new Date('12/31/14'), value:     0.607}
+        { date: new Date('12/31/14'), value:     0.607},
+        { date: new Date('3/31/15'), value:      0.882},
+        { date: new Date('6/30/15'), value:      0.833},
+        { date: new Date('9/30/15'), value:      0.619},
+        { date: new Date('12/31/15'), value:     0.607}
     ],
     month : [
         { date: new Date('3/31/05'), value:      0.583},
