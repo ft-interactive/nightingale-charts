@@ -83,7 +83,6 @@ function drawDemo(timeFrame){
         x:{
             series: {key:'date', label:'year'},
         },
-        tickSize: 0,
         y: { series: ['value']},
         data: nestedFixture,
         scale: d3.scale
@@ -107,7 +106,6 @@ function drawDemo(timeFrame){
         })
         .each(function (d, i) {
             var axis = oCharts.axis.category()
-                .tickSize(d.tickSize)
                 .scale(d.scale, d.units);
 
             d3.select(this)
