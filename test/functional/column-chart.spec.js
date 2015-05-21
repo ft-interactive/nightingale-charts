@@ -24,7 +24,7 @@ describe('column-chart.js', function(){
 
         it('displayed when labels have been removed', function(){
             var quarterlyTicksGraphC = document.querySelectorAll('.width600 svg')[4].querySelectorAll('.x.axis .primary line');
-            expect(quarterlyTicksGraphC.length).toBe(39);
+            expect(quarterlyTicksGraphC.length).toBe(43);
         });
 
         it('extended when quarter labels are removed', function(){
@@ -181,15 +181,6 @@ describe('column-chart.js', function(){
             expect(labels[1].textContent).toBe('May');
             expect(labels[2].textContent).toBe('Jul');
             expect(labels[3].textContent).toBe('Sep');
-        });
-
-        //todo: test: get columns fitting within chart
-        xit('bars don\'t straggle over month labels on the axis', function () {
-            //var labels = lineChart4.querySelector('.chart .x text');
-            //expect(labels[0].textContent).toBe('Q1');
-            //expect(labels[1].textContent).toBe('Q2');
-            //expect(labels[2].textContent).toBe('Q3');
-            //expect(labels[3].textContent).toBe('Q4');
         });
 
     });

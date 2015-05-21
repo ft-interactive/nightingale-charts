@@ -88,9 +88,6 @@ function categoryAxis() {
     render.scale = function (scale, units) {
         if (!arguments.length) return config.axes[0].scale();
         units = units || ['unknown'];
-        if (units[0] === 'quarterly' && timeDiff(scale.domain()).decades > 1){
-            units = dates.unitGenerator(scale.domain(), config.simple);
-        }
         config.scale = scale;
         config.units = units;
 
