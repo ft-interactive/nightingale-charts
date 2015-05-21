@@ -10,6 +10,7 @@ function categoryAxis() {
         axes: [d3.svg.axis().orient('bottom')],
         scale: false,
         lineHeight: 20,
+        stack: false,
         tickSize: 5,
         simple: false,//axis has only first and last points as ticks, i.e. the scale's domain extent
         nice: false,
@@ -82,6 +83,12 @@ function categoryAxis() {
     render.xOffset = function (int) {
         if (!arguments.length) return config.xOffset;
         config.xOffset = int;
+        return render;
+    };
+
+    render.stack = function (bool) {
+        if (!arguments.length) return config.stack;
+        config.stack = bool;
         return render;
     };
 

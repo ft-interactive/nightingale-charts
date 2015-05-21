@@ -46,9 +46,9 @@ module.exports = {
     dateSort: function (a, b) {
         return (a.getTime() - b.getTime());
     },
-    createAxes: function(scale, unit, tickSize, simple){
+    createAxes: function(scale, unit, config){
         var firstDate ;
-        var customTicks = (simple) ? scale.domain() : this.customTicks(scale, unit);
+        var customTicks = (config.simple) ? scale.domain() : this.customTicks(scale, unit);
         var axis = d3.svg.axis()
             .scale(scale)
             .tickValues(customTicks)
@@ -56,15 +56,15 @@ module.exports = {
                 firstDate = firstDate || d;
                 return utils.formatter[unit](d,i, firstDate);
             })
-            .tickSize(tickSize, 0);
+            .tickSize(config.tickSize, 0);
         return axis;
     },
-    render: function (scale, units, tickSize, simple) {
+    render: function (scale, units, config) {
         var axes = [];
         for (var i = 0; i < units.length; i++) {
             var unit = units[i];
             if (utils.formatter[unit]) {
-                axes.push(this.createAxes(scale, unit, tickSize, simple));
+                axes.push(this.createAxes(scale, unit, config));
             }
         }
         axes.forEach(function (axis) {

@@ -50,31 +50,41 @@ function setExtents(model){
 	return extents;
 }
 
-function groupedTimeDomain(model) {
-    if (model.timeDomain) {
-        return model.timeDomain;
+function timeDomain(model, chartType) {
+    if (model.timeDomain) { return model.timeDomain;  }
+
+    if (model.groupData && chartType === 'column'){
+        model.data = groupDates(model, model.units);
+        return model.data.map(function (d) {
+            return d[model.x.series.key];
+        });
+    } else {
+        return d3.extent(model.data, function (d) {
+            return d[model.x.series.key];
+        });
     }
-    return model.data.map(function (d) {
-        return d[model.x.series.key];
-    });
 }
 
-function timeDomain(model) {
-    if (model.timeDomain) {
-        return model.timeDomain;
-    }
-    return d3.extent(model.data, function (d) {
-        return d[model.x.series.key];
+function sumStackedValues(model){
+    var extents = [];
+    model.data.map(function (d, j) {
+        var key, sum = 0;
+        for (key in d.values[0]) {
+            if (key !== model.x.series.originalKey) {
+                sum += d.values[0][key];
+            }
+        }
+        extents.push(sum);
     });
+    return extents;
 }
 
-function valueDomain(model) {
-    if (model.valueDomain) {
-        return model.valueDomain;
-    }
-    var extents = setExtents(model);
+function valueDomain(model){
+    if(model.valueDomain){ return model.valueDomain; }
+
+    var extents = (model.stack) ? sumStackedValues(model) : setExtents(model);
     var domain = d3.extent(extents);
-    if (!model.falseOrigin && domain[0] > 0) {
+    if(!model.falseOrigin && domain[0] > 0){
         domain[0] = 0;
     }
     return domain;
@@ -141,6 +151,7 @@ function groupDates(m, units){
             return  dateStr.join(' ');
 		})
 		.entries(m.data);
+	m.x.series.originalKey = m.x.series.key;
 	m.x.series.key = 'key';
 	return m.data;
 }
@@ -178,6 +189,7 @@ function Model(chartType, opts) {
         columnClasses: {},
         niceValue: true,
         hideSource: false,
+        stack: false,
         numberAxisOrient: 'left',
         margin: 2,
         lineThickness: undefined,
@@ -212,14 +224,7 @@ function Model(chartType, opts) {
 	m.translate = translate(0);
 	m.data = verifyData(m);
     m.groupData = needsGrouping(m.units);
-
-    if(m.groupData && chartType == 'column'){
-        m.data = groupDates(m, m.units);
-		m.timeDomain = groupedTimeDomain(m);
-	}else{
-		m.timeDomain = timeDomain(m);
-	}
-
+    m.timeDomain = timeDomain(m, chartType);
 	m.valueDomain = valueDomain(m);
 	m.lineStrokeWidth = lineThickness(m.lineThickness);
 	m.key = setKey(m);
