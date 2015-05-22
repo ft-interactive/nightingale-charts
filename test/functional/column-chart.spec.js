@@ -172,16 +172,30 @@ describe('column-chart.js', function(){
     });
 
     describe('stacked column chart ', function(){ //still working on this one, had to leave a bit early
-        it('has the same number of stacks in each grouping', function(){
-            var g = document.querySelectorAll('.width600 svg')[8].querySelectorAll('.plot g.series');
-            var i = g.length;
 
-            expect(i).toBe(5);//5 groups
+        it('has the same number of stacks in each grouping', function(){
+            var series = document.querySelectorAll('.width600 svg')[8].querySelectorAll('.plot g.series');
+            var i = series.length;
+
+            expect(series.length).toBe(5);
             while(i--){
-                var thisGroup = g[i].querySelectorAll('rect');
+                var thisGroup = series[i].querySelectorAll('rect');
                 expect(thisGroup.length).toBe(5);
             }
         });
+
+        it('display columns associated with month labels', function(){
+            var chart = document.querySelectorAll('.width600 svg')[9];
+            var series = chart.querySelectorAll('.plot g.series');
+            var i = series.length;
+            expect(chart.querySelectorAll('.x .primary text').length).toBe(3);
+            expect(chart.querySelectorAll('.x .secondary text').length).toBe(2);
+            while(i--){
+                var thisGroup = series[i].querySelectorAll('rect');
+                expect(thisGroup.length).toBe(14);
+            }
+        });
+
     });
 
     describe('attaches style attributes to', function () {

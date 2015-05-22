@@ -132,6 +132,22 @@ var fixtures = {
         {myDateColumn: new Date('9/30/05'), value: 75, value2: 70, value3: 13, value4: 12, value5: 110},
         {myDateColumn: new Date('12/30/05'), value: 125, value2: 10, value3: 29, value4: 31, value5: 40},
         {myDateColumn: new Date('5/30/06'), value: 133, value2: 25, value3: 72, value4: 105, value5: 200}
+    ],
+    stackMonthly:[
+        {myDateColumn: new Date('1/28/05'), value: 50, value2: 99, value3: 26, value4: 40, value5: 15},
+        {myDateColumn: new Date('2/28/05'), value: 25, value2: 10, value3: 21, value4: 36, value5: 22},
+        {myDateColumn: new Date('3/28/05'), value: 75, value2: 70, value3: 13, value4: 12, value5: 110},
+        {myDateColumn: new Date('4/28/05'), value: 125, value2: 10, value3: 29, value4: 31, value5: 40},
+        {myDateColumn: new Date('5/28/05'), value: 133, value2: 25, value3: 72, value4: 105, value5: 200},
+        {myDateColumn: new Date('6/28/05'), value: 133, value2: 25, value3: 72, value4: 105, value5: 200},
+        {myDateColumn: new Date('7/28/05'), value: 133, value2: 25, value3: 2, value4: 105, value5: 00},
+        {myDateColumn: new Date('8/28/05'), value: 133, value2: 2, value3: 72, value4: 105, value5: 20},
+        {myDateColumn: new Date('9/28/05'), value: 133, value2: 25, value3: 72, value4: 105, value5: 20},
+        {myDateColumn: new Date('10/28/05'), value: 13, value2: 5, value3: 7, value4: 15, value5: 20},
+        {myDateColumn: new Date('11/28/05'), value: 133, value2: 25, value3: 72, value4: 105, value5: 20},
+        {myDateColumn: new Date('12/28/05'), value: 13, value2: 25, value3: 2, value4: 105, value5: 20},
+        {myDateColumn: new Date('1/28/06'), value: 33, value2: 25, value3: 72, value4: 105, value5: 2},
+        {myDateColumn: new Date('2/28/06'), value: 10, value2: 5, value3: 35, value4: 43, value5: 78}
     ]
 };
 
@@ -144,14 +160,17 @@ var units = {
     multiple: ['quarterly', 'yearly'],
     month: ['monthly', 'yearly'],
     time : false,
-    stack: ['monthly', 'yearly']
+    stack: ['quarterly', 'yearly'],
+    stackMonthly: ['monthly', 'yearly']
 };
 var ySeriesData = {
     multiple: ['value', 'value2', 'value3'],
-    stack: ['value', 'value2', 'value3', 'value4', 'value5']
+    stack: ['value', 'value2', 'value3', 'value4', 'value5'],
+    stackMonthly: ['value', 'value2', 'value3', 'value4', 'value5']
 };
 var xSeriesData = {
-    stack: {key:'myDateColumn', label:'yearly'}
+    stack: {key:'myDateColumn', label:'yearly'},
+    stackMonthly: {key:'myDateColumn', label:'yearly'}
 };
 function getChartData(timeFrame){
     var ySeries = ySeriesData[timeFrame] || ['value'];
@@ -168,7 +187,7 @@ function getChartData(timeFrame){
         y: { series: ySeries },
         units: units[timeFrame],
         data: fixtures[timeFrame],
-        stack: timeFrame == 'stack'
+        stack: ['stack','stackMonthly'].indexOf(timeFrame)>-1
     };
 }
 var widths = [600, 300];
@@ -176,7 +195,7 @@ var widths = [600, 300];
 module.exports = {
     getChartData: getChartData,
     init: function(){
-        var demos = ['quarters','quartersWithNegative','years','yearsWithNegative','decade', 'month', 'multiple', 'time', 'stack'];
+        var demos = ['quarters','quartersWithNegative','years','yearsWithNegative','decade', 'month', 'multiple', 'time', 'stack', 'stackMonthly'];
         demos.forEach(function(timeFrame, i){
             var textContent = '';
             if (i===7){
