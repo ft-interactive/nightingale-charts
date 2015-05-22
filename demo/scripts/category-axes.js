@@ -1,5 +1,6 @@
 
 var oCharts = require('../../src/scripts/o-charts');
+var dateUtils = oCharts.util.dates;
 var d3 = require('d3');
 
 var margin = {
@@ -7,27 +8,111 @@ var margin = {
 };
 
 var fixtures = {
-    decade : [
+    months : [
+        { date: new Date('12/30/05'), value:     1.348},
+        { date: new Date('01/31/06'), value:      0.583},
+        { date: new Date('02/28/06'), value:      0.501},
+        { date: new Date('03/29/06'), value:      0.175},
+        { date: new Date('04/29/06'), value:     0.753},
+        { date: new Date('05/31/06'), value:      0.583},
+        { date: new Date('06/30/06'), value: 1.027},
+        { date: new Date('07/30/06'), value: 1.03},
+        { date: new Date('08/30/06'), value:     1.348}
+    ],
+    "many-months" : [
+        //{ date: new Date('11/30/05'), value:     1.348},
+        { date: new Date('12/30/05'), value:     1.348},
+        { date: new Date('01/30/06'), value:      0.583},
+        { date: new Date('02/28/06'), value:      0.501},
+        { date: new Date('03/29/06'), value:      0.175},
+        { date: new Date('04/29/06'), value:     0.753},
+        { date: new Date('05/30/06'), value:      0.583},
+        { date: new Date('06/30/06'), value: 1.027},
+        { date: new Date('07/30/06'), value: 1.03},
+        { date: new Date('08/30/06'), value:     1.348},
+        { date: new Date('09/30/06'), value:     1.348},
+        { date: new Date('10/30/06'), value:      0.583},
+        { date: new Date('11/30/06'), value:      0.583},
+        { date: new Date('12/30/06'), value:      0.501},
+        { date: new Date('01/29/07'), value:      0.175},
+        { date: new Date('02/29/07'), value:      0.175},
+        { date: new Date('03/29/07'), value:      0.175},
+        { date: new Date('04/29/07'), value:     0.753},
+        { date: new Date('05/30/07'), value:      0.583},
+        { date: new Date('06/30/07'), value: 1.027},
+        { date: new Date('07/30/07'), value: 1.03},
+        { date: new Date('08/30/07'), value:     1.348},
+        { date: new Date('09/30/07'), value:     1.348},
+        { date: new Date('10/30/07'), value:      0.583},
+        { date: new Date('11/30/07'), value:      0.583}
+    ],
+    quarters : [
+        { date: new Date('3/31/05'), value:      0.583},
+        { date: new Date('6/30/05'), value: 1.027},
+        { date: new Date('9/30/05'), value: 1.03},
+        { date: new Date('12/30/05'), value:     1.348},
+        { date: new Date('01/30/06'), value:     1.348}
+    ],
+    "many-quarters" : [
+        { date: new Date('3/31/05'), value:      0.583},
         { date: new Date('6/30/05'), value: 1.027},
         { date: new Date('9/30/05'), value: 1.03},
         { date: new Date('12/30/05'), value:     1.348},
         { date: new Date('3/31/06'), value:      0.583},
-        { date: new Date('6/30/06'), value:      0.501},
-        { date: new Date('9/29/06'), value:      0.175},
-        { date: new Date('12/29/06'), value:     0.753},
-        { date: new Date('3/30/07'), value:      0.763},
-        { date: new Date('6/29/07'), value:      0.601},
-        { date: new Date('9/28/07'), value:      0.843},
-        { date: new Date('12/31/07'), value:     0.468},
-        { date: new Date('3/31/08'), value:      0.313},
+        { date: new Date('6/30/06'), value: 1.027},
+        { date: new Date('9/30/06'), value: 1.03},
+        { date: new Date('12/30/06'), value:     1.348},
+        { date: new Date('3/31/07'), value:      0.583},
+        { date: new Date('6/30/07'), value: 1.027},
+        { date: new Date('9/30/07'), value: 1.03},
+        { date: new Date('12/30/07'), value:     1.348},
+        { date: new Date('3/31/08'), value:      0.583},
+        { date: new Date('6/30/08'), value: 1.027},
+        { date: new Date('9/30/08'), value: 1.03},
+        { date: new Date('12/30/08'), value:     1.348},
+        { date: new Date('3/31/09'), value:      0.583},
+        { date: new Date('6/30/09'), value: 1.027},
+        { date: new Date('9/30/09'), value: 1.03},
+        { date: new Date('12/30/09'), value:     1.348},
+        { date: new Date('3/31/10'), value:      0.583},
+        { date: new Date('6/30/10'), value: 1.027},
+        { date: new Date('9/30/10'), value: 1.03},
+        { date: new Date('12/30/10'), value:     1.348}
+    ],
+    years : [
+        { date: new Date('6/30/05'), value: 1.027},
+        { date: new Date('6/30/06'), value: 1.03},
+        { date: new Date('6/30/07'), value:     1.348},
+        { date: new Date('6/31/08'), value:      0.583},
+        { date: new Date('6/30/09'), value:      0.501},
+        { date: new Date('6/29/10'), value:      0.175},
+        { date: new Date('6/29/11'), value:     0.753},
+        { date: new Date('6/30/12'), value:      0.763},
+        { date: new Date('6/29/13'), value:      0.601},
+        { date: new Date('6/28/14'), value:      0.843},
+        { date: new Date('6/31/15'), value:     0.468}
+    ],
+    "many-years" : [
+        { date: new Date('6/30/05'), value: 1.027},
+        { date: new Date('6/30/06'), value: 1.03},
+        { date: new Date('6/30/07'), value:     1.348},
+        { date: new Date('6/31/08'), value:      0.583},
+        { date: new Date('6/30/09'), value:      0.501},
+        { date: new Date('6/29/10'), value:      0.175},
+        { date: new Date('6/29/11'), value:     0.753},
+        { date: new Date('6/30/12'), value:      0.763},
+        { date: new Date('6/29/13'), value:      0.601},
+        { date: new Date('6/28/14'), value:      0.843},
+        { date: new Date('6/31/15'), value:     0.468},
+        { date: new Date('6/31/08'), value:      0.313},
         { date: new Date('6/30/08'), value:      -0.231},
-        { date: new Date('9/30/08'), value:      -1.664},
-        { date: new Date('12/31/08'), value:     -2.229},
-        { date: new Date('3/31/09'), value:      -1.79},
+        { date: new Date('6/30/08'), value:      -1.664},
+        { date: new Date('6/31/08'), value:     -2.229},
+        { date: new Date('6/31/09'), value:      -1.79},
         { date: new Date('6/30/09'), value:      -0.261},
-        { date: new Date('9/30/09'), value:      0.2},
-        { date: new Date('12/31/09'), value:     0.389},
-        { date: new Date('3/31/10'), value:      0.509},
+        { date: new Date('6/30/09'), value:      0.2},
+        { date: new Date('6/31/09'), value:     0.389},
+        { date: new Date('6/31/10'), value:      0.509},
         { date: new Date('6/30/10'), value:      0.977},
         { date: new Date('9/30/10'), value:      0.647},
         { date: new Date('12/31/10'), value:     0.025},
@@ -46,42 +131,50 @@ var fixtures = {
         { date: new Date('3/31/14'), value:      0.882},
         { date: new Date('6/30/14'), value:      0.833},
         { date: new Date('9/30/14'), value:      0.619},
-        { date: new Date('12/31/14'), value:     0.607}
-    ],
-    year : [
-        { date: new Date('3/31/05'), value:      0.583},
-        { date: new Date('6/30/05'), value: 1.027},
-        { date: new Date('9/30/05'), value: 1.03},
-        { date: new Date('12/30/05'), value:     1.348}
-    ],
-    month : [
-        { date: new Date('3/31/05'), value:      0.583},
-        { date: new Date('6/30/05'), value: 1.027},
-        { date: new Date('9/30/05'), value: 1.03},
-        { date: new Date('12/30/05'), value:     1.348}
+        { date: new Date('12/31/14'), value:     0.607},
+        { date: new Date('3/31/15'), value:      0.882},
+        { date: new Date('6/30/15'), value:      0.833},
+        { date: new Date('9/30/15'), value:      0.619},
+        { date: new Date('12/31/15'), value:     0.607},
+        { date: new Date('3/31/16'), value:      0.882},
+        { date: new Date('6/30/16'), value:      0.833},
+        { date: new Date('9/30/16'), value:      0.619},
+        { date: new Date('12/31/16'), value:     0.607},
+        { date: new Date('3/31/17'), value:      0.882}
     ]
 };
 
 var units = {
-    month: ['monthly', 'yearly']
-}
+    months: ['monthly', 'yearly'],
+    "many-months": ['monthly', 'yearly'],
+    "many-many-months": ['monthly', 'yearly'],
+    quarters: ['quarterly', 'yearly'],
+    "many-quarters": ['quarterly', 'yearly'],
+    years: ['yearly'],
+    "many-years": ['yearly']
+};
+
 
 var nesting = {
-    quarterly: function(d)  { return 'Q' + Math.floor((d.date.getMonth()+3)/3) + ' ' + (d.date.getYear() + 1900);  },
-    month: function(d)  { return d3.time.format('%b')(d.date) + ' ' + (d.date.getYear() + 1900);  },
-    yearly: function(d)  { return (d.date.getYear() + 1900);  }
+    quarters: function(d)       { return 'Q' + Math.floor((d.date.getMonth()+3)/3) + ' ' + (d.date.getYear() + 1900);  },
+    "many-quarters": function(d){ return 'Q' + Math.floor((d.date.getMonth()+3)/3) + ' ' + (d.date.getYear() + 1900);  },
+    months: function(d)          { return d3.time.format('%b')(d.date) + ' ' + (d.date.getYear() + 1900);  },
+    "many-months": function(d)  { return d3.time.format('%b')(d.date) + ' ' + (d.date.getYear() + 1900);  },
+    "many-many-months": function(d)  { return d3.time.format('%b')(d.date) + ' ' + (d.date.getYear() + 1900);  },
+    years: function(d)          { return (d.date.getYear() + 1900);  },
+    "many-years": function(d)   { return (d.date.getYear() + 1900);  }
 };
 
 function drawDemo(timeFrame){
 
     var nestedFixture = d3.nest()
-        .key(nesting[timeFrame] || nesting.quarterly)
+        .key(nesting[timeFrame])
         .entries(fixtures[timeFrame]);
 
     var data = {
         title: 'Grouped Date Series: ' + timeFrame,
         x:{
-            series: {key:'date', label:'year'},
+            series: {key:'date', label:'year'}
         },
         y: { series: ['value']},
         data: nestedFixture,
@@ -89,7 +182,7 @@ function drawDemo(timeFrame){
             .ordinal()
             .rangeRoundBands([0, 400], 0, 0)
             .domain(nestedFixture.map(function (d){return d.key;})),
-        units: units[timeFrame] || ['quarterly', 'yearly']
+        units: units[timeFrame]
     };
 
     d3.select('#views')
@@ -118,7 +211,7 @@ function drawDemo(timeFrame){
 module.exports = {
     init: function(){
 
-        var demos = ['year','decade', 'month'];
+        var demos = ['months', 'many-months', 'quarters', 'many-quarters','years','many-years'];
         demos.forEach(function(timeFrame){
             drawDemo(timeFrame);
         });

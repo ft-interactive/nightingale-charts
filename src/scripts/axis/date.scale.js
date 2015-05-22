@@ -67,9 +67,6 @@ module.exports = {
                 axes.push(this.createAxes(scale, unit, tickSize, simple));
             }
         }
-        axes.forEach(function (axis) {
-            axis.scale(scale);
-        });
         return axes;
     }
 };
