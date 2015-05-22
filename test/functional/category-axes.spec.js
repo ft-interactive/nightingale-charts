@@ -95,4 +95,23 @@ describe('category axis', function () {
 
     });
 
+    describe('yearly scale', function () {
+        var years = document.querySelectorAll('svg')[4];
+        var manyYears = document.querySelectorAll('svg')[5];
+
+        it('shows all years for a small time period ', function () {
+            var x = years.querySelector('.x.axis');
+            var ticks = x.querySelectorAll('.primary .tick');
+            var labels = x.querySelectorAll('.primary .tick text');
+            expect(ticks.length).toBe(11);
+            expect(labels.length).toBe(11);
+            expect(labels[0].textContent).toBe('2005');
+            expect(labels[1].textContent).toBe('06');
+            expect(labels[2].textContent).toBe('07');
+            expect(labels[3].textContent).toBe('08');
+            expect(labels[4].textContent).toBe('09');
+        });
+
+    });
+
 });
