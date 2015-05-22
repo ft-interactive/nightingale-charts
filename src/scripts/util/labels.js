@@ -83,7 +83,7 @@ module.exports = {
     },
 
     removeQuarters: function(g, axis, options){
-        if (!this.overlapping(g.selectAll(".primary text"))) return;
+        if (!this.overlapping(g.selectAll(".primary text")) || options.extendTicks) return;
         options.row--;
         options.extendTicks = true;
         g.select(".primary").remove();

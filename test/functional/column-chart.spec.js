@@ -71,6 +71,14 @@ describe('column-chart.js', function(){
             expect(yearlyLabelsGraphA[3].textContent).toBe('08');
         });
 
+        it('promoted and kept even if more labels overlap', function(){
+            var yearlyLabelsGraphA = document.querySelectorAll('.width300 svg')[4].querySelectorAll('.x.axis .primary text');
+            expect(yearlyLabelsGraphA[0].textContent).toBe('2005');
+            expect(yearlyLabelsGraphA[1].textContent).toBe('07');
+            expect(yearlyLabelsGraphA[2].textContent).toBe('09');
+            expect(yearlyLabelsGraphA[3].textContent).toBe('11');
+        });
+
     });
 
     describe('y-axis values', function(){
