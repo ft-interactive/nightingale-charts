@@ -5,13 +5,11 @@ var axis = {
     number: require('./number.js')
 };
 
-function getHeight(selection) {
-    return Math.ceil(selection.node().getBoundingClientRect().height);
+function getDimension(dimension, selection) {
+    return Math.ceil(selection.node().getBoundingClientRect()[dimension]);
 }
-
-function getWidth(selection) {
-    return Math.ceil(selection.node().getBoundingClientRect().width);
-}
+function getWidth(selection) { return getDimension('width', selection); }
+function getHeight(selection) { return getDimension('height', selection); }
 
 function ordinalScale(model, options) {
     var plotWidth = model.chartWidth - (getWidth(options.svg) - model.chartWidth);
@@ -24,6 +22,17 @@ function timeScale(model) {
     return d3.time.scale()
         .domain(model.timeDomain)
         .range([0, model.chartWidth]);
+}
+
+function updateChartPosition(g, model){
+    var vLabelWidth = 0;
+    model.chartPosition.top += (getHeight(g.select('.y.axis')) - model.plotHeight);
+    if (model.numberAxisOrient === 'left') {
+        g.selectAll('.y.axis text').each(function () {
+            vLabelWidth = Math.max(vLabelWidth, getWidth(d3.select(this)));
+        });
+        model.chartPosition.left += vLabelWidth + 4;//NOTE magic number 4
+    }
 }
 
 function Create(svg, model) {
@@ -43,12 +52,10 @@ Create.prototype.hideTicks = function () {
 Create.prototype.repositionAxis = function () {
     if (!this.independentScaleCreated || !this.dependentScaleCreated) return;
     var model = this.model;
-
     var xLabelHeight = getHeight(this.svg) - model.chartHeight;
     var yLabelWidth = getWidth(this.svg) - model.chartWidth;
-    var plotHeight = model.chartHeight - xLabelHeight;
-    var plotWidth = model.chartWidth - yLabelWidth;
-    var vLabelWidth = 0;
+    var plotHeight = model.plotHeight = model.chartHeight - xLabelHeight;
+    var plotWidth = model.plotWidth = model.chartWidth - yLabelWidth;
     model.tickSize = (model.chartType == 'column' && this.hideTicks()) ? 0 : model.tickSize;
 
     if (this.timeScale.rangeRoundBands) {
@@ -63,20 +70,9 @@ Create.prototype.repositionAxis = function () {
     this.svg.selectAll('*').remove();
     this.svg.call(this.vAxis);
     this.svg.call(this.timeAxis);
-
-    if (model.numberAxisOrient !== 'right') {
-        this.svg.selectAll('.y.axis text').each(function () {
-            vLabelWidth = Math.max(vLabelWidth, getWidth(d3.select(this)));
-        });
-        model.chartPosition.left += vLabelWidth + 4;//NOTE magic number 4
-    }
-    model.chartPosition.top += (getHeight(this.svg.select('.y.axis')) - plotHeight);
-    model.plotWidth = plotWidth;
-    model.plotHeight = plotHeight;
-
+    updateChartPosition(this.svg, this.model);
     this.svg.attr('transform', model.translate(model.chartPosition));
 };
-
 
 Create.prototype.independentScale = function (scale) {
     var model = this.model;
