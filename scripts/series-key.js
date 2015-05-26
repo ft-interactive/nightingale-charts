@@ -128,13 +128,11 @@ var axis = {
     number: require('./number.js')
 };
 
-function getHeight(selection) {
-    return Math.ceil(selection.node().getBoundingClientRect().height);
+function getDimension(dimension, selection) {
+    return Math.ceil(selection.node().getBoundingClientRect()[dimension]);
 }
-
-function getWidth(selection) {
-    return Math.ceil(selection.node().getBoundingClientRect().width);
-}
+function getWidth(selection) { return getDimension('width', selection); }
+function getHeight(selection) { return getDimension('height', selection); }
 
 function ordinalScale(model, options) {
     var plotWidth = model.chartWidth - (getWidth(options.svg) - model.chartWidth);
@@ -147,6 +145,17 @@ function timeScale(model) {
     return d3.time.scale()
         .domain(model.timeDomain)
         .range([0, model.chartWidth]);
+}
+
+function updateChartPosition(g, model){
+    var vLabelWidth = 0;
+    model.chartPosition.top += (getHeight(g.select('.y.axis')) - model.plotHeight);
+    if (model.numberAxisOrient === 'left') {
+        g.selectAll('.y.axis text').each(function () {
+            vLabelWidth = Math.max(vLabelWidth, getWidth(d3.select(this)));
+        });
+        model.chartPosition.left += vLabelWidth + 4;//NOTE magic number 4
+    }
 }
 
 function Create(svg, model) {
@@ -166,12 +175,10 @@ Create.prototype.hideTicks = function () {
 Create.prototype.repositionAxis = function () {
     if (!this.independentScaleCreated || !this.dependentScaleCreated) return;
     var model = this.model;
-
     var xLabelHeight = getHeight(this.svg) - model.chartHeight;
     var yLabelWidth = getWidth(this.svg) - model.chartWidth;
-    var plotHeight = model.chartHeight - xLabelHeight;
-    var plotWidth = model.chartWidth - yLabelWidth;
-    var vLabelWidth = 0;
+    var plotHeight = model.plotHeight = model.chartHeight - xLabelHeight;
+    var plotWidth = model.plotWidth = model.chartWidth - yLabelWidth;
     model.tickSize = (model.chartType == 'column' && this.hideTicks()) ? 0 : model.tickSize;
 
     if (this.timeScale.rangeRoundBands) {
@@ -186,20 +193,9 @@ Create.prototype.repositionAxis = function () {
     this.svg.selectAll('*').remove();
     this.svg.call(this.vAxis);
     this.svg.call(this.timeAxis);
-
-    if (model.numberAxisOrient !== 'right') {
-        this.svg.selectAll('.y.axis text').each(function () {
-            vLabelWidth = Math.max(vLabelWidth, getWidth(d3.select(this)));
-        });
-        model.chartPosition.left += vLabelWidth + 4;//NOTE magic number 4
-    }
-    model.chartPosition.top += (getHeight(this.svg.select('.y.axis')) - plotHeight);
-    model.plotWidth = plotWidth;
-    model.plotHeight = plotHeight;
-
+    updateChartPosition(this.svg, this.model);
     this.svg.attr('transform', model.translate(model.chartPosition));
 };
-
 
 Create.prototype.independentScale = function (scale) {
     var model = this.model;
@@ -346,7 +342,8 @@ function dateAxis() {
     render.scale = function (scale, units) {
         if (!arguments.length) return config.axes[0].scale();
         if (!units ||
-            (units[0] === 'quarterly' && timeDiff(scale.domain()).decades > 1)){
+            (units[0] === 'quarterly' && timeDiff(scale.domain()).decades > 1) ||
+            (units[0] === 'monthly' && timeDiff(scale.domain()).years > 4.9)){
             units = dates.unitGenerator(scale.domain(), config.simple);
         }
         if (config.nice) {
@@ -433,9 +430,6 @@ module.exports = {
                 axes.push(this.createAxes(scale, unit, config));
             }
         }
-        axes.forEach(function (axis) {
-            axis.scale(scale);
-        });
         return axes;
     }
 };
@@ -2195,8 +2189,9 @@ module.exports = {
 
         g.selectAll(ticks_selector)
             .attr("y2", function (d) {
-                var quarter = d.getMonth ? dateFormatter[config.units[0]](d) : d.toString();
-                return (quarter.indexOf('Q1') === 0) ? (config.tickSize * tickExtender) : config.tickSize ;
+                var formatted = d.getMonth ? dateFormatter[config.units[0]](d) : d.toString();
+                var isFirstInPeriod = formatted.indexOf('Q1') === 0 || formatted.indexOf('Jan') === 0;
+                return (isFirstInPeriod) ? (config.tickSize * tickExtender) : config.tickSize ;
             });
         var tickCount = g.selectAll(ticks_selector)[0].length;
         var extendedCount = g.selectAll(extendedTicks_selector)[0].length;
@@ -2206,37 +2201,34 @@ module.exports = {
         }
     },
     add: function(g, config){
-        var self = this, labelsAddedRatio, row = 0;
-        config.axes.forEach(function (a, i) {
-            if (config.units[0] === 'quarterly'){
-                if (i===0){
-                    labelsAddedRatio = self.addRow(g, a, row, 'primary', config);
-                } else if (i>0 && labelsAddedRatio < 1) {
-                    row--;
-                    g.select('.primary').remove();
-                    labelsAddedRatio = self.addRow(g, a, row, 'primary', config);
-                    self.extendedTicks(g, config);
-                } else if (i>0){
-                    self.addRow(g, a, row, 'secondary', config);
-                }
-                row++;
-            } else {
-                self.addRow(g, a, i, (i===0) ? 'primary' : 'secondary', config);
-            }
+        var self = this;
+        var options = { row: 0 };
+        config.axes.forEach(function (axis, i) {
+            self.addRow(g, axis, options, config);
+            options.row ++;
         });
     },
-    addRow: function(g, a, i, scaleClass, config){
+    addRow: function(g, axis, options, config){
+        var rowClass = (options.row) ? 'secondary': 'primary';
         g.append('g')
-            .attr('class', scaleClass)
-            .attr('transform', 'translate(0,' + (i * config.lineHeight) + ')')
-            .call(a);
+            .attr('class', rowClass)
+            .attr('transform', 'translate(0,' + (options.row * config.lineHeight) + ')')
+            .call(axis);
+
+        this.removeDuplicates(g, '.' + rowClass + ' text');
+        if (options.extendTicks) {
+            this.extendedTicks(g, config, options.extendTicks);
+        }
         if (dates.unitGenerator(config.scale.domain())[0] == 'days') {
             this.removeDays(g, '.primary text');
         }
-        this.removeDuplicates(g, '.' + scaleClass + ' text');
-        this.removeOverlapping(g, '.' + scaleClass + ' text');
-        var labelsAddedRatio = g.selectAll('text')[0].length / g.selectAll('line')[0].length;
-        return labelsAddedRatio;
+        if (config.units[0] == 'quarterly'){
+            this.removeQuarters(g, axis, options);
+        }
+        if (config.units[0] == 'monthly'){
+            this.removeMonths(g, axis, options, config);
+        }
+        this.removeOverlapping(g, '.' + rowClass + ' text');
     },
 
     intersection: function (a, b) {
@@ -2267,6 +2259,22 @@ module.exports = {
             }
         });
         return overlap;
+    },
+
+    removeQuarters: function(g, axis, options){
+        if (!this.overlapping(g.selectAll(".primary text")) || options.extendTicks) return;
+        options.row--;
+        options.extendTicks = true;
+        g.select(".primary").remove();
+    },
+    removeMonths: function(g, axis, options, config){
+        if (g.selectAll(".primary text")[0].length < 13) return;
+        options.extendTicks = true;
+        var text = g.selectAll('.primary .tick text');
+        text.each(function(d,i){
+            if (i === 0 || i === text[0].length-1 || d3.select(this).text() == 'Jan') return;
+            d3.select(this).remove();
+        });
     },
 
     removeDays: function (g, selector) {

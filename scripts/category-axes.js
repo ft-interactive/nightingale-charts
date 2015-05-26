@@ -128,13 +128,11 @@ var axis = {
     number: require('./number.js')
 };
 
-function getHeight(selection) {
-    return Math.ceil(selection.node().getBoundingClientRect().height);
+function getDimension(dimension, selection) {
+    return Math.ceil(selection.node().getBoundingClientRect()[dimension]);
 }
-
-function getWidth(selection) {
-    return Math.ceil(selection.node().getBoundingClientRect().width);
-}
+function getWidth(selection) { return getDimension('width', selection); }
+function getHeight(selection) { return getDimension('height', selection); }
 
 function ordinalScale(model, options) {
     var plotWidth = model.chartWidth - (getWidth(options.svg) - model.chartWidth);
@@ -147,6 +145,17 @@ function timeScale(model) {
     return d3.time.scale()
         .domain(model.timeDomain)
         .range([0, model.chartWidth]);
+}
+
+function updateChartPosition(g, model){
+    var vLabelWidth = 0;
+    model.chartPosition.top += (getHeight(g.select('.y.axis')) - model.plotHeight);
+    if (model.numberAxisOrient === 'left') {
+        g.selectAll('.y.axis text').each(function () {
+            vLabelWidth = Math.max(vLabelWidth, getWidth(d3.select(this)));
+        });
+        model.chartPosition.left += vLabelWidth + 4;//NOTE magic number 4
+    }
 }
 
 function Create(svg, model) {
@@ -166,12 +175,10 @@ Create.prototype.hideTicks = function () {
 Create.prototype.repositionAxis = function () {
     if (!this.independentScaleCreated || !this.dependentScaleCreated) return;
     var model = this.model;
-
     var xLabelHeight = getHeight(this.svg) - model.chartHeight;
     var yLabelWidth = getWidth(this.svg) - model.chartWidth;
-    var plotHeight = model.chartHeight - xLabelHeight;
-    var plotWidth = model.chartWidth - yLabelWidth;
-    var vLabelWidth = 0;
+    var plotHeight = model.plotHeight = model.chartHeight - xLabelHeight;
+    var plotWidth = model.plotWidth = model.chartWidth - yLabelWidth;
     model.tickSize = (model.chartType == 'column' && this.hideTicks()) ? 0 : model.tickSize;
 
     if (this.timeScale.rangeRoundBands) {
@@ -186,20 +193,9 @@ Create.prototype.repositionAxis = function () {
     this.svg.selectAll('*').remove();
     this.svg.call(this.vAxis);
     this.svg.call(this.timeAxis);
-
-    if (model.numberAxisOrient !== 'right') {
-        this.svg.selectAll('.y.axis text').each(function () {
-            vLabelWidth = Math.max(vLabelWidth, getWidth(d3.select(this)));
-        });
-        model.chartPosition.left += vLabelWidth + 4;//NOTE magic number 4
-    }
-    model.chartPosition.top += (getHeight(this.svg.select('.y.axis')) - plotHeight);
-    model.plotWidth = plotWidth;
-    model.plotHeight = plotHeight;
-
+    updateChartPosition(this.svg, this.model);
     this.svg.attr('transform', model.translate(model.chartPosition));
 };
-
 
 Create.prototype.independentScale = function (scale) {
     var model = this.model;
@@ -346,7 +342,8 @@ function dateAxis() {
     render.scale = function (scale, units) {
         if (!arguments.length) return config.axes[0].scale();
         if (!units ||
-            (units[0] === 'quarterly' && timeDiff(scale.domain()).decades > 1)){
+            (units[0] === 'quarterly' && timeDiff(scale.domain()).decades > 1) ||
+            (units[0] === 'monthly' && timeDiff(scale.domain()).years > 4.9)){
             units = dates.unitGenerator(scale.domain(), config.simple);
         }
         if (config.nice) {
@@ -433,9 +430,6 @@ module.exports = {
                 axes.push(this.createAxes(scale, unit, config));
             }
         }
-        axes.forEach(function (axis) {
-            axis.scale(scale);
-        });
         return axes;
     }
 };
@@ -2195,8 +2189,9 @@ module.exports = {
 
         g.selectAll(ticks_selector)
             .attr("y2", function (d) {
-                var quarter = d.getMonth ? dateFormatter[config.units[0]](d) : d.toString();
-                return (quarter.indexOf('Q1') === 0) ? (config.tickSize * tickExtender) : config.tickSize ;
+                var formatted = d.getMonth ? dateFormatter[config.units[0]](d) : d.toString();
+                var isFirstInPeriod = formatted.indexOf('Q1') === 0 || formatted.indexOf('Jan') === 0;
+                return (isFirstInPeriod) ? (config.tickSize * tickExtender) : config.tickSize ;
             });
         var tickCount = g.selectAll(ticks_selector)[0].length;
         var extendedCount = g.selectAll(extendedTicks_selector)[0].length;
@@ -2206,37 +2201,34 @@ module.exports = {
         }
     },
     add: function(g, config){
-        var self = this, labelsAddedRatio, row = 0;
-        config.axes.forEach(function (a, i) {
-            if (config.units[0] === 'quarterly'){
-                if (i===0){
-                    labelsAddedRatio = self.addRow(g, a, row, 'primary', config);
-                } else if (i>0 && labelsAddedRatio < 1) {
-                    row--;
-                    g.select('.primary').remove();
-                    labelsAddedRatio = self.addRow(g, a, row, 'primary', config);
-                    self.extendedTicks(g, config);
-                } else if (i>0){
-                    self.addRow(g, a, row, 'secondary', config);
-                }
-                row++;
-            } else {
-                self.addRow(g, a, i, (i===0) ? 'primary' : 'secondary', config);
-            }
+        var self = this;
+        var options = { row: 0 };
+        config.axes.forEach(function (axis, i) {
+            self.addRow(g, axis, options, config);
+            options.row ++;
         });
     },
-    addRow: function(g, a, i, scaleClass, config){
+    addRow: function(g, axis, options, config){
+        var rowClass = (options.row) ? 'secondary': 'primary';
         g.append('g')
-            .attr('class', scaleClass)
-            .attr('transform', 'translate(0,' + (i * config.lineHeight) + ')')
-            .call(a);
+            .attr('class', rowClass)
+            .attr('transform', 'translate(0,' + (options.row * config.lineHeight) + ')')
+            .call(axis);
+
+        this.removeDuplicates(g, '.' + rowClass + ' text');
+        if (options.extendTicks) {
+            this.extendedTicks(g, config, options.extendTicks);
+        }
         if (dates.unitGenerator(config.scale.domain())[0] == 'days') {
             this.removeDays(g, '.primary text');
         }
-        this.removeDuplicates(g, '.' + scaleClass + ' text');
-        this.removeOverlapping(g, '.' + scaleClass + ' text');
-        var labelsAddedRatio = g.selectAll('text')[0].length / g.selectAll('line')[0].length;
-        return labelsAddedRatio;
+        if (config.units[0] == 'quarterly'){
+            this.removeQuarters(g, axis, options);
+        }
+        if (config.units[0] == 'monthly'){
+            this.removeMonths(g, axis, options, config);
+        }
+        this.removeOverlapping(g, '.' + rowClass + ' text');
     },
 
     intersection: function (a, b) {
@@ -2267,6 +2259,22 @@ module.exports = {
             }
         });
         return overlap;
+    },
+
+    removeQuarters: function(g, axis, options){
+        if (!this.overlapping(g.selectAll(".primary text")) || options.extendTicks) return;
+        options.row--;
+        options.extendTicks = true;
+        g.select(".primary").remove();
+    },
+    removeMonths: function(g, axis, options, config){
+        if (g.selectAll(".primary text")[0].length < 13) return;
+        options.extendTicks = true;
+        var text = g.selectAll('.primary .tick text');
+        text.each(function(d,i){
+            if (i === 0 || i === text[0].length-1 || d3.select(this).text() == 'Jan') return;
+            d3.select(this).remove();
+        });
     },
 
     removeDays: function (g, selector) {
@@ -2487,6 +2495,7 @@ module.exports = "0.2.0";
 },{}],"category-axes":[function(require,module,exports){
 
 var oCharts = require('../../src/scripts/o-charts');
+var dateUtils = oCharts.util.dates;
 var d3 = require('d3');
 
 var margin = {
@@ -2494,27 +2503,111 @@ var margin = {
 };
 
 var fixtures = {
-    decade : [
+    months : [
+        { date: new Date('12/30/05'), value:     1.348},
+        { date: new Date('01/31/06'), value:      0.583},
+        { date: new Date('02/28/06'), value:      0.501},
+        { date: new Date('03/29/06'), value:      0.175},
+        { date: new Date('04/29/06'), value:     0.753},
+        { date: new Date('05/31/06'), value:      0.583},
+        { date: new Date('06/30/06'), value: 1.027},
+        { date: new Date('07/30/06'), value: 1.03},
+        { date: new Date('08/30/06'), value:     1.348}
+    ],
+    "many-months" : [
+        //{ date: new Date('11/30/05'), value:     1.348},
+        { date: new Date('12/30/05'), value:     1.348},
+        { date: new Date('01/30/06'), value:      0.583},
+        { date: new Date('02/28/06'), value:      0.501},
+        { date: new Date('03/29/06'), value:      0.175},
+        { date: new Date('04/29/06'), value:     0.753},
+        { date: new Date('05/30/06'), value:      0.583},
+        { date: new Date('06/30/06'), value: 1.027},
+        { date: new Date('07/30/06'), value: 1.03},
+        { date: new Date('08/30/06'), value:     1.348},
+        { date: new Date('09/30/06'), value:     1.348},
+        { date: new Date('10/30/06'), value:      0.583},
+        { date: new Date('11/30/06'), value:      0.583},
+        { date: new Date('12/30/06'), value:      0.501},
+        { date: new Date('01/29/07'), value:      0.175},
+        { date: new Date('02/29/07'), value:      0.175},
+        { date: new Date('03/29/07'), value:      0.175},
+        { date: new Date('04/29/07'), value:     0.753},
+        { date: new Date('05/30/07'), value:      0.583},
+        { date: new Date('06/30/07'), value: 1.027},
+        { date: new Date('07/30/07'), value: 1.03},
+        { date: new Date('08/30/07'), value:     1.348},
+        { date: new Date('09/30/07'), value:     1.348},
+        { date: new Date('10/30/07'), value:      0.583},
+        { date: new Date('11/30/07'), value:      0.583}
+    ],
+    quarters : [
+        { date: new Date('3/31/05'), value:      0.583},
+        { date: new Date('6/30/05'), value: 1.027},
+        { date: new Date('9/30/05'), value: 1.03},
+        { date: new Date('12/30/05'), value:     1.348},
+        { date: new Date('01/30/06'), value:     1.348}
+    ],
+    "many-quarters" : [
+        { date: new Date('3/31/05'), value:      0.583},
         { date: new Date('6/30/05'), value: 1.027},
         { date: new Date('9/30/05'), value: 1.03},
         { date: new Date('12/30/05'), value:     1.348},
         { date: new Date('3/31/06'), value:      0.583},
-        { date: new Date('6/30/06'), value:      0.501},
-        { date: new Date('9/29/06'), value:      0.175},
-        { date: new Date('12/29/06'), value:     0.753},
-        { date: new Date('3/30/07'), value:      0.763},
-        { date: new Date('6/29/07'), value:      0.601},
-        { date: new Date('9/28/07'), value:      0.843},
-        { date: new Date('12/31/07'), value:     0.468},
-        { date: new Date('3/31/08'), value:      0.313},
+        { date: new Date('6/30/06'), value: 1.027},
+        { date: new Date('9/30/06'), value: 1.03},
+        { date: new Date('12/30/06'), value:     1.348},
+        { date: new Date('3/31/07'), value:      0.583},
+        { date: new Date('6/30/07'), value: 1.027},
+        { date: new Date('9/30/07'), value: 1.03},
+        { date: new Date('12/30/07'), value:     1.348},
+        { date: new Date('3/31/08'), value:      0.583},
+        { date: new Date('6/30/08'), value: 1.027},
+        { date: new Date('9/30/08'), value: 1.03},
+        { date: new Date('12/30/08'), value:     1.348},
+        { date: new Date('3/31/09'), value:      0.583},
+        { date: new Date('6/30/09'), value: 1.027},
+        { date: new Date('9/30/09'), value: 1.03},
+        { date: new Date('12/30/09'), value:     1.348},
+        { date: new Date('3/31/10'), value:      0.583},
+        { date: new Date('6/30/10'), value: 1.027},
+        { date: new Date('9/30/10'), value: 1.03},
+        { date: new Date('12/30/10'), value:     1.348}
+    ],
+    years : [
+        { date: new Date('6/30/05'), value: 1.027},
+        { date: new Date('6/30/06'), value: 1.03},
+        { date: new Date('6/30/07'), value:     1.348},
+        { date: new Date('6/31/08'), value:      0.583},
+        { date: new Date('6/30/09'), value:      0.501},
+        { date: new Date('6/29/10'), value:      0.175},
+        { date: new Date('6/29/11'), value:     0.753},
+        { date: new Date('6/30/12'), value:      0.763},
+        { date: new Date('6/29/13'), value:      0.601},
+        { date: new Date('6/28/14'), value:      0.843},
+        { date: new Date('6/31/15'), value:     0.468}
+    ],
+    "many-years" : [
+        { date: new Date('6/30/05'), value: 1.027},
+        { date: new Date('6/30/06'), value: 1.03},
+        { date: new Date('6/30/07'), value:     1.348},
+        { date: new Date('6/31/08'), value:      0.583},
+        { date: new Date('6/30/09'), value:      0.501},
+        { date: new Date('6/29/10'), value:      0.175},
+        { date: new Date('6/29/11'), value:     0.753},
+        { date: new Date('6/30/12'), value:      0.763},
+        { date: new Date('6/29/13'), value:      0.601},
+        { date: new Date('6/28/14'), value:      0.843},
+        { date: new Date('6/31/15'), value:     0.468},
+        { date: new Date('6/31/08'), value:      0.313},
         { date: new Date('6/30/08'), value:      -0.231},
-        { date: new Date('9/30/08'), value:      -1.664},
-        { date: new Date('12/31/08'), value:     -2.229},
-        { date: new Date('3/31/09'), value:      -1.79},
+        { date: new Date('6/30/08'), value:      -1.664},
+        { date: new Date('6/31/08'), value:     -2.229},
+        { date: new Date('6/31/09'), value:      -1.79},
         { date: new Date('6/30/09'), value:      -0.261},
-        { date: new Date('9/30/09'), value:      0.2},
-        { date: new Date('12/31/09'), value:     0.389},
-        { date: new Date('3/31/10'), value:      0.509},
+        { date: new Date('6/30/09'), value:      0.2},
+        { date: new Date('6/31/09'), value:     0.389},
+        { date: new Date('6/31/10'), value:      0.509},
         { date: new Date('6/30/10'), value:      0.977},
         { date: new Date('9/30/10'), value:      0.647},
         { date: new Date('12/31/10'), value:     0.025},
@@ -2533,42 +2626,50 @@ var fixtures = {
         { date: new Date('3/31/14'), value:      0.882},
         { date: new Date('6/30/14'), value:      0.833},
         { date: new Date('9/30/14'), value:      0.619},
-        { date: new Date('12/31/14'), value:     0.607}
-    ],
-    year : [
-        { date: new Date('3/31/05'), value:      0.583},
-        { date: new Date('6/30/05'), value: 1.027},
-        { date: new Date('9/30/05'), value: 1.03},
-        { date: new Date('12/30/05'), value:     1.348}
-    ],
-    month : [
-        { date: new Date('3/31/05'), value:      0.583},
-        { date: new Date('6/30/05'), value: 1.027},
-        { date: new Date('9/30/05'), value: 1.03},
-        { date: new Date('12/30/05'), value:     1.348}
+        { date: new Date('12/31/14'), value:     0.607},
+        { date: new Date('3/31/15'), value:      0.882},
+        { date: new Date('6/30/15'), value:      0.833},
+        { date: new Date('9/30/15'), value:      0.619},
+        { date: new Date('12/31/15'), value:     0.607},
+        { date: new Date('3/31/16'), value:      0.882},
+        { date: new Date('6/30/16'), value:      0.833},
+        { date: new Date('9/30/16'), value:      0.619},
+        { date: new Date('12/31/16'), value:     0.607},
+        { date: new Date('3/31/17'), value:      0.882}
     ]
 };
 
 var units = {
-    month: ['monthly', 'yearly']
-}
+    months: ['monthly', 'yearly'],
+    "many-months": ['monthly', 'yearly'],
+    "many-many-months": ['monthly', 'yearly'],
+    quarters: ['quarterly', 'yearly'],
+    "many-quarters": ['quarterly', 'yearly'],
+    years: ['yearly'],
+    "many-years": ['yearly']
+};
+
 
 var nesting = {
-    quarterly: function(d)  { return 'Q' + Math.floor((d.date.getMonth()+3)/3) + ' ' + (d.date.getYear() + 1900);  },
-    month: function(d)  { return d3.time.format('%b')(d.date) + ' ' + (d.date.getYear() + 1900);  },
-    yearly: function(d)  { return (d.date.getYear() + 1900);  }
+    quarters: function(d)       { return 'Q' + Math.floor((d.date.getMonth()+3)/3) + ' ' + (d.date.getYear() + 1900);  },
+    "many-quarters": function(d){ return 'Q' + Math.floor((d.date.getMonth()+3)/3) + ' ' + (d.date.getYear() + 1900);  },
+    months: function(d)          { return d3.time.format('%b')(d.date) + ' ' + (d.date.getYear() + 1900);  },
+    "many-months": function(d)  { return d3.time.format('%b')(d.date) + ' ' + (d.date.getYear() + 1900);  },
+    "many-many-months": function(d)  { return d3.time.format('%b')(d.date) + ' ' + (d.date.getYear() + 1900);  },
+    years: function(d)          { return (d.date.getYear() + 1900);  },
+    "many-years": function(d)   { return (d.date.getYear() + 1900);  }
 };
 
 function drawDemo(timeFrame){
 
     var nestedFixture = d3.nest()
-        .key(nesting[timeFrame] || nesting.quarterly)
+        .key(nesting[timeFrame])
         .entries(fixtures[timeFrame]);
 
     var data = {
         title: 'Grouped Date Series: ' + timeFrame,
         x:{
-            series: {key:'date', label:'year'},
+            series: {key:'date', label:'year'}
         },
         y: { series: ['value']},
         data: nestedFixture,
@@ -2576,7 +2677,7 @@ function drawDemo(timeFrame){
             .ordinal()
             .rangeRoundBands([0, 400], 0, 0)
             .domain(nestedFixture.map(function (d){return d.key;})),
-        units: units[timeFrame] || ['quarterly', 'yearly']
+        units: units[timeFrame]
     };
 
     d3.select('#views')
@@ -2605,7 +2706,7 @@ function drawDemo(timeFrame){
 module.exports = {
     init: function(){
 
-        var demos = ['year','decade', 'month'];
+        var demos = ['months', 'many-months', 'quarters', 'many-quarters','years','many-years'];
         demos.forEach(function(timeFrame){
             drawDemo(timeFrame);
         });
