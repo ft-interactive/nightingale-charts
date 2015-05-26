@@ -104,10 +104,10 @@ var groups = {
         return d;
     },
     years: function (d, i) {
-        return d.split(' ')[1];
+        return formatter.years(new Date(d), i);
     },
     yearly: function (d, i) {
-        return d.split(' ')[1];
+        return d.split(' ')[d.split(' ').length-1];
     },
     quarterly: function (d, i) {
         return d.split(' ')[0];
