@@ -2491,7 +2491,7 @@ module.exports = {
 };
 
 },{}],29:[function(require,module,exports){
-module.exports = "0.2.0";
+module.exports = "0.2.1";
 },{}],"category-axes":[function(require,module,exports){
 
 var oCharts = require('../../src/scripts/o-charts');
