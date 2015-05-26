@@ -343,7 +343,8 @@ function dateAxis() {
         if (!arguments.length) return config.axes[0].scale();
         if (!units ||
             (units[0] === 'quarterly' && timeDiff(scale.domain()).decades > 1) ||
-            (units[0] === 'monthly' && timeDiff(scale.domain()).years > 4.9)){
+            (units[0] === 'monthly' && timeDiff(scale.domain()).years > 4.9) ||
+            (units[0] === 'yearly' && timeDiff(scale.domain()).years > 10)){
             units = dates.unitGenerator(scale.domain(), config.simple);
         }
         if (config.nice) {
@@ -367,7 +368,7 @@ var utils = require('../util/dates.js');
 var interval = {
     centuries: d3.time.year,
     decades: d3.time.year,
-    yearly: d3.time.month,
+    yearly: d3.time.year,
     years: d3.time.year,
     fullYears: d3.time.year,
     quarterly: d3.time.month,
@@ -381,7 +382,7 @@ var interval = {
 var increment = {
     centuries: 100,
     decades: 10,
-    yearly: 3,
+    yearly: 1,
     years: 1,
     fullYears: 1,
     quarterly: 3,
@@ -393,7 +394,8 @@ var increment = {
 };
 
 module.exports = {
-    customTicks: function (scale, unit) {
+    customTicks: function (scale, unit, primaryUnit) {
+        if (primaryUnit == 'quarterly' && unit == 'yearly') unit = 'quarterly';
         var customTicks = scale.ticks(interval[unit], increment[unit]);
         customTicks.push(scale.domain()[0]); //always include the first and last values
         customTicks.push(scale.domain()[1]);
@@ -409,9 +411,9 @@ module.exports = {
     dateSort: function (a, b) {
         return (a.getTime() - b.getTime());
     },
-    createAxes: function(scale, unit, config){
+    createAxes: function(scale, unit, config, primaryUnit){
         var firstDate ;
-        var customTicks = (config.simple) ? scale.domain() : this.customTicks(scale, unit);
+        var customTicks = (config.simple) ? scale.domain() : this.customTicks(scale, unit, primaryUnit);
         var axis = d3.svg.axis()
             .scale(scale)
             .tickValues(customTicks)
@@ -427,7 +429,7 @@ module.exports = {
         for (var i = 0; i < units.length; i++) {
             var unit = units[i];
             if (utils.formatter[unit]) {
-                axes.push(this.createAxes(scale, unit, config));
+                axes.push(this.createAxes(scale, unit, config, units[0]));
             }
         }
         return axes;
@@ -1961,10 +1963,10 @@ var groups = {
         return d;
     },
     years: function (d, i) {
-        return d.split(' ')[1];
+        return formatter.years(new Date(d), i);
     },
     yearly: function (d, i) {
-        return d.split(' ')[1];
+        return d.split(' ')[d.split(' ').length-1];
     },
     quarterly: function (d, i) {
         return d.split(' ')[0];
@@ -2491,7 +2493,7 @@ module.exports = {
 };
 
 },{}],29:[function(require,module,exports){
-module.exports = "0.2.1";
+module.exports = "0.2.2";
 },{}],"category-axes":[function(require,module,exports){
 
 var oCharts = require('../../src/scripts/o-charts');
@@ -2588,6 +2590,13 @@ var fixtures = {
         { date: new Date('6/31/15'), value:     0.468}
     ],
     "many-years" : [
+        { date: new Date('6/30/98'), value: 1.027},
+        { date: new Date('6/30/99'), value: 1.027},
+        { date: new Date('6/30/00'), value: 1.027},
+        { date: new Date('6/30/01'), value: 1.027},
+        { date: new Date('6/30/02'), value: 1.027},
+        { date: new Date('6/30/03'), value: 1.027},
+        { date: new Date('6/30/04'), value: 1.027},
         { date: new Date('6/30/05'), value: 1.027},
         { date: new Date('6/30/06'), value: 1.03},
         { date: new Date('6/30/07'), value:     1.348},
@@ -2599,43 +2608,17 @@ var fixtures = {
         { date: new Date('6/29/13'), value:      0.601},
         { date: new Date('6/28/14'), value:      0.843},
         { date: new Date('6/31/15'), value:     0.468},
-        { date: new Date('6/31/08'), value:      0.313},
-        { date: new Date('6/30/08'), value:      -0.231},
-        { date: new Date('6/30/08'), value:      -1.664},
-        { date: new Date('6/31/08'), value:     -2.229},
-        { date: new Date('6/31/09'), value:      -1.79},
-        { date: new Date('6/30/09'), value:      -0.261},
-        { date: new Date('6/30/09'), value:      0.2},
-        { date: new Date('6/31/09'), value:     0.389},
-        { date: new Date('6/31/10'), value:      0.509},
-        { date: new Date('6/30/10'), value:      0.977},
-        { date: new Date('9/30/10'), value:      0.647},
-        { date: new Date('12/31/10'), value:     0.025},
-        { date: new Date('3/31/11'), value:      0.536},
-        { date: new Date('6/30/11'), value:      0.228},
-        { date: new Date('9/30/11'), value:      0.696},
-        { date: new Date('12/30/11'), value:     -0.015},
-        { date: new Date('3/30/12'), value:      0.068},
-        { date: new Date('6/29/12'), value:      -0.178},
-        { date: new Date('9/28/12'), value:      0.833},
-        { date: new Date('12/31/12'), value:     -0.338},
-        { date: new Date('3/29/13'), value:      0.596},
-        { date: new Date('6/28/13'), value:      0.643},
-        { date: new Date('9/30/13'), value:      0.717},
-        { date: new Date('12/31/13'), value:     0.406},
-        { date: new Date('3/31/14'), value:      0.882},
-        { date: new Date('6/30/14'), value:      0.833},
-        { date: new Date('9/30/14'), value:      0.619},
-        { date: new Date('12/31/14'), value:     0.607},
-        { date: new Date('3/31/15'), value:      0.882},
-        { date: new Date('6/30/15'), value:      0.833},
-        { date: new Date('9/30/15'), value:      0.619},
-        { date: new Date('12/31/15'), value:     0.607},
-        { date: new Date('3/31/16'), value:      0.882},
-        { date: new Date('6/30/16'), value:      0.833},
-        { date: new Date('9/30/16'), value:      0.619},
-        { date: new Date('12/31/16'), value:     0.607},
-        { date: new Date('3/31/17'), value:      0.882}
+        { date: new Date('6/31/16'), value:      0.313},
+        { date: new Date('6/30/17'), value:      -0.231},
+        { date: new Date('6/30/18'), value:      -1.664},
+        { date: new Date('6/31/19'), value:     -2.229},
+        { date: new Date('6/31/20'), value:      -1.79},
+        { date: new Date('6/30/21'), value:      -0.261},
+        { date: new Date('6/30/22'), value:      0.2},
+        { date: new Date('6/31/23'), value:     0.389},
+        { date: new Date('6/31/24'), value:      0.509},
+        { date: new Date('6/30/25'), value:      0.977},
+        { date: new Date('9/30/26'), value:      0.647}
     ]
 };
 
@@ -2645,8 +2628,8 @@ var units = {
     "many-many-months": ['monthly', 'yearly'],
     quarters: ['quarterly', 'yearly'],
     "many-quarters": ['quarterly', 'yearly'],
-    years: ['yearly'],
-    "many-years": ['yearly']
+    years: ['years'],
+    "many-years": ['years']
 };
 
 

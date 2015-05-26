@@ -343,7 +343,8 @@ function dateAxis() {
         if (!arguments.length) return config.axes[0].scale();
         if (!units ||
             (units[0] === 'quarterly' && timeDiff(scale.domain()).decades > 1) ||
-            (units[0] === 'monthly' && timeDiff(scale.domain()).years > 4.9)){
+            (units[0] === 'monthly' && timeDiff(scale.domain()).years > 4.9) ||
+            (units[0] === 'yearly' && timeDiff(scale.domain()).years > 10)){
             units = dates.unitGenerator(scale.domain(), config.simple);
         }
         if (config.nice) {
@@ -367,7 +368,7 @@ var utils = require('../util/dates.js');
 var interval = {
     centuries: d3.time.year,
     decades: d3.time.year,
-    yearly: d3.time.month,
+    yearly: d3.time.year,
     years: d3.time.year,
     fullYears: d3.time.year,
     quarterly: d3.time.month,
@@ -381,7 +382,7 @@ var interval = {
 var increment = {
     centuries: 100,
     decades: 10,
-    yearly: 3,
+    yearly: 1,
     years: 1,
     fullYears: 1,
     quarterly: 3,
@@ -393,7 +394,8 @@ var increment = {
 };
 
 module.exports = {
-    customTicks: function (scale, unit) {
+    customTicks: function (scale, unit, primaryUnit) {
+        if (primaryUnit == 'quarterly' && unit == 'yearly') unit = 'quarterly';
         var customTicks = scale.ticks(interval[unit], increment[unit]);
         customTicks.push(scale.domain()[0]); //always include the first and last values
         customTicks.push(scale.domain()[1]);
@@ -409,9 +411,9 @@ module.exports = {
     dateSort: function (a, b) {
         return (a.getTime() - b.getTime());
     },
-    createAxes: function(scale, unit, config){
+    createAxes: function(scale, unit, config, primaryUnit){
         var firstDate ;
-        var customTicks = (config.simple) ? scale.domain() : this.customTicks(scale, unit);
+        var customTicks = (config.simple) ? scale.domain() : this.customTicks(scale, unit, primaryUnit);
         var axis = d3.svg.axis()
             .scale(scale)
             .tickValues(customTicks)
@@ -427,7 +429,7 @@ module.exports = {
         for (var i = 0; i < units.length; i++) {
             var unit = units[i];
             if (utils.formatter[unit]) {
-                axes.push(this.createAxes(scale, unit, config));
+                axes.push(this.createAxes(scale, unit, config, units[0]));
             }
         }
         return axes;
@@ -1961,10 +1963,10 @@ var groups = {
         return d;
     },
     years: function (d, i) {
-        return d.split(' ')[1];
+        return formatter.years(new Date(d), i);
     },
     yearly: function (d, i) {
-        return d.split(' ')[1];
+        return d.split(' ')[d.split(' ').length-1];
     },
     quarterly: function (d, i) {
         return d.split(' ')[0];
@@ -2491,7 +2493,7 @@ module.exports = {
 };
 
 },{}],29:[function(require,module,exports){
-module.exports = "0.2.1";
+module.exports = "0.2.2";
 },{}],"column-chart":[function(require,module,exports){
 var oCharts = require('../../src/scripts/o-charts');
 var d3 = require('d3');
@@ -2627,6 +2629,22 @@ var fixtures = {
         {myDateColumn: new Date('9/30/05'), value: 75, value2: 70, value3: 13, value4: 12, value5: 110},
         {myDateColumn: new Date('12/30/05'), value: 125, value2: 10, value3: 29, value4: 31, value5: 40},
         {myDateColumn: new Date('5/30/06'), value: 133, value2: 25, value3: 72, value4: 105, value5: 200}
+    ],
+    stackMonthly:[
+        {myDateColumn: new Date('1/28/05'), value: 50, value2: 99, value3: 26, value4: 40, value5: 15},
+        {myDateColumn: new Date('2/28/05'), value: 25, value2: 10, value3: 21, value4: 36, value5: 22},
+        {myDateColumn: new Date('3/28/05'), value: 75, value2: 70, value3: 13, value4: 12, value5: 110},
+        {myDateColumn: new Date('4/28/05'), value: 125, value2: 10, value3: 29, value4: 31, value5: 40},
+        {myDateColumn: new Date('5/28/05'), value: 133, value2: 25, value3: 72, value4: 105, value5: 200},
+        {myDateColumn: new Date('6/28/05'), value: 133, value2: 25, value3: 72, value4: 105, value5: 200},
+        {myDateColumn: new Date('7/28/05'), value: 133, value2: 25, value3: 2, value4: 105, value5: 00},
+        {myDateColumn: new Date('8/28/05'), value: 133, value2: 2, value3: 72, value4: 105, value5: 20},
+        {myDateColumn: new Date('9/28/05'), value: 133, value2: 25, value3: 72, value4: 105, value5: 20},
+        {myDateColumn: new Date('10/28/05'), value: 13, value2: 5, value3: 7, value4: 15, value5: 20},
+        {myDateColumn: new Date('11/28/05'), value: 133, value2: 25, value3: 72, value4: 105, value5: 20},
+        {myDateColumn: new Date('12/28/05'), value: 13, value2: 25, value3: 2, value4: 105, value5: 20},
+        {myDateColumn: new Date('1/28/06'), value: 33, value2: 25, value3: 72, value4: 105, value5: 2},
+        {myDateColumn: new Date('2/28/06'), value: 10, value2: 5, value3: 35, value4: 43, value5: 78}
     ]
 };
 
@@ -2639,14 +2657,17 @@ var units = {
     multiple: ['quarterly', 'yearly'],
     month: ['monthly', 'yearly'],
     time : false,
-    stack: ['monthly', 'yearly']
+    stack: ['quarterly', 'yearly'],
+    stackMonthly: ['monthly', 'yearly']
 };
 var ySeriesData = {
     multiple: ['value', 'value2', 'value3'],
-    stack: ['value', 'value2', 'value3', 'value4', 'value5']
+    stack: ['value', 'value2', 'value3', 'value4', 'value5'],
+    stackMonthly: ['value', 'value2', 'value3', 'value4', 'value5']
 };
 var xSeriesData = {
-    stack: {key:'myDateColumn', label:'yearly'}
+    stack: {key:'myDateColumn', label:'yearly'},
+    stackMonthly: {key:'myDateColumn', label:'yearly'}
 };
 function getChartData(timeFrame){
     var ySeries = ySeriesData[timeFrame] || ['value'];
@@ -2663,7 +2684,7 @@ function getChartData(timeFrame){
         y: { series: ySeries },
         units: units[timeFrame],
         data: fixtures[timeFrame],
-        stack: timeFrame == 'stack'
+        stack: ['stack','stackMonthly'].indexOf(timeFrame)>-1
     };
 }
 var widths = [600, 300];
@@ -2671,7 +2692,7 @@ var widths = [600, 300];
 module.exports = {
     getChartData: getChartData,
     init: function(){
-        var demos = ['quarters','quartersWithNegative','years','yearsWithNegative','decade', 'month', 'multiple', 'time', 'stack'];
+        var demos = ['quarters','quartersWithNegative','years','yearsWithNegative','decade', 'month', 'multiple', 'time', 'stack', 'stackMonthly'];
         demos.forEach(function(timeFrame, i){
             var textContent = '';
             if (i===7){

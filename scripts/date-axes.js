@@ -343,7 +343,8 @@ function dateAxis() {
         if (!arguments.length) return config.axes[0].scale();
         if (!units ||
             (units[0] === 'quarterly' && timeDiff(scale.domain()).decades > 1) ||
-            (units[0] === 'monthly' && timeDiff(scale.domain()).years > 4.9)){
+            (units[0] === 'monthly' && timeDiff(scale.domain()).years > 4.9) ||
+            (units[0] === 'yearly' && timeDiff(scale.domain()).years > 10)){
             units = dates.unitGenerator(scale.domain(), config.simple);
         }
         if (config.nice) {
@@ -367,7 +368,7 @@ var utils = require('../util/dates.js');
 var interval = {
     centuries: d3.time.year,
     decades: d3.time.year,
-    yearly: d3.time.month,
+    yearly: d3.time.year,
     years: d3.time.year,
     fullYears: d3.time.year,
     quarterly: d3.time.month,
@@ -381,7 +382,7 @@ var interval = {
 var increment = {
     centuries: 100,
     decades: 10,
-    yearly: 3,
+    yearly: 1,
     years: 1,
     fullYears: 1,
     quarterly: 3,
@@ -393,7 +394,8 @@ var increment = {
 };
 
 module.exports = {
-    customTicks: function (scale, unit) {
+    customTicks: function (scale, unit, primaryUnit) {
+        if (primaryUnit == 'quarterly' && unit == 'yearly') unit = 'quarterly';
         var customTicks = scale.ticks(interval[unit], increment[unit]);
         customTicks.push(scale.domain()[0]); //always include the first and last values
         customTicks.push(scale.domain()[1]);
@@ -409,9 +411,9 @@ module.exports = {
     dateSort: function (a, b) {
         return (a.getTime() - b.getTime());
     },
-    createAxes: function(scale, unit, config){
+    createAxes: function(scale, unit, config, primaryUnit){
         var firstDate ;
-        var customTicks = (config.simple) ? scale.domain() : this.customTicks(scale, unit);
+        var customTicks = (config.simple) ? scale.domain() : this.customTicks(scale, unit, primaryUnit);
         var axis = d3.svg.axis()
             .scale(scale)
             .tickValues(customTicks)
@@ -427,7 +429,7 @@ module.exports = {
         for (var i = 0; i < units.length; i++) {
             var unit = units[i];
             if (utils.formatter[unit]) {
-                axes.push(this.createAxes(scale, unit, config));
+                axes.push(this.createAxes(scale, unit, config, units[0]));
             }
         }
         return axes;
@@ -1961,10 +1963,10 @@ var groups = {
         return d;
     },
     years: function (d, i) {
-        return d.split(' ')[1];
+        return formatter.years(new Date(d), i);
     },
     yearly: function (d, i) {
-        return d.split(' ')[1];
+        return d.split(' ')[d.split(' ').length-1];
     },
     quarterly: function (d, i) {
         return d.split(' ')[0];
@@ -2491,7 +2493,7 @@ module.exports = {
 };
 
 },{}],29:[function(require,module,exports){
-module.exports = "0.2.1";
+module.exports = "0.2.2";
 },{}],"date-axes":[function(require,module,exports){
 var oCharts = require('../../src/scripts/o-charts');
 var d3 = require('d3');
