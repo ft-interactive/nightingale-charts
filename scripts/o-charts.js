@@ -737,8 +737,13 @@ Plot.prototype.x = function(key, seriesNumber){ //seriesNumber: grrr.
 };
 
 Plot.prototype.y = function(value, stack){
-    var yValue = (this.model.stack) ? stackSeries(this.model, value, stack) : value;
-    var maxValue = (this.model.chartType == 'column') ? Math.max(0, yValue) : yValue;
+    if (this.model.chartType == 'line') return this.axes.valueScale(value);
+    var maxValue = Math.max(0, value);
+    if (this.model.stack) {
+        var yValue = stackSeries(this.model, value, stack);
+        var height = this.model.stacks[stack][this.model.stacks[stack].length-1];
+        maxValue = (yValue<0) ? yValue - height : Math.max(0, yValue);
+    }
     return this.axes.valueScale(maxValue);
 };
 
@@ -2473,7 +2478,7 @@ module.exports = {
 };
 
 },{}],28:[function(require,module,exports){
-module.exports = "0.2.2";
+module.exports = "0.2.3";
 },{}],"o-charts":[function(require,module,exports){
 module.exports = {
     chart: require('./chart/index.js'),

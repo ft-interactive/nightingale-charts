@@ -737,8 +737,13 @@ Plot.prototype.x = function(key, seriesNumber){ //seriesNumber: grrr.
 };
 
 Plot.prototype.y = function(value, stack){
-    var yValue = (this.model.stack) ? stackSeries(this.model, value, stack) : value;
-    var maxValue = (this.model.chartType == 'column') ? Math.max(0, yValue) : yValue;
+    if (this.model.chartType == 'line') return this.axes.valueScale(value);
+    var maxValue = Math.max(0, value);
+    if (this.model.stack) {
+        var yValue = stackSeries(this.model, value, stack);
+        var height = this.model.stacks[stack][this.model.stacks[stack].length-1];
+        maxValue = (yValue<0) ? yValue - height : Math.max(0, yValue);
+    }
     return this.axes.valueScale(maxValue);
 };
 
@@ -2493,7 +2498,7 @@ module.exports = {
 };
 
 },{}],29:[function(require,module,exports){
-module.exports = "0.2.2";
+module.exports = "0.2.3";
 },{}],"column-chart":[function(require,module,exports){
 var oCharts = require('../../src/scripts/o-charts');
 var d3 = require('d3');
@@ -2645,6 +2650,18 @@ var fixtures = {
         {myDateColumn: new Date('12/28/05'), value: 13, value2: 25, value3: 2, value4: 105, value5: 20},
         {myDateColumn: new Date('1/28/06'), value: 33, value2: 25, value3: 72, value4: 105, value5: 2},
         {myDateColumn: new Date('2/28/06'), value: 10, value2: 5, value3: 35, value4: 43, value5: 78}
+    ],
+    multipleWithNegatives:[
+        {date: new Date('3/31/05'), value: Math.floor(Math.random() * 40) + 10, value2: -99, value3: 26},
+        {date: new Date('6/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 10, value3: 21},
+        {date: new Date('9/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 70, value3: -13},
+        {date: new Date('12/30/05'), value: Math.floor(Math.random() * -40) + 10, value2: 10, value3: 99}
+    ],
+    stackWithAllNegatives:[
+        {myDateColumn: new Date('3/31/05'), value: -50, value2: -99, value3: -26, value4: -40, value5: -15},
+        {myDateColumn: new Date('6/30/05'), value: 50, value2: 99, value3: 26, value4: 40, value5: 15},
+        {myDateColumn: new Date('9/30/05'), value: -75, value2: -70, value3: -13, value4: -12, value5: -110},
+        {myDateColumn: new Date('12/30/05'), value: 75, value2: 70, value3: 13, value4: 12, value5: 110}
     ]
 };
 
@@ -2658,16 +2675,22 @@ var units = {
     month: ['monthly', 'yearly'],
     time : false,
     stack: ['quarterly', 'yearly'],
-    stackMonthly: ['monthly', 'yearly']
+    stackMonthly: ['monthly', 'yearly'],
+    multipleWithNegatives: ['quarterly', 'yearly'],
+    stackWithAllNegatives: ['quarterly', 'yearly']
 };
 var ySeriesData = {
     multiple: ['value', 'value2', 'value3'],
+    multipleWithNegatives: ['value', 'value2', 'value3'],
     stack: ['value', 'value2', 'value3', 'value4', 'value5'],
+    stackWithNegatives: ['value', 'value2', 'value3', 'value4', 'value5'],
+    stackWithAllNegatives: ['value', 'value2', 'value3', 'value4', 'value5'],
     stackMonthly: ['value', 'value2', 'value3', 'value4', 'value5']
 };
 var xSeriesData = {
     stack: {key:'myDateColumn', label:'yearly'},
-    stackMonthly: {key:'myDateColumn', label:'yearly'}
+    stackMonthly: {key:'myDateColumn', label:'yearly'},
+    stackWithAllNegatives: {key:'myDateColumn', label:'yearly'}
 };
 function getChartData(timeFrame){
     var ySeries = ySeriesData[timeFrame] || ['value'];
@@ -2684,7 +2707,7 @@ function getChartData(timeFrame){
         y: { series: ySeries },
         units: units[timeFrame],
         data: fixtures[timeFrame],
-        stack: ['stack','stackMonthly'].indexOf(timeFrame)>-1
+        stack: ['stack','stackMonthly', 'stackWithAllNegatives'].indexOf(timeFrame)>-1
     };
 }
 var widths = [600, 300];
@@ -2692,7 +2715,7 @@ var widths = [600, 300];
 module.exports = {
     getChartData: getChartData,
     init: function(){
-        var demos = ['quarters','quartersWithNegative','years','yearsWithNegative','decade', 'month', 'multiple', 'time', 'stack', 'stackMonthly'];
+        var demos = ['quarters','quartersWithNegative','years','yearsWithNegative','decade', 'month', 'multiple', 'time', 'stack', 'stackMonthly', 'multipleWithNegatives', 'stackWithAllNegatives'];
         demos.forEach(function(timeFrame, i){
             var textContent = '';
             if (i===7){
