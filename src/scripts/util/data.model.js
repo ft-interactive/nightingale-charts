@@ -53,8 +53,8 @@ function setExtents(model){
 function timeDomain(model, chartType) {
     if (model.timeDomain) { return model.timeDomain;  }
 
-    if (model.groupData && chartType === 'column'){
-        model.data = groupDates(model, model.units);
+    if ((model.groupData || model.categorical) && chartType === 'column'){
+        model.data = (model.groupData && !model.categorical) ? groupDates(model, model.units) : model.data;
         return model.data.map(function (d) {
             return d[model.x.series.key];
         });
@@ -69,9 +69,10 @@ function sumStackedValues(model){
     var extents = [];
     model.data.map(function (d, j) {
         var key, sum = 0;
-        for (key in d.values[0]) {
+        var values = Array.isArray(d.values) ? d.values[0] : d;
+        for (key in values) {
             if (key !== model.x.series.originalKey) {
-                sum += d.values[0][key];
+                sum += values[key];
             }
         }
         extents.push(sum);
@@ -116,8 +117,10 @@ function verifyData(model) {
             error.message = 'Empty row';
         } else if (!s) {
             error.message = 'X axis value is empty or null';
-        } else if (!isDate(s)) {
+        } else if (!isDate(s) && model.chartType == 'line') {
             error.message = 'Value is not a valid date';
+        } else if (!isDate(s)) {
+            model.categorical = true;
         }
 
         if (error.message) {
@@ -151,7 +154,6 @@ function groupDates(m, units){
             return  dateStr.join(' ');
 		})
 		.entries(m.data);
-	m.x.series.originalKey = m.x.series.key;
 	m.x.series.key = 'key';
 	return m.data;
 }

@@ -122,6 +122,25 @@ var fixtures = {
         { date: new Date('6/31/24'), value:      0.509},
         { date: new Date('6/30/25'), value:      0.977},
         { date: new Date('9/30/26'), value:      0.647}
+    ],
+    categories : [
+        { key: 'red', value:      0.583},
+        { key: 'blue', value: 1.027},
+        { key: 'green', value: 1.03},
+        { key: 'purple', value:     1.348},
+        { key: 'pink', value:     1.348}
+    ],
+    manyCategories : [
+        { key: 'red', value:      0.583},
+        { key: 'blue', value: 1.027},
+        { key: 'green', value: 1.03},
+        { key: 'purple', value:     1.348},
+        { key: 'pink', value:     1.348},
+        { key: 'colour', value:     1.348},
+        { key: 'magenta', value:     1.348},
+        { key: 'dove white', value:     1.348},
+        { key: 'white', value:     1.348},
+        { key: 'black', value:     1.348}
     ]
 };
 
@@ -136,6 +155,11 @@ var units = {
 };
 
 
+var xSeriesData = {
+    categories: {key:'key', label:'Colours'},
+    manyCategories: {key:'key', label:'Colours'}
+};
+
 var nesting = {
     quarters: function(d)       { return 'Q' + Math.floor((d.date.getMonth()+3)/3) + ' ' + (d.date.getYear() + 1900);  },
     "many-quarters": function(d){ return 'Q' + Math.floor((d.date.getMonth()+3)/3) + ' ' + (d.date.getYear() + 1900);  },
@@ -148,14 +172,16 @@ var nesting = {
 
 function drawDemo(timeFrame){
 
-    var nestedFixture = d3.nest()
+    var nestedFixture = (nesting[timeFrame]) ?
+        d3.nest()
         .key(nesting[timeFrame])
-        .entries(fixtures[timeFrame]);
+        .entries(fixtures[timeFrame]) :
+        fixtures[timeFrame];
 
     var data = {
         title: 'Grouped Date Series: ' + timeFrame,
         x:{
-            series: {key:'date', label:'year'}
+            series: xSeriesData[timeFrame] || {key:'date', label:'year'}
         },
         y: { series: ['value']},
         data: nestedFixture,
@@ -192,7 +218,7 @@ function drawDemo(timeFrame){
 module.exports = {
     init: function(){
 
-        var demos = ['months', 'many-months', 'quarters', 'many-quarters','years','many-years'];
+        var demos = ['months', 'many-months', 'quarters', 'many-quarters','years','many-years', 'categories', 'manyCategories'];
         demos.forEach(function(timeFrame){
             drawDemo(timeFrame);
         });

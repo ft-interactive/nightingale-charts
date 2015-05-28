@@ -123,6 +123,9 @@ var groups = {
     },
     centuries: function (d, i) {
         return d.split(' ')[1];
+    },
+    categorical: function (d, i) {
+        return d;
     }
 };
 

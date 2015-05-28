@@ -36,6 +36,8 @@ module.exports = {
             .attr('transform', 'translate(0,' + (options.row * config.lineHeight) + ')')
             .call(axis);
 
+        if (config.categorical) return;
+
         this.removeDuplicates(g, '.' + rowClass + ' text');
         if (options.extendTicks) {
             this.extendedTicks(g, config, options.extendTicks);

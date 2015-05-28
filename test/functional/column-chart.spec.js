@@ -204,6 +204,15 @@ describe('column-chart.js', function(){
             expect(parseInt(rect[8].getAttribute('y'),10)).toBeLessThan(parseInt(rect[12].getAttribute('y'),10));
         });
 
+        it('correctly stacks categories', function(){
+            var chart = document.querySelectorAll('.width600 svg')[13];
+            var rect = chart.querySelectorAll('.plot rect');
+            expect(rect.length).toBe(10);
+            expect(parseInt(rect[0].getAttribute('y'),10)).toBeGreaterThan(0);
+            expect(parseInt(rect[0].getAttribute('x'),10)).toBe(parseInt(rect[5].getAttribute('x'),10));
+            expect(parseInt(rect[0].getAttribute('y'),10)).toBeGreaterThan(parseInt(rect[5].getAttribute('y'),10));
+        });
+
     });
 
     describe('attaches style attributes to', function () {
