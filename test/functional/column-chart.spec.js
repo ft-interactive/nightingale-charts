@@ -196,6 +196,14 @@ describe('column-chart.js', function(){
             }
         });
 
+        it('correctly stacks negative numbers', function(){
+            var chart = document.querySelectorAll('.width600 svg')[11];
+            var rect = chart.querySelectorAll('.plot rect');
+            expect(parseInt(rect[0].getAttribute('y'),10)).toBeLessThan(parseInt(rect[4].getAttribute('y'),10));
+            expect(parseInt(rect[4].getAttribute('y'),10)).toBeLessThan(parseInt(rect[8].getAttribute('y'),10));
+            expect(parseInt(rect[8].getAttribute('y'),10)).toBeLessThan(parseInt(rect[12].getAttribute('y'),10));
+        });
+
     });
 
     describe('attaches style attributes to', function () {
