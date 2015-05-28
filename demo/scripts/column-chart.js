@@ -156,6 +156,34 @@ var fixtures = {
         {myDateColumn: new Date('6/30/05'), value: 50, value2: 99, value3: 26, value4: 40, value5: 15},
         {myDateColumn: new Date('9/30/05'), value: -75, value2: -70, value3: -13, value4: -12, value5: -110},
         {myDateColumn: new Date('12/30/05'), value: 75, value2: 70, value3: 13, value4: 12, value5: 110}
+    ],
+    categories : [
+        { key: 'red', value:      0.583, value2:      1.583},
+        { key: 'blue', value: 1.027, value2:  2},
+        { key: 'green', value: 1.03, value2:  1.4},
+        { key: 'purple', value:     1.348, value2:  1.9},
+        { key: 'pink', value:     -1.048, value2:  -2}
+    ],
+    categoriesStack : [
+        { key: 'red', value:      0.583, value2:      1.583},
+        { key: 'blue', value: 1.027, value2:  2},
+        { key: 'green', value: 1.03, value2:  1.4},
+        { key: 'purple', value:     1.348, value2:  1.9},
+        { key: 'pink', value:     -1.048, value2:  -2}
+    ],
+    dateCategories : [
+        { key: new Date(2011,10,25), value:      0.583, value2:      1.583},
+        { key: new Date(2011,10,26), value: 1.027, value2:  2},
+        { key: new Date(2011,10,27), value: 1.03, value2:  1.4},
+        { key: new Date(2011,10,28), value:     1.348, value2:  1.9},
+        { key: new Date(2011,10,29), value:     -1.048, value2:  -2}
+    ],
+    quarterCategories : [
+        { key: '2005 Q1', value:      0.583, value2:      1.583},
+        { key: '2005 Q2', value: 1.027, value2:  2},
+        { key: '2005 Q3', value: 1.03, value2:  1.4},
+        { key: '2005 Q4', value:     1.348, value2:  1.9},
+        { key: '2006 Q1', value:     -1.048, value2:  -2}
     ]
 };
 
@@ -174,6 +202,10 @@ var units = {
     stackWithAllNegatives: ['quarterly', 'yearly']
 };
 var ySeriesData = {
+    categories: ['value', 'value2'],
+    categoriesStack: ['value', 'value2'],
+    dateCategories: ['value', 'value2'],
+    quarterCategories: ['value', 'value2'],
     multiple: ['value', 'value2', 'value3'],
     multipleWithNegatives: ['value', 'value2', 'value3'],
     stack: ['value', 'value2', 'value3', 'value4', 'value5'],
@@ -182,6 +214,10 @@ var ySeriesData = {
     stackMonthly: ['value', 'value2', 'value3', 'value4', 'value5']
 };
 var xSeriesData = {
+    categories: {key:'key', label:'Colours'},
+    categoriesStack: {key:'key', label:'Colours'},
+    dateCategories: {key:'key', label:'Colours'},
+    quarterCategories: {key:'key', label:'Colours'},
     stack: {key:'myDateColumn', label:'yearly'},
     stackMonthly: {key:'myDateColumn', label:'yearly'},
     stackWithAllNegatives: {key:'myDateColumn', label:'yearly'}
@@ -201,7 +237,8 @@ function getChartData(timeFrame){
         y: { series: ySeries },
         units: units[timeFrame],
         data: fixtures[timeFrame],
-        stack: ['stack','stackMonthly', 'stackWithAllNegatives'].indexOf(timeFrame)>-1
+        stack: ['stack','stackMonthly', 'stackWithAllNegatives', 'categoriesStack'].indexOf(timeFrame)>-1,
+        categorical: ['dateCategories', 'quarterCategories'].indexOf(timeFrame)>-1
     };
 }
 var widths = [600, 300];
@@ -209,7 +246,10 @@ var widths = [600, 300];
 module.exports = {
     getChartData: getChartData,
     init: function(){
-        var demos = ['quarters','quartersWithNegative','years','yearsWithNegative','decade', 'month', 'multiple', 'time', 'stack', 'stackMonthly', 'multipleWithNegatives', 'stackWithAllNegatives'];
+        var demos = [
+            'quarters','quartersWithNegative','years','yearsWithNegative','decade', 'month',
+            'multiple', 'time', 'stack', 'stackMonthly', 'multipleWithNegatives', 'stackWithAllNegatives',
+            'categories', 'categoriesStack', 'dateCategories', 'quarterCategories'];
         demos.forEach(function(timeFrame, i){
             var textContent = '';
             if (i===7){

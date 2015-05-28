@@ -28,6 +28,7 @@ function normalise(value) {
     if (typeof d.label === 'function') {
         d.label = d.label();
     }
+    d.originalKey = d.key;
 
     return d;
 }

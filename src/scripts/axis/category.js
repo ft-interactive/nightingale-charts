@@ -20,7 +20,8 @@ function categoryAxis() {
         yOffset: 0,
         xOffset: 0,
         labelWidth: 0,
-        showDomain: false
+        showDomain: false,
+        categorical: false
     };
 
     function render(g) {
@@ -47,6 +48,12 @@ function categoryAxis() {
     render.simple = function (bool) {
         if (!arguments.length) return config.simple;
         config.simple = bool;
+        return render;
+    };
+
+    render.categorical = function (bool) {
+        if (!arguments.length) return config.categorical;
+        config.categorical = bool;
         return render;
     };
 
@@ -95,6 +102,9 @@ function categoryAxis() {
     render.scale = function (scale, units) {
         if (!arguments.length) return config.axes[0].scale();
         units = units || ['unknown'];
+        if (config.categorical){
+            units = ['categorical'];
+        }
         config.scale = scale;
         config.units = units;
 
