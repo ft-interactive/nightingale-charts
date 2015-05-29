@@ -1,5 +1,6 @@
 var d3 = require('d3');
 var dates = require('../util/dates');
+var styler = require('./chart-attribute-styles');
 var dateFormatter = dates.formatter;
 
 module.exports = {
@@ -24,10 +25,20 @@ module.exports = {
     add: function(g, config){
         var self = this;
         var options = { row: 0 };
+
         config.axes.forEach(function (axis, i) {
             self.addRow(g, axis, options, config);
             options.row ++;
         });
+
+        //remove text-anchor attribute from year positions
+        g.selectAll('.primary text').attr({
+            x: null,
+            y: null,
+            dy: 15 + config.tickSize
+        });
+
+
     },
     addRow: function(g, axis, options, config){
         var rowClass = (options.row) ? 'secondary': 'primary';
@@ -35,6 +46,9 @@ module.exports = {
             .attr('class', rowClass)
             .attr('transform', 'translate(0,' + (options.row * config.lineHeight) + ')')
             .call(axis);
+        // style the row before we do any removing, to ensure that
+        // collision detection is done correctly
+        styler(g);
 
         if (config.categorical) return;
 
@@ -52,6 +66,7 @@ module.exports = {
             this.removeMonths(g, axis, options, config);
         }
         this.removeOverlapping(g, '.' + rowClass + ' text');
+
     },
 
     intersection: function (a, b) {

@@ -1,22 +1,31 @@
-/* Add HTML + CSS to setup page for functional testing */
-require('../helper').loadAssets('date-axes');
-
-require('../../demo/scripts/date-axes').init();
-
 /* Start Test */
 describe('When the date axis is', function () {
 
+    beforeEach(function() {
+        require('../helper').loadAssets('date-axes');
+        require('../../demo/scripts/date-axes').init();
+    });
+
     describe('a day or less,', function () {
-        var dayOrLess = document.querySelector('#views .axis-test:nth-child(1) svg');
-        var x = dayOrLess.querySelector('.x.axis');
-        var ticks = x.querySelectorAll('.primary .tick');
-        var labels = x.querySelectorAll('.primary .tick text');
-        var firstTick = ticks[0];
-        var finalTick = ticks[ticks.length-1];
-        var firstTickLine = firstTick.querySelectorAll('line');
-        var firstTickLabel = firstTick.querySelectorAll('text');
-        var finalTickLine = finalTick.querySelectorAll('line');
-        var finalTickLabel = finalTick.querySelectorAll('text');
+        var dayOrLess, x, ticks, labels, firstTick, finalTick, firstTickLine,
+            firstTickLabel, finalTickLine, finalTickLabel;
+
+        beforeEach(function() {
+            dayOrLess = document.querySelector('#views .axis-test:nth-child(1) svg');
+            x = dayOrLess.querySelector('.x.axis');
+            ticks = x.querySelectorAll('.primary .tick');
+            labels = x.querySelectorAll('.primary .tick text');
+            firstTick = ticks[0];
+            finalTick = ticks[ticks.length-1];
+            firstTickLine = firstTick.querySelectorAll('line');
+            firstTickLabel = firstTick.querySelectorAll('text');
+            finalTickLine = finalTick.querySelectorAll('line');
+            finalTickLabel = finalTick.querySelectorAll('text');
+        });
+
+        afterEach(function() {
+            document.body.innerHTML = '';
+        });
 
         it('one tick for each hour is shown', function () {
             expect(ticks.length).toBe(12);
@@ -43,12 +52,22 @@ describe('When the date axis is', function () {
     });
 
     describe('a day or less (small),', function () {
-        var dayOrLessSmall = document.querySelector('#viewsSmall .axis-test:nth-child(1) svg');
-        var x = dayOrLessSmall.querySelector('.x.axis');
-        var ticks = x.querySelectorAll('.primary .tick');
-        var labels = x.querySelectorAll('.primary .tick text');
-        var firstTick = ticks[0];
-        var firstTickLine = firstTick.querySelectorAll('line');
+        var dayOrLessSmall, x, ticks, labels, firstTick, firstTickLine;
+
+        beforeEach(function() {
+
+            dayOrLessSmall = document.querySelector('#viewsSmall .axis-test:nth-child(1) svg');
+            x = dayOrLessSmall.querySelector('.x.axis');
+            ticks = x.querySelectorAll('.primary .tick');
+            labels = x.querySelectorAll('.primary .tick text');
+            firstTick = ticks[0];
+            firstTickLine = firstTick.querySelectorAll('line');
+
+        });
+
+        afterEach(function() {
+            document.body.innerHTML = '';
+        });
 
         it('one tick for each hour is shown', function () {
             expect(ticks.length).toBe(12);
@@ -67,12 +86,20 @@ describe('When the date axis is', function () {
     });
 
     describe('a few weeks,', function () {
-        var aFewWeeks = document.querySelector('#views .axis-test:nth-child(2) svg');
-        var x = aFewWeeks.querySelector('.x.axis');
-        var ticks = x.querySelectorAll('.primary .tick');
-        var labels = x.querySelectorAll('.primary .tick text');
-        var firstTick = ticks[0];
-        var firstTickLine = firstTick.querySelectorAll('line');
+        var aFewWeeks, x, ticks, labels, firstTick, firstTickLine;
+
+        beforeEach(function() {
+            aFewWeeks = document.querySelector('#views .axis-test:nth-child(2) svg');
+            x = aFewWeeks.querySelector('.x.axis');
+            ticks = x.querySelectorAll('.primary .tick');
+            labels = x.querySelectorAll('.primary .tick text');
+            firstTick = ticks[0];
+            firstTickLine = firstTick.querySelectorAll('line');
+        });
+
+        afterEach(function() {
+            document.body.innerHTML = '';
+        });
 
         it('one tick for each day is shown', function () {
             expect(ticks.length).toBe(26);
@@ -89,12 +116,20 @@ describe('When the date axis is', function () {
     });
 
     describe('between 3 - 15 years,', function () {
-        var threeToFifteenYears = document.querySelector('#views .axis-test:nth-child(5) svg');
-        var x = threeToFifteenYears.querySelector('.x.axis');
-        var ticks = x.querySelectorAll('.primary .tick');
-        var labels = x.querySelectorAll('.primary .tick text');
-        var firstTick = ticks[0];
-        var firstTickLine = firstTick.querySelectorAll('line');
+        var threeToFifteenYears, x, ticks, labels, firstTick, firstTickLine;
+
+        beforeEach(function() {
+            threeToFifteenYears = document.querySelector('#views .axis-test:nth-child(5) svg');
+            x = threeToFifteenYears.querySelector('.x.axis');
+            ticks = x.querySelectorAll('.primary .tick');
+            labels = x.querySelectorAll('.primary .tick text');
+            firstTick = ticks[0];
+            firstTickLine = firstTick.querySelectorAll('line');
+        });
+
+        afterEach(function() {
+            document.body.innerHTML = '';
+        });
 
         it('shows one tick for each year', function () {
             expect(ticks.length).toBe(10);
@@ -126,10 +161,18 @@ describe('When the date axis is', function () {
     });
 
     describe('has 2 ticks very close to each other, ', function () {
-        var overlapping = document.querySelector('#viewsSmall .axis-test:nth-child(9) svg');
-        var overlappingX = overlapping.querySelector('.x.axis');
-        var ticks = overlappingX.querySelectorAll('.primary .tick');
-        var overlappingLabels = overlappingX.querySelectorAll('.primary .tick text');
+        var overlapping, overlappingX, ticks, overlappingLabels;
+
+        beforeEach(function() {
+            overlapping = document.querySelector('#viewsSmall .axis-test:nth-child(9) svg');
+            overlappingX = overlapping.querySelector('.x.axis');
+            ticks = overlappingX.querySelectorAll('.primary .tick');
+            overlappingLabels = overlappingX.querySelectorAll('.primary .tick text');
+        });
+
+        afterEach(function() {
+            document.body.innerHTML = '';
+        });
 
         it('they should not overlap (ng-65)', function () {
             expect(ticks.length).toBe(15);
@@ -150,4 +193,32 @@ describe('When the date axis is', function () {
             expect(overlappingLabels[4].textContent).toBe('13');
         });
     });
+
+    describe('X axis labels', function() {
+        var intersection = require('../../src/scripts/util/labels').intersection;
+        var axes;
+
+        beforeEach(function() {
+            axes = document.querySelectorAll('g.x.axis g.primary,g.secondary');
+        });
+
+        afterEach(function() {
+            document.body.innerHTML = '';
+        });
+
+        it('should never overlap', function() {
+            var ax, i, j, textLabels, parent;
+            for (i = 0; i < axes.length; i ++) {
+                ax = axes[i];
+                textLabels = ax.querySelectorAll('text');
+                for (j = 1; j < textLabels.length; j++) {
+                    var previous = textLabels[j-1].getBoundingClientRect();
+                    var current = textLabels[j].getBoundingClientRect();
+                    expect(intersection(previous, current)).toBe(false);
+                }
+            }
+        });
+
+    });
+
 });
