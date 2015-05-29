@@ -52,6 +52,11 @@ var axesDefinitions = [
         title: 'Years Overlapping',
         dateStart: new Date(1999, 8, 31),
         dateEnd: new Date(2013, 1, 4)
+    },
+    {
+        title: 'Months Overlapping',
+        dateStart: new Date(1995, 5, 15),
+        dateEnd: new Date(2005, 10, 14)
     }];
 
 function createAxesDefArrayOfWidth(axisWidth) {
@@ -100,7 +105,9 @@ function renderAxesArrayIntoDiv(div, axesDefinitionArray) {
                 .append('g')
                 .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
                 .call(axis);
+
         });
+
 }
 
 module.exports = {
