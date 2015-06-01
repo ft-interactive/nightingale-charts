@@ -78,7 +78,7 @@ Create.prototype.independentScale = function (scale) {
     var model = this.model;
     if(scale == 'ordinal'){
         this.timeScale = ordinalScale(model, this);
-        this.timeAxis = axis.category();
+        this.timeAxis = axis.category().categorical(model.categorical);
     } else {
         this.timeScale = timeScale(model);
         this.timeAxis = axis.date();

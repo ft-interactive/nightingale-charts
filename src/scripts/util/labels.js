@@ -50,6 +50,8 @@ module.exports = {
         // collision detection is done correctly
         styler(g);
 
+        if (config.categorical) return;
+
         this.removeDuplicates(g, '.' + rowClass + ' text');
         if (options.extendTicks) {
             this.extendedTicks(g, config, options.extendTicks);
