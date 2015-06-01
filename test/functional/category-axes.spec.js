@@ -114,4 +114,22 @@ describe('category axis', function () {
 
     });
 
+    describe('label positions', function () {
+        it('Text labels should have textAnchor: center', function() {
+            var primaryTicks = document.querySelectorAll('.x.axis .primary .tick text');
+            var secondaryTicks = document.querySelectorAll('.x.axis .secondary .tick text');
+
+            // turn NodeList into Arrays;
+            primaryTicks = Array.prototype.slice.call(primaryTicks);
+            secondaryTicks = Array.prototype.slice.call(secondaryTicks);
+
+            var ticks = primaryTicks.concat(secondaryTicks);
+
+            for (var i = 0; i < ticks.length; i++) {
+                expect(ticks[i].style.textAnchor).toEqual('middle');
+            }
+
+        });
+    });
+
 });

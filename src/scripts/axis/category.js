@@ -21,7 +21,8 @@ function categoryAxis() {
         xOffset: 0,
         labelWidth: 0,
         showDomain: false,
-        categorical: false
+        categorical: false,
+        keepD3Style: true
     };
 
     function render(g) {
@@ -31,13 +32,6 @@ function categoryAxis() {
         g.append('g').attr('class', 'x axis').each(function () {
             var g = d3.select(this);
             labels.add(g, config);
-            //remove text-anchor attribute from year positions
-            g.selectAll('.primary text').attr({
-                x: null,
-                y: null,
-                dy: 15 + config.tickSize
-            });
-            styler(g, true);
         });
 
         if (!config.showDomain) {

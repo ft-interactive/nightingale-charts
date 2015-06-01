@@ -38,19 +38,22 @@ module.exports = {
             dy: 15 + config.tickSize
         });
 
-
     },
+
     addRow: function(g, axis, options, config){
         var rowClass = (options.row) ? 'secondary': 'primary';
         g.append('g')
             .attr('class', rowClass)
             .attr('transform', 'translate(0,' + (options.row * config.lineHeight) + ')')
             .call(axis);
+
         // style the row before we do any removing, to ensure that
         // collision detection is done correctly
-        styler(g);
+        styler(g, config.keepD3Style);
 
-        if (config.categorical) return;
+        if (config.categorical) {
+            return;
+        }
 
         this.removeDuplicates(g, '.' + rowClass + ' text');
         if (options.extendTicks) {
