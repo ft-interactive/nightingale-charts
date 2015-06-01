@@ -19,7 +19,8 @@ function dateAxis() {
         yOffset: 0,
         xOffset: 0,
         labelWidth: 0,
-        showDomain: false
+        showDomain: false,
+        keepD3Style: false
     };
 
     function render(g) {

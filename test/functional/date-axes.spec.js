@@ -219,6 +219,22 @@ describe('When the date axis is', function () {
             }
         });
 
+        it('should have no textAnchor', function() {
+            var primaryTicks = document.querySelectorAll('.x.axis .primary .tick text');
+            var secondaryTicks = document.querySelectorAll('.x.axis .secondary .tick text');
+
+            // turn NodeList into Arrays;
+            primaryTicks = Array.prototype.slice.call(primaryTicks);
+            secondaryTicks = Array.prototype.slice.call(secondaryTicks);
+
+            var ticks = primaryTicks.concat(secondaryTicks);
+
+            for (var i = 0; i < ticks.length; i++) {
+                expect(ticks[i].style.textAnchor).toEqual("");
+            }
+        });
+
     });
+
 
 });

@@ -23,7 +23,8 @@ module.exports = function(config) {
             'src/**/*.txt',
             'src/**/*.csv',
             'src/**/*.hbs'
-        ]
+        ],
+        browserNoActivityTimeout: 20000
     };
     var pkg = require('../package.json');
     karmaConfig.browser = pkg.browser || {};
