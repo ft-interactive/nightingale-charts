@@ -22,7 +22,8 @@ function categoryAxis() {
         xOffset: 0,
         labelWidth: 0,
         showDomain: false,
-        categorical: false
+        categorical: false,
+        keepD3Style: true
     };
 
     function render(g) {
@@ -32,13 +33,6 @@ function categoryAxis() {
         g.append('g').attr('class', 'x axis').each(function () {
             var g = d3.select(this);
             labels.add(g, config);
-            //remove text-anchor attribute from year positions
-            g.selectAll('.primary text').attr({
-                x: null,
-                y: null,
-                dy: 15 + config.tickSize
-            });
-            styler(g, true);
         });
 
         if (!config.showDomain) {
@@ -276,7 +270,8 @@ function dateAxis() {
         yOffset: 0,
         xOffset: 0,
         labelWidth: 0,
-        showDomain: false
+        showDomain: false,
+        keepD3Style: false
     };
 
     function render(g) {
@@ -2210,19 +2205,22 @@ module.exports = {
             dy: 15 + config.tickSize
         });
 
-
     },
+
     addRow: function(g, axis, options, config){
         var rowClass = (options.row) ? 'secondary': 'primary';
         g.append('g')
             .attr('class', rowClass)
             .attr('transform', 'translate(0,' + (options.row * config.lineHeight) + ')')
             .call(axis);
+
         // style the row before we do any removing, to ensure that
         // collision detection is done correctly
-        styler(g);
+        styler(g, config.keepD3Style);
 
-        if (config.categorical) return;
+        if (config.categorical) {
+            return;
+        }
 
         this.removeDuplicates(g, '.' + rowClass + ' text');
         if (options.extendTicks) {
@@ -2502,7 +2500,7 @@ module.exports = {
 };
 
 },{}],28:[function(require,module,exports){
-module.exports = "0.3.0";
+module.exports = "0.3.1";
 },{}],"o-charts":[function(require,module,exports){
 module.exports = {
     chart: require('./chart/index.js'),
