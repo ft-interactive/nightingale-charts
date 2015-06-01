@@ -2,7 +2,6 @@ var d3 = require('d3');
 var labels = require('../util/labels.js');
 var dates = require('../util/dates.js');
 var dateScale = require('./date.scale.js');
-var styler = require('../util/chart-attribute-styles');
 var timeDiff = dates.timeDiff;
 
 function dateAxis() {
@@ -28,15 +27,7 @@ function dateAxis() {
         g = g.append('g').attr('transform', 'translate(' + config.xOffset + ',' + config.yOffset + ')');
 
         g.append('g').attr('class', 'x axis').each(function () {
-            var g = d3.select(this);
-            labels.add(g, config);
-            //remove text-anchor attribute from year positions
-            g.selectAll('.primary text').attr({
-                x: null,
-                y: null,
-                dy: 15 + config.tickSize
-            });
-            styler(g);
+            labels.add(d3.select(this), config);
         });
 
         if (!config.showDomain) {
