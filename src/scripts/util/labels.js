@@ -51,7 +51,7 @@ module.exports = {
         // collision detection is done correctly
         styler(g, config.keepD3Style);
 
-        if (config.categorical) {
+        if (config.dataType === 'categorical') {
             return;
         }
 
