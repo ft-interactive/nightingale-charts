@@ -29,7 +29,7 @@ function formatData(model, series) {
             value: (Array.isArray(d.values)) ? d.values[0][series.key] : d[series.key]
         };
     }).filter(function (d) {
-        return (d.value !== null);
+        return (d.value !== null && !isNaN(d.value));
     });
     return data;
 }

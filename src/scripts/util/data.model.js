@@ -144,16 +144,14 @@ function setKey(model) {
 }
 
 function groupDates(m, units){
-	var i=0;
-	var firstDate;
-	m.data = d3.nest()
-		.key(function(d)  {
-            firstDate = firstDate || d[m.x.series.key];
-            var dateStr = [dateUtil.formatter[units[0]](d[m.x.series.key], i++, firstDate)];
-            units[1] && dateStr.push(dateUtil.formatter[units[1]](d[m.x.series.key], i++, firstDate));
-            return  dateStr.join(' ');
-		})
-		.entries(m.data);
+    var firstDate = m.data[0][m.x.series.key];
+    var data = [];
+    m.data.forEach(function(d,i){
+        var dateStr = [dateUtil.formatter[units[0]](d[m.x.series.key], i, firstDate)];
+        units[1] && dateStr.push(dateUtil.formatter[units[1]](d[m.x.series.key], i, firstDate));
+        data.push({key:dateStr.join(' '),values:[d]});
+    });
+    m.data = data;
 	m.x.series.key = 'key';
 	return m.data;
 }
