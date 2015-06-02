@@ -849,7 +849,7 @@ function formatData(model, series) {
             value: (Array.isArray(d.values)) ? d.values[0][series.key] : d[series.key]
         };
     }).filter(function (d) {
-        return (d.value !== null);
+        return (d.value !== null && !isNaN(d.value));
     });
     return data;
 }
@@ -1744,16 +1744,14 @@ function setKey(model) {
 }
 
 function groupDates(m, units){
-	var i=0;
-	var firstDate;
-	m.data = d3.nest()
-		.key(function(d)  {
-            firstDate = firstDate || d[m.x.series.key];
-            var dateStr = [dateUtil.formatter[units[0]](d[m.x.series.key], i++, firstDate)];
-            units[1] && dateStr.push(dateUtil.formatter[units[1]](d[m.x.series.key], i++, firstDate));
-            return  dateStr.join(' ');
-		})
-		.entries(m.data);
+    var firstDate = m.data[0][m.x.series.key];
+    var data = [];
+    m.data.forEach(function(d,i){
+        var dateStr = [dateUtil.formatter[units[0]](d[m.x.series.key], i, firstDate)];
+        units[1] && dateStr.push(dateUtil.formatter[units[1]](d[m.x.series.key], i, firstDate));
+        data.push({key:dateStr.join(' '),values:[d]});
+    });
+    m.data = data;
 	m.x.series.key = 'key';
 	return m.data;
 }
@@ -2500,7 +2498,7 @@ module.exports = {
 };
 
 },{}],28:[function(require,module,exports){
-module.exports = "0.3.1";
+module.exports = "0.3.2";
 },{}],"o-charts":[function(require,module,exports){
 module.exports = {
     chart: require('./chart/index.js'),
