@@ -180,7 +180,8 @@ describe('data model', function () {
             ],
             x: { series:{key:'date',label:'myValue'}},
             y: { series: [{key:'value', label:'String Value'},
-                {key:'value2', label:'Another String Value'}]}
+                {key:'value2', label:'Another String Value'}]},
+            dataType: 'categorical'
         });
         expect(DataModel.prototype.error.calls.count()).toBe(3);
         expect(DataModel.prototype.error).toHaveBeenCalledWith(jasmine.objectContaining({

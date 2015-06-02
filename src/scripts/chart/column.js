@@ -57,7 +57,7 @@ function columnChart(g){
 
 	var create = new axes.Create(chartSVG, model);
     create.dependentScale('number');
-    create.independentScale((model.groupData || model.categorical) ? 'ordinal' : 'time');
+    create.independentScale((model.groupData || model.dataType === 'categorical') ? 'ordinal' : 'time');
 
 	var plotSVG = chartSVG.append('g').attr('class', 'plot');
     var i = 0;

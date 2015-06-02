@@ -53,8 +53,8 @@ function setExtents(model){
 function timeDomain(model, chartType) {
     if (model.timeDomain) { return model.timeDomain;  }
 
-    if ((model.groupData || model.categorical) && chartType === 'column'){
-        model.data = (model.groupData && !model.categorical) ? groupDates(model, model.units) : model.data;
+    if ((model.groupData || model.dataType === 'categorical') && chartType === 'column'){
+        model.data = (model.groupData && model.dataType !=='categorical') ? groupDates(model, model.units) : model.data;
         return model.data.map(function (d) {
             return d[model.x.series.key];
         });
@@ -119,8 +119,6 @@ function verifyData(model) {
             error.message = 'X axis value is empty or null';
         } else if (!isDate(s) && model.chartType == 'line') {
             error.message = 'Value is not a valid date';
-        } else if (!isDate(s)) {
-            model.categorical = true;
         }
 
         if (error.message) {
