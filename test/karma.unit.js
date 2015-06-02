@@ -1,7 +1,7 @@
 module.exports = function(config) {
     var karmaConfig = {
         basePath: '..',
-        browsers: ['PhantomJS'],
+        browsers: ['Chrome'],
         frameworks: ['jasmine', 'browserify'],
         reporters: ['progress', 'coverage'],
         preprocessors: {

@@ -1,15 +1,15 @@
 module.exports = function(config) {
     var karmaConfig = {
         basePath: '..',
-        browsers: ['PhantomJS'],
+        browsers: ['Chrome'],
         frameworks: ['jasmine', 'browserify'],
-        reporters: ['progress'],
+        reporters: ['mocha'],
         preprocessors: {
             'test/functional/**/*.js': ['browserify'],
             '_site/*.html': ['html2js']
         },
         plugins: [
-            'karma-browserify', 'karma-jasmine', 'karma-coverage', 'karma-phantomjs-launcher', 'karma-chrome-launcher', 'karma-html2js-preprocessor'
+            'karma-browserify',  'karma-mocha-reporter', 'karma-jasmine', 'karma-coverage', 'karma-phantomjs-launcher', 'karma-chrome-launcher', 'karma-html2js-preprocessor'
         ],
         files: [
             {pattern: '_site/**/vendor.*', included: true, served: true, watched: true},

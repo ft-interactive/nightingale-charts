@@ -21,6 +21,25 @@ describe('data model', function () {
 
     });
 
+    it('doesnt reorder grouped dates (chrome test)', function(){
+        var model = new DataModel('column', {
+            units: ['yearly'],
+            data: [
+                {date: new Date('2008'), value: 10, value2: 1},
+                {date: new Date('2009'), value: 11, value2: 1},
+                {date: new Date('2010'), value: 12, value2: 1},
+                {date: new Date('2011'), value: 13, value2: 1}
+            ],
+            x: { series: ['date']},
+            y: { series: ['value', 'value2']}
+        });
+        expect(model.groupData).toBe(true);
+        expect(model.data[0].key).toBe('2008');
+        expect(model.data[1].key).toBe('09');
+        expect(model.data[2].key).toBe('10');
+        expect(model.data[3].key).toBe('11');
+    });
+
     it('returns values as set in options', function(){
         var model = new DataModel('line', {
             height: 100,
