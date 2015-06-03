@@ -23,26 +23,26 @@ function applyAttributes(g, keepD3Styles) {
                 'fill': 'none'
             }
         }, {
-            'selector': '.y.axis path.domain, .secondary path.domain, .secondary .tick line',
+            'selector': '.axis--dependent path.domain, .secondary path.domain, .secondary .tick line',
             'attributes': {
                 'stroke': 'none'
             }
         },
 
         {
-            'selector': '.y.axis .tick line',
+            'selector': '.axis--dependent .tick line',
             'attributes': {
                 'stroke-dasharray': '2 2'
             }
         },
         {
-            'selector': '.y.axis .origin line',
+            'selector': '.axis--dependent .origin line',
             'attributes': {
                 'stroke': '#333',
                 'stroke-dasharray': 'none'
             }
         }, {
-            'selector': '.y.axis .origin.tick line',
+            'selector': '.axis--dependent .origin.tick line',
             'attributes': {
                 'stroke': '#333',
                 'stroke-dasharray': 'none'
@@ -75,7 +75,7 @@ function applyAttributes(g, keepD3Styles) {
                 'text-anchor': 'end'
             }
         }, {
-            'selector': '.x.axis .primary path.domain',
+            'selector': '.axis--independent .primary path.domain',
             'attributes': {
                 'stroke': '#757470'
             }
@@ -131,42 +131,42 @@ function applyAttributes(g, keepD3Styles) {
         },
         //Columns
         {
-            'selector': '.column, .key__column',
+            'selector': '.column, .key__column, .bar, .key__bar',
             'attributes': {
                 'stroke': 'none'
             }
         }, {
-            'selector': '.column--series1',
+            'selector': '.column--series1, .bar--series1',
             'attributes': {
                 'fill': '#af516c'
             }
         }, {
-            'selector': '.column--series2',
+            'selector': '.column--series2, .bar--series2',
             'attributes': {
                 'fill': '#ecafaf'
             }
         }, {
-            'selector': '.column--series3',
+            'selector': '.column--series3, .bar--series3',
             'attributes': {
                 'fill': '#d7706c'
             }
         }, {
-            'selector': '.column--series4',
+            'selector': '.column--series4, .bar--series4',
             'attributes': {
                 'fill': '#76acb8'
             }
         }, {
-            'selector': '.column--series5',
+            'selector': '.column--series5, .bar--series5',
             'attributes': {
                 'fill': '#81d0e6'
             }
         }, {
-            'selector': '.column--series6',
+            'selector': '.column--series6, .bar--series6',
             'attributes': {
                 'fill': '#4086b6'
             }
         }, {
-            'selector': '.column--series7',
+            'selector': '.column--series7, .bar--series7',
             'attributes': {
                 'fill': '#b8b1a9'
             }

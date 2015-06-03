@@ -102,7 +102,11 @@ var fixtures = {
         { date: new Date('3/31/14'), value:      0.882},
         { date: new Date('6/30/14'), value:      0.833},
         { date: new Date('9/30/14'), value:      0.619},
-        { date: new Date('12/31/14'), value:     0.607}
+        { date: new Date('12/31/14'), value:     0.607},
+        { date: new Date('3/31/15'), value:      0.882},
+        { date: new Date('6/30/15'), value:      0.833},
+        { date: new Date('9/30/15'), value:      0.619},
+        { date: new Date('12/31/15'), value:     0.607}
     ],
     month : [
         { date: new Date('3/31/05'), value:      0.583},
@@ -147,7 +151,7 @@ var fixtures = {
     ],
     multipleWithNegatives:[
         {date: new Date('3/31/05'), value: Math.floor(Math.random() * 40) + 10, value2: -99, value3: 26},
-        {date: new Date('6/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 10, value3: 21},
+        {date: new Date('6/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: null, value3: 21},
         {date: new Date('9/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 70, value3: -13},
         {date: new Date('12/30/05'), value: Math.floor(Math.random() * -40) + 10, value2: 10, value3: 99}
     ],
@@ -159,10 +163,9 @@ var fixtures = {
     ],
     categories : [
         { key: 'red', value:      0.583, value2:      1.583},
-        { key: 'blue', value: 1.027, value2:  2},
-        { key: 'green', value: 1.03, value2:  1.4},
-        { key: 'purple', value:     1.348, value2:  1.9},
-        { key: 'pink', value:     -1.048, value2:  -2}
+        { key: 'blue', value: 0.12, value2:  2},
+        { key: 'green machine', value: 1.03, value2:  1.4},
+        { key: 'purple', value:     1.348, value2:  1.9}
     ],
     categoriesStack : [
         { key: 'red', value:      0.583, value2:      1.583},
@@ -184,35 +187,9 @@ var fixtures = {
         { key: '2005 Q3', value: 1.03, value2:  1.4},
         { key: '2005 Q4', value:     1.348, value2:  1.9},
         { key: '2006 Q1', value:     -1.048, value2:  -2}
-    ],
-    nullValues : [
-        { date: new Date('6/30/05'), value: 1.027},
-        { date: new Date('9/30/05'), value: 1.03},
-        { date: new Date('12/30/05'), value:     1.348},
-        { date: new Date('3/31/06'), value:      0.583},
-        { date: new Date('6/30/06'), value:      0.501},
-        { date: new Date('9/29/06'), value:      null},
-        { date: new Date('12/29/06'), value:     0.753},
-        { date: new Date('3/30/07'), value:      0.763},
-        { date: new Date('6/29/07'), value:      0.601},
-        { date: new Date('9/28/07'), value:      null},
-        { date: new Date('12/31/07'), value:     0.468},
-        { date: new Date('3/31/08'), value:      0.313}
-    ],
-    nullMultiple:[
-        {date: new Date('3/31/05'), value: Math.floor(Math.random() * 40) + 10, value2: 99, value3: 26},
-        {date: new Date('6/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: null, value3: 21},
-        {date: new Date('9/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 70, value3: 13},
-        {date: new Date('12/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 10, value3: null}
-    ],
-    nullStack:[
-        {myDateColumn: new Date('3/31/05'), value: 50, value2: 99, value3: 26, value4: 40, value5: 15},
-        {myDateColumn: new Date('6/30/05'), value: 25, value2: 10, value3: 21, value4: 36, value5: null},
-        {myDateColumn: new Date('9/30/05'), value: 75, value2: 70, value3: null, value4: 12, value5: 110},
-        {myDateColumn: new Date('12/30/05'), value: null, value2: 10, value3: 29, value4: 31, value5: 40},
-        {myDateColumn: new Date('5/30/06'), value: 133, value2: 25, value3: 72, value4: 105, value5: 200}
-    ],
+    ]
 };
+
 
 var units = {
     quarters: ['quarterly', 'yearly'],
@@ -226,10 +203,7 @@ var units = {
     stack: ['quarterly', 'yearly'],
     stackMonthly: ['monthly', 'yearly'],
     multipleWithNegatives: ['quarterly', 'yearly'],
-    stackWithAllNegatives: ['quarterly', 'yearly'],
-    nullValues: ['quarterly', 'yearly'],
-    nullMultiple: ['quarterly', 'yearly'],
-    nullStack: ['quarterly', 'yearly']
+    stackWithAllNegatives: ['quarterly', 'yearly']
 };
 var ySeriesData = {
     categories: ['value', 'value2'],
@@ -237,10 +211,8 @@ var ySeriesData = {
     dateCategories: ['value', 'value2'],
     quarterCategories: ['value', 'value2'],
     multiple: ['value', 'value2', 'value3'],
-    nullMultiple: ['value', 'value2', 'value3'],
     multipleWithNegatives: ['value', 'value2', 'value3'],
     stack: ['value', 'value2', 'value3', 'value4', 'value5'],
-    nullStack: ['value', 'value2', 'value3', 'value4', 'value5'],
     stackWithNegatives: ['value', 'value2', 'value3', 'value4', 'value5'],
     stackWithAllNegatives: ['value', 'value2', 'value3', 'value4', 'value5'],
     stackMonthly: ['value', 'value2', 'value3', 'value4', 'value5']
@@ -251,7 +223,6 @@ var xSeriesData = {
     dateCategories: {key:'key', label:'Colours'},
     quarterCategories: {key:'key', label:'Colours'},
     stack: {key:'myDateColumn', label:'yearly'},
-    nullStack: {key:'myDateColumn', label:'yearly'},
     stackMonthly: {key:'myDateColumn', label:'yearly'},
     stackWithAllNegatives: {key:'myDateColumn', label:'yearly'}
 };
@@ -259,45 +230,43 @@ function getChartData(timeFrame){
     var ySeries = ySeriesData[timeFrame] || ['value'];
     var xSeries = xSeriesData[timeFrame] ||  {key:'date', label:'yearly'};
     return {
-        comment: 'Column chart',
+        comment: 'Bar chart',
         footnote: 'this is just for testing!',
         source: 'tbc',
-        title: 'Columns: ' + timeFrame,
+        title: 'Bars: ' + timeFrame,
         subtitle: 'Drawn for you',
-        dependentAxisOrient: 'left', //todo: refactor onto y object
+        dependentAxisOrient: ['categoriesStack'].indexOf(timeFrame)>-1 ? 'top' : 'bottom', //todo: refactor onto y object
+        independentAxisOrient: 'left', //todo: refactor onto y object
         hideSource: false,
         x: { series: xSeries },
         y: { series: ySeries },
         units: units[timeFrame],
         data: fixtures[timeFrame],
-        stack: ['stack', 'nullStack','stackMonthly', 'stackWithAllNegatives', 'categoriesStack'].indexOf(timeFrame)>-1,
+        stack: ['stack','stackMonthly', 'stackWithAllNegatives', 'categoriesStack'].indexOf(timeFrame)>-1,
         dataType: ['categories','categoriesStack','dateCategories', 'quarterCategories'].indexOf(timeFrame)>-1 ? 'categorical' : 'time'
     };
 }
+
 var widths = [600, 300];
 
 module.exports = {
     getChartData: getChartData,
     init: function(){
-        var demos = [
-            'quarters','quartersWithNegative','years','yearsWithNegative','decade', 'month',
-            'multiple', 'time', 'stack', 'stackMonthly', 'multipleWithNegatives', 'stackWithAllNegatives',
-            'categories', 'categoriesStack', 'dateCategories', 'quarterCategories',
-            'nullMultiple', 'nullValues', 'nullStack'];
+        var demos = ['categories', 'multipleWithNegatives', 'categoriesStack'];
         demos.forEach(function(timeFrame, i){
             var textContent = '';
             if (i===7){
                 textContent = 'NOTE: This chart highlights how columns should rarely be used for time-data. This example should check that charts of this form render but not that they should look good.'
             }
             d3.select('#views').append('p').text(textContent).append('div').attr({
-                'id':'column-chart__' + timeFrame
+                'id':'bar-chart__' + timeFrame
             });
             widths.forEach(function (width){
                 var data = getChartData(timeFrame);
                 data.width = width;
-                d3.select('#column-chart__' + timeFrame).append('span')
+                d3.select('#bar-chart__' + timeFrame).append('span')
                     .attr('class', 'width' + width)
-                    .data([data]).call(oCharts.chart.column);
+                    .data([data]).call(oCharts.chart.bar);
             });
         });
     }

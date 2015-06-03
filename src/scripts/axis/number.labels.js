@@ -5,11 +5,11 @@ module.exports = {
     },
     arrangeTicks: function (g, axes, lineHeight, hardRules) {
         var textWidth = this.textWidth(g, axes.orient());
+        g.selectAll('.tick').classed('origin', function (d, i) {
+            return hardRules.indexOf(d) > -1;
+        });
         if (this.isVertical(axes)) {
             g.selectAll('text').attr('transform', 'translate( ' + textWidth + ', ' + -(lineHeight / 2) + ' )');
-            g.selectAll('.tick').classed('origin', function (d, i) {
-                return hardRules.indexOf(d) > -1;
-            });
         }
     },
     extendAxis: function (g, axes, extension) {
@@ -47,7 +47,7 @@ module.exports = {
     },
     render: function (g, config) {
         g.append('g')
-            .attr('class', (this.isVertical(config.axes)) ? 'y axis left' : 'x axis')
+            .attr('class', (this.isVertical(config.axes)) ? 'axis axis--dependent y left' : 'axis axis--dependent x')
             .append('g')
             .attr('class', 'primary')
             .call(config.axes);
