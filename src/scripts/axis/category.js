@@ -21,7 +21,7 @@ function categoryAxis() {
         xOffset: 0,
         labelWidth: 0,
         showDomain: false,
-        categorical: false,
+        dataType: 'categorical',
         keepD3Style: true
     };
 
@@ -45,9 +45,9 @@ function categoryAxis() {
         return render;
     };
 
-    render.categorical = function (bool) {
-        if (!arguments.length) return config.categorical;
-        config.categorical = bool;
+    render.dataType = function (dataType) {
+        if (!arguments.length) return config.dataType;
+        config.dataType = dataType;
         return render;
     };
 
@@ -96,7 +96,7 @@ function categoryAxis() {
     render.scale = function (scale, units) {
         if (!arguments.length) return config.axes[0].scale();
         units = units || ['unknown'];
-        if (config.categorical){
+        if (config.dataType === 'categorical'){
             units = ['categorical'];
         }
         config.scale = scale;

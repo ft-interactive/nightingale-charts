@@ -229,7 +229,7 @@ var xSeriesData = {
 function getChartData(timeFrame){
     var ySeries = ySeriesData[timeFrame] || ['value'];
     var xSeries = xSeriesData[timeFrame] ||  {key:'date', label:'yearly'};
-    return{
+    return {
         comment: 'Column chart',
         footnote: 'this is just for testing!',
         source: 'tbc',
@@ -242,7 +242,7 @@ function getChartData(timeFrame){
         units: units[timeFrame],
         data: fixtures[timeFrame],
         stack: ['stack','stackMonthly', 'stackWithAllNegatives', 'categoriesStack'].indexOf(timeFrame)>-1,
-        categorical: ['dateCategories', 'quarterCategories'].indexOf(timeFrame)>-1
+        dataType: ['categories','categoriesStack','dateCategories', 'quarterCategories'].indexOf(timeFrame)>-1 ? 'categorical' : 'time'
     };
 }
 var widths = [600, 300];
