@@ -21,7 +21,7 @@ function categoryAxis() {
         xOffset: 0,
         labelWidth: 0,
         showDomain: false,
-        dataType: false,
+        dataType: 'categorical',
         keepD3Style: true
     };
 
@@ -45,9 +45,9 @@ function categoryAxis() {
         return render;
     };
 
-    render.dataType = function (bool) {
+    render.dataType = function (dataType) {
         if (!arguments.length) return config.dataType;
-        config.dataType = bool;
+        config.dataType = dataType;
         return render;
     };
 

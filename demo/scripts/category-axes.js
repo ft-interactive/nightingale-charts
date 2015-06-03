@@ -185,6 +185,7 @@ function drawDemo(timeFrame){
         },
         y: { series: ['value']},
         data: nestedFixture,
+        dataType: ['categories','manyCategories'].indexOf(timeFrame)>-1 ? 'categorical' : 'time',
         scale: d3.scale
             .ordinal()
             .rangeRoundBands([0, 400], 0, 0)
@@ -206,6 +207,7 @@ function drawDemo(timeFrame){
         })
         .each(function (d, i) {
             var axis = oCharts.axis.category()
+                .dataType(d.dataType)
                 .scale(d.scale, d.units);
 
             d3.select(this)
