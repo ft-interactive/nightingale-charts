@@ -188,7 +188,34 @@ var fixtures = {
         { key: '2005 Q3', value: 1.03, value2:  1.4},
         { key: '2005 Q4', value:     1.348, value2:  1.9},
         { key: '2006 Q1', value:     -1.048, value2:  -2}
-    ]
+    ],
+    nullValues : [
+        { date: new Date('6/30/05'), value: 1.027},
+        { date: new Date('9/30/05'), value: 1.03},
+        { date: new Date('12/30/05'), value:     1.348},
+        { date: new Date('3/31/06'), value:      0.583},
+        { date: new Date('6/30/06'), value:      0.501},
+        { date: new Date('9/29/06'), value:      null},
+        { date: new Date('12/29/06'), value:     0.753},
+        { date: new Date('3/30/07'), value:      0.763},
+        { date: new Date('6/29/07'), value:      0.601},
+        { date: new Date('9/28/07'), value:      null},
+        { date: new Date('12/31/07'), value:     0.468},
+        { date: new Date('3/31/08'), value:      0.313}
+    ],
+    nullMultiple:[
+        {date: new Date('3/31/05'), value: Math.floor(Math.random() * 40) + 10, value2: 99, value3: 26},
+        {date: new Date('6/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: null, value3: 21},
+        {date: new Date('9/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 70, value3: 13},
+        {date: new Date('12/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 10, value3: null}
+    ],
+    nullStack:[
+        {myDateColumn: new Date('3/31/05'), value: 50, value2: 99, value3: 26, value4: 40, value5: 15},
+        {myDateColumn: new Date('6/30/05'), value: 25, value2: 10, value3: 21, value4: 36, value5: null},
+        {myDateColumn: new Date('9/30/05'), value: 75, value2: 70, value3: null, value4: 12, value5: 110},
+        {myDateColumn: new Date('12/30/05'), value: null, value2: 10, value3: 29, value4: 31, value5: 40},
+        {myDateColumn: new Date('5/30/06'), value: 133, value2: 25, value3: 72, value4: 105, value5: 200}
+    ],
 };
 
 var units = {
@@ -203,7 +230,10 @@ var units = {
     stack: ['quarterly', 'yearly'],
     stackMonthly: ['monthly', 'yearly'],
     multipleWithNegatives: ['quarterly', 'yearly'],
-    stackWithAllNegatives: ['quarterly', 'yearly']
+    stackWithAllNegatives: ['quarterly', 'yearly'],
+    nullValues: ['quarterly', 'yearly'],
+    nullMultiple: ['quarterly', 'yearly'],
+    nullStack: ['quarterly', 'yearly']
 };
 var ySeriesData = {
     categories: ['value', 'value2'],
@@ -211,8 +241,10 @@ var ySeriesData = {
     dateCategories: ['value', 'value2'],
     quarterCategories: ['value', 'value2'],
     multiple: ['value', 'value2', 'value3'],
+    nullMultiple: ['value', 'value2', 'value3'],
     multipleWithNegatives: ['value', 'value2', 'value3'],
     stack: ['value', 'value2', 'value3', 'value4', 'value5'],
+    nullStack: ['value', 'value2', 'value3', 'value4', 'value5'],
     stackWithNegatives: ['value', 'value2', 'value3', 'value4', 'value5'],
     stackWithAllNegatives: ['value', 'value2', 'value3', 'value4', 'value5'],
     stackMonthly: ['value', 'value2', 'value3', 'value4', 'value5']
@@ -223,6 +255,7 @@ var xSeriesData = {
     dateCategories: {key:'key', label:'Colours'},
     quarterCategories: {key:'key', label:'Colours'},
     stack: {key:'myDateColumn', label:'yearly'},
+    nullStack: {key:'myDateColumn', label:'yearly'},
     stackMonthly: {key:'myDateColumn', label:'yearly'},
     stackWithAllNegatives: {key:'myDateColumn', label:'yearly'}
 };
@@ -241,7 +274,7 @@ function getChartData(timeFrame){
         y: { series: ySeries },
         units: units[timeFrame],
         data: fixtures[timeFrame],
-        stack: ['stack','stackMonthly', 'stackWithAllNegatives', 'categoriesStack'].indexOf(timeFrame)>-1,
+        stack: ['stack', 'nullStack','stackMonthly', 'stackWithAllNegatives', 'categoriesStack'].indexOf(timeFrame)>-1,
         dataType: ['categories','categoriesStack','dateCategories', 'quarterCategories'].indexOf(timeFrame)>-1 ? 'categorical' : 'time'
     };
 }
@@ -253,7 +286,8 @@ module.exports = {
         var demos = [
             'quarters','quartersWithNegative','years','yearsWithNegative','decade', 'month',
             'multiple', 'time', 'stack', 'stackMonthly', 'multipleWithNegatives', 'stackWithAllNegatives',
-            'categories', 'categoriesStack', 'dateCategories', 'quarterCategories'];
+            'categories', 'categoriesStack', 'dateCategories', 'quarterCategories',
+            'nullMultiple', 'nullValues', 'nullStack'];
         demos.forEach(function(timeFrame, i){
             var textContent = '';
             if (i===7){

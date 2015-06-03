@@ -175,7 +175,15 @@ function applyAttributes(g, keepD3Styles) {
             'attributes': {
                 'stroke': 'rgb(184,177,169)'
             }
+        }, {
+            'selector': '.series text.null-label',
+            'attributes': {
+                'text-anchor': 'middle',
+                'font-size': 10,
+                'fill': 'rgba(0, 0, 0, 0.4)'
+            }
         },
+
         //text
         {
             'selector': '.chart-title text, .chart-title tspan',
