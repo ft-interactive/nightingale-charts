@@ -81,6 +81,27 @@ describe('column-chart.js', function(){
 
     });
 
+    describe('null values', function() {
+        it('has N/A labels when null values are present', function() {
+            var nullValsGraph = document.querySelector('#column-chart__nullValues .width600 svg');
+            var nullLabels = nullValsGraph.querySelectorAll('text.null-label');
+            expect(nullLabels.length).toBe(2);
+            for (var i = 0; i < nullLabels.length; i++) {
+                expect(nullLabels[i].innerHTML).toBe('n/a');
+            }
+        });
+
+        it('has ≁ labels when null values are present on small charts', function() {
+            var nullValsGraph = document.querySelector('#column-chart__nullMultiple .width300 svg');
+            var nullLabels = nullValsGraph.querySelectorAll('text.null-label');
+            expect(nullLabels.length).toBe(2);
+            for (var i = 0; i < nullLabels.length; i++) {
+                expect(nullLabels[i].innerHTML).toBe('–');
+            }
+        });
+
+    });
+
     describe('y-axis values', function(){
 
         it('can positive only numbers', function(){
