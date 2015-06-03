@@ -14,7 +14,7 @@ var y = [   { series: ['value', 'value2', 'value3'] },
             { series: ['value'] },
             { series: ['value'] }];
 var hideSource = [true, true, false];
-var numberAxisOrient = ['left', 'right', 'left', 'right', 'right', 'right', 'right', 'right'];
+var dependentAxisOrient = ['left', 'right', 'left', 'right', 'right', 'right', 'right', 'right'];
 
 var quarterlyDataPlus =  [
     { date: new Date('1/1/05'), value: 0.583},
@@ -114,7 +114,7 @@ function getChartData(i) {
         source: "tbc",
         title: "Some Simple Lines: " + (i + 1),
         subtitle: "Drawn for you",
-        numberAxisOrient: numberAxisOrient[i], //todo: refactor onto y object
+        dependentAxisOrient: dependentAxisOrient[i], //todo: refactor onto y object
         hideSource: hideSource[i],
         x: {
             series: {key: 'date', label: 'year'}

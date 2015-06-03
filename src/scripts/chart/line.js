@@ -57,15 +57,14 @@ function lineChart(g) {
     var chartSVG = svg.append('g').attr('class', 'chart');
     chartSVG.attr('transform', model.translate(model.chartPosition));
 
-    var create = new axes.Create(chartSVG, model);
-    create.dependentScale('number');
-    create.independentScale('time');
+    var creator = new axes.Create(chartSVG, model);
+    creator.createAxes({dependent:'number', independent: 'time'});
 
     var plotSVG = chartSVG.append('g').attr('class', 'plot');
     var i = model.y.series.length;
 
     while (i--) {
-        plotSeries(plotSVG, model, create, model.y.series[i], i);
+        plotSeries(plotSVG, model, creator, model.y.series[i], i);
     }
 }
 

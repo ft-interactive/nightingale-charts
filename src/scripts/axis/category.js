@@ -25,11 +25,14 @@ function categoryAxis() {
         keepD3Style: true
     };
 
+    function isVertical(){
+        return ['right','left'].indexOf(config.axes[0].orient())>-1;
+    }
+
     function render(g) {
-
-        g = g.append('g').attr('transform', 'translate(' + config.xOffset + ',' + config.yOffset + ')');
-
-        g.append('g').attr('class', 'x axis').each(function () {
+        var orientOffset = (isVertical()) ? -config.axes[0].tickSize() : 0;
+        g = g.append('g').attr('transform', 'translate(' + (config.xOffset + orientOffset) + ',' + config.yOffset + ')');
+        g.append('g').attr('class', isVertical() ? 'y axis axis--independent' : 'x axis axis--independent').each(function () {
             var g = d3.select(this);
             labels.add(g, config);
         });
@@ -75,6 +78,12 @@ function categoryAxis() {
         return render;
     };
 
+    render.orient = function (string) {
+        if (!arguments.length) return config.axes[0].orient();
+        config.axes[0].orient(string);
+        return render;
+    };
+
     render.yOffset = function (int) {
         if (!arguments.length) return config.yOffset;
         config.yOffset = int;
@@ -107,6 +116,7 @@ function categoryAxis() {
             var unit = units[i];
             if (dates.formatGroups[unit]) {
                 var axis = d3.svg.axis()
+                    .orient(config.axes[0].orient())
                     .scale(scale)
                     .tickFormat(dates.formatGroups[unit])
                     .tickSize(config.tickSize, 0);

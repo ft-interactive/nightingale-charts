@@ -1,5 +1,3 @@
-require('../../helper').loadAssets('date-axes');
-
 var utils = require('../../../src/scripts/util/dates');
 var d3 = require('d3');
 

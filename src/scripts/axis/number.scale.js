@@ -13,11 +13,13 @@ module.exports = {
         return ticks;
     },
     tickIntervalBoundaries: function (ticks) {
-        var interval = 0;
+        var interval = 0, step;
         ticks.forEach(function (d, i) {
-            if (i < ticks.length - 1) {
-                interval = Math.max(ticks[i + 1] - d, interval);
-            }
+            if (i == ticks.length - 1)  return;
+            // there was an issue with float precission
+            // so we're ensuring the step is sound
+            step = +((ticks[i + 1] - d).toPrecision(12));
+            interval = Math.max(step, interval);
         });
         return interval;
     },
@@ -25,10 +27,13 @@ module.exports = {
         var count = this.tickCount(scale, pixelsPerTick);
         var ticks = scale.ticks(count);
         var interval = this.tickIntervalBoundaries(ticks);
-        scale.domain()[0] = Math.ceil(scale.domain()[0] / interval) * interval;
-        scale.domain()[1] = Math.floor(scale.domain()[1] / interval) * interval;
-        ticks.push(scale.domain()[1]);
-        ticks.push(scale.domain()[0]);
+        var pos = scale.domain()[0] > scale.domain()[1] ? 0 : 1;
+        var d1 = Math.ceil(scale.domain()[pos] / interval) * interval;
+        var d2 = Math.floor(scale.domain()[1-pos] / interval) * interval;
+        ticks[d1<=0 ? 'unshift' : 'push'](d1);
+        ticks[d2<=0 ? 'unshift' : 'push'](d2);
+        scale.domain()[pos] = d1;
+        scale.domain()[1-pos] = d2;
         return ticks;
     },
     simpleTicks: function (scale) {
@@ -60,7 +65,8 @@ module.exports = {
             customTicks = this.simpleTicks(scale);
         } else {
             customTicks = this.detailedTicks(scale, pixelsPerTick);
-            hardRules.push(scale.domain()[1]);
+            var pos = scale.domain()[0] > scale.domain()[1] ? 1 : 0;
+            hardRules.push(scale.domain()[pos]);
         }
         customTicks = this.removeDuplicateTicks(scale, customTicks);
         return customTicks;

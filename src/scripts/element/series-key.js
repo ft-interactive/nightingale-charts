@@ -14,7 +14,8 @@ function lineKey(options) {
 
     var charts = {
         'line' : addLineKeys,
-        'column' : addColumnKeys
+        'column' : addColumnKeys,
+        'bar' : addColumnKeys
     };
 
     var style = function (d) {

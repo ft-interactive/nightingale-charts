@@ -112,11 +112,11 @@ describe('column-chart.js', function(){
 
         it('can handle negative numbers', function(){
             var values = document.querySelectorAll('.width600 svg')[3].querySelectorAll('.y.axis text');
-            expect(values[0].textContent).toBe('-2');
-            expect(values[1].textContent).toBe('-1');
-            expect(values[2].textContent).toBe('0');
-            expect(values[3].textContent).toBe('1');
-            expect(values[4].textContent).toBe('-3');
+            expect(values[0].textContent).toBe('-3');
+            expect(values[1].textContent).toBe('-2');
+            expect(values[2].textContent).toBe('-1');
+            expect(values[3].textContent).toBe('0');
+            expect(values[4].textContent).toBe('1');
             expect(values[5].textContent).toBe('2');
         });
 

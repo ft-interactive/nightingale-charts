@@ -4,7 +4,7 @@ var dateUtils = oCharts.util.dates;
 var d3 = require('d3');
 
 var margin = {
-    top:.0, left:00, bottom:0, right:75
+    top:20, left:50, bottom:40, right:75
 };
 
 var fixtures = {
@@ -171,43 +171,28 @@ var nesting = {
 };
 
 function drawDemo(timeFrame){
-
-    var nestedFixture = (nesting[timeFrame]) ?
-        d3.nest()
-        .key(nesting[timeFrame])
-        .entries(fixtures[timeFrame]) :
-        fixtures[timeFrame];
-
-    var data = {
-        title: 'Grouped Date Series: ' + timeFrame,
-        x:{
-            series: xSeriesData[timeFrame] || {key:'date', label:'year'}
-        },
-        y: { series: ['value']},
-        data: nestedFixture,
-        dataType: ['categories','manyCategories'].indexOf(timeFrame)>-1 ? 'categorical' : 'time',
-        scale: d3.scale
-            .ordinal()
-            .rangeRoundBands([0, 400], 0, 0)
-            .domain(nestedFixture.map(function (d){return d.key;})),
-        units: units[timeFrame]
-    };
-
-    d3.select('#views')
-        .append('div').attr('id','column-chart__' + timeFrame)
-        .data([data])
-        .append('h2')
-        .text(function (d) {
-            return d.title
-        });
     d3.select('#column-chart__'  + timeFrame).append('svg')
         .attr('width', function (d) {
-            var r = d.scale.range();
-            return (r[r.length-1] - r[0]) + margin.left + margin.right;
+            var width = margin.left + margin.right;
+            if (d.orient =='bottom') {
+                var r = d.scale.range();
+                width += (r[r.length-1] - r[0]);
+            }
+            return width;
         })
+        .attr('height', function (d) {
+            var height = margin.top + margin.bottom;
+            if (d.orient == 'left') {
+                var r = d.scale.range();
+                height += r[0] + r[r.length-1];
+            }
+            return height
+        })
+
         .each(function (d, i) {
             var axis = oCharts.axis.category()
                 .dataType(d.dataType)
+                .orient(d.orient)
                 .scale(d.scale, d.units);
 
             d3.select(this)
@@ -222,7 +207,41 @@ module.exports = {
 
         var demos = ['months', 'many-months', 'quarters', 'many-quarters','years','many-years', 'categories', 'manyCategories'];
         demos.forEach(function(timeFrame){
+
+            var nestedFixture = (nesting[timeFrame]) ?
+                d3.nest()
+                    .key(nesting[timeFrame])
+                    .entries(fixtures[timeFrame]) :
+                fixtures[timeFrame];
+
+            var data = {
+                title: 'Grouped Date Series: ' + timeFrame,
+                x:{
+                    series: xSeriesData[timeFrame] || {key:'date', label:'year'}
+                },
+                y: { series: ['value']},
+                data: nestedFixture,
+                dataType: ['categories','manyCategories'].indexOf(timeFrame)>-1 ? 'categorical' : 'time',
+                scale: d3.scale
+                    .ordinal()
+                    .rangeRoundBands([0, 400], 0, 0)
+                    .domain(nestedFixture.map(function (d){return d.key;})),
+                units: units[timeFrame]
+            };
+
+            d3.select('#views')
+                .append('div').attr('id','column-chart__' + timeFrame)
+                .data([data])
+                .append('h2')
+                .text(function (d) {
+                    return d.title
+                });
+
+            data.orient = 'bottom';
             drawDemo(timeFrame);
+
+            //data.orient = 'left';
+            //drawDemo(timeFrame);
         });
 
     }
