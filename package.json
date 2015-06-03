@@ -1,0 +1,32 @@
+{
+  "version": "0.3.3",
+  "name": "o-charts",
+  "description": "FT style charts, axes, scales etc",
+  "private": true,
+  "main": "src/scripts/o-charts.js",
+  "scripts": {
+    "build": "component build",
+    "bump": "component bump",
+    "release": "npm test && component release",
+    "report": "component serve test/coverage/phantomjs/",
+    "start": "component build && component serve",
+    "tdd": "component test tdd",
+    "test": "jshint src && component build && component test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ft-interactive/o-charts.git"
+  },
+  "author": "tom pearson",
+  "license": "ISC",
+  "devDependencies": {
+    "browserify-istanbul": "^0.2.1",
+    "component-helper": "1.3.1-rc.1",
+    "jshint": "^2.6.3",
+    "karma-mocha-reporter": "^1.0.2"
+  },
+  "browser": {
+    "d3": "./bower_components/d3/d3.js"
+  },
+  "dependencies": {}
+}
