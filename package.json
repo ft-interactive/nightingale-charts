@@ -1,5 +1,5 @@
 {
-  "version": "0.3.3",
+  "version": "0.3.4",
   "name": "o-charts",
   "description": "FT style charts, axes, scales etc",
   "private": true,
@@ -8,7 +8,7 @@
     "build": "component build",
     "bump": "component bump",
     "release": "npm test && component release",
-    "report": "component serve test/coverage/phantomjs/",
+    "report": "component serve test/coverage/chrome/",
     "start": "component build && component serve",
     "tdd": "component test tdd",
     "test": "jshint src && component build && component test"
