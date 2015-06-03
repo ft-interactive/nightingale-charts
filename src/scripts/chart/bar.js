@@ -8,17 +8,17 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
 	var data = formatData(model, series);
     var plot = new axes.Plot(model, createdAxes);
     var s = plotSVG.append('g').attr('class', 'series');
+
     s.selectAll('rect')
         .data(data)
         .enter()
         .append('rect')
-        .attr('class', function (d){return 'column '  + series.className + (d.value < 0 ? ' negative' : ' positive');})
+        .attr('class', function (d){return 'bar '  + series.className + (d.value < 0 ? ' negative' : ' positive');})
         .attr('data-value', function (d){return d.value;})
-        .attr('x',      function (d, i){ return plot.x(d.key, seriesNumber); })
-        .attr('y',      function (d, i){ return plot.y(d.value, i); })
-        .attr('height', function (d, i){ return plot.columnHeight(d.value); })
-        .attr('width',  function (d, i){ return plot.columnWidth(d, i); });
-
+        .attr('x',      function (d, i){ return plot.x(d.value, i); })
+        .attr('y',      function (d, i){ return plot.y(d.key, seriesNumber); })
+        .attr('height', function (d, i){ return plot.barHeight(d, i); })
+        .attr('width',  function (d, i){ return plot.barWidth(d.value, i); });
 
     if (!model.stack) {
         // add N/As for null values
@@ -27,10 +27,14 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
             .enter()
             .append('text')
             .attr('class', 'null-label')
-            .attr('x',  function (d, i) { return plot.x(d.key, seriesNumber); })
-            .attr('y',  function (d, i) { return plot.y(d.value, i); })
-            .attr('dy', '-0.5em')
-            .attr('dx', function (d, i) { return plot.columnWidth(d, i) / 2;})
+            .attr('x',  function (d, i) { return plot.x(d.value, i); })
+            .attr('y',  function (d, i) {
+                var yPos = plot.y(d.key, seriesNumber);
+                var halfHeight = plot.barHeight(d, i) / 2;
+                return yPos + halfHeight;
+            })
+            .attr('dx', '1em')
+            .attr('dy', '0.31em')
             .text('n/a');
     }
 
@@ -41,7 +45,7 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
         s.selectAll('text.null-label')
             .each(function(d, i) {
                 var w = this.getBoundingClientRect();
-                if ((w.width + 2) >= plot.columnWidth(d, i)) {
+                if ((w.height + 2) >= plot.barHeight(d, i)) {
                     this.innerHTML = '–';
                 }
             });
@@ -51,7 +55,6 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
 function formatData(model, series) {
 
     var nulls = [];
-
     var data = model.data.map(function (d){
         return{
             key:d[model.x.series.key],
@@ -74,13 +77,13 @@ function formatData(model, series) {
     return data;
 }
 
-function columnChart(g){
+function barChart(g){
 	'use strict';
 
-	var model = new DataModel('column', Object.create(g.data()[0]));
+	var model = new DataModel('bar', Object.create(g.data()[0]));
 	var svg = g.append('svg')
 		.attr({
-			'class': 'graphic column-chart',
+			'class': 'graphic bar-chart',
 			height: model.height,
 			width: model.width,
 			xmlns: 'http://www.w3.org/2000/svg',
@@ -95,9 +98,9 @@ function columnChart(g){
 	var chartSVG = svg.append('g').attr('class', 'chart');
     chartSVG.attr('transform', model.translate(model.chartPosition));
 
+    model.tickSize = 0;
     var independent = (model.groupData || model.dataType === 'categorical') ? 'ordinal' : 'time';
-	var creator = new axes.Create(chartSVG, model);
-
+    var creator = new axes.Create(chartSVG, model);
     creator.createAxes({dependent:'number', independent: independent});
 
 	var plotSVG = chartSVG.append('g').attr('class', 'plot');
@@ -108,4 +111,4 @@ function columnChart(g){
 	}
 }
 
-module.exports = columnChart;
+module.exports = barChart;

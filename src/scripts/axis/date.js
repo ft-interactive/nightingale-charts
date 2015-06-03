@@ -27,7 +27,7 @@ function dateAxis() {
 
         g = g.append('g').attr('transform', 'translate(' + config.xOffset + ',' + config.yOffset + ')');
 
-        g.append('g').attr('class', 'x axis').each(function () {
+        g.append('g').attr('class', 'x axis axis--independent').each(function () {
             labels.add(d3.select(this), config);
         });
 
@@ -63,6 +63,12 @@ function dateAxis() {
     render.lineHeight = function (int) {
         if (!arguments.length) return config.lineHeight;
         config.lineHeight = int;
+        return render;
+    };
+
+    render.orient = function (string) {
+        if (!arguments.length) return config.axes[0].orient();
+        config.axes[0].orient(string);
         return render;
     };
 

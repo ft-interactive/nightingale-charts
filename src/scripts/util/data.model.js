@@ -50,11 +50,14 @@ function setExtents(model){
 	return extents;
 }
 
-function timeDomain(model, chartType) {
-    if (model.timeDomain) { return model.timeDomain;  }
+function independentDomain(model, chartType) {
+    if (model.independentDomain) { return model.independentDomain;  }
 
-    if ((model.groupData || model.dataType === 'categorical') && chartType === 'column'){
-        model.data = (model.groupData && model.dataType !=='categorical') ? groupDates(model, model.units) : model.data;
+    var isCategorical = model.dataType === 'categorical';
+    var isBarOrColumn = ['column', 'bar'].indexOf(chartType) >= 0;
+
+    if ((model.groupData || isCategorical) && isBarOrColumn){
+        model.data = (model.groupData && !isCategorical) ? groupDates(model, model.units) : model.data;
         return model.data.map(function (d) {
             return d[model.x.series.key];
         });
@@ -80,8 +83,8 @@ function sumStackedValues(model){
     return extents;
 }
 
-function valueDomain(model){
-    if(model.valueDomain){ return model.valueDomain; }
+function dependentDomain(model){
+    if(model.dependentDomain){ return model.dependentDomain; }
 
     var extents = (model.stack) ? sumStackedValues(model) : setExtents(model);
     var domain = d3.extent(extents);
@@ -167,7 +170,8 @@ function needsGrouping(units){
 function Model(chartType, opts) {
     var classes = {
         line: ['line--series1', 'line--series2', 'line--series3', 'line--series4', 'line--series5', 'line--series6', 'line--series7', 'accent'],
-        column: ['column--series1', 'column--series2', 'column--series3', 'column--series4', 'column--series5', 'column--series6', 'column--series7', 'accent']
+        column: ['column--series1', 'column--series2', 'column--series3', 'column--series4', 'column--series5', 'column--series6', 'column--series7', 'accent'],
+        bar: ['bar--series1', 'bar--series2', 'bar--series3', 'bar--series4', 'bar--series5', 'bar--series6', 'bar--series7', 'accent']
     };
     var m = {
         //layout stuff
@@ -188,9 +192,12 @@ function Model(chartType, opts) {
         niceValue: true,
         hideSource: false,
         stack: false,
-        numberAxisOrient: 'left',
+        dependentAxisOrient: 'left',
+        independentAxisOrient: 'bottom',
         margin: 2,
         lineThickness: undefined,
+        yLabelWidth: 0,
+        xLabelHeight: 0,
         x: {
             series: '&'
         },
@@ -222,8 +229,8 @@ function Model(chartType, opts) {
 	m.translate = translate(0);
 	m.data = verifyData(m);
     m.groupData = needsGrouping(m.units);
-    m.timeDomain = timeDomain(m, chartType);
-	m.valueDomain = valueDomain(m);
+    m.independentDomain = independentDomain(m, chartType);
+	m.dependentDomain = dependentDomain(m);
 	m.lineStrokeWidth = lineThickness(m.lineThickness);
 	m.key = setKey(m);
 

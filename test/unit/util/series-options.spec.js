@@ -1,9 +1,5 @@
-require('../../helper').loadAssets('line-chart');
-
 var series = require('../../../src/scripts/util/series-options');
 var d3 = require('d3');
-
-
 
 describe('line chart normalises given options', function () {
 
