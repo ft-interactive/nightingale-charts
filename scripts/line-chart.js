@@ -22,7 +22,7 @@ function categoryAxis() {
         xOffset: 0,
         labelWidth: 0,
         showDomain: false,
-        categorical: false,
+        dataType: 'categorical',
         keepD3Style: true
     };
 
@@ -46,9 +46,9 @@ function categoryAxis() {
         return render;
     };
 
-    render.categorical = function (bool) {
-        if (!arguments.length) return config.categorical;
-        config.categorical = bool;
+    render.dataType = function (dataType) {
+        if (!arguments.length) return config.dataType;
+        config.dataType = dataType;
         return render;
     };
 
@@ -97,7 +97,7 @@ function categoryAxis() {
     render.scale = function (scale, units) {
         if (!arguments.length) return config.axes[0].scale();
         units = units || ['unknown'];
-        if (config.categorical){
+        if (config.dataType === 'categorical'){
             units = ['categorical'];
         }
         config.scale = scale;
@@ -205,7 +205,7 @@ Create.prototype.independentScale = function (scale) {
     var model = this.model;
     if(scale == 'ordinal'){
         this.timeScale = ordinalScale(model, this);
-        this.timeAxis = axis.category().categorical(model.categorical);
+        this.timeAxis = axis.category().dataType(model.dataType);
     } else {
         this.timeScale = timeScale(model);
         this.timeAxis = axis.date();
@@ -877,7 +877,7 @@ function columnChart(g){
 
 	var create = new axes.Create(chartSVG, model);
     create.dependentScale('number');
-    create.independentScale((model.groupData || model.categorical) ? 'ordinal' : 'time');
+    create.independentScale((model.groupData || model.dataType === 'categorical') ? 'ordinal' : 'time');
 
 	var plotSVG = chartSVG.append('g').attr('class', 'plot');
     var i = 0;
@@ -1673,8 +1673,8 @@ function setExtents(model){
 function timeDomain(model, chartType) {
     if (model.timeDomain) { return model.timeDomain;  }
 
-    if ((model.groupData || model.categorical) && chartType === 'column'){
-        model.data = (model.groupData && !model.categorical) ? groupDates(model, model.units) : model.data;
+    if ((model.groupData || model.dataType === 'categorical') && chartType === 'column'){
+        model.data = (model.groupData && model.dataType !=='categorical') ? groupDates(model, model.units) : model.data;
         return model.data.map(function (d) {
             return d[model.x.series.key];
         });
@@ -1739,8 +1739,6 @@ function verifyData(model) {
             error.message = 'X axis value is empty or null';
         } else if (!isDate(s) && model.chartType == 'line') {
             error.message = 'Value is not a valid date';
-        } else if (!isDate(s)) {
-            model.categorical = true;
         }
 
         if (error.message) {
@@ -2236,7 +2234,7 @@ module.exports = {
         // collision detection is done correctly
         styler(g, config.keepD3Style);
 
-        if (config.categorical) {
+        if (config.dataType === 'categorical') {
             return;
         }
 
@@ -2518,7 +2516,7 @@ module.exports = {
 };
 
 },{}],29:[function(require,module,exports){
-module.exports = "0.3.2";
+module.exports = "0.3.3";
 },{}],"line-chart":[function(require,module,exports){
 var oCharts = require('../../src/scripts/o-charts');
 var d3 = require('d3');
