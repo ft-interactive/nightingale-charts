@@ -24,7 +24,7 @@ module.exports = function(config) {
             'src/**/*.csv',
             'src/**/*.hbs'
         ],
-        browserNoActivityTimeout: 20000
+        browserNoActivityTimeout: 30000
     };
     var pkg = require('../package.json');
     karmaConfig.browser = pkg.browser || {};
