@@ -12,12 +12,6 @@
   fill: rgba(0, 0, 0, 0.5);
   stroke: none; }
 
-.y.axis .domain {
-  stroke: none; }
-
-.secondary .domain, .secondary .tick {
-  stroke: none; }
-
 .primary .tick text {
   font-size: 12px; }
 

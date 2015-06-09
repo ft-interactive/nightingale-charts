@@ -134,7 +134,7 @@ function categoryAxis() {
 
 module.exports = categoryAxis;
 
-},{"../util/chart-attribute-styles":20,"../util/dates.js":22,"../util/labels.js":24,"d3":"d3"}],2:[function(require,module,exports){
+},{"../util/chart-attribute-styles":21,"../util/dates.js":23,"../util/labels.js":25,"d3":"d3"}],2:[function(require,module,exports){
 var d3 = require('d3');
 var axis = {
     category: require('./category.js'),
@@ -424,7 +424,7 @@ function dateAxis() {
 
 module.exports = dateAxis;
 
-},{"../util/dates.js":22,"../util/labels.js":24,"./date.scale.js":4,"d3":"d3"}],4:[function(require,module,exports){
+},{"../util/dates.js":23,"../util/labels.js":25,"./date.scale.js":4,"d3":"d3"}],4:[function(require,module,exports){
 var d3 = require('d3');
 var utils = require('../util/dates.js');
 
@@ -499,7 +499,7 @@ module.exports = {
     }
 };
 
-},{"../util/dates.js":22,"d3":"d3"}],5:[function(require,module,exports){
+},{"../util/dates.js":23,"d3":"d3"}],5:[function(require,module,exports){
 module.exports = {
     Create: require('./create.js'),
     Plot: require('./plot.js'),
@@ -631,7 +631,7 @@ function numericAxis() {
 
 module.exports = numericAxis;
 
-},{"../util/chart-attribute-styles":20,"./number.labels":7,"./number.scale":8,"d3":"d3"}],7:[function(require,module,exports){
+},{"../util/chart-attribute-styles":21,"./number.labels":7,"./number.scale":8,"d3":"d3"}],7:[function(require,module,exports){
 module.exports = {
 
     isVertical: function (axis) {
@@ -990,7 +990,7 @@ function barChart(g){
 
 module.exports = barChart;
 
-},{"../axis":5,"../util/chart-attribute-styles":20,"../util/data.model.js":21,"../util/dressing.js":23,"../util/metadata.js":27}],11:[function(require,module,exports){
+},{"../axis":5,"../util/chart-attribute-styles":21,"../util/data.model.js":22,"../util/dressing.js":24,"../util/metadata.js":28}],11:[function(require,module,exports){
 //var d3 = require('d3');
 
 function blankChart() {
@@ -1175,7 +1175,7 @@ function columnChart(g){
 
 module.exports = columnChart;
 
-},{"../axis":5,"../util/chart-attribute-styles":20,"../util/data.model.js":21,"../util/dressing.js":23,"../util/metadata.js":27}],13:[function(require,module,exports){
+},{"../axis":5,"../util/chart-attribute-styles":21,"../util/data.model.js":22,"../util/dressing.js":24,"../util/metadata.js":28}],13:[function(require,module,exports){
 module.exports = {
     line: require('./line.js'),
     blank: require('./blank.js'),
@@ -1257,7 +1257,7 @@ function lineChart(g) {
 
 module.exports = lineChart;
 
-},{"../axis":5,"../util/chart-attribute-styles":20,"../util/data.model.js":21,"../util/dressing.js":23,"../util/line-interpolators.js":25,"../util/metadata.js":27,"d3":"d3"}],15:[function(require,module,exports){
+},{"../axis":5,"../util/chart-attribute-styles":21,"../util/data.model.js":22,"../util/dressing.js":24,"../util/line-interpolators.js":26,"../util/metadata.js":28,"d3":"d3"}],15:[function(require,module,exports){
 //var d3 = require('d3');
 
 function pieChart() {
@@ -1485,7 +1485,7 @@ function lineKey(options) {
 
 module.exports = lineKey;
 
-},{"../util/chart-attribute-styles":20,"../util/line-thickness.js":26}],18:[function(require,module,exports){
+},{"../util/chart-attribute-styles":21,"../util/line-thickness.js":27}],18:[function(require,module,exports){
 /*jshint -W084 */
 //text area provides a wrapping text block of a given type
 var d3 = require('d3');
@@ -1586,6 +1586,26 @@ function textArea() {
 module.exports = textArea;
 
 },{"d3":"d3"}],19:[function(require,module,exports){
+module.exports = {
+    chart: require('./chart/index.js'),
+
+    axis: require('./axis/index.js'),
+
+    element: {
+        seriesKey: require('./element/series-key.js'),
+        textArea: require('./element/text-area.js')
+    },
+
+    util: {
+        attributeStyler: require('./util/chart-attribute-styles.js'),
+        dates: require('./util/dates.js')
+    },
+
+    version: require('./util/version')
+
+};
+
+},{"./axis/index.js":5,"./chart/index.js":13,"./element/series-key.js":17,"./element/text-area.js":18,"./util/chart-attribute-styles.js":21,"./util/dates.js":23,"./util/version":30}],20:[function(require,module,exports){
 // More info:
 // http://en.wikipedia.org/wiki/Aspect_ratio_%28image%29
 
@@ -1656,7 +1676,7 @@ module.exports = {
     }
 };
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 // because of the need to export and convert browser rendered SVGs
 // we need a simple way to attach styles as attributes if necessary,
 // so, heres a list of attributes and the selectors to which they should be applied
@@ -1892,7 +1912,7 @@ function applyAttributes(g, keepD3Styles) {
 
 module.exports = applyAttributes;
 
-},{"d3":"d3"}],21:[function(require,module,exports){
+},{"d3":"d3"}],22:[function(require,module,exports){
 var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
 var ratios = require('../util/aspect-ratios.js');
@@ -2137,7 +2157,7 @@ Model.prototype.error = function (err) {
 };
 module.exports = Model;
 
-},{"../util/aspect-ratios.js":19,"../util/dates.js":22,"../util/line-thickness.js":26,"../util/series-options.js":28,"d3":"d3"}],22:[function(require,module,exports){
+},{"../util/aspect-ratios.js":20,"../util/dates.js":23,"../util/line-thickness.js":27,"../util/series-options.js":29,"d3":"d3"}],23:[function(require,module,exports){
 var d3 = require('d3');
 
 var formatter = {
@@ -2276,7 +2296,7 @@ module.exports = {
     unitGenerator: unitGenerator
 };
 
-},{"d3":"d3"}],23:[function(require,module,exports){
+},{"d3":"d3"}],24:[function(require,module,exports){
 var textArea = require('../element/text-area.js');
 var seriesKey = require('../element/series-key.js');
 var ftLogo = require('../element/logo.js');
@@ -2462,7 +2482,7 @@ Dressing.prototype.setPosition = function () {
 
 module.exports = Dressing;
 
-},{"../element/logo.js":16,"../element/series-key.js":17,"../element/text-area.js":18}],24:[function(require,module,exports){
+},{"../element/logo.js":16,"../element/series-key.js":17,"../element/text-area.js":18}],25:[function(require,module,exports){
 var d3 = require('d3');
 var dates = require('../util/dates');
 var styler = require('./chart-attribute-styles');
@@ -2638,7 +2658,7 @@ module.exports = {
     }
 };
 
-},{"../util/dates":22,"./chart-attribute-styles":20,"d3":"d3"}],25:[function(require,module,exports){
+},{"../util/dates":23,"./chart-attribute-styles":21,"d3":"d3"}],26:[function(require,module,exports){
 //a place to define custom line interpolators
 
 var d3 = require('d3');
@@ -2672,7 +2692,7 @@ module.exports = {
     gappedLine: gappedLineInterpolator
 };
 
-},{"d3":"d3"}],26:[function(require,module,exports){
+},{"d3":"d3"}],27:[function(require,module,exports){
 var thicknesses = {
     small: 2,
     medium: 4,
@@ -2700,7 +2720,7 @@ module.exports = function (value) {
     }
 };
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 //example:
 //http://codinginparadise.org/projects/svgweb-staging/tests/htmlObjectHarness/basic-metadata-example-01-b.html
 var svgSchema = 'http://www.w3.org/2000/svg';
@@ -2751,7 +2771,7 @@ module.exports = {
     create: create
 };
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 function isTruthy(value) {
     return !!value;
 }
@@ -2797,26 +2817,281 @@ module.exports = {
     normalise: normalise
 };
 
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 module.exports = "0.4.0";
-},{}],"o-charts":[function(require,module,exports){
-module.exports = {
-    chart: require('./chart/index.js'),
+},{}],"bar-chart":[function(require,module,exports){
+var oCharts = require('../../src/scripts/o-charts');
+var d3 = require('d3');
 
-    axis: require('./axis/index.js'),
+var hideSource = [true, true, false];
+var dependentAxisOrient = ['left', 'right', 'left'];
 
-    element: {
-        seriesKey: require('./element/series-key.js'),
-        textArea: require('./element/text-area.js')
-    },
-
-    util: {
-        attributeStyler: require('./util/chart-attribute-styles.js'),
-        dates: require('./util/dates.js')
-    },
-
-    version: require('./util/version')
-
+var fixtures = {
+    quarters : [
+        { date: new Date('3/31/05'), value:      0.583},
+        { date: new Date('6/30/05'), value: 1.027},
+        { date: new Date('9/30/05'), value: 1.03},
+        { date: new Date('12/30/05'), value:     1.348}
+    ],
+    quartersWithNegative : [
+        { date: new Date('3/31/05'), value:      0.583},
+        { date: new Date('6/30/05'), value: -1.027},
+        { date: new Date('9/30/05'), value: 1.03},
+        { date: new Date('12/30/05'), value:     1.348}
+    ],
+    quartersWithZero : [
+        { date: new Date('3/31/05'), value:      0.583},
+        { date: new Date('6/30/05'), value: 0},
+        { date: new Date('9/30/05'), value: 1.03},
+        { date: new Date('12/30/05'), value:     1.348}
+    ],
+    years : [
+        { date: new Date('6/30/05'), value: 1.027},
+        { date: new Date('9/30/05'), value: 1.03},
+        { date: new Date('12/30/05'), value:     1.348},
+        { date: new Date('3/31/06'), value:      0.583},
+        { date: new Date('6/30/06'), value:      0.501},
+        { date: new Date('9/29/06'), value:      0.175},
+        { date: new Date('12/29/06'), value:     0.753},
+        { date: new Date('3/30/07'), value:      0.763},
+        { date: new Date('6/29/07'), value:      0.601},
+        { date: new Date('9/28/07'), value:      0.843},
+        { date: new Date('12/31/07'), value:     0.468},
+        { date: new Date('3/31/08'), value:      0.313},
+        { date: new Date('6/30/08'), value:      0.231},
+        { date: new Date('9/30/08'), value:      1.664},
+        { date: new Date('12/31/08'), value:     2.229},
+        { date: new Date('3/31/09'), value:      1.79},
+        { date: new Date('6/30/09'), value:      0.261},
+        { date: new Date('9/30/09'), value:      0.2}
+    ],
+    yearsWithNegative : [//remove q labels keep ticks + remove duplicate year labels + extend q1 tick. year label is primary
+        { date: new Date('6/30/05'), value: 1.027},
+        { date: new Date('9/30/05'), value: 1.03},
+        { date: new Date('12/30/05'), value:     1.348},
+        { date: new Date('3/31/06'), value:      0.583},
+        { date: new Date('6/30/06'), value:      0.501},
+        { date: new Date('9/29/06'), value:      0.175},
+        { date: new Date('12/29/06'), value:     0.753},
+        { date: new Date('3/30/07'), value:      0.763},
+        { date: new Date('6/29/07'), value:      0.601},
+        { date: new Date('9/28/07'), value:      0.843},
+        { date: new Date('12/31/07'), value:     0.468},
+        { date: new Date('3/31/08'), value:      0.313},
+        { date: new Date('6/30/08'), value:      -0.231},
+        { date: new Date('9/30/08'), value:      -1.664},
+        { date: new Date('12/31/08'), value:     -2.229},
+        { date: new Date('3/31/09'), value:      -1.79},
+        { date: new Date('6/30/09'), value:      -0.261},
+        { date: new Date('9/30/09'), value:      0.2}
+    ],
+    decade : [//get rid of Qs + show yearly ticks (decade rule)
+        { date: new Date('6/30/05'), value: 1.027},
+        { date: new Date('9/30/05'), value: 1.03},
+        { date: new Date('12/30/05'), value:     1.348},
+        { date: new Date('3/31/06'), value:      0.583},
+        { date: new Date('6/30/06'), value:      0.501},
+        { date: new Date('9/29/06'), value:      0.175},
+        { date: new Date('12/29/06'), value:     0.753},
+        { date: new Date('3/30/07'), value:      0.763},
+        { date: new Date('6/29/07'), value:      0.601},
+        { date: new Date('9/28/07'), value:      0.843},
+        { date: new Date('12/31/07'), value:     0.468},
+        { date: new Date('3/31/08'), value:      0.313},
+        { date: new Date('6/30/08'), value:      -0.231},
+        { date: new Date('9/30/08'), value:      -1.664},
+        { date: new Date('12/31/08'), value:     -2.229},
+        { date: new Date('3/31/09'), value:      -1.79},
+        { date: new Date('6/30/09'), value:      -0.261},
+        { date: new Date('9/30/09'), value:      0.2},
+        { date: new Date('12/31/09'), value:     0.389},
+        { date: new Date('3/31/10'), value:      0.509},
+        { date: new Date('6/30/10'), value:      0.977},
+        { date: new Date('9/30/10'), value:      0.647},
+        { date: new Date('12/31/10'), value:     0.025},
+        { date: new Date('3/31/11'), value:      0.536},
+        { date: new Date('6/30/11'), value:      0.228},
+        { date: new Date('9/30/11'), value:      0.696},
+        { date: new Date('12/30/11'), value:     -0.015},
+        { date: new Date('3/30/12'), value:      0.068},
+        { date: new Date('6/29/12'), value:      -0.178},
+        { date: new Date('9/28/12'), value:      0.833},
+        { date: new Date('12/31/12'), value:     -0.338},
+        { date: new Date('3/29/13'), value:      0.596},
+        { date: new Date('6/28/13'), value:      0.643},
+        { date: new Date('9/30/13'), value:      0.717},
+        { date: new Date('12/31/13'), value:     0.406},
+        { date: new Date('3/31/14'), value:      0.882},
+        { date: new Date('6/30/14'), value:      0.833},
+        { date: new Date('9/30/14'), value:      0.619},
+        { date: new Date('12/31/14'), value:     0.607},
+        { date: new Date('3/31/15'), value:      0.882},
+        { date: new Date('6/30/15'), value:      0.833},
+        { date: new Date('9/30/15'), value:      0.619},
+        { date: new Date('12/31/15'), value:     0.607}
+    ],
+    month : [
+        { date: new Date('3/31/05'), value:      0.583},
+        { date: new Date('6/30/05'), value: 1.027},
+        { date: new Date('9/30/05'), value: 1.03},
+        { date: new Date('12/30/05'), value:     1.348}
+    ],
+    multiple:[
+        {date: new Date('3/31/05'), value: Math.floor(Math.random() * 40) + 10, value2: 99, value3: 26},
+        {date: new Date('6/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 10, value3: 21},
+        {date: new Date('9/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 70, value3: 13},
+        {date: new Date('12/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 10, value3: 99}
+    ],
+    time: [
+        {date: new Date('3/31/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
+        {date: new Date('6/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
+        {date: new Date('9/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
+        {date: new Date('12/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66}
+    ],
+    stack:[
+        {myDateColumn: new Date('3/31/05'), value: 50, value2: 99, value3: 26, value4: 40, value5: 15},
+        {myDateColumn: new Date('6/30/05'), value: 25, value2: 10, value3: 21, value4: 36, value5: 22},
+        {myDateColumn: new Date('9/30/05'), value: 75, value2: 70, value3: 13, value4: 12, value5: 110},
+        {myDateColumn: new Date('12/30/05'), value: 125, value2: 10, value3: 29, value4: 31, value5: 40},
+        {myDateColumn: new Date('5/30/06'), value: 133, value2: 25, value3: 72, value4: 105, value5: 200}
+    ],
+    stackMonthly:[
+        {myDateColumn: new Date('1/28/05'), value: 50, value2: 99, value3: 26, value4: 40, value5: 15},
+        {myDateColumn: new Date('2/28/05'), value: 25, value2: 10, value3: 21, value4: 36, value5: 22},
+        {myDateColumn: new Date('3/28/05'), value: 75, value2: 70, value3: 13, value4: 12, value5: 110},
+        {myDateColumn: new Date('4/28/05'), value: 125, value2: 10, value3: 29, value4: 31, value5: 40},
+        {myDateColumn: new Date('5/28/05'), value: 133, value2: 25, value3: 72, value4: 105, value5: 200},
+        {myDateColumn: new Date('6/28/05'), value: 133, value2: 25, value3: 72, value4: 105, value5: 200},
+        {myDateColumn: new Date('7/28/05'), value: 133, value2: 25, value3: 2, value4: 105, value5: 00},
+        {myDateColumn: new Date('8/28/05'), value: 133, value2: 2, value3: 72, value4: 105, value5: 20},
+        {myDateColumn: new Date('9/28/05'), value: 133, value2: 25, value3: 72, value4: 105, value5: 20},
+        {myDateColumn: new Date('10/28/05'), value: 13, value2: 5, value3: 7, value4: 15, value5: 20},
+        {myDateColumn: new Date('11/28/05'), value: 133, value2: 25, value3: 72, value4: 105, value5: 20},
+        {myDateColumn: new Date('12/28/05'), value: 13, value2: 25, value3: 2, value4: 105, value5: 20},
+        {myDateColumn: new Date('1/28/06'), value: 33, value2: 25, value3: 72, value4: 105, value5: 2},
+        {myDateColumn: new Date('2/28/06'), value: 10, value2: 5, value3: 35, value4: 43, value5: 78}
+    ],
+    multipleWithNegatives:[
+        {date: new Date('3/31/05'), value: Math.floor(Math.random() * 40) + 10, value2: -99, value3: 26},
+        {date: new Date('6/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: null, value3: 21},
+        {date: new Date('9/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 70, value3: -13},
+        {date: new Date('12/30/05'), value: Math.floor(Math.random() * -40) + 10, value2: 10, value3: 99}
+    ],
+    stackWithAllNegatives:[
+        {myDateColumn: new Date('3/31/05'), value: -50, value2: -99, value3: -26, value4: -40, value5: -15},
+        {myDateColumn: new Date('6/30/05'), value: 50, value2: 99, value3: 26, value4: 40, value5: 15},
+        {myDateColumn: new Date('9/30/05'), value: -75, value2: -70, value3: -13, value4: -12, value5: -110},
+        {myDateColumn: new Date('12/30/05'), value: 75, value2: 70, value3: 13, value4: 12, value5: 110}
+    ],
+    categories : [
+        { key: 'red', value:      0.583, value2:      1.583},
+        { key: 'blue', value: 0.12, value2:  2},
+        { key: 'green machine', value: 1.03, value2:  1.4},
+        { key: 'purple', value:     1.348, value2:  1.9}
+    ],
+    categoriesStack : [
+        { key: 'red', value:      0.583, value2:      1.583},
+        { key: 'blue', value: 1.027, value2:  2},
+        { key: 'green', value: 1.03, value2:  1.4},
+        { key: 'purple', value:     1.348, value2:  1.9},
+        { key: 'pink', value:     -1.048, value2:  -2}
+    ],
+    dateCategories : [
+        { key: new Date(2011,10,25), value:      0.583, value2:      1.583},
+        { key: new Date(2011,10,26), value: 1.027, value2:  2},
+        { key: new Date(2011,10,27), value: 1.03, value2:  1.4},
+        { key: new Date(2011,10,28), value:     1.348, value2:  1.9},
+        { key: new Date(2011,10,29), value:     -1.048, value2:  -2}
+    ],
+    quarterCategories : [
+        { key: '2005 Q1', value:      0.583, value2:      1.583},
+        { key: '2005 Q2', value: 1.027, value2:  2},
+        { key: '2005 Q3', value: 1.03, value2:  1.4},
+        { key: '2005 Q4', value:     1.348, value2:  1.9},
+        { key: '2006 Q1', value:     -1.048, value2:  -2}
+    ]
 };
 
-},{"./axis/index.js":5,"./chart/index.js":13,"./element/series-key.js":17,"./element/text-area.js":18,"./util/chart-attribute-styles.js":20,"./util/dates.js":22,"./util/version":29}]},{},["o-charts"]);
+
+var units = {
+    quarters: ['quarterly', 'yearly'],
+    quartersWithNegative: ['quarterly', 'yearly'],
+    years: ['quarterly', 'yearly'],
+    yearsWithNegative: ['quarterly', 'yearly'],
+    decade: ['quarterly', 'yearly'],
+    multiple: ['quarterly', 'yearly'],
+    month: ['monthly', 'yearly'],
+    time : false,
+    stack: ['quarterly', 'yearly'],
+    stackMonthly: ['monthly', 'yearly'],
+    multipleWithNegatives: ['quarterly', 'yearly'],
+    stackWithAllNegatives: ['quarterly', 'yearly']
+};
+var ySeriesData = {
+    categories: ['value', 'value2'],
+    categoriesStack: ['value', 'value2'],
+    dateCategories: ['value', 'value2'],
+    quarterCategories: ['value', 'value2'],
+    multiple: ['value', 'value2', 'value3'],
+    multipleWithNegatives: ['value', 'value2', 'value3'],
+    stack: ['value', 'value2', 'value3', 'value4', 'value5'],
+    stackWithNegatives: ['value', 'value2', 'value3', 'value4', 'value5'],
+    stackWithAllNegatives: ['value', 'value2', 'value3', 'value4', 'value5'],
+    stackMonthly: ['value', 'value2', 'value3', 'value4', 'value5']
+};
+var xSeriesData = {
+    categories: {key:'key', label:'Colours'},
+    categoriesStack: {key:'key', label:'Colours'},
+    dateCategories: {key:'key', label:'Colours'},
+    quarterCategories: {key:'key', label:'Colours'},
+    stack: {key:'myDateColumn', label:'yearly'},
+    stackMonthly: {key:'myDateColumn', label:'yearly'},
+    stackWithAllNegatives: {key:'myDateColumn', label:'yearly'}
+};
+function getChartData(timeFrame){
+    var ySeries = ySeriesData[timeFrame] || ['value'];
+    var xSeries = xSeriesData[timeFrame] ||  {key:'date', label:'yearly'};
+    return {
+        comment: 'Bar chart',
+        footnote: 'this is just for testing!',
+        source: 'tbc',
+        title: 'Bars: ' + timeFrame,
+        subtitle: 'Drawn for you',
+        dependentAxisOrient: ['categoriesStack'].indexOf(timeFrame)>-1 ? 'top' : 'bottom', //todo: refactor onto y object
+        independentAxisOrient: 'left', //todo: refactor onto y object
+        hideSource: false,
+        x: { series: xSeries },
+        y: { series: ySeries },
+        units: units[timeFrame],
+        data: fixtures[timeFrame],
+        stack: ['stack','stackMonthly', 'stackWithAllNegatives', 'categoriesStack'].indexOf(timeFrame)>-1,
+        dataType: ['categories','categoriesStack','dateCategories', 'quarterCategories'].indexOf(timeFrame)>-1 ? 'categorical' : 'time'
+    };
+}
+
+var widths = [600, 300];
+
+module.exports = {
+    getChartData: getChartData,
+    init: function(){
+        var demos = ['categories', 'multipleWithNegatives', 'categoriesStack'];
+        demos.forEach(function(timeFrame, i){
+            var textContent = '';
+            if (i===7){
+                textContent = 'NOTE: This chart highlights how columns should rarely be used for time-data. This example should check that charts of this form render but not that they should look good.'
+            }
+            d3.select('#views').append('p').text(textContent).append('div').attr({
+                'id':'bar-chart__' + timeFrame
+            });
+            widths.forEach(function (width){
+                var data = getChartData(timeFrame);
+                data.width = width;
+                d3.select('#bar-chart__' + timeFrame).append('span')
+                    .attr('class', 'width' + width)
+                    .data([data]).call(oCharts.chart.bar);
+            });
+        });
+    }
+};
+
+},{"../../src/scripts/o-charts":19,"d3":"d3"}]},{},["bar-chart"]);
