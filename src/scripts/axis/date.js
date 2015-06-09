@@ -93,6 +93,8 @@ function dateAxis() {
     render.scale = function (scale, units) {
         if (!arguments.length) return config.axes[0].scale();
         if (!units ||
+            (units[0] === 'daily' && timeDiff(scale.domain()).months > 1) ||
+            (units[0] === 'weekly' && timeDiff(scale.domain()).years > 1) ||
             (units[0] === 'quarterly' && timeDiff(scale.domain()).decades > 1) ||
             (units[0] === 'monthly' && timeDiff(scale.domain()).years > 4.9) ||
             (units[0] === 'yearly' && timeDiff(scale.domain()).years > 10)){

@@ -216,6 +216,28 @@ var fixtures = {
         {myDateColumn: new Date('12/30/05'), value: null, value2: 10, value3: 29, value4: 31, value5: 40},
         {myDateColumn: new Date('5/30/06'), value: 133, value2: 25, value3: 72, value4: 105, value5: 200}
     ],
+    weekly : [
+        { date: new Date('5/07/2014'), value:      0.368069},
+        { date: new Date('5/14/2014'), value: 0.472146},
+        { date: new Date('5/21/2014'), value: 0.743529},
+        { date: new Date('5/28/2014'), value:     0.600043},
+        { date: new Date('6/04/2014'), value:     0.301624},
+        { date: new Date('6/11/2014'), value:     0.277067},
+        { date: new Date('6/18/2014'), value:     -0.239283},
+        { date: new Date('6/25/2014'), value:     0.619157},
+        { date: new Date('7/02/2014'), value:     0.090189}
+    ],
+    daily : [
+        { date: new Date('5/07/2014'), value:      0.368069},
+        { date: new Date('5/08/2014'), value: 0.472146},
+        { date: new Date('5/09/2014'), value: 0.743529},
+        { date: new Date('5/10/2014'), value:     0.600043},
+        { date: new Date('5/11/2014'), value:     0.301624},
+        { date: new Date('5/12/2014'), value:     0.277067},
+        { date: new Date('5/13/2014'), value:     -0.239283},
+        { date: new Date('5/14/2014'), value:     0.619157},
+        { date: new Date('5/15/2014'), value:     0.090189}
+    ]
 };
 
 var units = {
@@ -233,9 +255,13 @@ var units = {
     stackWithAllNegatives: ['quarterly', 'yearly'],
     nullValues: ['quarterly', 'yearly'],
     nullMultiple: ['quarterly', 'yearly'],
-    nullStack: ['quarterly', 'yearly']
+    nullStack: ['quarterly', 'yearly'],
+    weekly: ['weekly', 'monthly', 'yearly'],
+    daily: ['daily', 'monthly', 'yearly']
 };
 var ySeriesData = {
+    weekly: ['value'],
+    daily: ['value'],
     categories: ['value', 'value2'],
     categoriesStack: ['value', 'value2'],
     dateCategories: ['value', 'value2'],
@@ -278,6 +304,7 @@ function getChartData(timeFrame){
         dataType: ['categories','categoriesStack','dateCategories', 'quarterCategories'].indexOf(timeFrame)>-1 ? 'categorical' : 'time'
     };
 }
+
 var widths = [600, 300];
 
 module.exports = {
@@ -287,7 +314,8 @@ module.exports = {
             'quarters','quartersWithNegative','years','yearsWithNegative','decade', 'month',
             'multiple', 'time', 'stack', 'stackMonthly', 'multipleWithNegatives', 'stackWithAllNegatives',
             'categories', 'categoriesStack', 'dateCategories', 'quarterCategories',
-            'nullMultiple', 'nullValues', 'nullStack'];
+            'nullMultiple', 'nullValues', 'nullStack',
+            'weekly', 'daily'];
         demos.forEach(function(timeFrame, i){
             var textContent = '';
             if (i===7){

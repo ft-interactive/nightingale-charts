@@ -150,6 +150,7 @@ function groupDates(m, units){
     m.data.forEach(function(d,i){
         var dateStr = [dateUtil.formatter[units[0]](d[m.x.series.key], i, firstDate)];
         units[1] && dateStr.push(dateUtil.formatter[units[1]](d[m.x.series.key], i, firstDate));
+        units[2] && dateStr.push(dateUtil.formatter[units[2]](d[m.x.series.key], i, firstDate));
         data.push({key:dateStr.join(' '),values:[d]});
     });
     m.data = data;
@@ -161,7 +162,7 @@ function needsGrouping(units){
     if (!units) return false;
     var isGroupingUnit = false;
     units.forEach(function(unit){
-        var groupThis = ['quarterly', 'monthly', 'yearly'].indexOf(unit);
+        var groupThis = ['weekly', 'quarterly', 'monthly', 'yearly'].indexOf(unit);
         isGroupingUnit = isGroupingUnit || (groupThis>-1);
     });
     return isGroupingUnit;
