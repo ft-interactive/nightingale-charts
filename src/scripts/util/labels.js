@@ -65,6 +65,12 @@ module.exports = {
         if (config.units[0] == 'quarterly'){
             this.removeQuarters(g, axis, options);
         }
+        if (config.units[0] == 'weekly'){
+            this.removeWeekly(g, axis, options);
+        }
+        if (config.units[0] == 'daily'){
+            this.removeDaily(g, axis, options);
+        }
         if (config.units[0] == 'monthly'){
             this.removeMonths(g, axis, options, config);
         }
@@ -104,6 +110,18 @@ module.exports = {
 
     removeQuarters: function(g, axis, options){
         if (!this.overlapping(g.selectAll(".primary text")) || options.extendTicks) return;
+        options.row--;
+        options.extendTicks = true;
+        g.select(".primary").remove();
+    },
+    removeWeekly: function(g, axis, options){
+        if (options.extendTicks) return;
+        options.row--;
+        options.extendTicks = true;
+        g.select(".primary").remove();
+    },
+    removeDaily: function(g, axis, options){
+        if (options.extendTicks) return;
         options.row--;
         options.extendTicks = true;
         g.select(".primary").remove();
