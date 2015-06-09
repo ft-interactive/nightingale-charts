@@ -52,6 +52,20 @@ describe('bar-chart.js', function(){
             expect(axis.getAttribute('transform')).toBe('translate(0,306)');
         });
 
+        it('no primary ticks', function() {
+            var chart = document.querySelector('#bar-chart__categories .width600 svg');
+            var ticks = chart.querySelectorAll('.axis--independent .primary line');
+            expect(ticks.length).toBe(4);
+            expect(ticks[0].getAttribute('x2')).toBe('0');
+            expect(ticks[0].getAttribute('y2')).toBe('0');
+            expect(ticks[1].getAttribute('x2')).toBe('0');
+            expect(ticks[1].getAttribute('y2')).toBe('0');
+            expect(ticks[2].getAttribute('x2')).toBe('0');
+            expect(ticks[2].getAttribute('y2')).toBe('0');
+            expect(ticks[3].getAttribute('x2')).toBe('0');
+            expect(ticks[3].getAttribute('y2')).toBe('0');
+        });
+
     });
 
 });

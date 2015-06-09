@@ -98,6 +98,7 @@ function barChart(g){
 	var chartSVG = svg.append('g').attr('class', 'chart');
     chartSVG.attr('transform', model.translate(model.chartPosition));
 
+    model.tickSize = 0;
     var independent = (model.groupData || model.dataType === 'categorical') ? 'ordinal' : 'time';
     var creator = new axes.Create(chartSVG, model);
     creator.createAxes({dependent:'number', independent: independent});
