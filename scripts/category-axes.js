@@ -380,6 +380,7 @@ function dateAxis() {
 
     render.orient = function (string) {
         if (!arguments.length) return config.axes[0].orient();
+        if (!config.axes.length) return; //todo: why i sthis being called when axes dont exist
         config.axes[0].orient(string);
         return render;
     };
@@ -405,6 +406,8 @@ function dateAxis() {
     render.scale = function (scale, units) {
         if (!arguments.length) return config.axes[0].scale();
         if (!units ||
+            (units[0] === 'daily' && timeDiff(scale.domain()).months > 1) ||
+            (units[0] === 'weekly' && timeDiff(scale.domain()).years > 1) ||
             (units[0] === 'quarterly' && timeDiff(scale.domain()).decades > 1) ||
             (units[0] === 'monthly' && timeDiff(scale.domain()).years > 4.9) ||
             (units[0] === 'yearly' && timeDiff(scale.domain()).years > 10)){
@@ -438,7 +441,9 @@ var interval = {
     monthly: d3.time.month,
     months: d3.time.month,
     weeks: d3.time.week,
+    weekly: d3.time.week,
     days: d3.time.day,
+    daily: d3.time.day,
     hours: d3.time.hours
 };
 
@@ -452,7 +457,9 @@ var increment = {
     monthly: 1,
     months: 1,
     weeks: 1,
+    weekly: 1,
     days: 1,
+    daily: 1,
     hours: 1
 };
 
@@ -1354,6 +1361,7 @@ function ftLogo(g, dim) {
     var d = 'M21.777,53.336c0,6.381,1.707,7.1,8.996,7.37v2.335H1.801v-2.335c6.027-0.27,7.736-0.989,7.736-7.37v-41.67 c0-6.387-1.708-7.104-7.556-7.371V1.959h51.103l0.363,13.472h-2.519c-2.16-6.827-4.502-8.979-16.467-8.979h-9.27 c-2.785,0-3.415,0.624-3.415,3.142v19.314h4.565c9.54,0,11.61-1.712,12.779-8.089h2.338v21.559h-2.338 c-1.259-7.186-4.859-8.981-12.779-8.981h-4.565V53.336z M110.955,1.959H57.328l-1.244,13.477h3.073c1.964-6.601,4.853-8.984,11.308-8.984h7.558v46.884 c0,6.381-1.71,7.1-8.637,7.37v2.335H98.9v-2.335c-6.931-0.27-8.64-0.989-8.64-7.37V6.453h7.555c6.458,0,9.351,2.383,11.309,8.984 h3.075L110.955,1.959z';
     var path = g.append('path').attr('d', d); //measure and rescale to the bounds
     var rect = path.node().getBoundingClientRect();
+    if (!rect.width) return; //todo: look into why this is being added before a svg exists?
     //the logo is square so
     var scale = Math.min(dim / rect.width, dim / rect.height);
 
@@ -2065,6 +2073,7 @@ function groupDates(m, units){
     m.data.forEach(function(d,i){
         var dateStr = [dateUtil.formatter[units[0]](d[m.x.series.key], i, firstDate)];
         units[1] && dateStr.push(dateUtil.formatter[units[1]](d[m.x.series.key], i, firstDate));
+        units[2] && dateStr.push(dateUtil.formatter[units[2]](d[m.x.series.key], i, firstDate));
         data.push({key:dateStr.join(' '),values:[d]});
     });
     m.data = data;
@@ -2076,7 +2085,7 @@ function needsGrouping(units){
     if (!units) return false;
     var isGroupingUnit = false;
     units.forEach(function(unit){
-        var groupThis = ['quarterly', 'monthly', 'yearly'].indexOf(unit);
+        var groupThis = ['weekly', 'quarterly', 'monthly', 'yearly'].indexOf(unit);
         isGroupingUnit = isGroupingUnit || (groupThis>-1);
     });
     return isGroupingUnit;
@@ -2195,6 +2204,9 @@ var formatter = {
     quarterly: function (d, i) {
         return 'Q' + Math.floor((d.getMonth() + 3) / 3);
     },
+    weekly: function (d, i) {
+        return d3.time.format('%W')(d);
+    },
     monthly: function (d, i) {
         return formatter.months(d, i);
     },
@@ -2211,6 +2223,10 @@ var formatter = {
 
     days: function (d, i) {
         return d3.time.format('%e')(d);
+    },
+
+    daily: function (d, i) {
+        return d3.time.format('%d')(d);
     },
 
     hours: function (d, i) {
@@ -2272,8 +2288,19 @@ var groups = {
     quarterly: function (d, i) {
         return d.split(' ')[0];
     },
-    monthly: function (d, i) {
+    weekly: function (d, i) {
         return d.split(' ')[0];
+    },
+    daily: function (d, i) {
+        if (d[0] === ' ') {
+            d = d.substring(1);
+        }
+        return d.split(' ')[0];
+    },
+    monthly: function (d, i) {
+        var parts = d.split(' ');
+        var pos = (parts.length == 3) ? 1 : 0;
+        return parts[pos];
     },
     months: function (d, i) {
         return d.split(' ')[0];
@@ -2550,6 +2577,12 @@ module.exports = {
         if (config.units[0] == 'quarterly'){
             this.removeQuarters(g, axis, options);
         }
+        if (config.units[0] == 'weekly'){
+            this.removeWeekly(g, axis, options);
+        }
+        if (config.units[0] == 'daily'){
+            this.removeDaily(g, axis, options);
+        }
         if (config.units[0] == 'monthly'){
             this.removeMonths(g, axis, options, config);
         }
@@ -2589,6 +2622,18 @@ module.exports = {
 
     removeQuarters: function(g, axis, options){
         if (!this.overlapping(g.selectAll(".primary text")) || options.extendTicks) return;
+        options.row--;
+        options.extendTicks = true;
+        g.select(".primary").remove();
+    },
+    removeWeekly: function(g, axis, options){
+        if (options.extendTicks) return;
+        options.row--;
+        options.extendTicks = true;
+        g.select(".primary").remove();
+    },
+    removeDaily: function(g, axis, options){
+        if (options.extendTicks) return;
         options.row--;
         options.extendTicks = true;
         g.select(".primary").remove();
@@ -2818,7 +2863,7 @@ module.exports = {
 };
 
 },{}],30:[function(require,module,exports){
-module.exports = "0.4.0";
+module.exports = "0.4.1";
 },{}],"category-axes":[function(require,module,exports){
 
 var oCharts = require('../../src/scripts/o-charts');
@@ -2830,6 +2875,192 @@ var margin = {
 };
 
 var fixtures = {
+    days: [
+        { date: new Date('5/07/2014'), value:      0.368069},
+        { date: new Date('5/08/2014'), value: 0.472146},
+        { date: new Date('5/09/2014'), value: 0.743529},
+        { date: new Date('5/10/2014'), value:     0.600043},
+        { date: new Date('5/11/2014'), value:     0.301624},
+        { date: new Date('5/12/2014'), value:     0.277067},
+        { date: new Date('5/13/2014'), value:     -0.239283},
+        { date: new Date('5/14/2014'), value:     0.619157},
+        { date: new Date('5/15/2014'), value:     0.090189}
+    ],
+    "many-days": [
+        { date: new Date('5/07/2014'), value:      0.368069},
+        { date: new Date('5/08/2014'), value:      0.472146},
+        { date: new Date('5/09/2014'), value:      0.743529},
+        { date: new Date('5/10/2014'), value:      0.600043},
+        { date: new Date('5/11/2014'), value:      0.301624},
+        { date: new Date('5/12/2014'), value:      0.277067},
+        { date: new Date('5/13/2014'), value:     -0.239283},
+        { date: new Date('5/14/2014'), value:      0.619157},
+        { date: new Date('5/16/2014'), value:      0.090189},
+        { date: new Date('5/17/2014'), value:      0.090189},
+        { date: new Date('5/18/2014'), value:      0.090189},
+        { date: new Date('5/19/2014'), value:      0.090189},
+        { date: new Date('5/20/2014'), value:      0.090189},
+        { date: new Date('5/21/2014'), value:      0.090189},
+        { date: new Date('5/22/2014'), value:      0.090189},
+        { date: new Date('5/23/2014'), value:      0.090189},
+        { date: new Date('5/24/2014'), value:      0.090189},
+        { date: new Date('5/25/2014'), value:      0.090189},
+        { date: new Date('5/26/2014'), value:      0.090189},
+        { date: new Date('5/27/2014'), value:      0.090189},
+        { date: new Date('5/28/2014'), value:      0.090189},
+        { date: new Date('5/29/2014'), value:      0.090189},
+        { date: new Date('5/30/2014'), value:      0.090189},
+        { date: new Date('5/31/2014'), value:      0.090189},
+        { date: new Date('6/01/2014'), value:      0.090189},
+        { date: new Date('6/02/2014'), value:      0.090189},
+        { date: new Date('6/03/2014'), value:      0.090189},
+        { date: new Date('6/04/2014'), value:      0.090189},
+        { date: new Date('6/05/2014'), value:      0.090189},
+        { date: new Date('6/06/2014'), value:      0.090189},
+        { date: new Date('6/07/2014'), value:      0.090189},
+        { date: new Date('6/08/2014'), value:      0.090189},
+        { date: new Date('6/09/2014'), value:      0.090189},
+        { date: new Date('6/10/2014'), value:      0.090189},
+        { date: new Date('6/11/2014'), value:      0.090189},
+        { date: new Date('6/12/2014'), value:      0.090189},
+        { date: new Date('6/13/2014'), value:      0.090189},
+        { date: new Date('6/14/2014'), value:      0.090189}
+    ],
+    weeks: [
+        { date: new Date('5/07/2014'), value:      0.368069},
+        { date: new Date('5/14/2014'), value:      0.472146},
+        { date: new Date('5/21/2014'), value:      0.743529},
+        { date: new Date('5/28/2014'), value:     0.600043},
+        { date: new Date('6/04/2014'), value:     0.301624},
+        { date: new Date('6/11/2014'), value:     0.277067},
+        { date: new Date('6/18/2014'), value:     -0.239283},
+        { date: new Date('6/25/2014'), value:     0.619157},
+        { date: new Date('7/02/2014'), value:     0.090189}
+    ],
+    "many-weeks" : [
+        { date: new Date('5/07/2014'), value:      0.368069},
+        { date: new Date('5/14/2014'), value: 0.472146},
+        { date: new Date('5/21/2014'), value: 0.743529},
+        { date: new Date('5/28/2014'), value:     0.600043},
+        { date: new Date('6/04/2014'), value:     0.301624},
+        { date: new Date('6/11/2014'), value:     0.277067},
+        { date: new Date('6/18/2014'), value:     -0.239283},
+        { date: new Date('6/25/2014'), value:     0.619157},
+        { date: new Date('7/02/2014'), value:     0.090189},
+        { date: new Date('7/09/2014'), value:     0.090189},
+        { date: new Date('7/16/2014'), value:     0.090189},
+        { date: new Date('7/23/2014'), value:     0.090189},
+        { date: new Date('7/30/2014'), value:     0.090189},
+        { date: new Date('8/06/2014'), value:     0.090189},
+        { date: new Date('8/13/2014'), value:     0.090189},
+        { date: new Date('8/20/2014'), value:     0.090189},
+        { date: new Date('8/27/2014'), value:     0.090189},
+        { date: new Date('9/03/2014'), value:     0.090189},
+        { date: new Date('9/10/2014'), value:     0.090189},
+        { date: new Date('9/17/2014'), value:     0.090189},
+        { date: new Date('9/24/2014'), value:     0.090189},
+        { date: new Date('10/1/2014'), value:     0.090189},
+        { date: new Date('10/8/2014'), value:     0.090189},
+        { date: new Date('10/15/2014'), value:     0.090189},
+        { date: new Date('10/22/2014'), value:     0.090189},
+        { date: new Date('10/29/2014'), value:     0.090189},
+        { date: new Date('11/05/2014'), value:     0.090189},
+        { date: new Date('11/12/2014'), value:     0.090189},
+        { date: new Date('11/19/2014'), value:     0.090189},
+        { date: new Date('11/26/2014'), value:     0.090189},
+        { date: new Date('12/03/2014'), value:     0.090189},
+        { date: new Date('12/10/2014'), value:     0.090189},
+        { date: new Date('12/17/2014'), value:     0.090189},
+        { date: new Date('12/24/2014'), value:     0.090189},
+        { date: new Date('12/31/2014'), value:     0.090189},
+        { date: new Date('1/07/2015'), value:     0.090189},
+        { date: new Date('1/14/2015'), value:     0.090189},
+        { date: new Date('1/21/2015'), value:     0.090189},
+        { date: new Date('1/28/2015'), value:     0.090189},
+        { date: new Date('2/04/2015'), value:     0.090189},
+        { date: new Date('2/11/2015'), value:     0.090189},
+        { date: new Date('2/18/2015'), value:     0.090189},
+        { date: new Date('2/25/2015'), value:     0.090189},
+        { date: new Date('3/04/2015'), value:     0.090189},
+        { date: new Date('3/11/2015'), value:     0.090189},
+        { date: new Date('3/18/2015'), value:     0.090189},
+        { date: new Date('3/25/2015'), value:     0.090189},
+        { date: new Date('4/01/2015'), value:     0.090189},
+        { date: new Date('4/08/2015'), value:     0.090189},
+        { date: new Date('4/15/2015'), value:     0.090189},
+        { date: new Date('4/22/2015'), value:     0.090189},
+        { date: new Date('4/29/2015'), value:     0.090189},
+        { date: new Date('5/06/2015'), value:     0.090189},
+        { date: new Date('5/13/2015'), value:     0.090189},
+        { date: new Date('5/20/2015'), value:     0.090189},
+        { date: new Date('5/27/2015'), value:     0.090189},
+        { date: new Date('6/03/2015'), value:     0.090189},
+        { date: new Date('6/10/2015'), value:     0.090189},
+        { date: new Date('6/17/2015'), value:     0.090189},
+        { date: new Date('6/24/2015'), value:     0.090189},
+        { date: new Date('7/01/2015'), value:     0.090189},
+        { date: new Date('7/08/2015'), value:     0.090189},
+        { date: new Date('7/15/2015'), value:     0.090189},
+        { date: new Date('7/22/2015'), value:     0.090189},
+        { date: new Date('7/29/2015'), value:     0.090189},
+        { date: new Date('8/05/2015'), value:     0.090189},
+        { date: new Date('8/12/2015'), value:     0.090189},
+        { date: new Date('8/19/2015'), value:     0.090189},
+        { date: new Date('8/26/2015'), value:     0.090189},
+        { date: new Date('9/02/2015'), value:     0.090189},
+        { date: new Date('9/09/2015'), value:     0.090189},
+        { date: new Date('9/16/2015'), value:     0.090189},
+        { date: new Date('9/23/2015'), value:     0.090189},
+        { date: new Date('9/30/2015'), value:     0.090189},
+        { date: new Date('10/07/2015'), value:     0.090189},
+        { date: new Date('10/14/2015'), value:     0.090189},
+        { date: new Date('10/21/2015'), value:     0.090189},
+        { date: new Date('10/28/2015'), value:     0.090189},
+        { date: new Date('11/04/2015'), value:     0.090189},
+        { date: new Date('11/11/2015'), value:     0.090189},
+        { date: new Date('11/18/2015'), value:     0.090189},
+        { date: new Date('11/25/2015'), value:     0.090189},
+        { date: new Date('12/02/2015'), value:     0.090189},
+        { date: new Date('12/09/2015'), value:     0.090189},
+        { date: new Date('12/16/2015'), value:     0.090189},
+        { date: new Date('12/23/2015'), value:     0.090189},
+        { date: new Date('12/30/2015'), value:     0.090189},
+        { date: new Date('1/06/2016'), value:     0.090189},
+        { date: new Date('1/13/2016'), value:     0.090189},
+        { date: new Date('1/20/2016'), value:     0.090189},
+        { date: new Date('1/27/2016'), value:     0.090189},
+        { date: new Date('2/03/2016'), value:     0.090189},
+        { date: new Date('2/10/2016'), value:     0.090189},
+        { date: new Date('2/17/2016'), value:     0.090189},
+        { date: new Date('2/24/2016'), value:     0.090189},
+        { date: new Date('3/02/2016'), value:     0.090189},
+        { date: new Date('3/09/2016'), value:     0.090189},
+        { date: new Date('3/16/2016'), value:     0.090189},
+        { date: new Date('3/23/2016'), value:     0.090189},
+        { date: new Date('3/30/2016'), value:     0.090189},
+        { date: new Date('4/6/2016'), value:     0.090189},
+        { date: new Date('4/13/2016'), value:     0.090189},
+        { date: new Date('4/20/2016'), value:     0.090189},
+        { date: new Date('4/27/2016'), value:     0.090189},
+        { date: new Date('5/04/2016'), value:     0.090189},
+        { date: new Date('5/11/2016'), value:     0.090189},
+        { date: new Date('5/18/2016'), value:     0.090189},
+        { date: new Date('5/25/2016'), value:     0.090189},
+        { date: new Date('6/01/2016'), value:     0.090189},
+        { date: new Date('6/08/2016'), value:     0.090189},
+        { date: new Date('6/15/2016'), value:     0.090189},
+        { date: new Date('6/22/2016'), value:     0.090189},
+        { date: new Date('6/29/2016'), value:     0.090189},
+        { date: new Date('7/06/2016'), value:     0.090189},
+        { date: new Date('7/13/2016'), value:     0.090189},
+        { date: new Date('7/20/2016'), value:     0.090189},
+        { date: new Date('7/27/2016'), value:     0.090189},
+        { date: new Date('8/03/2016'), value:     0.090189},
+        { date: new Date('8/10/2016'), value:     0.090189},
+        { date: new Date('8/17/2016'), value:     0.090189},
+        { date: new Date('8/24/2016'), value:     0.090189},
+        { date: new Date('8/31/2016'), value:     0.090189}
+    ],
     months : [
         { date: new Date('12/30/05'), value:     1.348},
         { date: new Date('01/31/06'), value:      0.583},
@@ -2967,6 +3198,10 @@ var fixtures = {
 };
 
 var units = {
+    days: ['daily', 'monthly', 'yearly'],
+    "many-weeks": ['daily', 'monthly', 'yearly'],
+    weeks: ['weekly', 'monthly', 'yearly'],
+    "many-weeks": ['weekly', 'monthly', 'yearly'],
     months: ['monthly', 'yearly'],
     "many-months": ['monthly', 'yearly'],
     "many-many-months": ['monthly', 'yearly'],
@@ -2983,13 +3218,17 @@ var xSeriesData = {
 };
 
 var nesting = {
+    days: function(d) { return d3.time.format('%d %b %Y')(d.date); },
+    "many-days": function(d) { return d3.time.format('%d %b %Y')(d.date); },
+    weeks: function(d) { return d3.time.format('%W %b %Y')(d.date); },
+    "many-weeks": function(d) { return d3.time.format('%W %b %Y')(d.date); },
     quarters: function(d)       { return 'Q' + Math.floor((d.date.getMonth()+3)/3) + ' ' + (d.date.getYear() + 1900);  },
     "many-quarters": function(d){ return 'Q' + Math.floor((d.date.getMonth()+3)/3) + ' ' + (d.date.getYear() + 1900);  },
-    months: function(d)          { return d3.time.format('%b')(d.date) + ' ' + (d.date.getYear() + 1900);  },
-    "many-months": function(d)  { return d3.time.format('%b')(d.date) + ' ' + (d.date.getYear() + 1900);  },
-    "many-many-months": function(d)  { return d3.time.format('%b')(d.date) + ' ' + (d.date.getYear() + 1900);  },
-    years: function(d)          { return (d.date.getYear() + 1900);  },
-    "many-years": function(d)   { return (d.date.getYear() + 1900);  }
+    months: function(d)          { return d3.time.format('%b %Y')(d.date);  },
+    "many-months": function(d)  { return d3.time.format('%b %Y')(d.date);  },
+    "many-many-months": function(d)  { return d3.time.format('%b %Y')(d.date);  },
+    years: function(d)          { return d3.time.format('%Y')(d.date);  },
+    "many-years": function(d)   { return d3.time.format('%Y')(d.date);  }
 };
 
 function drawDemo(timeFrame){
@@ -3025,9 +3264,10 @@ function drawDemo(timeFrame){
 }
 
 module.exports = {
+    fixtures: fixtures,
     init: function(){
 
-        var demos = ['months', 'many-months', 'quarters', 'many-quarters','years','many-years', 'categories', 'manyCategories'];
+        var demos = ['days', 'many-days', 'weeks', 'many-weeks', 'months', 'many-months', 'quarters', 'many-quarters','years','many-years', 'categories', 'manyCategories'];
         demos.forEach(function(timeFrame){
 
             var nestedFixture = (nesting[timeFrame]) ?
