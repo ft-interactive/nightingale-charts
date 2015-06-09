@@ -68,6 +68,7 @@ function dateAxis() {
 
     render.orient = function (string) {
         if (!arguments.length) return config.axes[0].orient();
+        if (!config.axes.length) return; //todo: why i sthis being called when axes dont exist
         config.axes[0].orient(string);
         return render;
     };
