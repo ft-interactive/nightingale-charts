@@ -83,7 +83,7 @@ function sumStackedValues(model){
     return extents;
 }
 
-function dependentDomain(model){
+function dependentDomain(model, chartType){
     if(model.dependentDomain){ return model.dependentDomain; }
 
     var extents = (model.stack) ? sumStackedValues(model) : setExtents(model);
@@ -91,6 +91,12 @@ function dependentDomain(model){
     if(!model.falseOrigin && domain[0] > 0){
         domain[0] = 0;
     }
+
+    var isBarOrColumn = ['column', 'bar'].indexOf(chartType) >= 0;
+    if (isBarOrColumn && domain[1] < 0) {
+        domain[1] = 0;
+    }
+
     return domain;
 }
 
@@ -231,7 +237,7 @@ function Model(chartType, opts) {
 	m.data = verifyData(m);
     m.groupData = needsGrouping(m.units);
     m.independentDomain = independentDomain(m, chartType);
-	m.dependentDomain = dependentDomain(m);
+	m.dependentDomain = dependentDomain(m, chartType);
 	m.lineStrokeWidth = lineThickness(m.lineThickness);
 	m.key = setKey(m);
 

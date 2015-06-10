@@ -237,6 +237,39 @@ var fixtures = {
         { date: new Date('5/13/2014'), value:     -0.239283},
         { date: new Date('5/14/2014'), value:     0.619157},
         { date: new Date('5/15/2014'), value:     0.090189}
+    ],
+    allNegative : [
+        { date: new Date('01/01/2012'), value:  -74.891},
+        { date: new Date('02/01/2012'), value:  -73.203},
+        { date: new Date('03/01/2012'), value:  -70.019},
+        { date: new Date('04/01/2012'), value:  -67.087},
+        { date: new Date('05/01/2012'), value:  -64.752},
+        { date: new Date('06/01/2012'), value:  -61.148},
+        { date: new Date('07/01/2012'), value:  -60.145},
+        { date: new Date('08/01/2012'), value:  -57.734},
+        { date: new Date('09/01/2012'), value:  -54.278},
+        { date: new Date('10/01/2012'), value:  -51.322},
+        { date: new Date('11/01/2012'), value:  -50.174},
+        { date: new Date('12/01/2012'), value:  -48.535},
+        { date: new Date('01/01/2013'), value:  -48.493},
+        { date: new Date('02/01/2013'), value:  -49.276},
+        { date: new Date('03/01/2013'), value:  -48.614},
+        { date: new Date('04/01/2013'), value:  -52.105},
+        { date: new Date('05/01/2013'), value:  -54.341},
+        { date: new Date('06/01/2013'), value:  -55.098},
+        { date: new Date('07/01/2013'), value:  -57.209},
+        { date: new Date('08/01/2013'), value:  -58.276},
+        { date: new Date('09/01/2013'), value:  -58.986},
+        { date: new Date('10/01/2013'), value:  -61.06},
+        { date: new Date('11/01/2013'), value:  -61.168},
+        { date: new Date('12/01/2013'), value:  -64.658},
+        { date: new Date('01/01/2014'), value:  -63.906},
+        { date: new Date('02/01/2014'), value:  -62.235},
+        { date: new Date('03/01/2014'), value:  -60.006},
+        { date: new Date('04/01/2014'), value:  -56.832},
+        { date: new Date('05/01/2014'), value:  -52.89},
+        { date: new Date('06/01/2014'), value:  -52.287},
+        { date: new Date('07/01/2014'), value:  -48.415}
     ]
 };
 
@@ -257,11 +290,13 @@ var units = {
     nullMultiple: ['quarterly', 'yearly'],
     nullStack: ['quarterly', 'yearly'],
     weekly: ['weekly', 'monthly', 'yearly'],
-    daily: ['daily', 'monthly', 'yearly']
+    daily: ['daily', 'monthly', 'yearly'],
+    allNegative: ['monthly', 'yearly']
 };
 var ySeriesData = {
     weekly: ['value'],
     daily: ['value'],
+    allNegative: ['value'],
     categories: ['value', 'value2'],
     categoriesStack: ['value', 'value2'],
     dateCategories: ['value', 'value2'],
@@ -315,7 +350,7 @@ module.exports = {
             'multiple', 'time', 'stack', 'stackMonthly', 'multipleWithNegatives', 'stackWithAllNegatives',
             'categories', 'categoriesStack', 'dateCategories', 'quarterCategories',
             'nullMultiple', 'nullValues', 'nullStack',
-            'weekly', 'daily'];
+            'weekly', 'daily', 'allNegative'];
         demos.forEach(function(timeFrame, i){
             var textContent = '';
             if (i===7){

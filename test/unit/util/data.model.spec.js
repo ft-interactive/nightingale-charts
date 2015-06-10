@@ -218,4 +218,46 @@ describe('data model', function () {
         expect(model.lineStrokeWidth).toBe(10);
 
     });
+
+    it('sets the max value of the dependentDomain to zero when all values are neg on column and bar charts', function() {
+        var columnModel = new DataModel('column', {
+            height: 100,
+            width: 100,
+            key: true,
+            falseOrigin: false,
+            lineThickness: 10,
+            data: [
+                {quartersCol: new Date('2000-01-01T00:00:00.000Z'), qValue: -10.23, value2: -12},
+                {quartersCol: new Date('2001-01-01T00:00:00.000Z'), qValue: -29.23, value2: -29},
+                {quartersCol: new Date('2002-01-01T00:00:00.000Z'), qValue: -32.23, value2: -32},
+                {quartersCol: new Date('2003-01-01T00:00:00.000Z'), qValue: -39.23, value2: -37}
+            ],
+            units: ['quarterly','yearly'],
+            x: { series:{key:'quartersCol',label:'myValue'}},
+            y: { series: [{key:'qValue', label:'String Value'},
+                {key:'value2', label:'Another String Value'}]}
+        });
+        var barModel = new DataModel('bar', {
+            height: 100,
+            width: 100,
+            key: true,
+            falseOrigin: false,
+            lineThickness: 10,
+            data: [
+                {quartersCol: new Date('2000-01-01T00:00:00.000Z'), qValue: -10.23, value2: -12},
+                {quartersCol: new Date('2001-01-01T00:00:00.000Z'), qValue: -29.23, value2: -29},
+                {quartersCol: new Date('2002-01-01T00:00:00.000Z'), qValue: -32.23, value2: -32},
+                {quartersCol: new Date('2003-01-01T00:00:00.000Z'), qValue: -39.23, value2: -37}
+            ],
+            units: ['quarterly','yearly'],
+            x: { series:{key:'quartersCol',label:'myValue'}},
+            y: { series: [{key:'qValue', label:'String Value'},
+                {key:'value2', label:'Another String Value'}]}
+        });
+
+        expect(columnModel.dependentDomain[1]).toBe(0);
+        expect(barModel.dependentDomain[1]).toBe(0);
+
+    });
+
 });
