@@ -3,13 +3,13 @@ module.exports = function(config) {
         basePath: '..',
         browsers: ['Chrome'],
         frameworks: ['jasmine', 'browserify'],
-        reporters: ['progress', 'coverage'],
+        reporters: ['mocha', 'coverage'],
         preprocessors: {
             'test/unit/**/*.js': ['browserify'],
             '_site/*.html': ['html2js']
         },
         plugins: [
-            'karma-browserify', 'karma-jasmine', 'karma-coverage', 'karma-phantomjs-launcher', 'karma-chrome-launcher', 'karma-html2js-preprocessor'
+            'karma-mocha-reporter', 'karma-browserify', 'karma-jasmine', 'karma-coverage', 'karma-phantomjs-launcher', 'karma-chrome-launcher', 'karma-html2js-preprocessor'
         ],
         coverageReporter: {
             dir : 'test/coverage/',
@@ -17,15 +17,17 @@ module.exports = function(config) {
                 { type: 'html',
                     subdir: function(browser) {
                         return browser.toLowerCase().split(/[ /-]/)[0];
-                    },
-                    watermarks: {
-                        statements: [0, 85],
-                        lines: [0, 85],
-                        functions: [0, 85],
-                        branches:[0, 85]
-                    }},
-                { type: 'json-summary', subdir: '.', file: 'summary.json' }
-            ]
+                    }
+                }
+            ],
+            check: {
+                global: {
+                    statements: 50,
+                    branches: 25,
+                    functions: 25,
+                    lines: 50
+                }
+            }
         },
         files: [
             {pattern: '_site/**/vendor.*', included: true, served: true, watched: true},
