@@ -17,6 +17,16 @@ describe('category axis', function () {
         it('shows all ticks', function () {
             var tickss = days.querySelectorAll('.x.axis .primary .tick');
             expect(tickss.length).toBe(catAxes.fixtures.days.length);
+            var fmt = function(d, str) {
+                str = d3.time.format('%e')(d);
+                return (str[0] === ' ') ? str.substring(1) : str;
+            };
+
+            var txt;
+            for (var i = 0; i < tickss.length; i++) {
+                txt = tickss[i].querySelector('text').textContent;
+                expect(txt).toBe(fmt(catAxes.fixtures.days[i].date));
+            }
 
             var ticksl = manyDays.querySelectorAll('.x.axis .primary .tick');
             expect(ticksl.length).toBe(catAxes.fixtures['many-days'].length);
@@ -24,8 +34,7 @@ describe('category axis', function () {
 
         it('shows one month for the small time period', function () {
             var labels = days.querySelectorAll('.x.axis .primary .tick text');
-            expect(labels.length).toBe(1);
-            expect(labels[0].textContent).toBe('May');
+            expect(labels.length).toBe(9);
         });
 
     });

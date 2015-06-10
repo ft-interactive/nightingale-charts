@@ -12,9 +12,10 @@ var y = [   { series: ['value', 'value2', 'value3'] },
             { series: ['value'] },
             { series: ['value'] },
             { series: ['value'] },
+            { series: ['value'] },
             { series: ['value'] }];
 var hideSource = [true, true, false];
-var dependentAxisOrient = ['left', 'right', 'left', 'right', 'right', 'right', 'right', 'right'];
+var dependentAxisOrient = ['left', 'right', 'left', 'right', 'right', 'right', 'right', 'right', 'right'];
 
 var quarterlyDataPlus =  [
     { date: new Date('1/1/05'), value: 0.583},
@@ -49,6 +50,20 @@ var quarterlyDataMany =  [
     { date: new Date('10/01/08'), value: 1.348},
     { date: new Date('01/01/09'), value: 1.348}
 ];
+
+var dailyData = [
+    { date: new Date('2015-12-12'), value: 4},
+    { date: new Date('2015-12-13'), value: 6},
+    { date: new Date('2015-12-14'), value: 8},
+    { date: new Date('2015-12-15'), value: 3},
+    { date: new Date('2015-12-16'), value: 6},
+    { date: new Date('2015-12-17'), value: 6},
+    { date: new Date('2015-12-18'), value: 6},
+    { date: new Date('2015-12-19'), value: 6},
+    { date: new Date('2015-12-20'), value: 6},
+    { date: new Date('2015-12-21'), value: 6}
+];
+
 var quarterlyDataDecade =  [
     { date: new Date('1/1/05'), value: 0.583},
     { date: new Date('4/01/05'), value: -1.027},
@@ -105,7 +120,7 @@ var dataWithZeros = [
     {date: new Date('2002-01-01T00:00:00.000Z'), value: -1, value2: 1.5, value3:0},
     {date: new Date('2003-01-01T00:00:00.000Z'), value: 1.5, value2: -1, value3:1}
 ];
-var data = [timeData,timeData,timeData,dataWithZeros,quarterlyDataPlus, quarterlyData5Months, quarterlyDataMany, quarterlyDataDecade]
+var data = [timeData,timeData,timeData,dataWithZeros,quarterlyDataPlus, quarterlyData5Months, quarterlyDataMany, quarterlyDataDecade, dailyData];
 
 function getChartData(i) {
     var defaultData = {
@@ -127,13 +142,17 @@ function getChartData(i) {
         defaultData.subtitle = "Quarterly Axis";
         defaultData.units = ['quarterly', 'yearly'];
     }
+    if (i === 8) {
+        defaultData.subtitle = "Daily Axis";
+        defaultData.units = ['daily', 'monthly', 'yearly'];
+    }
     return defaultData;
 }
 
 module.exports = {
     getChartData: getChartData,
     init: function () {
-        for (var i = 0; i < 8; i++) {
+        for (var i = 0; i < data.length; i++) {
             d3.select('body').append('div').attr('id', 'line-chart' + (i + 1));
             d3.select('#line-chart' + (i + 1)).data([getChartData(i)]).call(oCharts.chart.line);
         }

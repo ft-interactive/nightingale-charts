@@ -69,7 +69,7 @@ module.exports = {
             this.removeWeekly(g, axis, options);
         }
         if (config.units[0] == 'daily'){
-            this.removeDaily(g, axis, options);
+            // in this case we don't remove daily ticks
         }
         if (config.units[0] == 'monthly'){
             this.removeMonths(g, axis, options, config);
