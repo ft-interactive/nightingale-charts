@@ -134,7 +134,7 @@ function categoryAxis() {
 
 module.exports = categoryAxis;
 
-},{"../util/chart-attribute-styles":20,"../util/dates.js":22,"../util/labels.js":24,"d3":"d3"}],2:[function(require,module,exports){
+},{"../util/chart-attribute-styles":20,"../util/dates.js":23,"../util/labels.js":25,"d3":"d3"}],2:[function(require,module,exports){
 var d3 = require('d3');
 var axis = {
     category: require('./category.js'),
@@ -427,7 +427,7 @@ function dateAxis() {
 
 module.exports = dateAxis;
 
-},{"../util/dates.js":22,"../util/labels.js":24,"./date.scale.js":4,"d3":"d3"}],4:[function(require,module,exports){
+},{"../util/dates.js":23,"../util/labels.js":25,"./date.scale.js":4,"d3":"d3"}],4:[function(require,module,exports){
 var d3 = require('d3');
 var utils = require('../util/dates.js');
 
@@ -506,7 +506,7 @@ module.exports = {
     }
 };
 
-},{"../util/dates.js":22,"d3":"d3"}],5:[function(require,module,exports){
+},{"../util/dates.js":23,"d3":"d3"}],5:[function(require,module,exports){
 module.exports = {
     Create: require('./create.js'),
     Plot: require('./plot.js'),
@@ -997,7 +997,7 @@ function barChart(g){
 
 module.exports = barChart;
 
-},{"../axis":5,"../util/chart-attribute-styles":20,"../util/data.model.js":21,"../util/dressing.js":23,"../util/metadata.js":27}],11:[function(require,module,exports){
+},{"../axis":5,"../util/chart-attribute-styles":20,"../util/data.model.js":22,"../util/dressing.js":24,"../util/metadata.js":28}],11:[function(require,module,exports){
 //var d3 = require('d3');
 
 function blankChart() {
@@ -1182,7 +1182,7 @@ function columnChart(g){
 
 module.exports = columnChart;
 
-},{"../axis":5,"../util/chart-attribute-styles":20,"../util/data.model.js":21,"../util/dressing.js":23,"../util/metadata.js":27}],13:[function(require,module,exports){
+},{"../axis":5,"../util/chart-attribute-styles":20,"../util/data.model.js":22,"../util/dressing.js":24,"../util/metadata.js":28}],13:[function(require,module,exports){
 module.exports = {
     line: require('./line.js'),
     blank: require('./blank.js'),
@@ -1264,7 +1264,7 @@ function lineChart(g) {
 
 module.exports = lineChart;
 
-},{"../axis":5,"../util/chart-attribute-styles":20,"../util/data.model.js":21,"../util/dressing.js":23,"../util/line-interpolators.js":25,"../util/metadata.js":27,"d3":"d3"}],15:[function(require,module,exports){
+},{"../axis":5,"../util/chart-attribute-styles":20,"../util/data.model.js":22,"../util/dressing.js":24,"../util/line-interpolators.js":26,"../util/metadata.js":28,"d3":"d3"}],15:[function(require,module,exports){
 //var d3 = require('d3');
 
 function pieChart() {
@@ -1493,7 +1493,7 @@ function lineKey(options) {
 
 module.exports = lineKey;
 
-},{"../util/chart-attribute-styles":20,"../util/line-thickness.js":26}],18:[function(require,module,exports){
+},{"../util/chart-attribute-styles":20,"../util/line-thickness.js":27}],18:[function(require,module,exports){
 /*jshint -W084 */
 //text area provides a wrapping text block of a given type
 var d3 = require('d3');
@@ -1670,6 +1670,7 @@ module.exports = {
 // so, heres a list of attributes and the selectors to which they should be applied
 
 var d3 = require('d3');
+var colours = require('./colours');
 
 function applyAttributes(g, keepD3Styles) {
     var styleList = [
@@ -1758,42 +1759,37 @@ function applyAttributes(g, keepD3Styles) {
         }, {
             'selector': '.line--series1',
             'attributes': {
-                'stroke': '#af516c'
+                'stroke': colours.line[0]
             }
         }, {
             'selector': '.line--series2',
             'attributes': {
-                'stroke': '#ecafaf'
+                'stroke': colours.line[1]
             }
         }, {
             'selector': '.line--series3',
             'attributes': {
-                'stroke': '#d7706c'
+                'stroke': colours.line[2]
             }
         }, {
             'selector': '.line--series4',
             'attributes': {
-                'stroke': '#76acb8'
+                'stroke': colours.line[3]
             }
         }, {
             'selector': '.line--series5',
             'attributes': {
-                'stroke': '#81d0e6'
+                'stroke': colours.line[4]
             }
         }, {
             'selector': '.line--series6',
             'attributes': {
-                'stroke': '#4086b6'
+                'stroke': colours.line[5]
             }
         }, {
             'selector': '.line--series7',
             'attributes': {
-                'stroke': '#b8b1a9'
-            }
-        }, {
-            'selector': 'path.accent, line.accent',
-            'attributes': {
-                'stroke': 'rgb(184,177,169)'
+                'stroke': colours.line[6]
             }
         },
         //Columns
@@ -1805,42 +1801,42 @@ function applyAttributes(g, keepD3Styles) {
         }, {
             'selector': '.column--series1, .bar--series1',
             'attributes': {
-                'fill': '#af516c'
+                'fill': colours.area[0]
             }
         }, {
             'selector': '.column--series2, .bar--series2',
             'attributes': {
-                'fill': '#ecafaf'
+                'fill': colours.area[1]
             }
         }, {
             'selector': '.column--series3, .bar--series3',
             'attributes': {
-                'fill': '#d7706c'
+                'fill': colours.area[2]
             }
         }, {
             'selector': '.column--series4, .bar--series4',
             'attributes': {
-                'fill': '#76acb8'
+                'fill': colours.area[3]
             }
         }, {
             'selector': '.column--series5, .bar--series5',
             'attributes': {
-                'fill': '#81d0e6'
+                'fill': colours.area[4]
             }
         }, {
             'selector': '.column--series6, .bar--series6',
             'attributes': {
-                'fill': '#4086b6'
+                'fill': colours.area[5]
             }
         }, {
             'selector': '.column--series7, .bar--series7',
             'attributes': {
-                'fill': '#b8b1a9'
+                'fill': colours.area[6]
             }
         }, {
-            'selector': 'path.accent, line.accent',
+            'selector': 'path.accent, line.accent, rect.accent',
             'attributes': {
-                'stroke': 'rgb(184,177,169)'
+                'stroke': colours.accent
             }
         }, {
             'selector': '.series text.null-label',
@@ -1900,7 +1896,30 @@ function applyAttributes(g, keepD3Styles) {
 
 module.exports = applyAttributes;
 
-},{"d3":"d3"}],21:[function(require,module,exports){
+},{"./colours":21,"d3":"d3"}],21:[function(require,module,exports){
+module.exports = {
+  line: [
+    '#af516c',
+    '#ecafaf',
+    '#d7706c',
+    '#76acb8',
+    '#7fd8f5',
+    '#3d7ab3',
+    '#b8b1a9'
+  ],
+  area: [
+    '#bb6d82',
+    '#ecafaf',
+    '#d7706c',
+    '#cb9f8c',
+    '#b07979',
+    '#ccc2c2',
+    '#8f7d95',
+    '#b8b1a9'
+  ],
+  accent: '#9e2f50'
+};
+},{}],22:[function(require,module,exports){
 var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
 var ratios = require('../util/aspect-ratios.js');
@@ -1986,7 +2005,7 @@ function sumStackedValues(model){
     return extents;
 }
 
-function dependentDomain(model){
+function dependentDomain(model, chartType){
     if(model.dependentDomain){ return model.dependentDomain; }
 
     var extents = (model.stack) ? sumStackedValues(model) : setExtents(model);
@@ -1994,6 +2013,12 @@ function dependentDomain(model){
     if(!model.falseOrigin && domain[0] > 0){
         domain[0] = 0;
     }
+
+    var isBarOrColumn = ['column', 'bar'].indexOf(chartType) >= 0;
+    if (isBarOrColumn && domain[1] < 0) {
+        domain[1] = 0;
+    }
+
     return domain;
 }
 
@@ -2134,7 +2159,7 @@ function Model(chartType, opts) {
 	m.data = verifyData(m);
     m.groupData = needsGrouping(m.units);
     m.independentDomain = independentDomain(m, chartType);
-	m.dependentDomain = dependentDomain(m);
+	m.dependentDomain = dependentDomain(m, chartType);
 	m.lineStrokeWidth = lineThickness(m.lineThickness);
 	m.key = setKey(m);
 
@@ -2146,7 +2171,7 @@ Model.prototype.error = function (err) {
 };
 module.exports = Model;
 
-},{"../util/aspect-ratios.js":19,"../util/dates.js":22,"../util/line-thickness.js":26,"../util/series-options.js":28,"d3":"d3"}],22:[function(require,module,exports){
+},{"../util/aspect-ratios.js":19,"../util/dates.js":23,"../util/line-thickness.js":27,"../util/series-options.js":29,"d3":"d3"}],23:[function(require,module,exports){
 var d3 = require('d3');
 
 var formatter = {
@@ -2305,7 +2330,7 @@ module.exports = {
     unitGenerator: unitGenerator
 };
 
-},{"d3":"d3"}],23:[function(require,module,exports){
+},{"d3":"d3"}],24:[function(require,module,exports){
 var textArea = require('../element/text-area.js');
 var seriesKey = require('../element/series-key.js');
 var ftLogo = require('../element/logo.js');
@@ -2491,7 +2516,7 @@ Dressing.prototype.setPosition = function () {
 
 module.exports = Dressing;
 
-},{"../element/logo.js":16,"../element/series-key.js":17,"../element/text-area.js":18}],24:[function(require,module,exports){
+},{"../element/logo.js":16,"../element/series-key.js":17,"../element/text-area.js":18}],25:[function(require,module,exports){
 var d3 = require('d3');
 var dates = require('../util/dates');
 var styler = require('./chart-attribute-styles');
@@ -2685,7 +2710,7 @@ module.exports = {
     }
 };
 
-},{"../util/dates":22,"./chart-attribute-styles":20,"d3":"d3"}],25:[function(require,module,exports){
+},{"../util/dates":23,"./chart-attribute-styles":20,"d3":"d3"}],26:[function(require,module,exports){
 //a place to define custom line interpolators
 
 var d3 = require('d3');
@@ -2719,7 +2744,7 @@ module.exports = {
     gappedLine: gappedLineInterpolator
 };
 
-},{"d3":"d3"}],26:[function(require,module,exports){
+},{"d3":"d3"}],27:[function(require,module,exports){
 var thicknesses = {
     small: 2,
     medium: 4,
@@ -2747,7 +2772,7 @@ module.exports = function (value) {
     }
 };
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 //example:
 //http://codinginparadise.org/projects/svgweb-staging/tests/htmlObjectHarness/basic-metadata-example-01-b.html
 var svgSchema = 'http://www.w3.org/2000/svg';
@@ -2798,7 +2823,7 @@ module.exports = {
     create: create
 };
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 function isTruthy(value) {
     return !!value;
 }
@@ -2844,8 +2869,8 @@ module.exports = {
     normalise: normalise
 };
 
-},{}],29:[function(require,module,exports){
-module.exports = "0.4.2";
+},{}],30:[function(require,module,exports){
+module.exports = "0.4.3";
 },{}],"o-charts":[function(require,module,exports){
 module.exports = {
     chart: require('./chart/index.js'),
@@ -2866,4 +2891,4 @@ module.exports = {
 
 };
 
-},{"./axis/index.js":5,"./chart/index.js":13,"./element/series-key.js":17,"./element/text-area.js":18,"./util/chart-attribute-styles.js":20,"./util/dates.js":22,"./util/version":29}]},{},["o-charts"]);
+},{"./axis/index.js":5,"./chart/index.js":13,"./element/series-key.js":17,"./element/text-area.js":18,"./util/chart-attribute-styles.js":20,"./util/dates.js":23,"./util/version":30}]},{},["o-charts"]);
