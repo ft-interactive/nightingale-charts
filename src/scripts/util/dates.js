@@ -57,7 +57,9 @@ var formatter = {
     },
 
     daily: function (d, i) {
-        return d3.time.format('%d')(d);
+        var str = d3.time.format('%e')(d);
+        if (str[0] === ' ') str = str.substring(1);
+        return str;
     },
 
     hours: function (d, i) {

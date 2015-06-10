@@ -351,8 +351,16 @@ var xSeriesData = {
 };
 
 var nesting = {
-    days: function(d) { return d3.time.format('%d %b %Y')(d.date); },
-    "many-days": function(d) { return d3.time.format('%d %b %Y')(d.date); },
+    days: function(d) {
+        var str = d3.time.format('%e %b %Y')(d.date);
+        if (str[0] === ' ') str = str.substring(1);
+        return str;
+    },
+    "many-days": function(d) {
+        var str = d3.time.format('%e %b %Y')(d.date);
+        if (str[0] === ' ') str = str.substring(1);
+        return str;
+    },
     weeks: function(d) { return d3.time.format('%W %b %Y')(d.date); },
     "many-weeks": function(d) { return d3.time.format('%W %b %Y')(d.date); },
     quarters: function(d)       { return 'Q' + Math.floor((d.date.getMonth()+3)/3) + ' ' + (d.date.getYear() + 1900);  },
