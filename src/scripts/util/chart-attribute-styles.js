@@ -3,6 +3,7 @@
 // so, heres a list of attributes and the selectors to which they should be applied
 
 var d3 = require('d3');
+var colours = require('./colours');
 
 function applyAttributes(g, keepD3Styles) {
     var styleList = [
@@ -91,42 +92,37 @@ function applyAttributes(g, keepD3Styles) {
         }, {
             'selector': '.line--series1',
             'attributes': {
-                'stroke': '#af516c'
+                'stroke': colours.line[0]
             }
         }, {
             'selector': '.line--series2',
             'attributes': {
-                'stroke': '#ecafaf'
+                'stroke': colours.line[1]
             }
         }, {
             'selector': '.line--series3',
             'attributes': {
-                'stroke': '#d7706c'
+                'stroke': colours.line[2]
             }
         }, {
             'selector': '.line--series4',
             'attributes': {
-                'stroke': '#76acb8'
+                'stroke': colours.line[3]
             }
         }, {
             'selector': '.line--series5',
             'attributes': {
-                'stroke': '#81d0e6'
+                'stroke': colours.line[4]
             }
         }, {
             'selector': '.line--series6',
             'attributes': {
-                'stroke': '#4086b6'
+                'stroke': colours.line[5]
             }
         }, {
             'selector': '.line--series7',
             'attributes': {
-                'stroke': '#b8b1a9'
-            }
-        }, {
-            'selector': 'path.accent, line.accent',
-            'attributes': {
-                'stroke': 'rgb(184,177,169)'
+                'stroke': colours.line[6]
             }
         },
         //Columns
@@ -138,42 +134,42 @@ function applyAttributes(g, keepD3Styles) {
         }, {
             'selector': '.column--series1, .bar--series1',
             'attributes': {
-                'fill': '#af516c'
+                'fill': colours.area[0]
             }
         }, {
             'selector': '.column--series2, .bar--series2',
             'attributes': {
-                'fill': '#ecafaf'
+                'fill': colours.area[1]
             }
         }, {
             'selector': '.column--series3, .bar--series3',
             'attributes': {
-                'fill': '#d7706c'
+                'fill': colours.area[2]
             }
         }, {
             'selector': '.column--series4, .bar--series4',
             'attributes': {
-                'fill': '#76acb8'
+                'fill': colours.area[3]
             }
         }, {
             'selector': '.column--series5, .bar--series5',
             'attributes': {
-                'fill': '#81d0e6'
+                'fill': colours.area[4]
             }
         }, {
             'selector': '.column--series6, .bar--series6',
             'attributes': {
-                'fill': '#4086b6'
+                'fill': colours.area[5]
             }
         }, {
             'selector': '.column--series7, .bar--series7',
             'attributes': {
-                'fill': '#b8b1a9'
+                'fill': colours.area[6]
             }
         }, {
-            'selector': 'path.accent, line.accent',
+            'selector': 'path.accent, line.accent, rect.accent',
             'attributes': {
-                'stroke': 'rgb(184,177,169)'
+                'stroke': colours.accent
             }
         }, {
             'selector': '.series text.null-label',
