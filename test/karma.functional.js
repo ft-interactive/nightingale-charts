@@ -9,7 +9,7 @@ module.exports = function(config) {
             '_site/*.html': ['html2js']
         },
         plugins: [
-            'karma-browserify',  'karma-mocha-reporter', 'karma-jasmine', 'karma-coverage', 'karma-phantomjs-launcher', 'karma-chrome-launcher', 'karma-html2js-preprocessor'
+            'karma-mocha-reporter', 'karma-browserify', 'karma-jasmine', 'karma-coverage', 'karma-phantomjs-launcher', 'karma-chrome-launcher', 'karma-html2js-preprocessor'
         ],
         files: [
             {pattern: '_site/**/vendor.*', included: true, served: true, watched: true},
