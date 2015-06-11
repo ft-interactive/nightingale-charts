@@ -12,11 +12,9 @@
     "license": "MIT",
     "private": true,
     "ignore": [
-        "**/.*",
-        "node_modules",
-        "bower_components",
-        "test",
-        "tests"
+        "**/*",
+        "!src/**/*",
+        "!dist/**/*"
     ],
     "dependencies": {
         "d3": "~3.5.5"

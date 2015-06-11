@@ -6,7 +6,8 @@ module.exports = function(config) {
         reporters: ['mocha'],
         preprocessors: {
             'test/functional/**/*.js': ['browserify'],
-            '_site/*.html': ['html2js']
+            '_site/*.html': ['html2js'],
+            '_test/**/*.html': ['html2js']
         },
         plugins: [
             'karma-mocha-reporter', 'karma-browserify', 'karma-jasmine', 'karma-coverage', 'karma-phantomjs-launcher', 'karma-chrome-launcher', 'karma-html2js-preprocessor'
@@ -14,11 +15,11 @@ module.exports = function(config) {
         files: [
             {pattern: '_site/**/vendor.*', included: true, served: true, watched: true},
             {pattern: '_site/**/*.*', included: true, served: true, watched: true},
+            {pattern: '_test/**/*.*', included: true, served: true, watched: true},
             'test/functional/**/*.spec.js'
         ],
         exclude: [
             '**/*.png',
-            'src/**/*.requirejs.js',
             '**/*.min.js',
             'src/**/*.txt',
             'src/**/*.csv',

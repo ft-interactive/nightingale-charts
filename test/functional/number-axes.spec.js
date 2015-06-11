@@ -3,13 +3,13 @@ describe('When Number axis data is', function () {
     beforeEach(function(){
         //pm: hack to stop quarterly axis spec rewriting dom too early :(
         require('../helper').loadAssets('number-axes');
-        require('../../demo/scripts/number-axes').init();
+        require('../fixtures/scripts/number-axes').init();
     });
 
     describe('6 or less, it', function () {
         //pm: hack to stop quarterly axis spec rewriting dom too early :(
         require('../helper').loadAssets('number-axes');
-        require('../../demo/scripts/number-axes').init();
+        require('../fixtures/scripts/number-axes').init();
         var sixOrLess = document.querySelector('.axis-test:nth-child(1) svg');
         var y = sixOrLess.querySelector('.y.axis');
         var labels = y.querySelectorAll('.primary .tick text');

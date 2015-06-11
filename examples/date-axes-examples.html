@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel=stylesheet href="styles/main.css">
+    <link rel=stylesheet href="styles/demo.css">
+    <title>Date Axes</title>
+</head>
+<body class=ft>
+    <h1>Date axes</h1>
+
+    <div id=views></div>
+
+    <script src=scripts/vendor.js></script>
+    <script src=scripts/o-charts.js></script>
+    <script>
+        var oCharts = require('o-charts');
+        var d3 = require('d3');
+        var margin = {
+            top:20, left:25, bottom:40, right:75
+        };
+
+        var data = {
+            simple: false,
+            scale: d3.time.scale()
+                .range([0, 600])
+                .domain([ new Date("October 13, 1975 11:13:00"), new Date("October 13, 1975 22:00:00")])
+        };
+
+        var divs = d3.select('#views');
+        divs.append('h2')
+            .text('A day or less');
+
+        divs.append('svg')
+            .data([data])
+            .attr('width', function (d) {
+                var r = d.scale.range();
+                return (r[1] - r[0]) + margin.left + margin.right;
+            })
+            .attr('class', 'ft-chart')
+            .attr('height', margin.top + margin.bottom)
+            .each(function (d, i) {
+
+                //create the axis, giving it a scale
+                var axis = oCharts.axis.date()
+                    .simple(d.simple)
+                    .scale(d.scale);
+
+                d3.select(this)
+                    .append('g')
+                    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+                    .call(axis);
+
+            });
+
+    </script>
+</body>
+</html>

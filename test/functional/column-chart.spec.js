@@ -3,7 +3,7 @@ describe('column-chart.js', function(){
     beforeEach(function(){
         //pm: hack to stop spec rewriting dom too early :(
         require('../helper').loadAssets('column-chart');
-        require('../../demo/scripts/column-chart').init();
+        require('../fixtures/scripts/column-chart').init();
     })
 
     describe('has ticks ', function(){

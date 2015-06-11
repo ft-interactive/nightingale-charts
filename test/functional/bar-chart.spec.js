@@ -3,7 +3,7 @@ describe('bar-chart.js', function(){
     beforeEach(function(){
         //pm: hack to stop spec rewriting dom too early :(
         require('../helper').loadAssets('bar-chart');
-        require('../../demo/scripts/bar-chart').init();
+        require('../fixtures/scripts/bar-chart').init();
     });
 
     describe('displays ', function() {

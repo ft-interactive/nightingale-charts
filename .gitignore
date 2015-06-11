@@ -4,6 +4,8 @@ bower_components
 svgstyle.html
 .sass-cache
 .idea
+_test
 _site
+dist
 test/coverage
 npm-debug.log
