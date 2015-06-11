@@ -1939,6 +1939,7 @@ module.exports = {
   ],
   accent: '#9e2f50'
 };
+
 },{}],23:[function(require,module,exports){
 var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
