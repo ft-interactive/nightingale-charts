@@ -232,7 +232,11 @@ Create.prototype.configureDependentScale = function (model) {
         .yOffset(model.dependentAxisOrient =='bottom' ? model.plotHeight : 0);
         //this.dependentAxis.noLabels(true);
     }
+    // THIS IS A HACK BECAUSE FOR SOME REASON THE
+    // DOMAIN IS COMING BACK DIFFERENT ON THESE SCALES
+    // ;_;
     this.dependentAxis.scale(this.dependentAxisScale);
+    this.dependentAxis.scale().domain(this.dependentAxisScale.domain());
     this.chart.call(this.dependentAxis);
 };
 
@@ -245,6 +249,7 @@ Create.prototype.configureIndependentScale = function (model) {
         this.independentAxis.yOffset(model.plotHeight);	//position the axis at the bottom of the chart
     }
     this.independentAxis.scale(this.independentAxisScale, this.model.units);
+    // ?? do we need to do the same here?
     this.chart.call(this.independentAxis);
 };
 
@@ -2892,7 +2897,7 @@ module.exports = {
 };
 
 },{}],31:[function(require,module,exports){
-module.exports = "0.4.4";
+module.exports = "0.4.5";
 },{}],"date-axes":[function(require,module,exports){
 var oCharts = require('../../src/scripts/o-charts');
 var d3 = require('d3');

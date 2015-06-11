@@ -232,7 +232,11 @@ Create.prototype.configureDependentScale = function (model) {
         .yOffset(model.dependentAxisOrient =='bottom' ? model.plotHeight : 0);
         //this.dependentAxis.noLabels(true);
     }
+    // THIS IS A HACK BECAUSE FOR SOME REASON THE
+    // DOMAIN IS COMING BACK DIFFERENT ON THESE SCALES
+    // ;_;
     this.dependentAxis.scale(this.dependentAxisScale);
+    this.dependentAxis.scale().domain(this.dependentAxisScale.domain());
     this.chart.call(this.dependentAxis);
 };
 
@@ -245,6 +249,7 @@ Create.prototype.configureIndependentScale = function (model) {
         this.independentAxis.yOffset(model.plotHeight);	//position the axis at the bottom of the chart
     }
     this.independentAxis.scale(this.independentAxisScale, this.model.units);
+    // ?? do we need to do the same here?
     this.chart.call(this.independentAxis);
 };
 
@@ -2892,7 +2897,7 @@ module.exports = {
 };
 
 },{}],31:[function(require,module,exports){
-module.exports = "0.4.4";
+module.exports = "0.4.5";
 },{}],"column-chart":[function(require,module,exports){
 var oCharts = require('../../src/scripts/o-charts');
 var d3 = require('d3');
@@ -3057,6 +3062,59 @@ var fixtures = {
         {myDateColumn: new Date('9/30/05'), value: -75, value2: -70, value3: -13, value4: -12, value5: -110},
         {myDateColumn: new Date('12/30/05'), value: 75, value2: 70, value3: 13, value4: 12, value5: 110}
     ],
+    baselineTest: [
+        {date: new Date('2015'), value:    5.0},
+        {date: new Date('2016'), value:    4.0},
+        {date: new Date('2017'), value:    2.0},
+        {date: new Date('2018'), value:    0.6},
+        {date: new Date('2019'), value:    -0.2},
+        {date: new Date('2020'), value:    -0.3},
+        {date: new Date('2021'), value:    -0.3},
+        {date: new Date('2022'), value:    -0.2},
+        {date: new Date('2023'), value:    -0.1},
+        {date: new Date('2024'), value:    0.1},
+        {date: new Date('2025'), value:    0.3},
+        {date: new Date('2026'), value:    0.5},
+        {date: new Date('2027'), value:    0.6},
+        {date: new Date('2028'), value:    0.7},
+        {date: new Date('2029'), value:    0.8},
+        {date: new Date('2030'), value:    1.0},
+        {date: new Date('2031'), value:    1.2},
+        {date: new Date('2032'), value:    1.4},
+        {date: new Date('2033'), value:    1.6},
+        {date: new Date('2034'), value:    1.8},
+        {date: new Date('2035'), value:    1.8},
+        {date: new Date('2036'), value:    1.8},
+        {date: new Date('2037'), value:    1.9},
+        {date: new Date('2038'), value:    2.1},
+        {date: new Date('2039'), value:    2.2},
+        {date: new Date('2040'), value:    2.4},
+        {date: new Date('2041'), value:    2.5},
+        {date: new Date('2042'), value:    2.6},
+        {date: new Date('2043'), value:    2.7},
+        {date: new Date('2044'), value:    2.8},
+        {date: new Date('2045'), value:    2.9},
+        {date: new Date('2046'), value:    3.1},
+        {date: new Date('2047'), value:    3.3},
+        {date: new Date('2048'), value:    3.4},
+        {date: new Date('2049'), value:    3.4},
+        {date: new Date('2050'), value:    3.5},
+        {date: new Date('2051'), value:    3.6},
+        {date: new Date('2052'), value:    3.8},
+        {date: new Date('2053'), value:    3.9},
+        {date: new Date('2054'), value:    4.0},
+        {date: new Date('2055'), value:    4.1},
+        {date: new Date('2056'), value:    4.3},
+        {date: new Date('2057'), value:    4.4},
+        {date: new Date('2058'), value:    4.5},
+        {date: new Date('2059'), value:    4.7},
+        {date: new Date('2060'), value:    4.8},
+        {date: new Date('2061'), value:    4.9},
+        {date: new Date('2062'), value:    5.0},
+        {date: new Date('2063'), value:    5.0},
+        {date: new Date('2064'), value:    5.0},
+        {date: new Date('2065'), value:    5.2}
+    ],
     categories : [
         { key: 'red', value:      0.583, value2:      1.583},
         { key: 'blue', value: 1.027, value2:  2},
@@ -3187,7 +3245,8 @@ var units = {
     nullStack: ['quarterly', 'yearly'],
     weekly: ['weekly', 'monthly', 'yearly'],
     daily: ['daily', 'monthly', 'yearly'],
-    allNegative: ['monthly', 'yearly']
+    allNegative: ['monthly', 'yearly'],
+    baselineTest: ['yearly']
 };
 var ySeriesData = {
     weekly: ['value'],
@@ -3238,6 +3297,8 @@ function getChartData(timeFrame){
 
 var widths = [600, 300];
 
+
+
 module.exports = {
     getChartData: getChartData,
     init: function(){
@@ -3246,7 +3307,8 @@ module.exports = {
             'multiple', 'time', 'stack', 'stackMonthly', 'multipleWithNegatives', 'stackWithAllNegatives',
             'categories', 'categoriesStack', 'dateCategories', 'quarterCategories',
             'nullMultiple', 'nullValues', 'nullStack',
-            'weekly', 'daily', 'allNegative'];
+            'weekly', 'daily', 'allNegative',
+            'baselineTest'];
         demos.forEach(function(timeFrame, i){
             var textContent = '';
             if (i===7){
