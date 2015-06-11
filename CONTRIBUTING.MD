@@ -12,24 +12,22 @@ To build the Nightingale locally, you'll need to install:
 
 ## pre-requisits
 
-if behind a proxy run, setup git to use https:
+1. `git clone git@github.com:ft-interactive/o-charts.git`
+2. `npm i`
 
- `git config --global url."https://".insteadOf git://`
+if behind a proxy run, setup git to use https:
+ * `git config --global url."https://".insteadOf git://`
 
 ## Workflow
 
-1. `https://github.com/ft-interactive/o-charts.git`
-2. Run `npm i && bower i`
-3. Create a topic branch to contain your change
-`git checkout -b my-feature`
-4. Hack, test, hack, test
-5. Update [CHANGELOG.md](./CHANGELOG.md) with a summary of your changes
-6. Make sure you are still up to date with master
-`git pull origin master`
-7. If necessary, rebase your commits into logical chunks, without errors.
-8. Push the branch up
-`git push origin my-feature`
-9. Create a pull request and describe what your change does and the why you think it should be merged.
+1. Run `npm run regression` to create reference shots
+2. Run `git checkout -b my-feature`
+3. Hack, test, hack, test
+1. Run `npm run regression` to make sure nothing has broken
+4. `git rebase master`
+5. If necessary, rebase your commits into logical chunks, without errors.
+6. `git push origin my-feature`
+7. Create a pull request and describe what your change does and the why you think it should be merged.
 
 ## Running Locally
 

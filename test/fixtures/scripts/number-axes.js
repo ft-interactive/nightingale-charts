@@ -1,12 +1,13 @@
 var oCharts = require('../../../src/scripts/o-charts');
 var d3 = require('d3');
+var slug = require('slug');
 
 var margin = {
     top: 20, left: 50, bottom: 70, right: 50
 }
 var axesDefinitions = [
     {
-        title: '6 or less',
+        title: 'six or less',
         simple: false,
         start: 11.2,
         end: 7
@@ -18,7 +19,7 @@ var axesDefinitions = [
         end: 0
     },
     {
-        title: '6 or less (simple)',
+        title: 'six or less (simple)',
         simple: true,
         start: 11.2,
         end: 7
@@ -30,14 +31,14 @@ var axesDefinitions = [
         end: 0
     },
     {
-        title: '6 or less',
+        title: 'six or less',
         simple: false,
         orient: 'bottom',
         start: 7,
         end: 11.2
     },
     {
-        title: '6 or less (simple)',
+        title: 'six or less (simple)',
         simple: true,
         orient: 'bottom',
         start: 7,
@@ -80,6 +81,9 @@ function renderAxesArrayIntoDiv(div, axesDefinitionArray) {
         });
 
     divs.append('svg')
+        .attr('id', function(d) {
+            return slug(d.title).toLowerCase();
+        })
         .attr('width', function (d) {
             if (d.orient) {
                 var r = d.scale.range();
