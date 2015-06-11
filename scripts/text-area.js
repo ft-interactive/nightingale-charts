@@ -2619,9 +2619,10 @@ module.exports = {
     },
 
     intersection: function (a, b) {
+        var PADDING = 2;
         var overlap = (
-        a.left <= b.right &&
-        b.left <= a.right &&
+        a.left <= b.right + PADDING &&
+        b.left <= a.right + PADDING &&
         a.top <= b.bottom &&
         b.top <= a.bottom
         );
@@ -2891,7 +2892,7 @@ module.exports = {
 };
 
 },{}],31:[function(require,module,exports){
-module.exports = "0.4.3";
+module.exports = "0.4.4";
 },{}],"text-area":[function(require,module,exports){
 
 var oCharts = require('../../src/scripts/o-charts');
