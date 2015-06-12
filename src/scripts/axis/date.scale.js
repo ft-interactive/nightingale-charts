@@ -11,7 +11,9 @@ var interval = {
     monthly: d3.time.month,
     months: d3.time.month,
     weeks: d3.time.week,
+    weekly: d3.time.week,
     days: d3.time.day,
+    daily: d3.time.day,
     hours: d3.time.hours
 };
 
@@ -25,7 +27,9 @@ var increment = {
     monthly: 1,
     months: 1,
     weeks: 1,
+    weekly: 1,
     days: 1,
+    daily: 1,
     hours: 1
 };
 

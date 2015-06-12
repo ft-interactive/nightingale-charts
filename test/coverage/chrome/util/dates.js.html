@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for util/dates.js</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../prettify.css">
+    <link rel="stylesheet" href="../base.css">
+    <style type='text/css'>
+        div.coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class="header medium">
+    <h1>Code coverage report for <span class="entity">util/dates.js</span></h1>
+    <h2>
+        Statements: <span class="metric">50% <small>(35 / 70)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Branches: <span class="metric">59.18% <small>(29 / 49)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">22.22% <small>(6 / 27)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">52.24% <small>(35 / 67)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"><a href="../index.html">All files</a> &#187; <a href="index.html">util/</a> &#187; dates.js</div>
+</div>
+<div class="body">
+<pre><table class="coverage">
+<tr><td class="line-count">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158</td><td class="line-coverage"><span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">44</span>
+<span class="cline-any cline-yes">17</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">45</span>
+<span class="cline-any cline-yes">45</span>
+<span class="cline-any cline-yes">45</span>
+<span class="cline-any cline-yes">45</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">45</span>
+<span class="cline-any cline-yes">45</span>
+<span class="cline-any cline-yes">45</span>
+<span class="cline-any cline-yes">45</span>
+<span class="cline-any cline-yes">8</span>
+<span class="cline-any cline-yes">37</span>
+<span class="cline-any cline-yes">10</span>
+<span class="cline-any cline-yes">27</span>
+<span class="cline-any cline-yes">8</span>
+<span class="cline-any cline-yes">19</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-yes">13</span>
+<span class="cline-any cline-yes">5</span>
+<span class="cline-any cline-yes">8</span>
+<span class="cline-any cline-yes">5</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">45</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">45</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">var d3 = require('d3');
+&nbsp;
+var formatter = {
+    centuries: <span class="fstat-no" title="function not covered" >function (d, i) {</span>
+<span class="cstat-no" title="statement not covered" >        if (i === 0 || d.getYear() % 100 === 0) {</span>
+<span class="cstat-no" title="statement not covered" >            return d3.time.format('%Y')(d);</span>
+        }
+<span class="cstat-no" title="statement not covered" >        return d3.time.format('%y')(d);</span>
+    },
+&nbsp;
+    decades: <span class="fstat-no" title="function not covered" >function (d, i) {</span>
+<span class="cstat-no" title="statement not covered" >        if (i === 0 || d.getYear() % 100 === 0) {</span>
+<span class="cstat-no" title="statement not covered" >            return d3.time.format('%Y')(d);</span>
+        }
+<span class="cstat-no" title="statement not covered" >        return d3.time.format('%y')(d);</span>
+    },
+&nbsp;
+    years: function (d, i) {
+        if (i === 0 || d.getYear() % 100 === 0) {
+            return d3.time.format('%Y')(d);
+        }
+        return d3.time.format('%y')(d);
+    },
+&nbsp;
+    fullYears: function (d, i) {
+        return d3.time.format('%Y')(d);
+    },
+    yearly: function (d, i, firstDate) {
+        var years = (firstDate &amp;&amp; !Array.isArray(firstDate) &amp;&amp;
+        (formatter.years(firstDate, i) == formatter.years(d, i))) ?
+            'fullYears' : 'years';
+&nbsp;
+        return formatter[years](d, i);
+    },
+    quarterly: function (d, i) {
+        return 'Q' + Math.floor((d.getMonth() + 3) / 3);
+    },
+    weekly: <span class="fstat-no" title="function not covered" >function (d, i) {</span>
+<span class="cstat-no" title="statement not covered" >        return d3.time.format('%W')(d);</span>
+    },
+    monthly: <span class="fstat-no" title="function not covered" >function (d, i) {</span>
+<span class="cstat-no" title="statement not covered" >        return formatter.months(d, i);</span>
+    },
+    shortmonths: <span class="fstat-no" title="function not covered" >function (d, i) {</span>
+<span class="cstat-no" title="statement not covered" >        return d3.time.format('%b')(d)[0];</span>
+    },
+    months: <span class="fstat-no" title="function not covered" >function (d, i) {</span>
+<span class="cstat-no" title="statement not covered" >        return d3.time.format('%b')(d);</span>
+    },
+&nbsp;
+    weeks: <span class="fstat-no" title="function not covered" >function (d, i) {</span>
+<span class="cstat-no" title="statement not covered" >        return d3.time.format('%e %b')(d);</span>
+    },
+&nbsp;
+    days: <span class="fstat-no" title="function not covered" >function (d, i) {</span>
+<span class="cstat-no" title="statement not covered" >        return d3.time.format('%e')(d);</span>
+    },
+&nbsp;
+    daily: <span class="fstat-no" title="function not covered" >function (d, i) {</span>
+<span class="cstat-no" title="statement not covered" >        var str = d3.time.format('%e')(d);</span>
+<span class="cstat-no" title="statement not covered" >        if (str[0] === ' ') <span class="cstat-no" title="statement not covered" >str = str.substring(1);</span></span>
+<span class="cstat-no" title="statement not covered" >        return str;</span>
+    },
+&nbsp;
+    hours: <span class="fstat-no" title="function not covered" >function (d, i) {</span>
+<span class="cstat-no" title="statement not covered" >        return parseInt(d3.time.format('%H')(d)) + ':00';</span>
+    }
+};
+&nbsp;
+function timeDiff(domain){
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!domain[0].getTime || !domain[1].getTime) <span class="cstat-no" title="statement not covered" >return {};</span>
+    var jsTimeDiff = domain[1].getTime() - domain[0].getTime();
+    var dayLength = 86400000;
+    return {
+        days: jsTimeDiff / dayLength,
+        months: jsTimeDiff / (dayLength * 30),
+        years: jsTimeDiff / (dayLength * 365.25),
+        decades: jsTimeDiff / (dayLength * 365.25 * 10),
+        centuries: jsTimeDiff / (dayLength * 365.25 * 100)
+    };
+}
+&nbsp;
+function unitGenerator(domain, simple) {	//which units are most appropriate
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!domain[0].getTime || !domain[1].getTime) <span class="cstat-no" title="statement not covered" >return [];</span>
+    var timeDif = timeDiff(domain);
+    var units;
+    if (timeDif.days &lt; 2) {
+        units = ['hours', 'days', 'months'];
+    } else if (timeDif.days &lt; 60) {
+        units = ['days', 'months'];
+    } else if (timeDif.years &lt; 1) {
+        units = ['months', 'years'];
+    } else if (timeDif.decades &lt; 1.5) {
+        units = ['years'];
+    } else if (timeDif.centuries &lt; 1.5) {
+        units = ['decades'];
+    } else if (timeDif.centuries &lt; 10) {
+        units = ['centuries'];
+    } else {
+        units = ['multi'];
+    }
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (simple &amp;&amp; (
+<span class="branch-1 cbranch-no" title="branch not covered" >        units.indexOf('years') &gt; -1 </span>||
+<span class="branch-2 cbranch-no" title="branch not covered" >        units.indexOf('decades') </span>||
+<span class="branch-3 cbranch-no" title="branch not covered" >        units.indexOf('centuries'))</span>) {
+<span class="cstat-no" title="statement not covered" >        units = ['fullYears']; </span>//simple axis always uses full years
+    }
+    return units;
+}
+&nbsp;
+var groups = {
+    unknown: <span class="fstat-no" title="function not covered" >function (d, i) {</span>
+<span class="cstat-no" title="statement not covered" >        return d;</span>
+    },
+    years: <span class="fstat-no" title="function not covered" >function (d, i) {</span>
+<span class="cstat-no" title="statement not covered" >        return formatter.years(new Date(d), i);</span>
+    },
+    yearly: <span class="fstat-no" title="function not covered" >function (d, i) {</span>
+<span class="cstat-no" title="statement not covered" >        return d.split(' ')[d.split(' ').length-1];</span>
+    },
+    quarterly: <span class="fstat-no" title="function not covered" >function (d, i) {</span>
+<span class="cstat-no" title="statement not covered" >        return d.split(' ')[0];</span>
+    },
+    weekly: <span class="fstat-no" title="function not covered" >function (d, i) {</span>
+<span class="cstat-no" title="statement not covered" >        return d.split(' ')[0];</span>
+    },
+    daily: <span class="fstat-no" title="function not covered" >function (d, i) {</span>
+<span class="cstat-no" title="statement not covered" >        if (d[0] === ' ') {</span>
+<span class="cstat-no" title="statement not covered" >            d = d.substring(1);</span>
+        }
+<span class="cstat-no" title="statement not covered" >        return d.split(' ')[0];</span>
+    },
+    monthly: <span class="fstat-no" title="function not covered" >function (d, i) {</span>
+<span class="cstat-no" title="statement not covered" >        var parts = d.split(' ');</span>
+<span class="cstat-no" title="statement not covered" >        var pos = (parts.length == 3) ? 1 : 0;</span>
+<span class="cstat-no" title="statement not covered" >        return parts[pos];</span>
+    },
+    months: <span class="fstat-no" title="function not covered" >function (d, i) {</span>
+<span class="cstat-no" title="statement not covered" >        return d.split(' ')[0];</span>
+    },
+    decades: <span class="fstat-no" title="function not covered" >function (d, i) {</span>
+<span class="cstat-no" title="statement not covered" >        return d.split(' ')[1];</span>
+    },
+    centuries: <span class="fstat-no" title="function not covered" >function (d, i) {</span>
+<span class="cstat-no" title="statement not covered" >        return d.split(' ')[1];</span>
+    },
+    categorical: <span class="fstat-no" title="function not covered" >function (d, i) {</span>
+<span class="cstat-no" title="statement not covered" >        return d;</span>
+    }
+};
+&nbsp;
+module.exports = {
+    timeDiff: timeDiff,
+    formatGroups: groups,
+    formatter: formatter,
+    unitGenerator: unitGenerator
+};
+&nbsp;</pre></td></tr>
+</table></pre>
+
+</div>
+<div class="footer">
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jun 12 2015 11:33:51 GMT+0100 (BST)</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

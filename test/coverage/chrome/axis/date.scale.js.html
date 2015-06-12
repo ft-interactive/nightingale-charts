@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for axis/date.scale.js</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../prettify.css">
+    <link rel="stylesheet" href="../base.css">
+    <style type='text/css'>
+        div.coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class="header low">
+    <h1>Code coverage report for <span class="entity">axis/date.scale.js</span></h1>
+    <h2>
+        Statements: <span class="metric">17.86% <small>(5 / 28)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Branches: <span class="metric">0% <small>(0 / 12)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">0% <small>(0 / 5)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">18.52% <small>(5 / 27)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"><a href="../index.html">All files</a> &#187; <a href="index.html">axis/</a> &#187; date.scale.js</div>
+</div>
+<div class="body">
+<pre><table class="coverage">
+<tr><td class="line-count">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78</td><td class="line-coverage"><span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">var d3 = require('d3');
+var utils = require('../util/dates.js');
+&nbsp;
+var interval = {
+    centuries: d3.time.year,
+    decades: d3.time.year,
+    yearly: d3.time.year,
+    years: d3.time.year,
+    fullYears: d3.time.year,
+    quarterly: d3.time.month,
+    monthly: d3.time.month,
+    months: d3.time.month,
+    weeks: d3.time.week,
+    weekly: d3.time.week,
+    days: d3.time.day,
+    daily: d3.time.day,
+    hours: d3.time.hours
+};
+&nbsp;
+var increment = {
+    centuries: 100,
+    decades: 10,
+    yearly: 1,
+    years: 1,
+    fullYears: 1,
+    quarterly: 3,
+    monthly: 1,
+    months: 1,
+    weeks: 1,
+    weekly: 1,
+    days: 1,
+    daily: 1,
+    hours: 1
+};
+&nbsp;
+module.exports = {
+    customTicks: <span class="fstat-no" title="function not covered" >function (scale, unit, primaryUnit) {</span>
+<span class="cstat-no" title="statement not covered" >        if (primaryUnit == 'quarterly' &amp;&amp; unit == 'yearly') <span class="cstat-no" title="statement not covered" >unit = 'quarterly';</span></span>
+<span class="cstat-no" title="statement not covered" >        var customTicks = scale.ticks(interval[unit], increment[unit]);</span>
+<span class="cstat-no" title="statement not covered" >        customTicks.push(scale.domain()[0]); </span>//always include the first and last values
+<span class="cstat-no" title="statement not covered" >        customTicks.push(scale.domain()[1]);</span>
+<span class="cstat-no" title="statement not covered" >        customTicks.sort(this.dateSort);</span>
+&nbsp;
+        //if the last 2 values labels are the same, remove them
+<span class="cstat-no" title="statement not covered" >        var labels = customTicks.map(utils.formatter[unit]);</span>
+<span class="cstat-no" title="statement not covered" >        if (labels[labels.length - 1] == labels[labels.length - 2]) {</span>
+<span class="cstat-no" title="statement not covered" >            customTicks.pop();</span>
+        }
+<span class="cstat-no" title="statement not covered" >        return customTicks;</span>
+    },
+    dateSort: <span class="fstat-no" title="function not covered" >function (a, b) {</span>
+<span class="cstat-no" title="statement not covered" >        return (a.getTime() - b.getTime());</span>
+    },
+    createAxes: <span class="fstat-no" title="function not covered" >function(scale, unit, config, primaryUnit){</span>
+<span class="cstat-no" title="statement not covered" >        var firstDate ;</span>
+<span class="cstat-no" title="statement not covered" >        var customTicks = (config.simple) ? scale.domain() : this.customTicks(scale, unit, primaryUnit);</span>
+<span class="cstat-no" title="statement not covered" >        var axis = d3.svg.axis()</span>
+            .scale(scale)
+            .tickValues(customTicks)
+            .tickFormat(<span class="fstat-no" title="function not covered" >function(d,i){</span>
+<span class="cstat-no" title="statement not covered" >                firstDate = firstDate || d;</span>
+<span class="cstat-no" title="statement not covered" >                return utils.formatter[unit](d,i, firstDate);</span>
+            })
+            .tickSize(config.tickSize, 0);
+<span class="cstat-no" title="statement not covered" >        return axis;</span>
+    },
+    render: <span class="fstat-no" title="function not covered" >function (scale, units, config) {</span>
+<span class="cstat-no" title="statement not covered" >        var axes = [];</span>
+<span class="cstat-no" title="statement not covered" >        for (var i = 0; i &lt; units.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >            var unit = units[i];</span>
+<span class="cstat-no" title="statement not covered" >            if (utils.formatter[unit]) {</span>
+<span class="cstat-no" title="statement not covered" >                axes.push(this.createAxes(scale, unit, config, units[0]));</span>
+            }
+        }
+<span class="cstat-no" title="statement not covered" >        return axes;</span>
+    }
+};
+&nbsp;</pre></td></tr>
+</table></pre>
+
+</div>
+<div class="footer">
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jun 12 2015 11:33:51 GMT+0100 (BST)</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

@@ -10,8 +10,8 @@ var styler = require('../util/chart-attribute-styles');
 function numericAxis() {
     'use strict';
 
-    var ticksize = 5;
-    var a = d3.svg.axis().orient('left').tickSize(ticksize, 0);
+    var tickSize = 5;
+    var a = d3.svg.axis().orient('left').tickSize(tickSize, 0);
     var lineHeight = 16;
     var userTicks = [];
     var hardRules = [0];
@@ -42,7 +42,7 @@ function numericAxis() {
     };
 
     axis.tickSize = function (int) {
-        if (!arguments.length) return ticksize;
+        if (!arguments.length) return a.tickSize();
         a.tickSize(-int);
         return axis;
     };

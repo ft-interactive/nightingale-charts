@@ -2,12 +2,13 @@ var pkg = require('./package.json');
 
 module.exports = {
     pkg: pkg,
-    paths: {
-        source: "./src",
-        "demo": "./demo",
-        "target": './_site'
-    },
+    buildPaths: [
+        {source: "./src", targets: ['./_site', './dist'], minify: true},
+        {source: "./examples", targets: ['./_site']},
+        {source: './test/fixtures', targets: ['./_test']}
+    ],
     tasks: {
+        copy: ['server-config'],
         build: ['sass', 'mustache', 'browserify'],
         serve: 'staticApp',
         test: 'karma',
@@ -24,9 +25,5 @@ module.exports = {
         ],
         vendorTarget: 'scripts/vendor.js'
     },
-    karma:{
-        functional: './test/karma.functional.js', // string or false. Karma config file.
-        unit: './test/karma.unit.js', // string or false. Karma config file with coverage setup.
-        unitCoverage: './test/coverage/summary.json'// code coverage summary for unit tests
-    }
+    karma: [ './test/karma.unit.js', './test/karma.functional.js']
 };

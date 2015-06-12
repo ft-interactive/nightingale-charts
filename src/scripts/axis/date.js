@@ -27,7 +27,7 @@ function dateAxis() {
 
         g = g.append('g').attr('transform', 'translate(' + config.xOffset + ',' + config.yOffset + ')');
 
-        g.append('g').attr('class', 'x axis').each(function () {
+        g.append('g').attr('class', 'x axis axis--independent').each(function () {
             labels.add(d3.select(this), config);
         });
 
@@ -66,6 +66,13 @@ function dateAxis() {
         return render;
     };
 
+    render.orient = function (string) {
+        if (!arguments.length) return config.axes[0].orient();
+        if (!config.axes.length) return; //todo: why i sthis being called when axes dont exist
+        config.axes[0].orient(string);
+        return render;
+    };
+
     render.yOffset = function (int) {
         if (!arguments.length) return config.yOffset;
         config.yOffset = int;
@@ -87,6 +94,8 @@ function dateAxis() {
     render.scale = function (scale, units) {
         if (!arguments.length) return config.axes[0].scale();
         if (!units ||
+            (units[0] === 'daily' && timeDiff(scale.domain()).months > 1) ||
+            (units[0] === 'weekly' && timeDiff(scale.domain()).years > 1) ||
             (units[0] === 'quarterly' && timeDiff(scale.domain()).decades > 1) ||
             (units[0] === 'monthly' && timeDiff(scale.domain()).years > 4.9) ||
             (units[0] === 'yearly' && timeDiff(scale.domain()).years > 10)){

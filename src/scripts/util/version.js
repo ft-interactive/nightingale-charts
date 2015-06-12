@@ -1,1 +1,2 @@
-module.exports = "0.3.3";
+var app = require('../../app.json');
+module.exports = app.version;

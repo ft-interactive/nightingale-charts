@@ -3,13 +3,13 @@ describe('When Number axis data is', function () {
     beforeEach(function(){
         //pm: hack to stop quarterly axis spec rewriting dom too early :(
         require('../helper').loadAssets('number-axes');
-        require('../../demo/scripts/number-axes').init();
-    })
+        require('../../examples/scripts/number-axes').init();
+    });
 
     describe('6 or less, it', function () {
         //pm: hack to stop quarterly axis spec rewriting dom too early :(
         require('../helper').loadAssets('number-axes');
-        require('../../demo/scripts/number-axes').init();
+        require('../../examples/scripts/number-axes').init();
         var sixOrLess = document.querySelector('.axis-test:nth-child(1) svg');
         var y = sixOrLess.querySelector('.y.axis');
         var labels = y.querySelectorAll('.primary .tick text');
@@ -28,14 +28,13 @@ describe('When Number axis data is', function () {
             var sixOrLess = document.querySelector('.axis-test:nth-child(5) svg');
             var x = sixOrLess.querySelector('.x.axis');
             var labels = x.querySelectorAll('.primary .tick text');
-
-            expect(labels.length).toBe(5);//todo: should be 6??
+            expect(labels.length).toBe(6);
             expect(labels[0].textContent).toContain('7');
             expect(labels[1].textContent).toContain('8');
             expect(labels[2].textContent).toContain('9');
             expect(labels[3].textContent).toContain('10');
             expect(labels[4].textContent).toContain('11');
-            //expect(labels[5].textContent).toContain('12');
+            expect(labels[5].textContent).toContain('12');
         });
 
         it('shows two labels with simple:true', function () {
@@ -100,12 +99,13 @@ describe('When Number axis data is', function () {
 
         it('should always display 0.0 as 0', function () {
             expect(labels.length).toBe(7);
-            expect(labels[5].textContent).toBe('0');
-            expect(labels[0].textContent).toBe('0.5');
-            expect(labels[1].textContent).toBe('1.0');
-            expect(labels[2].textContent).toBe('1.5');
-            expect(labels[3].textContent).toBe('2.0');
-            expect(labels[4].textContent).toBe('2.5');
+            expect(labels[0].textContent).toBe('0');
+            expect(labels[1].textContent).toBe('0.5');
+            expect(labels[2].textContent).toBe('1.0');
+            expect(labels[3].textContent).toBe('1.5');
+            expect(labels[4].textContent).toBe('2.0');
+            expect(labels[5].textContent).toBe('2.5');
+            expect(labels[6].textContent).toBe('3.0');
         });
     })
 

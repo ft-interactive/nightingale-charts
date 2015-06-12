@@ -177,7 +177,7 @@ Dressing.prototype.setHeight = function () {
 Dressing.prototype.setPosition = function () {
     this.model.chartPosition = {
         top: this.headerHeight + this.halfLineStrokeWidth,
-        left: (this.model.numberAxisOrient === 'left' ? 0 : this.halfLineStrokeWidth)
+        left: (this.model.dependentAxisOrient === 'left' ? 0 : this.halfLineStrokeWidth)
     };
 };
 

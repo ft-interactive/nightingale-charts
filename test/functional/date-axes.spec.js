@@ -3,7 +3,7 @@ describe('When the date axis is', function () {
 
     beforeEach(function() {
         require('../helper').loadAssets('date-axes');
-        require('../../demo/scripts/date-axes').init();
+        require('../../examples/scripts/date-axes').init();
     });
 
     describe('a day or less,', function () {

@@ -1,5 +1,3 @@
-require('../../helper').loadAssets('number-axes');
-
 var number = require('../../../src/scripts/axis/number');
 var d3 = require('d3');
 

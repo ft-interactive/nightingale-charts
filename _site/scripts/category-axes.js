@@ -26,11 +26,14 @@ function categoryAxis() {
         keepD3Style: true
     };
 
+    function isVertical(){
+        return ['right','left'].indexOf(config.axes[0].orient())>-1;
+    }
+
     function render(g) {
-
-        g = g.append('g').attr('transform', 'translate(' + config.xOffset + ',' + config.yOffset + ')');
-
-        g.append('g').attr('class', 'x axis').each(function () {
+        var orientOffset = (isVertical()) ? -config.axes[0].tickSize() : 0;
+        g = g.append('g').attr('transform', 'translate(' + (config.xOffset + orientOffset) + ',' + config.yOffset + ')');
+        g.append('g').attr('class', isVertical() ? 'y axis axis--independent' : 'x axis axis--independent').each(function () {
             var g = d3.select(this);
             labels.add(g, config);
         });
@@ -76,6 +79,12 @@ function categoryAxis() {
         return render;
     };
 
+    render.orient = function (string) {
+        if (!arguments.length) return config.axes[0].orient();
+        config.axes[0].orient(string);
+        return render;
+    };
+
     render.yOffset = function (int) {
         if (!arguments.length) return config.yOffset;
         config.yOffset = int;
@@ -108,6 +117,7 @@ function categoryAxis() {
             var unit = units[i];
             if (dates.formatGroups[unit]) {
                 var axis = d3.svg.axis()
+                    .orient(config.axes[0].orient())
                     .scale(scale)
                     .tickFormat(dates.formatGroups[unit])
                     .tickSize(config.tickSize, 0);
@@ -124,7 +134,7 @@ function categoryAxis() {
 
 module.exports = categoryAxis;
 
-},{"../util/chart-attribute-styles":20,"../util/dates.js":22,"../util/labels.js":24,"d3":"d3"}],2:[function(require,module,exports){
+},{"../util/chart-attribute-styles":21,"../util/dates.js":24,"../util/labels.js":26,"d3":"d3"}],2:[function(require,module,exports){
 var d3 = require('d3');
 var axis = {
     category: require('./category.js'),
@@ -132,118 +142,174 @@ var axis = {
     number: require('./number.js')
 };
 
+var PADDING = 4;
+
 function getDimension(dimension, selection) {
+    if (!selection.node()) return 0;
     return Math.ceil(selection.node().getBoundingClientRect()[dimension]);
 }
-function getWidth(selection) { return getDimension('width', selection); }
+function getWidth(selection)  { return getDimension('width', selection);  }
 function getHeight(selection) { return getDimension('height', selection); }
+function isVertical(orient)   { return orient == 'right' || orient == 'left'; }
 
-function ordinalScale(model, options) {
-    var plotWidth = model.chartWidth - (getWidth(options.svg) - model.chartWidth);
+function getRange(model, orientation)     {
+    var plotWidth = model.plotWidth = model.chartWidth - model.yLabelWidth;
+    var plotHeight = model.plotHeight =  model.chartHeight - model.xLabelHeight;
+    return (isVertical(orientation)) ? [0, plotHeight] : [0, plotWidth];
+}
+
+function ordinalScale(model, options, orientation) {
+    var range = getRange(model, orientation);
     return d3.scale.ordinal()
-        .domain(model.timeDomain)
-        .rangeRoundBands([0, plotWidth], 0, options.margin);
+        .domain(model.independentDomain)
+        .rangeRoundBands(range, 0, options.margin);
 }
 
-function timeScale(model) {
+function timeScale(model, options, orientation) {
+    var range = getRange(model, orientation);
     return d3.time.scale()
-        .domain(model.timeDomain)
-        .range([0, model.chartWidth]);
+        .domain(model.independentDomain)
+        .range(range);
 }
 
-function updateChartPosition(g, model){
-    var vLabelWidth = 0;
-    model.chartPosition.top += (getHeight(g.select('.y.axis')) - model.plotHeight);
-    if (model.numberAxisOrient === 'left') {
-        g.selectAll('.y.axis text').each(function () {
-            vLabelWidth = Math.max(vLabelWidth, getWidth(d3.select(this)));
-        });
-        model.chartPosition.left += vLabelWidth + 4;//NOTE magic number 4
+function linearScale(model, options, orientation) {
+    var range = getRange(model, orientation);
+    var domain = (isVertical(orientation)) ? model.dependentDomain.reverse() : model.dependentDomain;
+    return d3.scale.linear()
+        .range(range)
+        .domain(domain);
+}
+
+function setChartPosition(g, model){
+    var labelSpace = 0,
+        spacing = PADDING,
+        top = model.chartPosition.top,
+        left = model.chartPosition.left;
+    if (isVertical(model.independentAxisOrient)) {
+        spacing = model.tickSize + (PADDING * 2);
+    } else {
+        top += (getHeight(g.select('.y.axis')) - model.plotHeight);
     }
+    if ([model.dependentAxisOrient,model.independentAxisOrient].indexOf('top') >-1) {
+        g.selectAll('.x.axis text').each(function () {
+            labelSpace = Math.max(labelSpace, getHeight(d3.select(this)));
+        });
+        top += labelSpace;
+    }
+    if ([model.dependentAxisOrient,model.independentAxisOrient].indexOf('left') >-1) {
+        g.selectAll('.y.axis text').each(function () {
+            labelSpace = Math.max(labelSpace, getWidth(d3.select(this)));
+        });
+        left += labelSpace + spacing;
+    }
+    return { top: top, left: left};
 }
 
 function Create(svg, model) {
     this.model = model;
-    this.svg = svg;
+    this.chart = svg;
     this.margin = 0.2;
 }
 
 Create.prototype.hideTicks = function () {
-    var tickCount = this.svg.selectAll('.x.axis .primary line')[0].length;
-    var labelCount= this.svg.selectAll('.x.axis .primary text')[0].length;
+    var tickCount = this.chart.selectAll('.x.axis .primary line')[0].length;
+    var labelCount= this.chart.selectAll('.x.axis .primary text')[0].length;
     var labelsShownRatio = labelCount/tickCount;
-    var allPositiveValues = Math.min.apply(null, this.valueScale.domain()) >= 0;
+    var allPositiveValues = Math.min.apply(null, this.dependentAxisScale.domain()) >= 0;
     return labelsShownRatio===1 && allPositiveValues;
 };
 
-Create.prototype.repositionAxis = function () {
-    if (!this.independentScaleCreated || !this.dependentScaleCreated) return;
-    var model = this.model;
-    var xLabelHeight = getHeight(this.svg) - model.chartHeight;
-    var yLabelWidth = getWidth(this.svg) - model.chartWidth;
-    var plotHeight = model.plotHeight = model.chartHeight - xLabelHeight;
-    var plotWidth = model.plotWidth = model.chartWidth - yLabelWidth;
-    model.tickSize = (model.chartType == 'column' && this.hideTicks()) ? 0 : model.tickSize;
+Create.prototype.configureDependentScale = function (model) {
+    this.dependentAxis.tickFormat(model.numberAxisFormatter)
+        .simple(model.simpleValue)
+        .orient(model.dependentAxisOrient);
 
-    if (this.timeScale.rangeRoundBands) {
-        this.timeScale.rangeRoundBands([0, plotWidth], this.margin);
+    if (isVertical(model.dependentAxisOrient)) {
+        this.dependentAxis.tickSize(model.plotWidth)
+            .tickExtension(model.yLabelWidth);
     } else {
-        this.timeScale.range([this.timeScale.range()[0], plotWidth]);
+        this.dependentAxis.tickSize(model.plotHeight)
+        .yOffset(model.dependentAxisOrient =='bottom' ? model.plotHeight : 0);
+        //this.dependentAxis.noLabels(true);
     }
+    // THIS IS A HACK BECAUSE FOR SOME REASON THE
+    // DOMAIN IS COMING BACK DIFFERENT ON THESE SCALES
+    // ;_;
+    this.dependentAxis.scale(this.dependentAxisScale);
+    this.dependentAxis.scale().domain(this.dependentAxisScale.domain());
+    this.chart.call(this.dependentAxis);
+};
 
-    this.valueScale.range([this.valueScale.range()[0], plotHeight]);
-    this.timeAxis.yOffset(plotHeight).tickSize(model.tickSize).scale(this.timeScale, model.units);
-    this.vAxis.tickSize(plotWidth).tickExtension(yLabelWidth);
-    this.svg.selectAll('*').remove();
-    this.svg.call(this.vAxis);
-    this.svg.call(this.timeAxis);
-    updateChartPosition(this.svg, this.model);
-    this.svg.attr('transform', model.translate(model.chartPosition));
+Create.prototype.configureIndependentScale = function (model) {
+    this.independentAxis
+        .simple(model.simpleDate)
+        .tickSize(model.tickSize)
+        .orient(model.independentAxisOrient);
+    if (!isVertical(model.independentAxisOrient)) {
+        this.independentAxis.yOffset(model.plotHeight);	//position the axis at the bottom of the chart
+    }
+    this.independentAxis.scale(this.independentAxisScale, this.model.units);
+    // ?? do we need to do the same here?
+    this.chart.call(this.independentAxis);
+};
+
+Create.prototype.repositionAxis = function () {
+    var model = this.model;
+    var independentRange = getRange(model, model.independentAxisOrient);
+    var dependentRange = getRange(model, model.dependentAxisOrient);
+
+    if (this.independentAxisScale.rangeRoundBands) {
+        this.independentAxisScale.rangeRoundBands(independentRange, this.margin);
+    } else {
+        this.independentAxisScale.range(independentRange);
+    }
+    this.dependentAxisScale.range(dependentRange);
+
+    this.configureIndependentScale(model);
+    this.configureDependentScale(model);
 };
 
 Create.prototype.independentScale = function (scale) {
     var model = this.model;
     if(scale == 'ordinal'){
-        this.timeScale = ordinalScale(model, this);
-        this.timeAxis = axis.category().dataType(model.dataType);
+        this.independentAxisScale = ordinalScale(model, this, model.independentAxisOrient);
+        this.independentAxis = axis.category().dataType(model.dataType);
     } else {
-        this.timeScale = timeScale(model);
-        this.timeAxis = axis.date();
+        this.independentAxisScale = timeScale(model, this, model.independentAxisOrient);
+        this.independentAxis = axis.date();
     }
-    this.timeAxis
-        .simple(model.simpleDate)
-        .yOffset(model.chartHeight)	//position the axis at the bottom of the chart
-        .tickSize(model.tickSize)
-        .scale(this.timeScale, this.model.units);
-    this.svg.call(this.timeAxis);
-    this.independentScaleCreated = true;
-    this.repositionAxis();
+    this.configureIndependentScale(this.model);
 };
 
 Create.prototype.dependentScale = function (scale) {
     var model = this.model;
-    this.valueScale = d3.scale.linear()
-        .domain(model.valueDomain.reverse())
-        .range([0, model.chartHeight]);
-
+    this.dependentAxisScale = linearScale(model, this, model.dependentAxisOrient);
+    this.dependentAxis = axis.number();
     if (model.niceValue) {
-        this.valueScale.nice();
+        this.dependentAxisScale.nice();
     }
+    this.configureDependentScale(this.model);
+};
 
-    this.vAxis = axis.number()
-        .tickFormat(model.numberAxisFormatter)
-        .simple(model.simpleValue)
-        .tickSize(model.chartWidth)	//make the ticks the width of the chart
-        .scale(this.valueScale);
+Create.prototype.createAxes = function (axesSpec) {
+    var model = this.model;
+    var spacing = model.tickSize + (PADDING * 2);
+    this.independentScale(axesSpec.independent);
 
-    if (model.numberAxisOrient !== 'right' && model.numberAxisOrient !== 'left') {
-        this.vAxis.noLabels(true);
+    if (isVertical(model.dependentAxisOrient)) {
+        model.xLabelHeight = getHeight(this.chart) + spacing;
+        this.dependentScale(axesSpec.dependent); //create Y
+        model.yLabelWidth = getWidth(this.chart) - model.chartWidth;// measure Y
     } else {
-        this.vAxis.orient(model.numberAxisOrient);
+        model.yLabelWidth = getWidth(this.chart) + spacing;// measure Y
+        this.dependentScale(axesSpec.dependent);
+        model.xLabelHeight = getHeight(this.chart) - model.chartHeight;
     }
-    this.svg.call(this.vAxis);
-    this.dependentScaleCreated = true;
+    this.model.tickSize = (model.chartType == 'column' && this.hideTicks()) ? 0 : model.tickSize;
+    this.chart.selectAll('*').remove();
     this.repositionAxis();
+    model.chartPosition = setChartPosition(this.chart, model);
+    this.chart.attr('transform', model.translate(model.chartPosition));
 };
 
 module.exports = Create;
@@ -278,7 +344,7 @@ function dateAxis() {
 
         g = g.append('g').attr('transform', 'translate(' + config.xOffset + ',' + config.yOffset + ')');
 
-        g.append('g').attr('class', 'x axis').each(function () {
+        g.append('g').attr('class', 'x axis axis--independent').each(function () {
             labels.add(d3.select(this), config);
         });
 
@@ -317,6 +383,13 @@ function dateAxis() {
         return render;
     };
 
+    render.orient = function (string) {
+        if (!arguments.length) return config.axes[0].orient();
+        if (!config.axes.length) return; //todo: why i sthis being called when axes dont exist
+        config.axes[0].orient(string);
+        return render;
+    };
+
     render.yOffset = function (int) {
         if (!arguments.length) return config.yOffset;
         config.yOffset = int;
@@ -338,6 +411,8 @@ function dateAxis() {
     render.scale = function (scale, units) {
         if (!arguments.length) return config.axes[0].scale();
         if (!units ||
+            (units[0] === 'daily' && timeDiff(scale.domain()).months > 1) ||
+            (units[0] === 'weekly' && timeDiff(scale.domain()).years > 1) ||
             (units[0] === 'quarterly' && timeDiff(scale.domain()).decades > 1) ||
             (units[0] === 'monthly' && timeDiff(scale.domain()).years > 4.9) ||
             (units[0] === 'yearly' && timeDiff(scale.domain()).years > 10)){
@@ -357,7 +432,7 @@ function dateAxis() {
 
 module.exports = dateAxis;
 
-},{"../util/dates.js":22,"../util/labels.js":24,"./date.scale.js":4,"d3":"d3"}],4:[function(require,module,exports){
+},{"../util/dates.js":24,"../util/labels.js":26,"./date.scale.js":4,"d3":"d3"}],4:[function(require,module,exports){
 var d3 = require('d3');
 var utils = require('../util/dates.js');
 
@@ -371,7 +446,9 @@ var interval = {
     monthly: d3.time.month,
     months: d3.time.month,
     weeks: d3.time.week,
+    weekly: d3.time.week,
     days: d3.time.day,
+    daily: d3.time.day,
     hours: d3.time.hours
 };
 
@@ -385,7 +462,9 @@ var increment = {
     monthly: 1,
     months: 1,
     weeks: 1,
+    weekly: 1,
     days: 1,
+    daily: 1,
     hours: 1
 };
 
@@ -432,7 +511,7 @@ module.exports = {
     }
 };
 
-},{"../util/dates.js":22,"d3":"d3"}],5:[function(require,module,exports){
+},{"../util/dates.js":24,"d3":"d3"}],5:[function(require,module,exports){
 module.exports = {
     Create: require('./create.js'),
     Plot: require('./plot.js'),
@@ -454,8 +533,8 @@ var styler = require('../util/chart-attribute-styles');
 function numericAxis() {
     'use strict';
 
-    var ticksize = 5;
-    var a = d3.svg.axis().orient('left').tickSize(ticksize, 0);
+    var tickSize = 5;
+    var a = d3.svg.axis().orient('left').tickSize(tickSize, 0);
     var lineHeight = 16;
     var userTicks = [];
     var hardRules = [0];
@@ -486,7 +565,7 @@ function numericAxis() {
     };
 
     axis.tickSize = function (int) {
-        if (!arguments.length) return ticksize;
+        if (!arguments.length) return a.tickSize();
         a.tickSize(-int);
         return axis;
     };
@@ -564,7 +643,7 @@ function numericAxis() {
 
 module.exports = numericAxis;
 
-},{"../util/chart-attribute-styles":20,"./number.labels":7,"./number.scale":8,"d3":"d3"}],7:[function(require,module,exports){
+},{"../util/chart-attribute-styles":21,"./number.labels":7,"./number.scale":8,"d3":"d3"}],7:[function(require,module,exports){
 module.exports = {
 
     isVertical: function (axis) {
@@ -572,11 +651,11 @@ module.exports = {
     },
     arrangeTicks: function (g, axes, lineHeight, hardRules) {
         var textWidth = this.textWidth(g, axes.orient());
+        g.selectAll('.tick').classed('origin', function (d, i) {
+            return hardRules.indexOf(d) > -1;
+        });
         if (this.isVertical(axes)) {
             g.selectAll('text').attr('transform', 'translate( ' + textWidth + ', ' + -(lineHeight / 2) + ' )');
-            g.selectAll('.tick').classed('origin', function (d, i) {
-                return hardRules.indexOf(d) > -1;
-            });
         }
     },
     extendAxis: function (g, axes, extension) {
@@ -614,7 +693,7 @@ module.exports = {
     },
     render: function (g, config) {
         g.append('g')
-            .attr('class', (this.isVertical(config.axes)) ? 'y axis left' : 'x axis')
+            .attr('class', (this.isVertical(config.axes)) ? 'axis axis--dependent y left' : 'axis axis--dependent x')
             .append('g')
             .attr('class', 'primary')
             .call(config.axes);
@@ -644,11 +723,13 @@ module.exports = {
         return ticks;
     },
     tickIntervalBoundaries: function (ticks) {
-        var interval = 0;
+        var interval = 0, step;
         ticks.forEach(function (d, i) {
-            if (i < ticks.length - 1) {
-                interval = Math.max(ticks[i + 1] - d, interval);
-            }
+            if (i == ticks.length - 1)  return;
+            // there was an issue with float precission
+            // so we're ensuring the step is sound
+            step = +((ticks[i + 1] - d).toPrecision(12));
+            interval = Math.max(step, interval);
         });
         return interval;
     },
@@ -656,10 +737,13 @@ module.exports = {
         var count = this.tickCount(scale, pixelsPerTick);
         var ticks = scale.ticks(count);
         var interval = this.tickIntervalBoundaries(ticks);
-        scale.domain()[0] = Math.ceil(scale.domain()[0] / interval) * interval;
-        scale.domain()[1] = Math.floor(scale.domain()[1] / interval) * interval;
-        ticks.push(scale.domain()[1]);
-        ticks.push(scale.domain()[0]);
+        var pos = scale.domain()[0] > scale.domain()[1] ? 0 : 1;
+        var d1 = Math.ceil(scale.domain()[pos] / interval) * interval;
+        var d2 = Math.floor(scale.domain()[1-pos] / interval) * interval;
+        ticks[d1<=0 ? 'unshift' : 'push'](d1);
+        ticks[d2<=0 ? 'unshift' : 'push'](d2);
+        scale.domain()[pos] = d1;
+        scale.domain()[1-pos] = d2;
         return ticks;
     },
     simpleTicks: function (scale) {
@@ -691,7 +775,8 @@ module.exports = {
             customTicks = this.simpleTicks(scale);
         } else {
             customTicks = this.detailedTicks(scale, pixelsPerTick);
-            hardRules.push(scale.domain()[1]);
+            var pos = scale.domain()[0] > scale.domain()[1] ? 1 : 0;
+            hardRules.push(scale.domain()[pos]);
         }
         customTicks = this.removeDuplicateTicks(scale, customTicks);
         return customTicks;
@@ -714,38 +799,210 @@ function Plot(model, axes) {
 }
 
 Plot.prototype.columnHeight = function (value){
-    return Math.abs(this.axes.valueScale(value) - this.axes.valueScale(0));
+    return Math.abs(this.axes.dependentAxisScale(value) - this.axes.dependentAxisScale(0));
+};
+
+Plot.prototype.barWidth = function(value) {
+    return Math.abs(this.axes.dependentAxisScale(value) - this.axes.dependentAxisScale(0));
 };
 
 Plot.prototype.columnWidth = function (){
-    var columnWidthOnTimeScale = 20;  //todo: get proportional column width i.e. width to fit data = histogram!
-    var columnWidth = (this.axes.timeScale.rangeBand) ? this.axes.timeScale.rangeBand(): columnWidthOnTimeScale;
-    if(!this.model.stack){
-        columnWidth = columnWidth / this.model.y.series.length;
+    var size = 20;
+    if (this.axes.independentAxisScale.rangeBand) {
+        size = this.axes.independentAxisScale.rangeBand();
     }
-    return columnWidth;
+    if(!this.model.stack){
+        size = size / this.model.y.series.length;
+    }
+    return size;
 };
 
-Plot.prototype.x = function(key, seriesNumber){ //seriesNumber: grrr.
-    var timeScale = this.axes.timeScale(key);
-    var adjustX = (this.axes.timeScale.rangeBand && !this.model.stack) ? (this.axes.timeScale.rangeBand() / this.model.y.series.length) : 0;
-    return timeScale + (adjustX * seriesNumber);
+Plot.prototype.barHeight = function() {
+    var size = 20;
+    if (this.axes.independentAxisScale.rangeBand) {
+        size = this.axes.independentAxisScale.rangeBand();
+    }
+    if (!this.model.stack) {
+        size = size / this.model.y.series.length;
+    }
+    return size;
 };
 
-Plot.prototype.y = function(value, stack){
-    if (this.model.chartType == 'line') return this.axes.valueScale(value);
+Plot.prototype.x = function (){
+    if (['bottom','top'].indexOf(this.model.independentAxisOrient)>-1){
+        return this.xIndependent.apply(this, arguments);
+    } else {
+        return this.xDependent.apply(this, arguments);
+    }
+};
+
+Plot.prototype.y = function(){
+    if (['bottom','top'].indexOf(this.model.independentAxisOrient)>-1){
+        return this.yDependent.apply(this, arguments);
+    } else {
+        return this.yIndependent.apply(this, arguments);
+    }
+};
+
+Plot.prototype.xDependent = function(value, stack) {
+    if (this.model.chartType == 'line') return this.axes.dependentAxisScale(value);
+    var maxValue = Math.min(0, value);
+    if (this.model.stack) {
+        var xValue = stackSeries(this.model, value, stack);
+        var width = this.model.stacks[stack][this.model.stacks[stack].length-1];
+        maxValue = (xValue<0) ? xValue : xValue - width ;
+    }
+    return this.axes.dependentAxisScale(maxValue);
+};
+
+Plot.prototype.yDependent = function(value, stack) {
+    if (this.model.chartType == 'line') return this.axes.dependentAxisScale(value);
     var maxValue = Math.max(0, value);
     if (this.model.stack) {
         var yValue = stackSeries(this.model, value, stack);
         var height = this.model.stacks[stack][this.model.stacks[stack].length-1];
         maxValue = (yValue<0) ? yValue - height : Math.max(0, yValue);
     }
-    return this.axes.valueScale(maxValue);
+    return this.axes.dependentAxisScale(maxValue);
+};
+
+Plot.prototype.xIndependent = function(key, seriesNumber) {
+    var position = this.axes.independentAxisScale(key);
+    var adjust = 0;
+    if (this.axes.independentAxisScale.rangeBand && !this.model.stack) {
+        adjust = (this.axes.independentAxisScale.rangeBand() / this.model.y.series.length) ;
+    }
+    return position + (adjust * seriesNumber);
+};
+
+Plot.prototype.yIndependent = function(key, seriesNumber) {
+    var position = this.axes.independentAxisScale(key);
+    var adjust = 0;
+    if (this.axes.independentAxisScale.rangeBand && !this.model.stack) {
+        adjust = (this.axes.independentAxisScale.rangeBand() / this.model.y.series.length) ;
+    }
+    return position + (adjust * seriesNumber);
 };
 
 module.exports = Plot;
 
 },{"d3":"d3"}],10:[function(require,module,exports){
+var axes = require('../axis');
+var DataModel = require('../util/data.model.js');
+var metadata = require('../util/metadata.js');
+var Dressing = require('../util/dressing.js');
+var styler = require('../util/chart-attribute-styles');
+
+function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
+	var data = formatData(model, series);
+    var plot = new axes.Plot(model, createdAxes);
+    var s = plotSVG.append('g').attr('class', 'series');
+
+    s.selectAll('rect')
+        .data(data)
+        .enter()
+        .append('rect')
+        .attr('class', function (d){return 'bar '  + series.className + (d.value < 0 ? ' negative' : ' positive');})
+        .attr('data-value', function (d){return d.value;})
+        .attr('x',      function (d, i){ return plot.x(d.value, i); })
+        .attr('y',      function (d, i){ return plot.y(d.key, seriesNumber); })
+        .attr('height', function (d, i){ return plot.barHeight(d, i); })
+        .attr('width',  function (d, i){ return plot.barWidth(d.value, i); });
+
+    if (!model.stack) {
+        // add N/As for null values
+        s.selectAll('text.null-label')
+            .data(data._nulls)
+            .enter()
+            .append('text')
+            .attr('class', 'null-label')
+            .attr('x',  function (d, i) { return plot.x(d.value, i); })
+            .attr('y',  function (d, i) {
+                var yPos = plot.y(d.key, seriesNumber);
+                var halfHeight = plot.barHeight(d, i) / 2;
+                return yPos + halfHeight;
+            })
+            .attr('dx', '1em')
+            .attr('dy', '0.31em')
+            .text('n/a');
+    }
+
+    styler(plotSVG);
+
+    if (!model.stack) {
+        // make those labels who don't fit smaller
+        s.selectAll('text.null-label')
+            .each(function(d, i) {
+                var w = this.getBoundingClientRect();
+                if ((w.height + 2) >= plot.barHeight(d, i)) {
+                    this.innerHTML = '–';
+                }
+            });
+    }
+}
+
+function formatData(model, series) {
+
+    var nulls = [];
+    var data = model.data.map(function (d){
+        return{
+            key:d[model.x.series.key],
+            value: (Array.isArray(d.values)) ? d.values[0][series.key] : d[series.key]
+        };
+    }).filter(function (d) {
+        var isNull = !(d.value !== null && !isNaN(d.value));
+        if (isNull) nulls.push(d);
+        // if we're stacking - we transform nulls
+        // into zeros to avoid problems
+        if (model.stack && isNull) {
+            d.value = 0;
+            return true;
+        }
+        return !isNull;
+    });
+
+    data._nulls = nulls;
+
+    return data;
+}
+
+function barChart(g){
+	'use strict';
+
+	var model = new DataModel('bar', Object.create(g.data()[0]));
+	var svg = g.append('svg')
+		.attr({
+			'class': 'graphic bar-chart',
+			height: model.height,
+			width: model.width,
+			xmlns: 'http://www.w3.org/2000/svg',
+			version: '1.2'
+		});
+	metadata.create(svg, model);
+
+	var dressing = new Dressing(svg, model);
+    dressing.addHeader();
+    dressing.addFooter();
+
+	var chartSVG = svg.append('g').attr('class', 'chart');
+    chartSVG.attr('transform', model.translate(model.chartPosition));
+
+    model.tickSize = 0;
+    var independent = (model.groupData || model.dataType === 'categorical') ? 'ordinal' : 'time';
+    var creator = new axes.Create(chartSVG, model);
+    creator.createAxes({dependent:'number', independent: independent});
+
+	var plotSVG = chartSVG.append('g').attr('class', 'plot');
+    var i = 0;
+
+	for(i; i < model.y.series.length; i++){
+		plotSeries(plotSVG, model, creator, model.y.series[i], i);
+	}
+}
+
+module.exports = barChart;
+
+},{"../axis":5,"../util/chart-attribute-styles":21,"../util/data.model.js":23,"../util/dressing.js":25,"../util/metadata.js":29}],11:[function(require,module,exports){
 //var d3 = require('d3');
 
 function blankChart() {
@@ -817,7 +1074,7 @@ function blankChart() {
 
 module.exports = blankChart;
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 var axes = require('../axis');
 var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');
@@ -839,18 +1096,58 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
         .attr('height', function (d, i){ return plot.columnHeight(d.value); })
         .attr('width',  function (d, i){ return plot.columnWidth(d, i); });
 
+
+    if (!model.stack) {
+        // add N/As for null values
+        s.selectAll('text.null-label')
+            .data(data._nulls)
+            .enter()
+            .append('text')
+            .attr('class', 'null-label')
+            .attr('x',  function (d, i) { return plot.x(d.key, seriesNumber); })
+            .attr('y',  function (d, i) { return plot.y(d.value, i); })
+            .attr('dy', '-0.5em')
+            .attr('dx', function (d, i) { return plot.columnWidth(d, i) / 2;})
+            .text('n/a');
+    }
+
     styler(plotSVG);
+
+    if (!model.stack) {
+        // make those labels who don't fit smaller
+        s.selectAll('text.null-label')
+            .each(function(d, i) {
+                var w = this.getBoundingClientRect();
+                if ((w.width + 2) >= plot.columnWidth(d, i)) {
+                    this.innerHTML = '–';
+                }
+            });
+    }
 }
 
 function formatData(model, series) {
+
+    var nulls = [];
+
     var data = model.data.map(function (d){
         return{
             key:d[model.x.series.key],
             value: (Array.isArray(d.values)) ? d.values[0][series.key] : d[series.key]
         };
     }).filter(function (d) {
-        return (d.value !== null && !isNaN(d.value));
+        var isNull = !(d.value !== null && !isNaN(d.value));
+        if (isNull) nulls.push(d);
+        // if we're stacking - we transform nulls
+        // into zeros to avoid problems
+        if (model.stack && isNull) {
+            d.value = 0;
+            return true;
+        }
+        return !isNull;
     });
+
+    data._nulls = nulls;
+
     return data;
 }
 
@@ -875,29 +1172,31 @@ function columnChart(g){
 	var chartSVG = svg.append('g').attr('class', 'chart');
     chartSVG.attr('transform', model.translate(model.chartPosition));
 
-	var create = new axes.Create(chartSVG, model);
-    create.dependentScale('number');
-    create.independentScale((model.groupData || model.dataType === 'categorical') ? 'ordinal' : 'time');
+    var independent = (model.groupData || model.dataType === 'categorical') ? 'ordinal' : 'time';
+	var creator = new axes.Create(chartSVG, model);
+
+    creator.createAxes({dependent:'number', independent: independent});
 
 	var plotSVG = chartSVG.append('g').attr('class', 'plot');
     var i = 0;
 
 	for(i; i < model.y.series.length; i++){
-		plotSeries(plotSVG, model, create, model.y.series[i], i);
+		plotSeries(plotSVG, model, creator, model.y.series[i], i);
 	}
 }
 
 module.exports = columnChart;
 
-},{"../axis":5,"../util/chart-attribute-styles":20,"../util/data.model.js":21,"../util/dressing.js":23,"../util/metadata.js":27}],12:[function(require,module,exports){
+},{"../axis":5,"../util/chart-attribute-styles":21,"../util/data.model.js":23,"../util/dressing.js":25,"../util/metadata.js":29}],13:[function(require,module,exports){
 module.exports = {
     line: require('./line.js'),
     blank: require('./blank.js'),
     pie: require('./pie.js'),
-    column: require('./column.js')
+    column: require('./column.js'),
+    bar: require('./bar.js')
 };
 
-},{"./blank.js":10,"./column.js":11,"./line.js":13,"./pie.js":14}],13:[function(require,module,exports){
+},{"./bar.js":10,"./blank.js":11,"./column.js":12,"./line.js":14,"./pie.js":15}],14:[function(require,module,exports){
 var d3 = require('d3');
 var axes = require('../axis');
 var interpolator = require('../util/line-interpolators.js');
@@ -957,21 +1256,20 @@ function lineChart(g) {
     var chartSVG = svg.append('g').attr('class', 'chart');
     chartSVG.attr('transform', model.translate(model.chartPosition));
 
-    var create = new axes.Create(chartSVG, model);
-    create.dependentScale('number');
-    create.independentScale('time');
+    var creator = new axes.Create(chartSVG, model);
+    creator.createAxes({dependent:'number', independent: 'time'});
 
     var plotSVG = chartSVG.append('g').attr('class', 'plot');
     var i = model.y.series.length;
 
     while (i--) {
-        plotSeries(plotSVG, model, create, model.y.series[i], i);
+        plotSeries(plotSVG, model, creator, model.y.series[i], i);
     }
 }
 
 module.exports = lineChart;
 
-},{"../axis":5,"../util/chart-attribute-styles":20,"../util/data.model.js":21,"../util/dressing.js":23,"../util/line-interpolators.js":25,"../util/metadata.js":27,"d3":"d3"}],14:[function(require,module,exports){
+},{"../axis":5,"../util/chart-attribute-styles":21,"../util/data.model.js":23,"../util/dressing.js":25,"../util/line-interpolators.js":27,"../util/metadata.js":29,"d3":"d3"}],15:[function(require,module,exports){
 //var d3 = require('d3');
 
 function pieChart() {
@@ -1055,7 +1353,7 @@ function pieChart() {
 
 module.exports = pieChart;
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 //the ft logo there's probably an easier ay to do this...
 //var d3 = require('d3');
 
@@ -1068,6 +1366,7 @@ function ftLogo(g, dim) {
     var d = 'M21.777,53.336c0,6.381,1.707,7.1,8.996,7.37v2.335H1.801v-2.335c6.027-0.27,7.736-0.989,7.736-7.37v-41.67 c0-6.387-1.708-7.104-7.556-7.371V1.959h51.103l0.363,13.472h-2.519c-2.16-6.827-4.502-8.979-16.467-8.979h-9.27 c-2.785,0-3.415,0.624-3.415,3.142v19.314h4.565c9.54,0,11.61-1.712,12.779-8.089h2.338v21.559h-2.338 c-1.259-7.186-4.859-8.981-12.779-8.981h-4.565V53.336z M110.955,1.959H57.328l-1.244,13.477h3.073c1.964-6.601,4.853-8.984,11.308-8.984h7.558v46.884 c0,6.381-1.71,7.1-8.637,7.37v2.335H98.9v-2.335c-6.931-0.27-8.64-0.989-8.64-7.37V6.453h7.555c6.458,0,9.351,2.383,11.309,8.984 h3.075L110.955,1.959z';
     var path = g.append('path').attr('d', d); //measure and rescale to the bounds
     var rect = path.node().getBoundingClientRect();
+    if (!rect.width) return; //todo: look into why this is being added before a svg exists?
     //the logo is square so
     var scale = Math.min(dim / rect.width, dim / rect.height);
 
@@ -1089,7 +1388,7 @@ module.exports = ftLogo;
  h3.075L110.955,1.959z"/>
  */
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 //var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
 var styler = require('../util/chart-attribute-styles');
@@ -1106,7 +1405,8 @@ function lineKey(options) {
 
     var charts = {
         'line' : addLineKeys,
-        'column' : addColumnKeys
+        'column' : addColumnKeys,
+        'bar' : addColumnKeys
     };
 
     var style = function (d) {
@@ -1198,7 +1498,7 @@ function lineKey(options) {
 
 module.exports = lineKey;
 
-},{"../util/chart-attribute-styles":20,"../util/line-thickness.js":26}],17:[function(require,module,exports){
+},{"../util/chart-attribute-styles":21,"../util/line-thickness.js":28}],18:[function(require,module,exports){
 /*jshint -W084 */
 //text area provides a wrapping text block of a given type
 var d3 = require('d3');
@@ -1298,7 +1598,7 @@ function textArea() {
 
 module.exports = textArea;
 
-},{"d3":"d3"}],18:[function(require,module,exports){
+},{"d3":"d3"}],19:[function(require,module,exports){
 module.exports = {
     chart: require('./chart/index.js'),
 
@@ -1318,7 +1618,7 @@ module.exports = {
 
 };
 
-},{"./axis/index.js":5,"./chart/index.js":12,"./element/series-key.js":16,"./element/text-area.js":17,"./util/chart-attribute-styles.js":20,"./util/dates.js":22,"./util/version":29}],19:[function(require,module,exports){
+},{"./axis/index.js":5,"./chart/index.js":13,"./element/series-key.js":17,"./element/text-area.js":18,"./util/chart-attribute-styles.js":21,"./util/dates.js":24,"./util/version":31}],20:[function(require,module,exports){
 // More info:
 // http://en.wikipedia.org/wiki/Aspect_ratio_%28image%29
 
@@ -1389,12 +1689,13 @@ module.exports = {
     }
 };
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 // because of the need to export and convert browser rendered SVGs
 // we need a simple way to attach styles as attributes if necessary,
 // so, heres a list of attributes and the selectors to which they should be applied
 
 var d3 = require('d3');
+var colours = require('./colours');
 
 function applyAttributes(g, keepD3Styles) {
     var styleList = [
@@ -1415,26 +1716,26 @@ function applyAttributes(g, keepD3Styles) {
                 'fill': 'none'
             }
         }, {
-            'selector': '.y.axis path.domain, .secondary path.domain, .secondary .tick line',
+            'selector': '.axis--dependent path.domain, .secondary path.domain, .secondary .tick line',
             'attributes': {
                 'stroke': 'none'
             }
         },
 
         {
-            'selector': '.y.axis .tick line',
+            'selector': '.axis--dependent .tick line',
             'attributes': {
                 'stroke-dasharray': '2 2'
             }
         },
         {
-            'selector': '.y.axis .origin line',
+            'selector': '.axis--dependent .origin line',
             'attributes': {
                 'stroke': '#333',
                 'stroke-dasharray': 'none'
             }
         }, {
-            'selector': '.y.axis .origin.tick line',
+            'selector': '.axis--dependent .origin.tick line',
             'attributes': {
                 'stroke': '#333',
                 'stroke-dasharray': 'none'
@@ -1467,7 +1768,7 @@ function applyAttributes(g, keepD3Styles) {
                 'text-anchor': 'end'
             }
         }, {
-            'selector': '.x.axis .primary path.domain',
+            'selector': '.axis--independent .primary path.domain',
             'attributes': {
                 'stroke': '#757470'
             }
@@ -1483,91 +1784,94 @@ function applyAttributes(g, keepD3Styles) {
         }, {
             'selector': '.line--series1',
             'attributes': {
-                'stroke': '#af516c'
+                'stroke': colours.line[0]
             }
         }, {
             'selector': '.line--series2',
             'attributes': {
-                'stroke': '#ecafaf'
+                'stroke': colours.line[1]
             }
         }, {
             'selector': '.line--series3',
             'attributes': {
-                'stroke': '#d7706c'
+                'stroke': colours.line[2]
             }
         }, {
             'selector': '.line--series4',
             'attributes': {
-                'stroke': '#76acb8'
+                'stroke': colours.line[3]
             }
         }, {
             'selector': '.line--series5',
             'attributes': {
-                'stroke': '#81d0e6'
+                'stroke': colours.line[4]
             }
         }, {
             'selector': '.line--series6',
             'attributes': {
-                'stroke': '#4086b6'
+                'stroke': colours.line[5]
             }
         }, {
             'selector': '.line--series7',
             'attributes': {
-                'stroke': '#b8b1a9'
-            }
-        }, {
-            'selector': 'path.accent, line.accent',
-            'attributes': {
-                'stroke': 'rgb(184,177,169)'
+                'stroke': colours.line[6]
             }
         },
         //Columns
         {
-            'selector': '.column, .key__column',
+            'selector': '.column, .key__column, .bar, .key__bar',
             'attributes': {
                 'stroke': 'none'
             }
         }, {
-            'selector': '.column--series1',
+            'selector': '.column--series1, .bar--series1',
             'attributes': {
-                'fill': '#af516c'
+                'fill': colours.area[0]
             }
         }, {
-            'selector': '.column--series2',
+            'selector': '.column--series2, .bar--series2',
             'attributes': {
-                'fill': '#ecafaf'
+                'fill': colours.area[1]
             }
         }, {
-            'selector': '.column--series3',
+            'selector': '.column--series3, .bar--series3',
             'attributes': {
-                'fill': '#d7706c'
+                'fill': colours.area[2]
             }
         }, {
-            'selector': '.column--series4',
+            'selector': '.column--series4, .bar--series4',
             'attributes': {
-                'fill': '#76acb8'
+                'fill': colours.area[3]
             }
         }, {
-            'selector': '.column--series5',
+            'selector': '.column--series5, .bar--series5',
             'attributes': {
-                'fill': '#81d0e6'
+                'fill': colours.area[4]
             }
         }, {
-            'selector': '.column--series6',
+            'selector': '.column--series6, .bar--series6',
             'attributes': {
-                'fill': '#4086b6'
+                'fill': colours.area[5]
             }
         }, {
-            'selector': '.column--series7',
+            'selector': '.column--series7, .bar--series7',
             'attributes': {
-                'fill': '#b8b1a9'
+                'fill': colours.area[6]
             }
         }, {
-            'selector': 'path.accent, line.accent',
+            'selector': 'path.accent, line.accent, rect.accent',
             'attributes': {
-                'stroke': 'rgb(184,177,169)'
+                'stroke': colours.accent
+            }
+        }, {
+            'selector': '.series text.null-label',
+            'attributes': {
+                'text-anchor': 'middle',
+                'font-size': 10,
+                'fill': 'rgba(0, 0, 0, 0.4)'
             }
         },
+
         //text
         {
             'selector': '.chart-title text, .chart-title tspan',
@@ -1617,7 +1921,31 @@ function applyAttributes(g, keepD3Styles) {
 
 module.exports = applyAttributes;
 
-},{"d3":"d3"}],21:[function(require,module,exports){
+},{"./colours":22,"d3":"d3"}],22:[function(require,module,exports){
+module.exports = {
+  line: [
+    '#af516c',
+    '#ecafaf',
+    '#d7706c',
+    '#76acb8',
+    '#7fd8f5',
+    '#3d7ab3',
+    '#b8b1a9'
+  ],
+  area: [
+    '#bb6d82',
+    '#ecafaf',
+    '#d7706c',
+    '#cb9f8c',
+    '#b07979',
+    '#ccc2c2',
+    '#8f7d95',
+    '#b8b1a9'
+  ],
+  accent: '#9e2f50'
+};
+
+},{}],23:[function(require,module,exports){
 var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
 var ratios = require('../util/aspect-ratios.js');
@@ -1670,11 +1998,14 @@ function setExtents(model){
 	return extents;
 }
 
-function timeDomain(model, chartType) {
-    if (model.timeDomain) { return model.timeDomain;  }
+function independentDomain(model, chartType) {
+    if (model.independentDomain) { return model.independentDomain;  }
 
-    if ((model.groupData || model.dataType === 'categorical') && chartType === 'column'){
-        model.data = (model.groupData && model.dataType !=='categorical') ? groupDates(model, model.units) : model.data;
+    var isCategorical = model.dataType === 'categorical';
+    var isBarOrColumn = ['column', 'bar'].indexOf(chartType) >= 0;
+
+    if ((model.groupData || isCategorical) && isBarOrColumn){
+        model.data = (model.groupData && !isCategorical) ? groupDates(model, model.units) : model.data;
         return model.data.map(function (d) {
             return d[model.x.series.key];
         });
@@ -1700,14 +2031,20 @@ function sumStackedValues(model){
     return extents;
 }
 
-function valueDomain(model){
-    if(model.valueDomain){ return model.valueDomain; }
+function dependentDomain(model, chartType){
+    if(model.dependentDomain){ return model.dependentDomain; }
 
     var extents = (model.stack) ? sumStackedValues(model) : setExtents(model);
     var domain = d3.extent(extents);
     if(!model.falseOrigin && domain[0] > 0){
         domain[0] = 0;
     }
+
+    var isBarOrColumn = ['column', 'bar'].indexOf(chartType) >= 0;
+    if (isBarOrColumn && domain[1] < 0) {
+        domain[1] = 0;
+    }
+
     return domain;
 }
 
@@ -1767,6 +2104,7 @@ function groupDates(m, units){
     m.data.forEach(function(d,i){
         var dateStr = [dateUtil.formatter[units[0]](d[m.x.series.key], i, firstDate)];
         units[1] && dateStr.push(dateUtil.formatter[units[1]](d[m.x.series.key], i, firstDate));
+        units[2] && dateStr.push(dateUtil.formatter[units[2]](d[m.x.series.key], i, firstDate));
         data.push({key:dateStr.join(' '),values:[d]});
     });
     m.data = data;
@@ -1778,7 +2116,7 @@ function needsGrouping(units){
     if (!units) return false;
     var isGroupingUnit = false;
     units.forEach(function(unit){
-        var groupThis = ['quarterly', 'monthly', 'yearly'].indexOf(unit);
+        var groupThis = ['weekly', 'quarterly', 'monthly', 'yearly'].indexOf(unit);
         isGroupingUnit = isGroupingUnit || (groupThis>-1);
     });
     return isGroupingUnit;
@@ -1787,7 +2125,8 @@ function needsGrouping(units){
 function Model(chartType, opts) {
     var classes = {
         line: ['line--series1', 'line--series2', 'line--series3', 'line--series4', 'line--series5', 'line--series6', 'line--series7', 'accent'],
-        column: ['column--series1', 'column--series2', 'column--series3', 'column--series4', 'column--series5', 'column--series6', 'column--series7', 'accent']
+        column: ['column--series1', 'column--series2', 'column--series3', 'column--series4', 'column--series5', 'column--series6', 'column--series7', 'accent'],
+        bar: ['bar--series1', 'bar--series2', 'bar--series3', 'bar--series4', 'bar--series5', 'bar--series6', 'bar--series7', 'accent']
     };
     var m = {
         //layout stuff
@@ -1808,9 +2147,12 @@ function Model(chartType, opts) {
         niceValue: true,
         hideSource: false,
         stack: false,
-        numberAxisOrient: 'left',
+        dependentAxisOrient: 'left',
+        independentAxisOrient: 'bottom',
         margin: 2,
         lineThickness: undefined,
+        yLabelWidth: 0,
+        xLabelHeight: 0,
         x: {
             series: '&'
         },
@@ -1842,8 +2184,8 @@ function Model(chartType, opts) {
 	m.translate = translate(0);
 	m.data = verifyData(m);
     m.groupData = needsGrouping(m.units);
-    m.timeDomain = timeDomain(m, chartType);
-	m.valueDomain = valueDomain(m);
+    m.independentDomain = independentDomain(m, chartType);
+	m.dependentDomain = dependentDomain(m, chartType);
 	m.lineStrokeWidth = lineThickness(m.lineThickness);
 	m.key = setKey(m);
 
@@ -1855,7 +2197,7 @@ Model.prototype.error = function (err) {
 };
 module.exports = Model;
 
-},{"../util/aspect-ratios.js":19,"../util/dates.js":22,"../util/line-thickness.js":26,"../util/series-options.js":28,"d3":"d3"}],22:[function(require,module,exports){
+},{"../util/aspect-ratios.js":20,"../util/dates.js":24,"../util/line-thickness.js":28,"../util/series-options.js":30,"d3":"d3"}],24:[function(require,module,exports){
 var d3 = require('d3');
 
 var formatter = {
@@ -1893,6 +2235,9 @@ var formatter = {
     quarterly: function (d, i) {
         return 'Q' + Math.floor((d.getMonth() + 3) / 3);
     },
+    weekly: function (d, i) {
+        return d3.time.format('%W')(d);
+    },
     monthly: function (d, i) {
         return formatter.months(d, i);
     },
@@ -1909,6 +2254,12 @@ var formatter = {
 
     days: function (d, i) {
         return d3.time.format('%e')(d);
+    },
+
+    daily: function (d, i) {
+        var str = d3.time.format('%e')(d);
+        if (str[0] === ' ') str = str.substring(1);
+        return str;
     },
 
     hours: function (d, i) {
@@ -1970,8 +2321,19 @@ var groups = {
     quarterly: function (d, i) {
         return d.split(' ')[0];
     },
-    monthly: function (d, i) {
+    weekly: function (d, i) {
         return d.split(' ')[0];
+    },
+    daily: function (d, i) {
+        if (d[0] === ' ') {
+            d = d.substring(1);
+        }
+        return d.split(' ')[0];
+    },
+    monthly: function (d, i) {
+        var parts = d.split(' ');
+        var pos = (parts.length == 3) ? 1 : 0;
+        return parts[pos];
     },
     months: function (d, i) {
         return d.split(' ')[0];
@@ -1994,7 +2356,7 @@ module.exports = {
     unitGenerator: unitGenerator
 };
 
-},{"d3":"d3"}],23:[function(require,module,exports){
+},{"d3":"d3"}],25:[function(require,module,exports){
 var textArea = require('../element/text-area.js');
 var seriesKey = require('../element/series-key.js');
 var ftLogo = require('../element/logo.js');
@@ -2174,13 +2536,13 @@ Dressing.prototype.setHeight = function () {
 Dressing.prototype.setPosition = function () {
     this.model.chartPosition = {
         top: this.headerHeight + this.halfLineStrokeWidth,
-        left: (this.model.numberAxisOrient === 'left' ? 0 : this.halfLineStrokeWidth)
+        left: (this.model.dependentAxisOrient === 'left' ? 0 : this.halfLineStrokeWidth)
     };
 };
 
 module.exports = Dressing;
 
-},{"../element/logo.js":15,"../element/series-key.js":16,"../element/text-area.js":17}],24:[function(require,module,exports){
+},{"../element/logo.js":16,"../element/series-key.js":17,"../element/text-area.js":18}],26:[function(require,module,exports){
 var d3 = require('d3');
 var dates = require('../util/dates');
 var styler = require('./chart-attribute-styles');
@@ -2215,7 +2577,7 @@ module.exports = {
         });
 
         //remove text-anchor attribute from year positions
-        g.selectAll('.primary text').attr({
+        g.selectAll('.x.axis .primary text').attr({
             x: null,
             y: null,
             dy: 15 + config.tickSize
@@ -2248,6 +2610,12 @@ module.exports = {
         if (config.units[0] == 'quarterly'){
             this.removeQuarters(g, axis, options);
         }
+        if (config.units[0] == 'weekly'){
+            this.removeWeekly(g, axis, options);
+        }
+        if (config.units[0] == 'daily'){
+            // in this case we don't remove daily ticks
+        }
         if (config.units[0] == 'monthly'){
             this.removeMonths(g, axis, options, config);
         }
@@ -2256,9 +2624,10 @@ module.exports = {
     },
 
     intersection: function (a, b) {
+        var PADDING = 2;
         var overlap = (
-        a.left <= b.right &&
-        b.left <= a.right &&
+        a.left <= b.right + PADDING &&
+        b.left <= a.right + PADDING &&
         a.top <= b.bottom &&
         b.top <= a.bottom
         );
@@ -2287,6 +2656,18 @@ module.exports = {
 
     removeQuarters: function(g, axis, options){
         if (!this.overlapping(g.selectAll(".primary text")) || options.extendTicks) return;
+        options.row--;
+        options.extendTicks = true;
+        g.select(".primary").remove();
+    },
+    removeWeekly: function(g, axis, options){
+        if (options.extendTicks) return;
+        options.row--;
+        options.extendTicks = true;
+        g.select(".primary").remove();
+    },
+    removeDaily: function(g, axis, options){
+        if (options.extendTicks) return;
         options.row--;
         options.extendTicks = true;
         g.select(".primary").remove();
@@ -2356,7 +2737,7 @@ module.exports = {
     }
 };
 
-},{"../util/dates":22,"./chart-attribute-styles":20,"d3":"d3"}],25:[function(require,module,exports){
+},{"../util/dates":24,"./chart-attribute-styles":21,"d3":"d3"}],27:[function(require,module,exports){
 //a place to define custom line interpolators
 
 var d3 = require('d3');
@@ -2390,7 +2771,7 @@ module.exports = {
     gappedLine: gappedLineInterpolator
 };
 
-},{"d3":"d3"}],26:[function(require,module,exports){
+},{"d3":"d3"}],28:[function(require,module,exports){
 var thicknesses = {
     small: 2,
     medium: 4,
@@ -2418,7 +2799,7 @@ module.exports = function (value) {
     }
 };
 
-},{}],27:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 //example:
 //http://codinginparadise.org/projects/svgweb-staging/tests/htmlObjectHarness/basic-metadata-example-01-b.html
 var svgSchema = 'http://www.w3.org/2000/svg';
@@ -2469,7 +2850,7 @@ module.exports = {
     create: create
 };
 
-},{}],28:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 function isTruthy(value) {
     return !!value;
 }
@@ -2515,8 +2896,8 @@ module.exports = {
     normalise: normalise
 };
 
-},{}],29:[function(require,module,exports){
-module.exports = "0.3.3";
+},{}],31:[function(require,module,exports){
+module.exports = "0.4.5";
 },{}],"category-axes":[function(require,module,exports){
 
 var oCharts = require('../../src/scripts/o-charts');
@@ -2524,10 +2905,196 @@ var dateUtils = oCharts.util.dates;
 var d3 = require('d3');
 
 var margin = {
-    top:.0, left:00, bottom:0, right:75
+    top:20, left:50, bottom:40, right:75
 };
 
 var fixtures = {
+    days: [
+        { date: new Date('5/07/2014'), value:      0.368069},
+        { date: new Date('5/08/2014'), value: 0.472146},
+        { date: new Date('5/09/2014'), value: 0.743529},
+        { date: new Date('5/10/2014'), value:     0.600043},
+        { date: new Date('5/11/2014'), value:     0.301624},
+        { date: new Date('5/12/2014'), value:     0.277067},
+        { date: new Date('5/13/2014'), value:     -0.239283},
+        { date: new Date('5/14/2014'), value:     0.619157},
+        { date: new Date('5/15/2014'), value:     0.090189}
+    ],
+    "many-days": [
+        { date: new Date('5/07/2014'), value:      0.368069},
+        { date: new Date('5/08/2014'), value:      0.472146},
+        { date: new Date('5/09/2014'), value:      0.743529},
+        { date: new Date('5/10/2014'), value:      0.600043},
+        { date: new Date('5/11/2014'), value:      0.301624},
+        { date: new Date('5/12/2014'), value:      0.277067},
+        { date: new Date('5/13/2014'), value:     -0.239283},
+        { date: new Date('5/14/2014'), value:      0.619157},
+        { date: new Date('5/16/2014'), value:      0.090189},
+        { date: new Date('5/17/2014'), value:      0.090189},
+        { date: new Date('5/18/2014'), value:      0.090189},
+        { date: new Date('5/19/2014'), value:      0.090189},
+        { date: new Date('5/20/2014'), value:      0.090189},
+        { date: new Date('5/21/2014'), value:      0.090189},
+        { date: new Date('5/22/2014'), value:      0.090189},
+        { date: new Date('5/23/2014'), value:      0.090189},
+        { date: new Date('5/24/2014'), value:      0.090189},
+        { date: new Date('5/25/2014'), value:      0.090189},
+        { date: new Date('5/26/2014'), value:      0.090189},
+        { date: new Date('5/27/2014'), value:      0.090189},
+        { date: new Date('5/28/2014'), value:      0.090189},
+        { date: new Date('5/29/2014'), value:      0.090189},
+        { date: new Date('5/30/2014'), value:      0.090189},
+        { date: new Date('5/31/2014'), value:      0.090189},
+        { date: new Date('6/01/2014'), value:      0.090189},
+        { date: new Date('6/02/2014'), value:      0.090189},
+        { date: new Date('6/03/2014'), value:      0.090189},
+        { date: new Date('6/04/2014'), value:      0.090189},
+        { date: new Date('6/05/2014'), value:      0.090189},
+        { date: new Date('6/06/2014'), value:      0.090189},
+        { date: new Date('6/07/2014'), value:      0.090189},
+        { date: new Date('6/08/2014'), value:      0.090189},
+        { date: new Date('6/09/2014'), value:      0.090189},
+        { date: new Date('6/10/2014'), value:      0.090189},
+        { date: new Date('6/11/2014'), value:      0.090189},
+        { date: new Date('6/12/2014'), value:      0.090189},
+        { date: new Date('6/13/2014'), value:      0.090189},
+        { date: new Date('6/14/2014'), value:      0.090189}
+    ],
+    weeks: [
+        { date: new Date('5/07/2014'), value:      0.368069},
+        { date: new Date('5/14/2014'), value:      0.472146},
+        { date: new Date('5/21/2014'), value:      0.743529},
+        { date: new Date('5/28/2014'), value:     0.600043},
+        { date: new Date('6/04/2014'), value:     0.301624},
+        { date: new Date('6/11/2014'), value:     0.277067},
+        { date: new Date('6/18/2014'), value:     -0.239283},
+        { date: new Date('6/25/2014'), value:     0.619157},
+        { date: new Date('7/02/2014'), value:     0.090189}
+    ],
+    "many-weeks" : [
+        { date: new Date('5/07/2014'), value:      0.368069},
+        { date: new Date('5/14/2014'), value: 0.472146},
+        { date: new Date('5/21/2014'), value: 0.743529},
+        { date: new Date('5/28/2014'), value:     0.600043},
+        { date: new Date('6/04/2014'), value:     0.301624},
+        { date: new Date('6/11/2014'), value:     0.277067},
+        { date: new Date('6/18/2014'), value:     -0.239283},
+        { date: new Date('6/25/2014'), value:     0.619157},
+        { date: new Date('7/02/2014'), value:     0.090189},
+        { date: new Date('7/09/2014'), value:     0.090189},
+        { date: new Date('7/16/2014'), value:     0.090189},
+        { date: new Date('7/23/2014'), value:     0.090189},
+        { date: new Date('7/30/2014'), value:     0.090189},
+        { date: new Date('8/06/2014'), value:     0.090189},
+        { date: new Date('8/13/2014'), value:     0.090189},
+        { date: new Date('8/20/2014'), value:     0.090189},
+        { date: new Date('8/27/2014'), value:     0.090189},
+        { date: new Date('9/03/2014'), value:     0.090189},
+        { date: new Date('9/10/2014'), value:     0.090189},
+        { date: new Date('9/17/2014'), value:     0.090189},
+        { date: new Date('9/24/2014'), value:     0.090189},
+        { date: new Date('10/1/2014'), value:     0.090189},
+        { date: new Date('10/8/2014'), value:     0.090189},
+        { date: new Date('10/15/2014'), value:     0.090189},
+        { date: new Date('10/22/2014'), value:     0.090189},
+        { date: new Date('10/29/2014'), value:     0.090189},
+        { date: new Date('11/05/2014'), value:     0.090189},
+        { date: new Date('11/12/2014'), value:     0.090189},
+        { date: new Date('11/19/2014'), value:     0.090189},
+        { date: new Date('11/26/2014'), value:     0.090189},
+        { date: new Date('12/03/2014'), value:     0.090189},
+        { date: new Date('12/10/2014'), value:     0.090189},
+        { date: new Date('12/17/2014'), value:     0.090189},
+        { date: new Date('12/24/2014'), value:     0.090189},
+        { date: new Date('12/31/2014'), value:     0.090189},
+        { date: new Date('1/07/2015'), value:     0.090189},
+        { date: new Date('1/14/2015'), value:     0.090189},
+        { date: new Date('1/21/2015'), value:     0.090189},
+        { date: new Date('1/28/2015'), value:     0.090189},
+        { date: new Date('2/04/2015'), value:     0.090189},
+        { date: new Date('2/11/2015'), value:     0.090189},
+        { date: new Date('2/18/2015'), value:     0.090189},
+        { date: new Date('2/25/2015'), value:     0.090189},
+        { date: new Date('3/04/2015'), value:     0.090189},
+        { date: new Date('3/11/2015'), value:     0.090189},
+        { date: new Date('3/18/2015'), value:     0.090189},
+        { date: new Date('3/25/2015'), value:     0.090189},
+        { date: new Date('4/01/2015'), value:     0.090189},
+        { date: new Date('4/08/2015'), value:     0.090189},
+        { date: new Date('4/15/2015'), value:     0.090189},
+        { date: new Date('4/22/2015'), value:     0.090189},
+        { date: new Date('4/29/2015'), value:     0.090189},
+        { date: new Date('5/06/2015'), value:     0.090189},
+        { date: new Date('5/13/2015'), value:     0.090189},
+        { date: new Date('5/20/2015'), value:     0.090189},
+        { date: new Date('5/27/2015'), value:     0.090189},
+        { date: new Date('6/03/2015'), value:     0.090189},
+        { date: new Date('6/10/2015'), value:     0.090189},
+        { date: new Date('6/17/2015'), value:     0.090189},
+        { date: new Date('6/24/2015'), value:     0.090189},
+        { date: new Date('7/01/2015'), value:     0.090189},
+        { date: new Date('7/08/2015'), value:     0.090189},
+        { date: new Date('7/15/2015'), value:     0.090189},
+        { date: new Date('7/22/2015'), value:     0.090189},
+        { date: new Date('7/29/2015'), value:     0.090189},
+        { date: new Date('8/05/2015'), value:     0.090189},
+        { date: new Date('8/12/2015'), value:     0.090189},
+        { date: new Date('8/19/2015'), value:     0.090189},
+        { date: new Date('8/26/2015'), value:     0.090189},
+        { date: new Date('9/02/2015'), value:     0.090189},
+        { date: new Date('9/09/2015'), value:     0.090189},
+        { date: new Date('9/16/2015'), value:     0.090189},
+        { date: new Date('9/23/2015'), value:     0.090189},
+        { date: new Date('9/30/2015'), value:     0.090189},
+        { date: new Date('10/07/2015'), value:     0.090189},
+        { date: new Date('10/14/2015'), value:     0.090189},
+        { date: new Date('10/21/2015'), value:     0.090189},
+        { date: new Date('10/28/2015'), value:     0.090189},
+        { date: new Date('11/04/2015'), value:     0.090189},
+        { date: new Date('11/11/2015'), value:     0.090189},
+        { date: new Date('11/18/2015'), value:     0.090189},
+        { date: new Date('11/25/2015'), value:     0.090189},
+        { date: new Date('12/02/2015'), value:     0.090189},
+        { date: new Date('12/09/2015'), value:     0.090189},
+        { date: new Date('12/16/2015'), value:     0.090189},
+        { date: new Date('12/23/2015'), value:     0.090189},
+        { date: new Date('12/30/2015'), value:     0.090189},
+        { date: new Date('1/06/2016'), value:     0.090189},
+        { date: new Date('1/13/2016'), value:     0.090189},
+        { date: new Date('1/20/2016'), value:     0.090189},
+        { date: new Date('1/27/2016'), value:     0.090189},
+        { date: new Date('2/03/2016'), value:     0.090189},
+        { date: new Date('2/10/2016'), value:     0.090189},
+        { date: new Date('2/17/2016'), value:     0.090189},
+        { date: new Date('2/24/2016'), value:     0.090189},
+        { date: new Date('3/02/2016'), value:     0.090189},
+        { date: new Date('3/09/2016'), value:     0.090189},
+        { date: new Date('3/16/2016'), value:     0.090189},
+        { date: new Date('3/23/2016'), value:     0.090189},
+        { date: new Date('3/30/2016'), value:     0.090189},
+        { date: new Date('4/6/2016'), value:     0.090189},
+        { date: new Date('4/13/2016'), value:     0.090189},
+        { date: new Date('4/20/2016'), value:     0.090189},
+        { date: new Date('4/27/2016'), value:     0.090189},
+        { date: new Date('5/04/2016'), value:     0.090189},
+        { date: new Date('5/11/2016'), value:     0.090189},
+        { date: new Date('5/18/2016'), value:     0.090189},
+        { date: new Date('5/25/2016'), value:     0.090189},
+        { date: new Date('6/01/2016'), value:     0.090189},
+        { date: new Date('6/08/2016'), value:     0.090189},
+        { date: new Date('6/15/2016'), value:     0.090189},
+        { date: new Date('6/22/2016'), value:     0.090189},
+        { date: new Date('6/29/2016'), value:     0.090189},
+        { date: new Date('7/06/2016'), value:     0.090189},
+        { date: new Date('7/13/2016'), value:     0.090189},
+        { date: new Date('7/20/2016'), value:     0.090189},
+        { date: new Date('7/27/2016'), value:     0.090189},
+        { date: new Date('8/03/2016'), value:     0.090189},
+        { date: new Date('8/10/2016'), value:     0.090189},
+        { date: new Date('8/17/2016'), value:     0.090189},
+        { date: new Date('8/24/2016'), value:     0.090189},
+        { date: new Date('8/31/2016'), value:     0.090189}
+    ],
     months : [
         { date: new Date('12/30/05'), value:     1.348},
         { date: new Date('01/31/06'), value:      0.583},
@@ -2665,6 +3232,10 @@ var fixtures = {
 };
 
 var units = {
+    days: ['daily', 'monthly', 'yearly'],
+    "many-weeks": ['daily', 'monthly', 'yearly'],
+    weeks: ['weekly', 'monthly', 'yearly'],
+    "many-weeks": ['weekly', 'monthly', 'yearly'],
     months: ['monthly', 'yearly'],
     "many-months": ['monthly', 'yearly'],
     "many-many-months": ['monthly', 'yearly'],
@@ -2681,53 +3252,50 @@ var xSeriesData = {
 };
 
 var nesting = {
+    days: function(d) {
+        var str = d3.time.format('%e %b %Y')(d.date);
+        if (str[0] === ' ') str = str.substring(1);
+        return str;
+    },
+    "many-days": function(d) {
+        var str = d3.time.format('%e %b %Y')(d.date);
+        if (str[0] === ' ') str = str.substring(1);
+        return str;
+    },
+    weeks: function(d) { return d3.time.format('%W %b %Y')(d.date); },
+    "many-weeks": function(d) { return d3.time.format('%W %b %Y')(d.date); },
     quarters: function(d)       { return 'Q' + Math.floor((d.date.getMonth()+3)/3) + ' ' + (d.date.getYear() + 1900);  },
     "many-quarters": function(d){ return 'Q' + Math.floor((d.date.getMonth()+3)/3) + ' ' + (d.date.getYear() + 1900);  },
-    months: function(d)          { return d3.time.format('%b')(d.date) + ' ' + (d.date.getYear() + 1900);  },
-    "many-months": function(d)  { return d3.time.format('%b')(d.date) + ' ' + (d.date.getYear() + 1900);  },
-    "many-many-months": function(d)  { return d3.time.format('%b')(d.date) + ' ' + (d.date.getYear() + 1900);  },
-    years: function(d)          { return (d.date.getYear() + 1900);  },
-    "many-years": function(d)   { return (d.date.getYear() + 1900);  }
+    months: function(d)          { return d3.time.format('%b %Y')(d.date);  },
+    "many-months": function(d)  { return d3.time.format('%b %Y')(d.date);  },
+    "many-many-months": function(d)  { return d3.time.format('%b %Y')(d.date);  },
+    years: function(d)          { return d3.time.format('%Y')(d.date);  },
+    "many-years": function(d)   { return d3.time.format('%Y')(d.date);  }
 };
 
 function drawDemo(timeFrame){
-
-    var nestedFixture = (nesting[timeFrame]) ?
-        d3.nest()
-        .key(nesting[timeFrame])
-        .entries(fixtures[timeFrame]) :
-        fixtures[timeFrame];
-
-    var data = {
-        title: 'Grouped Date Series: ' + timeFrame,
-        x:{
-            series: xSeriesData[timeFrame] || {key:'date', label:'year'}
-        },
-        y: { series: ['value']},
-        data: nestedFixture,
-        dataType: ['categories','manyCategories'].indexOf(timeFrame)>-1 ? 'categorical' : 'time',
-        scale: d3.scale
-            .ordinal()
-            .rangeRoundBands([0, 400], 0, 0)
-            .domain(nestedFixture.map(function (d){return d.key;})),
-        units: units[timeFrame]
-    };
-
-    d3.select('#views')
-        .append('div').attr('id','column-chart__' + timeFrame)
-        .data([data])
-        .append('h2')
-        .text(function (d) {
-            return d.title
-        });
     d3.select('#column-chart__'  + timeFrame).append('svg')
         .attr('width', function (d) {
-            var r = d.scale.range();
-            return (r[r.length-1] - r[0]) + margin.left + margin.right;
+            var width = margin.left + margin.right;
+            if (d.orient =='bottom') {
+                var r = d.scale.range();
+                width += (r[r.length-1] - r[0]);
+            }
+            return width;
         })
+        .attr('height', function (d) {
+            var height = margin.top + margin.bottom;
+            if (d.orient == 'left') {
+                var r = d.scale.range();
+                height += r[0] + r[r.length-1];
+            }
+            return height
+        })
+
         .each(function (d, i) {
             var axis = oCharts.axis.category()
                 .dataType(d.dataType)
+                .orient(d.orient)
                 .scale(d.scale, d.units);
 
             d3.select(this)
@@ -2738,14 +3306,49 @@ function drawDemo(timeFrame){
 }
 
 module.exports = {
+    fixtures: fixtures,
     init: function(){
 
-        var demos = ['months', 'many-months', 'quarters', 'many-quarters','years','many-years', 'categories', 'manyCategories'];
+        var demos = ['days', 'many-days', 'weeks', 'many-weeks', 'months', 'many-months', 'quarters', 'many-quarters','years','many-years', 'categories', 'manyCategories'];
         demos.forEach(function(timeFrame){
+
+            var nestedFixture = (nesting[timeFrame]) ?
+                d3.nest()
+                    .key(nesting[timeFrame])
+                    .entries(fixtures[timeFrame]) :
+                fixtures[timeFrame];
+
+            var data = {
+                title: 'Grouped Date Series: ' + timeFrame,
+                x:{
+                    series: xSeriesData[timeFrame] || {key:'date', label:'year'}
+                },
+                y: { series: ['value']},
+                data: nestedFixture,
+                dataType: ['categories','manyCategories'].indexOf(timeFrame)>-1 ? 'categorical' : 'time',
+                scale: d3.scale
+                    .ordinal()
+                    .rangeRoundBands([0, 400], 0, 0)
+                    .domain(nestedFixture.map(function (d){return d.key;})),
+                units: units[timeFrame]
+            };
+
+            d3.select('#views')
+                .append('div').attr('id','column-chart__' + timeFrame)
+                .data([data])
+                .append('h2')
+                .text(function (d) {
+                    return d.title
+                });
+
+            data.orient = 'bottom';
             drawDemo(timeFrame);
+
+            //data.orient = 'left';
+            //drawDemo(timeFrame);
         });
 
     }
 };
 
-},{"../../src/scripts/o-charts":18,"d3":"d3"}]},{},["category-axes"]);
+},{"../../src/scripts/o-charts":19,"d3":"d3"}]},{},["category-axes"]);

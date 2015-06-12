@@ -35,6 +35,9 @@ var formatter = {
     quarterly: function (d, i) {
         return 'Q' + Math.floor((d.getMonth() + 3) / 3);
     },
+    weekly: function (d, i) {
+        return d3.time.format('%W')(d);
+    },
     monthly: function (d, i) {
         return formatter.months(d, i);
     },
@@ -51,6 +54,12 @@ var formatter = {
 
     days: function (d, i) {
         return d3.time.format('%e')(d);
+    },
+
+    daily: function (d, i) {
+        var str = d3.time.format('%e')(d);
+        if (str[0] === ' ') str = str.substring(1);
+        return str;
     },
 
     hours: function (d, i) {
@@ -112,8 +121,19 @@ var groups = {
     quarterly: function (d, i) {
         return d.split(' ')[0];
     },
-    monthly: function (d, i) {
+    weekly: function (d, i) {
         return d.split(' ')[0];
+    },
+    daily: function (d, i) {
+        if (d[0] === ' ') {
+            d = d.substring(1);
+        }
+        return d.split(' ')[0];
+    },
+    monthly: function (d, i) {
+        var parts = d.split(' ');
+        var pos = (parts.length == 3) ? 1 : 0;
+        return parts[pos];
     },
     months: function (d, i) {
         return d.split(' ')[0];

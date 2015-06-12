@@ -7,7 +7,7 @@ describe('line-chart  ', function () {
     beforeEach(function(){
         //pm: hack to stop spec rewriting dom too early :(
         require('../helper').loadAssets('line-chart');
-        require('../../demo/scripts/line-chart').init();
+        require('../../examples/scripts/line-chart').init();
 
         lineChart1 = document.querySelector('#line-chart1 svg');
         lineChart2 = document.querySelector('#line-chart2 svg');

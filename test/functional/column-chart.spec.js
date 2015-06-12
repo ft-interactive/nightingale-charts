@@ -3,7 +3,7 @@ describe('column-chart.js', function(){
     beforeEach(function(){
         //pm: hack to stop spec rewriting dom too early :(
         require('../helper').loadAssets('column-chart');
-        require('../../demo/scripts/column-chart').init();
+        require('../../examples/scripts/column-chart').init();
     })
 
     describe('has ticks ', function(){
@@ -81,6 +81,27 @@ describe('column-chart.js', function(){
 
     });
 
+    describe('null values', function() {
+        it('has N/A labels when null values are present', function() {
+            var nullValsGraph = document.querySelector('#column-chart__nullValues .width600 svg');
+            var nullLabels = nullValsGraph.querySelectorAll('text.null-label');
+            expect(nullLabels.length).toBe(2);
+            for (var i = 0; i < nullLabels.length; i++) {
+                expect(nullLabels[i].innerHTML).toBe('n/a');
+            }
+        });
+
+        it('has ≁ labels when null values are present on small charts', function() {
+            var nullValsGraph = document.querySelector('#column-chart__nullMultiple .width300 svg');
+            var nullLabels = nullValsGraph.querySelectorAll('text.null-label');
+            expect(nullLabels.length).toBe(2);
+            for (var i = 0; i < nullLabels.length; i++) {
+                expect(nullLabels[i].innerHTML).toBe('–');
+            }
+        });
+
+    });
+
     describe('y-axis values', function(){
 
         it('can positive only numbers', function(){
@@ -91,11 +112,11 @@ describe('column-chart.js', function(){
 
         it('can handle negative numbers', function(){
             var values = document.querySelectorAll('.width600 svg')[3].querySelectorAll('.y.axis text');
-            expect(values[0].textContent).toBe('-2');
-            expect(values[1].textContent).toBe('-1');
-            expect(values[2].textContent).toBe('0');
-            expect(values[3].textContent).toBe('1');
-            expect(values[4].textContent).toBe('-3');
+            expect(values[0].textContent).toBe('-3');
+            expect(values[1].textContent).toBe('-2');
+            expect(values[2].textContent).toBe('-1');
+            expect(values[3].textContent).toBe('0');
+            expect(values[4].textContent).toBe('1');
             expect(values[5].textContent).toBe('2');
         });
 
