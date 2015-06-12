@@ -134,7 +134,7 @@ function categoryAxis() {
 
 module.exports = categoryAxis;
 
-},{"../util/chart-attribute-styles":20,"../util/dates.js":23,"../util/labels.js":25,"d3":"d3"}],2:[function(require,module,exports){
+},{"../util/chart-attribute-styles":21,"../util/dates.js":24,"../util/labels.js":26,"d3":"d3"}],2:[function(require,module,exports){
 var d3 = require('d3');
 var axis = {
     category: require('./category.js'),
@@ -432,7 +432,7 @@ function dateAxis() {
 
 module.exports = dateAxis;
 
-},{"../util/dates.js":23,"../util/labels.js":25,"./date.scale.js":4,"d3":"d3"}],4:[function(require,module,exports){
+},{"../util/dates.js":24,"../util/labels.js":26,"./date.scale.js":4,"d3":"d3"}],4:[function(require,module,exports){
 var d3 = require('d3');
 var utils = require('../util/dates.js');
 
@@ -511,7 +511,7 @@ module.exports = {
     }
 };
 
-},{"../util/dates.js":23,"d3":"d3"}],5:[function(require,module,exports){
+},{"../util/dates.js":24,"d3":"d3"}],5:[function(require,module,exports){
 module.exports = {
     Create: require('./create.js'),
     Plot: require('./plot.js'),
@@ -643,7 +643,7 @@ function numericAxis() {
 
 module.exports = numericAxis;
 
-},{"../util/chart-attribute-styles":20,"./number.labels":7,"./number.scale":8,"d3":"d3"}],7:[function(require,module,exports){
+},{"../util/chart-attribute-styles":21,"./number.labels":7,"./number.scale":8,"d3":"d3"}],7:[function(require,module,exports){
 module.exports = {
 
     isVertical: function (axis) {
@@ -1002,7 +1002,7 @@ function barChart(g){
 
 module.exports = barChart;
 
-},{"../axis":5,"../util/chart-attribute-styles":20,"../util/data.model.js":22,"../util/dressing.js":24,"../util/metadata.js":28}],11:[function(require,module,exports){
+},{"../axis":5,"../util/chart-attribute-styles":21,"../util/data.model.js":23,"../util/dressing.js":25,"../util/metadata.js":29}],11:[function(require,module,exports){
 //var d3 = require('d3');
 
 function blankChart() {
@@ -1187,7 +1187,7 @@ function columnChart(g){
 
 module.exports = columnChart;
 
-},{"../axis":5,"../util/chart-attribute-styles":20,"../util/data.model.js":22,"../util/dressing.js":24,"../util/metadata.js":28}],13:[function(require,module,exports){
+},{"../axis":5,"../util/chart-attribute-styles":21,"../util/data.model.js":23,"../util/dressing.js":25,"../util/metadata.js":29}],13:[function(require,module,exports){
 module.exports = {
     line: require('./line.js'),
     blank: require('./blank.js'),
@@ -1269,7 +1269,7 @@ function lineChart(g) {
 
 module.exports = lineChart;
 
-},{"../axis":5,"../util/chart-attribute-styles":20,"../util/data.model.js":22,"../util/dressing.js":24,"../util/line-interpolators.js":26,"../util/metadata.js":28,"d3":"d3"}],15:[function(require,module,exports){
+},{"../axis":5,"../util/chart-attribute-styles":21,"../util/data.model.js":23,"../util/dressing.js":25,"../util/line-interpolators.js":27,"../util/metadata.js":29,"d3":"d3"}],15:[function(require,module,exports){
 //var d3 = require('d3');
 
 function pieChart() {
@@ -1498,7 +1498,7 @@ function lineKey(options) {
 
 module.exports = lineKey;
 
-},{"../util/chart-attribute-styles":20,"../util/line-thickness.js":27}],18:[function(require,module,exports){
+},{"../util/chart-attribute-styles":21,"../util/line-thickness.js":28}],18:[function(require,module,exports){
 /*jshint -W084 */
 //text area provides a wrapping text block of a given type
 var d3 = require('d3');
@@ -1599,6 +1599,26 @@ function textArea() {
 module.exports = textArea;
 
 },{"d3":"d3"}],19:[function(require,module,exports){
+module.exports = {
+    chart: require('./chart/index.js'),
+
+    axis: require('./axis/index.js'),
+
+    element: {
+        seriesKey: require('./element/series-key.js'),
+        textArea: require('./element/text-area.js')
+    },
+
+    util: {
+        attributeStyler: require('./util/chart-attribute-styles.js'),
+        dates: require('./util/dates.js')
+    },
+
+    version: require('./util/version')
+
+};
+
+},{"./axis/index.js":5,"./chart/index.js":13,"./element/series-key.js":17,"./element/text-area.js":18,"./util/chart-attribute-styles.js":21,"./util/dates.js":24,"./util/version":31}],20:[function(require,module,exports){
 // More info:
 // http://en.wikipedia.org/wiki/Aspect_ratio_%28image%29
 
@@ -1669,7 +1689,7 @@ module.exports = {
     }
 };
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 // because of the need to export and convert browser rendered SVGs
 // we need a simple way to attach styles as attributes if necessary,
 // so, heres a list of attributes and the selectors to which they should be applied
@@ -1901,7 +1921,7 @@ function applyAttributes(g, keepD3Styles) {
 
 module.exports = applyAttributes;
 
-},{"./colours":21,"d3":"d3"}],21:[function(require,module,exports){
+},{"./colours":22,"d3":"d3"}],22:[function(require,module,exports){
 module.exports = {
   line: [
     '#af516c',
@@ -1925,7 +1945,7 @@ module.exports = {
   accent: '#9e2f50'
 };
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
 var ratios = require('../util/aspect-ratios.js');
@@ -2177,7 +2197,7 @@ Model.prototype.error = function (err) {
 };
 module.exports = Model;
 
-},{"../util/aspect-ratios.js":19,"../util/dates.js":23,"../util/line-thickness.js":27,"../util/series-options.js":29,"d3":"d3"}],23:[function(require,module,exports){
+},{"../util/aspect-ratios.js":20,"../util/dates.js":24,"../util/line-thickness.js":28,"../util/series-options.js":30,"d3":"d3"}],24:[function(require,module,exports){
 var d3 = require('d3');
 
 var formatter = {
@@ -2336,7 +2356,7 @@ module.exports = {
     unitGenerator: unitGenerator
 };
 
-},{"d3":"d3"}],24:[function(require,module,exports){
+},{"d3":"d3"}],25:[function(require,module,exports){
 var textArea = require('../element/text-area.js');
 var seriesKey = require('../element/series-key.js');
 var ftLogo = require('../element/logo.js');
@@ -2522,7 +2542,7 @@ Dressing.prototype.setPosition = function () {
 
 module.exports = Dressing;
 
-},{"../element/logo.js":16,"../element/series-key.js":17,"../element/text-area.js":18}],25:[function(require,module,exports){
+},{"../element/logo.js":16,"../element/series-key.js":17,"../element/text-area.js":18}],26:[function(require,module,exports){
 var d3 = require('d3');
 var dates = require('../util/dates');
 var styler = require('./chart-attribute-styles');
@@ -2717,7 +2737,7 @@ module.exports = {
     }
 };
 
-},{"../util/dates":23,"./chart-attribute-styles":20,"d3":"d3"}],26:[function(require,module,exports){
+},{"../util/dates":24,"./chart-attribute-styles":21,"d3":"d3"}],27:[function(require,module,exports){
 //a place to define custom line interpolators
 
 var d3 = require('d3');
@@ -2751,7 +2771,7 @@ module.exports = {
     gappedLine: gappedLineInterpolator
 };
 
-},{"d3":"d3"}],27:[function(require,module,exports){
+},{"d3":"d3"}],28:[function(require,module,exports){
 var thicknesses = {
     small: 2,
     medium: 4,
@@ -2779,7 +2799,7 @@ module.exports = function (value) {
     }
 };
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 //example:
 //http://codinginparadise.org/projects/svgweb-staging/tests/htmlObjectHarness/basic-metadata-example-01-b.html
 var svgSchema = 'http://www.w3.org/2000/svg';
@@ -2830,7 +2850,7 @@ module.exports = {
     create: create
 };
 
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 function isTruthy(value) {
     return !!value;
 }
@@ -2876,26 +2896,128 @@ module.exports = {
     normalise: normalise
 };
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 module.exports = "0.4.5";
-},{}],"o-charts":[function(require,module,exports){
-module.exports = {
-    chart: require('./chart/index.js'),
+},{}],"date-axes":[function(require,module,exports){
+var oCharts = require('../../src/scripts/o-charts');
+var d3 = require('d3');
 
-    axis: require('./axis/index.js'),
-
-    element: {
-        seriesKey: require('./element/series-key.js'),
-        textArea: require('./element/text-area.js')
-    },
-
-    util: {
-        attributeStyler: require('./util/chart-attribute-styles.js'),
-        dates: require('./util/dates.js')
-    },
-
-    version: require('./util/version')
-
+var margin = {
+    top: 20, left: 50, bottom: 70, right: 50
 };
 
-},{"./axis/index.js":5,"./chart/index.js":13,"./element/series-key.js":17,"./element/text-area.js":18,"./util/chart-attribute-styles.js":20,"./util/dates.js":23,"./util/version":30}]},{},["o-charts"]);
+var axesDefinitions = [
+    {
+        title: 'A day or less',
+        simple: false,
+        dateStart: new Date("October 13, 1975 11:13:00"),
+        dateEnd: new Date("October 13, 1975 22:00:00")
+    },
+    {
+        title: 'A few weeks',
+        dateStart: new Date("October 13, 1975 11:13:00"),
+        dateEnd: new Date("November 7, 1975 22:00:00")
+    },
+    {
+        title: 'less than a year',
+        dateStart: new Date(2001, 3, 20),
+        dateEnd: new Date(2001, 11, 20)
+    },
+    {
+        title: 'up to 3 years',
+        dateStart: new Date(2012, 2, 1),
+        dateEnd: new Date(2015, 2, 1)
+    },
+    {
+        title: 'between 3 - 15 years',
+        dateStart: new Date(2001, 3, 1),
+        dateEnd: new Date(2010, 3, 1)
+    },
+    {
+        title: 'more than 15 years',
+        simple: true,
+        dateStart: new Date(1998),
+        dateEnd: new Date(2015, 2, 1)
+    },
+    {
+        title: '50 years or so',
+        dateStart: new Date(1966, 10, 1),
+        dateEnd: new Date(2015, 2, 1)
+    },
+    {
+        title: 'hundreds of years',
+        dateStart: new Date(1500, 0, 1),
+        dateEnd: new Date(2015, 2, 1)
+    },
+    {
+        title: 'Years Overlapping',
+        dateStart: new Date(1999, 8, 31),
+        dateEnd: new Date(2013, 1, 4)
+    },
+    {
+        title: 'Months Overlapping',
+        dateStart: new Date(1995, 5, 15),
+        dateEnd: new Date(2005, 10, 14)
+    }];
+
+function createAxesDefArrayOfWidth(axisWidth) {
+
+    var sizedAxesDefinitions = [];
+    axesDefinitions.forEach(function (axis){
+        var sizedAxis = {
+            title: axis.title,
+            simple: axis.simple,
+            scale: d3.time.scale()
+                .range([0, axisWidth])
+                .domain([axis.dateStart, axis.dateEnd])
+        };
+        sizedAxesDefinitions.push(sizedAxis);
+    });
+    return sizedAxesDefinitions;
+}
+
+function renderAxesArrayIntoDiv(div, axesDefinitionArray) {
+    var divs = d3.select(div)
+        .selectAll('div')
+        .data(axesDefinitionArray)
+        .enter().append('div')
+        .attr('class', 'axis-test');
+
+    divs.append('h2')
+        .text(function (d) {
+            return d.title
+        });
+
+    divs.append('svg')
+        .attr('width', function (d) {
+            var r = d.scale.range();
+            return (r[1] - r[0]) + margin.left + margin.right;
+        })
+        .attr('class', 'ft-chart')
+        .attr('height', margin.top + margin.bottom)
+        .each(function (d, i) {
+
+            //create the axis, giving it a scale
+            var axis = oCharts.axis.date()
+                .simple(d.simple)
+                .scale(d.scale);
+
+            d3.select(this)
+                .append('g')
+                .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+                .call(axis);
+
+        });
+
+}
+
+module.exports = {
+    init: function(){
+        var viewData = createAxesDefArrayOfWidth(400);
+        var viewSmallData = createAxesDefArrayOfWidth(200);
+        renderAxesArrayIntoDiv('#views', viewData);
+        renderAxesArrayIntoDiv('#viewsSmall', viewSmallData);
+    }
+};
+
+},{"../../src/scripts/o-charts":19,"d3":"d3"}]},{},["date-axes"]);

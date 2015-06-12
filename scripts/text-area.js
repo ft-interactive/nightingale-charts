@@ -134,7 +134,7 @@ function categoryAxis() {
 
 module.exports = categoryAxis;
 
-},{"../util/chart-attribute-styles":20,"../util/dates.js":23,"../util/labels.js":25,"d3":"d3"}],2:[function(require,module,exports){
+},{"../util/chart-attribute-styles":21,"../util/dates.js":24,"../util/labels.js":26,"d3":"d3"}],2:[function(require,module,exports){
 var d3 = require('d3');
 var axis = {
     category: require('./category.js'),
@@ -432,7 +432,7 @@ function dateAxis() {
 
 module.exports = dateAxis;
 
-},{"../util/dates.js":23,"../util/labels.js":25,"./date.scale.js":4,"d3":"d3"}],4:[function(require,module,exports){
+},{"../util/dates.js":24,"../util/labels.js":26,"./date.scale.js":4,"d3":"d3"}],4:[function(require,module,exports){
 var d3 = require('d3');
 var utils = require('../util/dates.js');
 
@@ -511,7 +511,7 @@ module.exports = {
     }
 };
 
-},{"../util/dates.js":23,"d3":"d3"}],5:[function(require,module,exports){
+},{"../util/dates.js":24,"d3":"d3"}],5:[function(require,module,exports){
 module.exports = {
     Create: require('./create.js'),
     Plot: require('./plot.js'),
@@ -643,7 +643,7 @@ function numericAxis() {
 
 module.exports = numericAxis;
 
-},{"../util/chart-attribute-styles":20,"./number.labels":7,"./number.scale":8,"d3":"d3"}],7:[function(require,module,exports){
+},{"../util/chart-attribute-styles":21,"./number.labels":7,"./number.scale":8,"d3":"d3"}],7:[function(require,module,exports){
 module.exports = {
 
     isVertical: function (axis) {
@@ -1002,7 +1002,7 @@ function barChart(g){
 
 module.exports = barChart;
 
-},{"../axis":5,"../util/chart-attribute-styles":20,"../util/data.model.js":22,"../util/dressing.js":24,"../util/metadata.js":28}],11:[function(require,module,exports){
+},{"../axis":5,"../util/chart-attribute-styles":21,"../util/data.model.js":23,"../util/dressing.js":25,"../util/metadata.js":29}],11:[function(require,module,exports){
 //var d3 = require('d3');
 
 function blankChart() {
@@ -1187,7 +1187,7 @@ function columnChart(g){
 
 module.exports = columnChart;
 
-},{"../axis":5,"../util/chart-attribute-styles":20,"../util/data.model.js":22,"../util/dressing.js":24,"../util/metadata.js":28}],13:[function(require,module,exports){
+},{"../axis":5,"../util/chart-attribute-styles":21,"../util/data.model.js":23,"../util/dressing.js":25,"../util/metadata.js":29}],13:[function(require,module,exports){
 module.exports = {
     line: require('./line.js'),
     blank: require('./blank.js'),
@@ -1269,7 +1269,7 @@ function lineChart(g) {
 
 module.exports = lineChart;
 
-},{"../axis":5,"../util/chart-attribute-styles":20,"../util/data.model.js":22,"../util/dressing.js":24,"../util/line-interpolators.js":26,"../util/metadata.js":28,"d3":"d3"}],15:[function(require,module,exports){
+},{"../axis":5,"../util/chart-attribute-styles":21,"../util/data.model.js":23,"../util/dressing.js":25,"../util/line-interpolators.js":27,"../util/metadata.js":29,"d3":"d3"}],15:[function(require,module,exports){
 //var d3 = require('d3');
 
 function pieChart() {
@@ -1498,7 +1498,7 @@ function lineKey(options) {
 
 module.exports = lineKey;
 
-},{"../util/chart-attribute-styles":20,"../util/line-thickness.js":27}],18:[function(require,module,exports){
+},{"../util/chart-attribute-styles":21,"../util/line-thickness.js":28}],18:[function(require,module,exports){
 /*jshint -W084 */
 //text area provides a wrapping text block of a given type
 var d3 = require('d3');
@@ -1599,6 +1599,26 @@ function textArea() {
 module.exports = textArea;
 
 },{"d3":"d3"}],19:[function(require,module,exports){
+module.exports = {
+    chart: require('./chart/index.js'),
+
+    axis: require('./axis/index.js'),
+
+    element: {
+        seriesKey: require('./element/series-key.js'),
+        textArea: require('./element/text-area.js')
+    },
+
+    util: {
+        attributeStyler: require('./util/chart-attribute-styles.js'),
+        dates: require('./util/dates.js')
+    },
+
+    version: require('./util/version')
+
+};
+
+},{"./axis/index.js":5,"./chart/index.js":13,"./element/series-key.js":17,"./element/text-area.js":18,"./util/chart-attribute-styles.js":21,"./util/dates.js":24,"./util/version":31}],20:[function(require,module,exports){
 // More info:
 // http://en.wikipedia.org/wiki/Aspect_ratio_%28image%29
 
@@ -1669,7 +1689,7 @@ module.exports = {
     }
 };
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 // because of the need to export and convert browser rendered SVGs
 // we need a simple way to attach styles as attributes if necessary,
 // so, heres a list of attributes and the selectors to which they should be applied
@@ -1901,7 +1921,7 @@ function applyAttributes(g, keepD3Styles) {
 
 module.exports = applyAttributes;
 
-},{"./colours":21,"d3":"d3"}],21:[function(require,module,exports){
+},{"./colours":22,"d3":"d3"}],22:[function(require,module,exports){
 module.exports = {
   line: [
     '#af516c',
@@ -1925,7 +1945,7 @@ module.exports = {
   accent: '#9e2f50'
 };
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
 var ratios = require('../util/aspect-ratios.js');
@@ -2177,7 +2197,7 @@ Model.prototype.error = function (err) {
 };
 module.exports = Model;
 
-},{"../util/aspect-ratios.js":19,"../util/dates.js":23,"../util/line-thickness.js":27,"../util/series-options.js":29,"d3":"d3"}],23:[function(require,module,exports){
+},{"../util/aspect-ratios.js":20,"../util/dates.js":24,"../util/line-thickness.js":28,"../util/series-options.js":30,"d3":"d3"}],24:[function(require,module,exports){
 var d3 = require('d3');
 
 var formatter = {
@@ -2336,7 +2356,7 @@ module.exports = {
     unitGenerator: unitGenerator
 };
 
-},{"d3":"d3"}],24:[function(require,module,exports){
+},{"d3":"d3"}],25:[function(require,module,exports){
 var textArea = require('../element/text-area.js');
 var seriesKey = require('../element/series-key.js');
 var ftLogo = require('../element/logo.js');
@@ -2522,7 +2542,7 @@ Dressing.prototype.setPosition = function () {
 
 module.exports = Dressing;
 
-},{"../element/logo.js":16,"../element/series-key.js":17,"../element/text-area.js":18}],25:[function(require,module,exports){
+},{"../element/logo.js":16,"../element/series-key.js":17,"../element/text-area.js":18}],26:[function(require,module,exports){
 var d3 = require('d3');
 var dates = require('../util/dates');
 var styler = require('./chart-attribute-styles');
@@ -2717,7 +2737,7 @@ module.exports = {
     }
 };
 
-},{"../util/dates":23,"./chart-attribute-styles":20,"d3":"d3"}],26:[function(require,module,exports){
+},{"../util/dates":24,"./chart-attribute-styles":21,"d3":"d3"}],27:[function(require,module,exports){
 //a place to define custom line interpolators
 
 var d3 = require('d3');
@@ -2751,7 +2771,7 @@ module.exports = {
     gappedLine: gappedLineInterpolator
 };
 
-},{"d3":"d3"}],27:[function(require,module,exports){
+},{"d3":"d3"}],28:[function(require,module,exports){
 var thicknesses = {
     small: 2,
     medium: 4,
@@ -2779,7 +2799,7 @@ module.exports = function (value) {
     }
 };
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 //example:
 //http://codinginparadise.org/projects/svgweb-staging/tests/htmlObjectHarness/basic-metadata-example-01-b.html
 var svgSchema = 'http://www.w3.org/2000/svg';
@@ -2830,7 +2850,7 @@ module.exports = {
     create: create
 };
 
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 function isTruthy(value) {
     return !!value;
 }
@@ -2876,26 +2896,40 @@ module.exports = {
     normalise: normalise
 };
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 module.exports = "0.4.5";
-},{}],"o-charts":[function(require,module,exports){
+},{}],"text-area":[function(require,module,exports){
+
+var oCharts = require('../../src/scripts/o-charts');
+var d3 = require('d3');
+
+
+var data = [
+    {label:"Family in feud with Zuckerbergs"},
+    {label:"Committed 671 birthdays to memory"},
+    {label:"Ex is doing too well"},
+    {label:"High school friends all have babies now"},
+    {label:"Discovered how to “like” things mentally"},
+    {label:"Not enough politics"}
+];
+
 module.exports = {
-    chart: require('./chart/index.js'),
+    init: function(){
 
-    axis: require('./axis/index.js'),
+        var text = oCharts.element.textArea()
+            .width(100)
+            .lineHeight(16);
 
-    element: {
-        seriesKey: require('./element/series-key.js'),
-        textArea: require('./element/text-area.js')
-    },
+        d3.select('svg')
+            .attr('width', 800)
+            .attr('height', 800)
+            .selectAll('text')
+            .data(data)
+            .enter()
+            .append('g').attr('transform',function (d,i) { return 'translate(10,'+ (30 + i*100)+')'; })
+            .call(text, function (d) { return d.label });
 
-    util: {
-        attributeStyler: require('./util/chart-attribute-styles.js'),
-        dates: require('./util/dates.js')
-    },
-
-    version: require('./util/version')
-
+    }
 };
 
-},{"./axis/index.js":5,"./chart/index.js":13,"./element/series-key.js":17,"./element/text-area.js":18,"./util/chart-attribute-styles.js":20,"./util/dates.js":23,"./util/version":30}]},{},["o-charts"]);
+},{"../../src/scripts/o-charts":19,"d3":"d3"}]},{},["text-area"]);
