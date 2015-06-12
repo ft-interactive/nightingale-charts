@@ -13,10 +13,8 @@
     "private": true,
     "ignore": [
         "**/.*",
-        "node_modules",
-        "bower_components",
-        "test",
-        "tests"
+        "!site/**/*",
+        "!dist/**/*"
     ],
     "dependencies": {
         "d3": "~3.5.5"
