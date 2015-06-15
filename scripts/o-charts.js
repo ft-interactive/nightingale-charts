@@ -1,4 +1,7 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+module.exports={"version":"0.4.6"}
+
+},{}],2:[function(require,module,exports){
 var d3 = require('d3');
 var styler = require('../util/chart-attribute-styles');
 var labels = require('../util/labels.js');
@@ -134,7 +137,7 @@ function categoryAxis() {
 
 module.exports = categoryAxis;
 
-},{"../util/chart-attribute-styles":20,"../util/dates.js":23,"../util/labels.js":25,"d3":"d3"}],2:[function(require,module,exports){
+},{"../util/chart-attribute-styles":21,"../util/dates.js":24,"../util/labels.js":26,"d3":"d3"}],3:[function(require,module,exports){
 var d3 = require('d3');
 var axis = {
     category: require('./category.js'),
@@ -314,7 +317,7 @@ Create.prototype.createAxes = function (axesSpec) {
 
 module.exports = Create;
 
-},{"./category.js":1,"./date.js":3,"./number.js":6,"d3":"d3"}],3:[function(require,module,exports){
+},{"./category.js":2,"./date.js":4,"./number.js":7,"d3":"d3"}],4:[function(require,module,exports){
 var d3 = require('d3');
 var labels = require('../util/labels.js');
 var dates = require('../util/dates.js');
@@ -432,7 +435,7 @@ function dateAxis() {
 
 module.exports = dateAxis;
 
-},{"../util/dates.js":23,"../util/labels.js":25,"./date.scale.js":4,"d3":"d3"}],4:[function(require,module,exports){
+},{"../util/dates.js":24,"../util/labels.js":26,"./date.scale.js":5,"d3":"d3"}],5:[function(require,module,exports){
 var d3 = require('d3');
 var utils = require('../util/dates.js');
 
@@ -511,7 +514,7 @@ module.exports = {
     }
 };
 
-},{"../util/dates.js":23,"d3":"d3"}],5:[function(require,module,exports){
+},{"../util/dates.js":24,"d3":"d3"}],6:[function(require,module,exports){
 module.exports = {
     Create: require('./create.js'),
     Plot: require('./plot.js'),
@@ -520,7 +523,7 @@ module.exports = {
     number: require('./number.js')
 };
 
-},{"./category.js":1,"./create.js":2,"./date.js":3,"./number.js":6,"./plot.js":9}],6:[function(require,module,exports){
+},{"./category.js":2,"./create.js":3,"./date.js":4,"./number.js":7,"./plot.js":10}],7:[function(require,module,exports){
 //this is wrapper for d3.svg.axis
 //for a standard FT styled numeric axis
 //usually these are vertical
@@ -643,7 +646,7 @@ function numericAxis() {
 
 module.exports = numericAxis;
 
-},{"../util/chart-attribute-styles":20,"./number.labels":7,"./number.scale":8,"d3":"d3"}],7:[function(require,module,exports){
+},{"../util/chart-attribute-styles":21,"./number.labels":8,"./number.scale":9,"d3":"d3"}],8:[function(require,module,exports){
 module.exports = {
 
     isVertical: function (axis) {
@@ -707,7 +710,7 @@ module.exports = {
 
 };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 module.exports = {
     removeDuplicateTicks: function (scale, ticks) {
         var formatted = [];
@@ -783,7 +786,7 @@ module.exports = {
     }
 };
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 var d3 = require('d3');
 
 function stackSeries(model, value, stack){
@@ -886,7 +889,7 @@ Plot.prototype.yIndependent = function(key, seriesNumber) {
 
 module.exports = Plot;
 
-},{"d3":"d3"}],10:[function(require,module,exports){
+},{"d3":"d3"}],11:[function(require,module,exports){
 var axes = require('../axis');
 var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');
@@ -1002,7 +1005,7 @@ function barChart(g){
 
 module.exports = barChart;
 
-},{"../axis":5,"../util/chart-attribute-styles":20,"../util/data.model.js":22,"../util/dressing.js":24,"../util/metadata.js":28}],11:[function(require,module,exports){
+},{"../axis":6,"../util/chart-attribute-styles":21,"../util/data.model.js":23,"../util/dressing.js":25,"../util/metadata.js":29}],12:[function(require,module,exports){
 //var d3 = require('d3');
 
 function blankChart() {
@@ -1074,7 +1077,7 @@ function blankChart() {
 
 module.exports = blankChart;
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 var axes = require('../axis');
 var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');
@@ -1187,7 +1190,7 @@ function columnChart(g){
 
 module.exports = columnChart;
 
-},{"../axis":5,"../util/chart-attribute-styles":20,"../util/data.model.js":22,"../util/dressing.js":24,"../util/metadata.js":28}],13:[function(require,module,exports){
+},{"../axis":6,"../util/chart-attribute-styles":21,"../util/data.model.js":23,"../util/dressing.js":25,"../util/metadata.js":29}],14:[function(require,module,exports){
 module.exports = {
     line: require('./line.js'),
     blank: require('./blank.js'),
@@ -1196,7 +1199,7 @@ module.exports = {
     bar: require('./bar.js')
 };
 
-},{"./bar.js":10,"./blank.js":11,"./column.js":12,"./line.js":14,"./pie.js":15}],14:[function(require,module,exports){
+},{"./bar.js":11,"./blank.js":12,"./column.js":13,"./line.js":15,"./pie.js":16}],15:[function(require,module,exports){
 var d3 = require('d3');
 var axes = require('../axis');
 var interpolator = require('../util/line-interpolators.js');
@@ -1269,7 +1272,7 @@ function lineChart(g) {
 
 module.exports = lineChart;
 
-},{"../axis":5,"../util/chart-attribute-styles":20,"../util/data.model.js":22,"../util/dressing.js":24,"../util/line-interpolators.js":26,"../util/metadata.js":28,"d3":"d3"}],15:[function(require,module,exports){
+},{"../axis":6,"../util/chart-attribute-styles":21,"../util/data.model.js":23,"../util/dressing.js":25,"../util/line-interpolators.js":27,"../util/metadata.js":29,"d3":"d3"}],16:[function(require,module,exports){
 //var d3 = require('d3');
 
 function pieChart() {
@@ -1353,7 +1356,7 @@ function pieChart() {
 
 module.exports = pieChart;
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 //the ft logo there's probably an easier ay to do this...
 //var d3 = require('d3');
 
@@ -1388,7 +1391,7 @@ module.exports = ftLogo;
  h3.075L110.955,1.959z"/>
  */
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 //var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
 var styler = require('../util/chart-attribute-styles');
@@ -1498,7 +1501,7 @@ function lineKey(options) {
 
 module.exports = lineKey;
 
-},{"../util/chart-attribute-styles":20,"../util/line-thickness.js":27}],18:[function(require,module,exports){
+},{"../util/chart-attribute-styles":21,"../util/line-thickness.js":28}],19:[function(require,module,exports){
 /*jshint -W084 */
 //text area provides a wrapping text block of a given type
 var d3 = require('d3');
@@ -1598,7 +1601,7 @@ function textArea() {
 
 module.exports = textArea;
 
-},{"d3":"d3"}],19:[function(require,module,exports){
+},{"d3":"d3"}],20:[function(require,module,exports){
 // More info:
 // http://en.wikipedia.org/wiki/Aspect_ratio_%28image%29
 
@@ -1669,7 +1672,7 @@ module.exports = {
     }
 };
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 // because of the need to export and convert browser rendered SVGs
 // we need a simple way to attach styles as attributes if necessary,
 // so, heres a list of attributes and the selectors to which they should be applied
@@ -1901,7 +1904,7 @@ function applyAttributes(g, keepD3Styles) {
 
 module.exports = applyAttributes;
 
-},{"./colours":21,"d3":"d3"}],21:[function(require,module,exports){
+},{"./colours":22,"d3":"d3"}],22:[function(require,module,exports){
 module.exports = {
   line: [
     '#af516c',
@@ -1925,7 +1928,7 @@ module.exports = {
   accent: '#9e2f50'
 };
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
 var ratios = require('../util/aspect-ratios.js');
@@ -2177,7 +2180,7 @@ Model.prototype.error = function (err) {
 };
 module.exports = Model;
 
-},{"../util/aspect-ratios.js":19,"../util/dates.js":23,"../util/line-thickness.js":27,"../util/series-options.js":29,"d3":"d3"}],23:[function(require,module,exports){
+},{"../util/aspect-ratios.js":20,"../util/dates.js":24,"../util/line-thickness.js":28,"../util/series-options.js":30,"d3":"d3"}],24:[function(require,module,exports){
 var d3 = require('d3');
 
 var formatter = {
@@ -2336,7 +2339,7 @@ module.exports = {
     unitGenerator: unitGenerator
 };
 
-},{"d3":"d3"}],24:[function(require,module,exports){
+},{"d3":"d3"}],25:[function(require,module,exports){
 var textArea = require('../element/text-area.js');
 var seriesKey = require('../element/series-key.js');
 var ftLogo = require('../element/logo.js');
@@ -2522,7 +2525,7 @@ Dressing.prototype.setPosition = function () {
 
 module.exports = Dressing;
 
-},{"../element/logo.js":16,"../element/series-key.js":17,"../element/text-area.js":18}],25:[function(require,module,exports){
+},{"../element/logo.js":17,"../element/series-key.js":18,"../element/text-area.js":19}],26:[function(require,module,exports){
 var d3 = require('d3');
 var dates = require('../util/dates');
 var styler = require('./chart-attribute-styles');
@@ -2717,7 +2720,7 @@ module.exports = {
     }
 };
 
-},{"../util/dates":23,"./chart-attribute-styles":20,"d3":"d3"}],26:[function(require,module,exports){
+},{"../util/dates":24,"./chart-attribute-styles":21,"d3":"d3"}],27:[function(require,module,exports){
 //a place to define custom line interpolators
 
 var d3 = require('d3');
@@ -2751,7 +2754,7 @@ module.exports = {
     gappedLine: gappedLineInterpolator
 };
 
-},{"d3":"d3"}],27:[function(require,module,exports){
+},{"d3":"d3"}],28:[function(require,module,exports){
 var thicknesses = {
     small: 2,
     medium: 4,
@@ -2779,7 +2782,7 @@ module.exports = function (value) {
     }
 };
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 //example:
 //http://codinginparadise.org/projects/svgweb-staging/tests/htmlObjectHarness/basic-metadata-example-01-b.html
 var svgSchema = 'http://www.w3.org/2000/svg';
@@ -2830,7 +2833,7 @@ module.exports = {
     create: create
 };
 
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 function isTruthy(value) {
     return !!value;
 }
@@ -2876,9 +2879,11 @@ module.exports = {
     normalise: normalise
 };
 
-},{}],30:[function(require,module,exports){
-module.exports = "0.4.5";
-},{}],"o-charts":[function(require,module,exports){
+},{}],31:[function(require,module,exports){
+var app = require('../../app.json');
+module.exports = app.version;
+
+},{"../../app.json":1}],"o-charts":[function(require,module,exports){
 module.exports = {
     chart: require('./chart/index.js'),
 
@@ -2898,4 +2903,4 @@ module.exports = {
 
 };
 
-},{"./axis/index.js":5,"./chart/index.js":13,"./element/series-key.js":17,"./element/text-area.js":18,"./util/chart-attribute-styles.js":20,"./util/dates.js":23,"./util/version":30}]},{},["o-charts"]);
+},{"./axis/index.js":6,"./chart/index.js":14,"./element/series-key.js":18,"./element/text-area.js":19,"./util/chart-attribute-styles.js":21,"./util/dates.js":24,"./util/version":31}]},{},["o-charts"]);

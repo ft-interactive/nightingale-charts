@@ -1,0 +1,42 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="styles/main.css"/>
+    <link rel="stylesheet" href="styles/demo.css"/>
+    <title>lines</title>
+</head>
+<body class="ft">
+
+<style>
+    svg {
+        margin:5px;
+    }
+</style>
+<script src=scripts/vendor.js></script>
+<script src=scripts/o-charts.js></script>
+
+<div id="views"></div>
+<script>
+    var oCharts = require('o-charts');
+    var d3 = require('d3');
+
+    d3.select('#views').append('div').data([{
+        comment: 'Line chart',
+        title: 'Lines: ',
+        subtitle: 'Dates, with a vertical independent axis',
+        dependentAxisOrient: 'left',
+        independentAxisOrient: 'bottom',
+        hideSource: true,
+        x: { series: 'date' },
+        y: { series: ['value', 'value2'] },
+        data: [
+            { date: new Date('01/01/2001'), value:      0.583, value2:      1.583},
+            { date: new Date('01/01/2002'), value: 0.12, value2:  2},
+            { date: new Date('01/01/2003'), value: 1.03, value2:  1.4},
+            { date: new Date('01/01/2004'), value:     1.348, value2:  1.9}
+        ],
+        dataType : 'time'
+    }]).call(oCharts.chart.line);
+</script>
+</body>
+</html>
