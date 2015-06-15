@@ -95,7 +95,11 @@ Create.prototype.configureDependentScale = function (model) {
         .yOffset(model.dependentAxisOrient =='bottom' ? model.plotHeight : 0);
         //this.dependentAxis.noLabels(true);
     }
+    // THIS IS A HACK BECAUSE FOR SOME REASON THE
+    // DOMAIN IS COMING BACK DIFFERENT ON THESE SCALES
+    // ;_;
     this.dependentAxis.scale(this.dependentAxisScale);
+    this.dependentAxis.scale().domain(this.dependentAxisScale.domain());
     this.chart.call(this.dependentAxis);
 };
 
@@ -108,6 +112,7 @@ Create.prototype.configureIndependentScale = function (model) {
         this.independentAxis.yOffset(model.plotHeight);	//position the axis at the bottom of the chart
     }
     this.independentAxis.scale(this.independentAxisScale, this.model.units);
+    // ?? do we need to do the same here?
     this.chart.call(this.independentAxis);
 };
 
