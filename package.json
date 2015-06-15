@@ -1,15 +1,17 @@
 {
-  "version": "0.4.5",
+  "version": "0.4.4",
   "name": "o-charts",
   "description": "FT style charts, axes, scales etc",
   "private": true,
   "main": "src/scripts/o-charts.js",
   "scripts": {
+    "postinstall": "bower install",
     "build": "caddy build",
     "bump": "caddy bump",
     "release": "npm test && caddy release",
     "report": "caddy serve test/coverage/chrome/",
     "start": "caddy build -dev && caddy serve",
+    "start-test": "caddy serve ./_test",
     "tdd": "caddy test tdd",
     "test": "jshint src && caddy build && caddy test"
   },
@@ -22,7 +24,7 @@
   "devDependencies": {
     "browserify-istanbul": "^0.2.1",
     "jshint": "^2.6.3",
-    "web-caddy": "^2.0.0-beta.6"
+    "web-caddy": "^2.0.0-rc.1"
   },
   "browser": {
     "d3": "./bower_components/d3/d3.js"

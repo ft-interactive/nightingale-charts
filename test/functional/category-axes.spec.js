@@ -1,13 +1,13 @@
 require('../helper').loadAssets('category-axes');
 var d3 = require('d3');
-var catAxes = require('../../demo/scripts/category-axes');
+var catAxes = require('../fixtures/scripts/category-axes');
 catAxes.init();
 
 describe('category axis', function () {
 
     beforeEach(function(){
         require('../helper').loadAssets('category-axes');
-        require('../../demo/scripts/category-axes').init();
+        require('../fixtures/scripts/category-axes').init();
     });
 
     describe('daily scale', function () {

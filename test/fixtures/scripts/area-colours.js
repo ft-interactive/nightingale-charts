@@ -1,5 +1,5 @@
 var d3 = require('d3');
-var colours = require('../../src/scripts/util/colours');
+var colours = require('../../../src/scripts/util/colours');
 
 
 module.exports = {
