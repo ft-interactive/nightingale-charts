@@ -9,3 +9,4 @@ _site
 dist
 test/coverage
 npm-debug.log
+test/regression/**/*.png

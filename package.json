@@ -4,6 +4,9 @@
   "description": "FT style charts, axes, scales etc",
   "private": true,
   "main": "src/scripts/o-charts.js",
+  "bin" : {
+    "casperjs" : "node_modules/phantomcss/node_modules/.bin/casperjs"
+  },
   "scripts": {
     "postinstall": "bower install",
     "build": "caddy build",
@@ -13,7 +16,8 @@
     "start": "caddy build -dev && caddy serve",
     "start-test": "caddy serve ./_test",
     "tdd": "caddy test tdd",
-    "test": "jshint src && caddy build && caddy test"
+    "test": "jshint src && caddy build && caddy test",
+    "regression": "caddy serve & sleep 4 && casperjs test test/regression/"
   },
   "repository": {
     "type": "git",
@@ -24,7 +28,9 @@
   "devDependencies": {
     "browserify-istanbul": "^0.2.1",
     "jshint": "^2.6.3",
-    "web-caddy": "^2.0.0-rc.1"
+    "web-caddy": "^2.0.0-rc.3",
+    "phantomcss": "^0.10.1",
+    "slug": "^0.9.1"
   },
   "browser": {
     "d3": "./bower_components/d3/d3.js"

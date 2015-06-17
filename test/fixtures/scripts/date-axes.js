@@ -1,6 +1,6 @@
 var oCharts = require('../../../src/scripts/o-charts');
 var d3 = require('d3');
-
+var slug = require('slug');
 var margin = {
     top: 20, left: 50, bottom: 70, right: 50
 };
@@ -39,7 +39,7 @@ var axesDefinitions = [
         dateEnd: new Date(2015, 2, 1)
     },
     {
-        title: '50 years or so',
+        title: 'fifty years or so',
         dateStart: new Date(1966, 10, 1),
         dateEnd: new Date(2015, 2, 1)
     },
@@ -88,6 +88,9 @@ function renderAxesArrayIntoDiv(div, axesDefinitionArray) {
         });
 
     divs.append('svg')
+        .attr('id', function(d) {
+            return slug(d.title).toLowerCase();
+        })
         .attr('width', function (d) {
             var r = d.scale.range();
             return (r[1] - r[0]) + margin.left + margin.right;

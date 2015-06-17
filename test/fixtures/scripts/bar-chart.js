@@ -115,16 +115,16 @@ var fixtures = {
         { date: new Date('12/30/05'), value:     1.348}
     ],
     multiple:[
-        {date: new Date('3/31/05'), value: Math.floor(Math.random() * 40) + 10, value2: 99, value3: 26},
-        {date: new Date('6/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 10, value3: 21},
-        {date: new Date('9/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 70, value3: 13},
-        {date: new Date('12/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 10, value3: 99}
+        {date: new Date('3/31/05'),  value: 45, value2: 99, value3: 26},
+        {date: new Date('6/30/05'),  value: 58, value2: 10, value3: 21},
+        {date: new Date('9/30/05'),  value: 43, value2: 70, value3: 13},
+        {date: new Date('12/30/05'), value: 34, value2: 10, value3: 99}
     ],
     time: [
-        {date: new Date('3/31/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
-        {date: new Date('6/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
-        {date: new Date('9/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
-        {date: new Date('12/30/05'), value: Math.random() * 40, value2: Math.random() * 40, value3:66}
+        {date: new Date('3/31/05'),  value: 45, value2: 33, value3:66},
+        {date: new Date('6/30/05'),  value: 58, value2: 28, value3:66},
+        {date: new Date('9/30/05'),  value: 43, value2: 57, value3:66},
+        {date: new Date('12/30/05'), value: 34, value2: 12, value3:66}
     ],
     stack:[
         {myDateColumn: new Date('3/31/05'), value: 50, value2: 99, value3: 26, value4: 40, value5: 15},
@@ -150,10 +150,10 @@ var fixtures = {
         {myDateColumn: new Date('2/28/06'), value: 10, value2: 5, value3: 35, value4: 43, value5: 78}
     ],
     multipleWithNegatives:[
-        {date: new Date('3/31/05'), value: Math.floor(Math.random() * 40) + 10, value2: -99, value3: 26},
-        {date: new Date('6/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: null, value3: 21},
-        {date: new Date('9/30/05'), value: Math.floor(Math.random() * 40) + 10, value2: 70, value3: -13},
-        {date: new Date('12/30/05'), value: Math.floor(Math.random() * -40) + 10, value2: 10, value3: 99}
+        {date: new Date('3/31/05'), value: 24, value2: -99, value3: 26},
+        {date: new Date('6/30/05'), value: 38, value2: null, value3: 21},
+        {date: new Date('9/30/05'), value: 50, value2: 70, value3: -13},
+        {date: new Date('12/30/05'), value: 32, value2: 10, value3: 99}
     ],
     stackWithAllNegatives:[
         {myDateColumn: new Date('3/31/05'), value: -50, value2: -99, value3: -26, value4: -40, value5: -15},

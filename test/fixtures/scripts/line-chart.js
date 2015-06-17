@@ -109,10 +109,10 @@ var quarterlyDataDecade =  [
     { date: new Date('04/01/15'), value: 1.348}
 ];
 var timeData = [
-    {date: new Date('2000-01-01T00:00:00.000Z'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
-    {date: new Date('2001-01-01T00:00:00.000Z'), value: 0, value2: Math.random() * 40, value3:66},
-    {date: new Date('2002-01-01T00:00:00.000Z'), value: Math.random() * 40, value2: Math.random() * 40, value3:66},
-    {date: new Date('2003-01-01T00:00:00.000Z'), value: Math.random() * 40, value2: Math.random() * 40, value3:66}
+    {date: new Date('2000-01-01T00:00:00.000Z'), value: 53, value2: 34, value3:66},
+    {date: new Date('2001-01-01T00:00:00.000Z'), value: 0,  value2: 14, value3:66},
+    {date: new Date('2002-01-01T00:00:00.000Z'), value: 20, value2: 43, value3:66},
+    {date: new Date('2003-01-01T00:00:00.000Z'), value: 33, value2: 22, value3:66}
 ];
 var dataWithZeros = [
     {date: new Date('2000-01-01T00:00:00.000Z'), value: 1, value2: 0, value3:1},
