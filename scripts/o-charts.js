@@ -1160,6 +1160,7 @@ function columnChart(g){
 	var model = new DataModel('column', Object.create(g.data()[0]));
 	var svg = g.append('svg')
 		.attr({
+            'id': model.id,
 			'class': 'graphic column-chart',
 			height: model.height,
 			width: model.width,
