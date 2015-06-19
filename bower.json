@@ -13,6 +13,7 @@
     "private": true,
     "ignore": [
         "**/*",
+        "!bower.json",
         "!src/**/*",
         "!dist/**/*"
     ],
