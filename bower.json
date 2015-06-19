@@ -1,0 +1,23 @@
+{
+    "name": "o-charts",
+    "authors": [
+        "tomgp <tom.g.pearson@gmail.com>",
+        "kavanagh <ltkavanagh@gmail.com>"
+    ],
+    "description": "FT style charts, axes, scales etc",
+    "main": "src/scripts/o-charts.js",
+    "moduleType": [
+        "node"
+    ],
+    "license": "MIT",
+    "private": true,
+    "ignore": [
+        "**/*",
+        "!bower.json",
+        "!src/**/*",
+        "!dist/**/*"
+    ],
+    "dependencies": {
+        "d3": "~3.5.5"
+    }
+}
