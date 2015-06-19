@@ -1,11 +1,11 @@
 {
-  "version": "0.4.6",
+  "version": "0.4.7",
   "name": "o-charts",
   "description": "FT style charts, axes, scales etc",
   "private": true,
   "main": "src/scripts/o-charts.js",
-  "bin" : {
-    "casperjs" : "node_modules/phantomcss/node_modules/.bin/casperjs"
+  "bin": {
+    "casperjs": "node_modules/phantomcss/node_modules/.bin/casperjs"
   },
   "scripts": {
     "postinstall": "bower install",
