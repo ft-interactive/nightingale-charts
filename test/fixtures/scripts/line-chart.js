@@ -9,13 +9,14 @@ var y = [   { series: ['value', 'value2', 'value3'] },
                         {key:'value2', label:function(){ return 'Another function Value';}} ]
             },
             { series: ['value','value2','value3'] },
+            { series: ['value','value2','value3'] },
             { series: ['value'] },
             { series: ['value'] },
             { series: ['value'] },
             { series: ['value'] },
             { series: ['value'] }];
 var hideSource = [true, true, false];
-var dependentAxisOrient = ['left', 'right', 'left', 'right', 'right', 'right', 'right', 'right', 'right'];
+var dependentAxisOrient = ['left', 'right', 'left', 'right', 'right', 'right', 'right', 'right', 'right', 'left'];
 
 var quarterlyDataPlus =  [
     { date: new Date('1/1/05'), value: 0.583},
@@ -120,7 +121,17 @@ var dataWithZeros = [
     {date: new Date('2002-01-01T00:00:00.000Z'), value: -1, value2: 1.5, value3:0},
     {date: new Date('2003-01-01T00:00:00.000Z'), value: 1.5, value2: -1, value3:1}
 ];
-var data = [timeData,timeData,timeData,dataWithZeros,quarterlyDataPlus, quarterlyData5Months, quarterlyDataMany, quarterlyDataDecade, dailyData];
+var reversed = [
+    {date: new Date('2000-01-01T00:00:00.000Z'), value: 1, value2: 0, value3:1},
+    {date: new Date('2001-01-01T00:00:00.000Z'), value: 0, value2: 1, value3:2},
+    {date: new Date('2002-01-01T00:00:00.000Z'), value: -1, value2: 1.5, value3:0},
+    {date: new Date('2003-01-01T00:00:00.000Z'), value: 1.5, value2: -1, value3:1}
+];
+var data = [
+    timeData,timeData,timeData,
+    dataWithZeros,reversed,
+    quarterlyDataPlus, quarterlyData5Months, quarterlyDataMany, quarterlyDataDecade,
+    dailyData ];
 
 function getChartData(i) {
     var defaultData = {
@@ -138,13 +149,18 @@ function getChartData(i) {
         data: data[i],
         units: false
     };
-    if (i>=4){
+    if (i>=5){
         defaultData.subtitle = "Quarterly Axis";
         defaultData.units = ['quarterly', 'yearly'];
     }
-    if (i === 8) {
+    if (i === 9) {
         defaultData.subtitle = "Daily Axis";
         defaultData.units = ['daily', 'monthly', 'yearly'];
+    }
+    if (i === 4) {
+        defaultData.subtitle = "Reversed Dependent Scale";
+        defaultData.y.reverse = true;
+        defaultData.units = false;
     }
     return defaultData;
 }

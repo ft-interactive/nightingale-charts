@@ -17,6 +17,7 @@ function numericAxis() {
     var hardRules = [0];
     var yOffset = 0;
     var xOffset = 0;
+    var reverse = false;
     var simple = false;
     var noLabels = false;
     var pixelsPerTick = 100;
@@ -57,7 +58,18 @@ function numericAxis() {
 
     axis.orient = function (string) {
         if (!arguments.length) return a.orient();
-        a.orient(string);
+        if (string) {
+            a.orient(string);
+        }
+        return axis;
+    };
+
+    axis.reverse = function (bool) {
+        if (!arguments.length) return reverse;
+        reverse = bool;
+        if (reverse){
+            a.scale().domain(a.scale().domain().reverse());
+        }
         return axis;
     };
 
@@ -76,12 +88,14 @@ function numericAxis() {
     axis.scale = function (x) {
         if (!arguments.length) return a.scale();
         a.scale(x);
+        axis.reverse(reverse);
         if (userTicks.length > 0) {
             a.tickValues(userTicks);
         } else {
-            var customTicks = numberScales.customTicks(a.scale(), pixelsPerTick, hardRules, simple);
+            var customTicks = numberScales.customTicks(a.scale(), pixelsPerTick, hardRules, simple, reverse);
             a.tickValues(customTicks);
         }
+        reverse = false; //only reverse once, even if scale is called twice i.e. in redraw
         return axis;
     };
 
