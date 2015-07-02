@@ -209,7 +209,7 @@ function Model(chartType, opts) {
             series: '&'
         },
         y: {
-            series: []
+            series: [], reverse: false
         },
         labelLookup: null,
         sourcePrefix: 'Source: '

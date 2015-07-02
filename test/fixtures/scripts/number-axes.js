@@ -4,7 +4,7 @@ var slug = require('slug');
 
 var margin = {
     top: 20, left: 50, bottom: 70, right: 50
-}
+};
 var axesDefinitions = [
     {
         title: 'six or less',
@@ -49,6 +49,13 @@ var axesDefinitions = [
         simple: false,
         start: 2.95,
         end: 0.2
+    },
+    {
+        title: 'reversed scale',
+        reverse: true,
+        simple: false,
+        start: 2.95,
+        end: 0.2
     }];
 
 function createAxesDefArrayOfWidth(axisWidth, axesDefinitionArray) {
@@ -59,6 +66,7 @@ function createAxesDefArrayOfWidth(axisWidth, axesDefinitionArray) {
             title: axis.title,
             orient: axis.orient,
             simple: axis.simple,
+            reverse: axis.reverse,
             scale: d3.scale.linear()
                 .range([0, axisWidth])
                 .domain([axis.start, axis.end])
@@ -102,10 +110,9 @@ function renderAxesArrayIntoDiv(div, axesDefinitionArray) {
         .each(function (d, i) {
             var axis = oCharts.axis.number()
                 .simple(d.simple)
+                .orient(d.orient)
+                .reverse(d.reverse)
                 .scale(d.scale);
-            if (d.orient) {
-                axis.orient(d.orient);
-            }
 
             d3.select(this)
                 .append('g')
