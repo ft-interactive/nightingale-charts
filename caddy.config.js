@@ -3,16 +3,15 @@ var pkg = require('./package.json');
 module.exports = {
     pkg: pkg,
     buildPaths: [
-        {source: "./src", targets: ['./_site', './dist'], minify: true},
-        {source: "./examples", targets: ['./_site']},
-        {source: './test/fixtures', targets: ['./_test']}
+        {source: "./src", target: './_site', minify: true},
+        {source: "./examples", target: './_site'},
+        {source: './test/fixtures', target: './_test'}
     ],
     tasks: {
-        copy: ['server-config'],
         build: ['sass', 'mustache', 'browserify'],
         serve: 'staticApp',
         test: 'karma',
-        release: ['git', 'gh-pages', 'bower']
+        release: ['git', 'gh-pages']
     },
     browserify: {
         insertGlobals: false,

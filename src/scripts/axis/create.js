@@ -85,7 +85,8 @@ Create.prototype.hideTicks = function () {
 Create.prototype.configureDependentScale = function (model) {
     this.dependentAxis.tickFormat(model.numberAxisFormatter)
         .simple(model.simpleValue)
-        .orient(model.dependentAxisOrient);
+        .orient(model.dependentAxisOrient)
+        .reverse(model.y.reverse);
 
     if (isVertical(model.dependentAxisOrient)) {
         this.dependentAxis.tickSize(model.plotWidth)

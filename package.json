@@ -28,7 +28,7 @@
   "devDependencies": {
     "browserify-istanbul": "^0.2.1",
     "jshint": "^2.6.3",
-    "web-caddy": "^2.0.0-rc.3",
+    "web-caddy": "^2.0.0",
     "phantomcss": "^0.10.1",
     "slug": "^0.9.1"
   },
