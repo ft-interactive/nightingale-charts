@@ -5,11 +5,12 @@
 var d3 = require('d3');
 var numberLabels = require('./number.labels');
 var numberScales = require('./number.scale');
-var styler = require('../util/chart-attribute-styles');
+var themes = require('../themes');
 
 function numericAxis() {
     'use strict';
 
+    var theme;
     var tickSize = 5;
     var a = d3.svg.axis().orient('left').tickSize(tickSize, 0);
     var lineHeight = 16;
@@ -33,8 +34,14 @@ function numericAxis() {
         if (noLabels) {
             g.selectAll('text').remove();
         }
-        styler(g);
+        themes.applyTheme(g, theme);
     }
+
+    axis.theme = function (themeUpdate) {
+        if (!arguments.length) return theme;
+        theme = themeUpdate;
+        return axis;
+    };
 
     axis.tickExtension = function (int) { // extend the axis ticks to the right/ left a specified distance
         if (!arguments.length) return tickExtension;

@@ -1,8 +1,8 @@
 var axes = require('../axis');
 var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');
-var Dressing = require('../util/dressing.js');
-var styler = require('../util/chart-attribute-styles');
+var Dressing = require('../dressing');
+var themes = require('../themes');
 
 function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
 	var data = formatData(model, series);
@@ -34,7 +34,7 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
             .text('n/a');
     }
 
-    styler(plotSVG);
+    themes.applyTheme(plotSVG, model.theme);
 
     if (!model.stack) {
         // make those labels who don't fit smaller

@@ -2,7 +2,7 @@
 
 describe('line-chart  ', function () {
 
-    var lineChart1, lineChart2, lineChart3, lineChart4, lineChart5, lineChart6, lineChart7, lineChart8, lineChart9;
+    var lineChart1, lineChart2, lineChart3, lineChart4, lineChart5, lineChart6, lineChart7, lineChart8, lineChart9, lineChart10, lineChart11;
 
     beforeEach(function(){
         //pm: hack to stop spec rewriting dom too early :(
@@ -18,6 +18,8 @@ describe('line-chart  ', function () {
         lineChart7 = document.querySelector('#line-chart7 svg');
         lineChart8 = document.querySelector('#line-chart8 svg');
         lineChart9 = document.querySelector('#line-chart9 svg');
+        lineChart10 = document.querySelector('#line-chart10 svg');
+        lineChart11 = document.querySelector('#line-chart11 svg');
     });
 
     describe('shows line keys as ', function () {
@@ -142,6 +144,11 @@ describe('line-chart  ', function () {
             expect(yAxis.getAttribute('fill')).toBeTruthy();
 
         });
+
+        it('keeps correct line width', function(){
+            var lines = lineChart11.querySelector('.line.line--series2');
+            expect(lines.getBoundingClientRect().width).toBe(251);//253?
+        })
 
     });
 

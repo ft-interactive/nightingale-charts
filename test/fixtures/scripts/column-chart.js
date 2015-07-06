@@ -1,7 +1,6 @@
 var oCharts = require('../../../src/scripts/o-charts');
 var d3 = require('d3');
 
-var hideSource = [true, true, false];
 var dependentAxisOrient = ['left', 'right', 'left'];
 
 var fixtures = {
@@ -385,7 +384,6 @@ function getChartData(timeFrame){
         title: 'Columns: ' + timeFrame,
         subtitle: 'Drawn for you',
         dependentAxisOrient: 'left', //todo: refactor onto y object
-        hideSource: false,
         x: { series: xSeries },
         y: { series: ySeries },
         units: units[timeFrame],

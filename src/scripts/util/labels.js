@@ -1,6 +1,6 @@
 var d3 = require('d3');
 var dates = require('../util/dates');
-var styler = require('./chart-attribute-styles');
+var themes = require('../themes');
 var dateFormatter = dates.formatter;
 
 module.exports = {
@@ -49,7 +49,7 @@ module.exports = {
 
         // style the row before we do any removing, to ensure that
         // collision detection is done correctly
-        styler(g, config.keepD3Style);
+        themes.applyTheme(g, config.theme, config.keepD3Style);
 
         if (config.dataType === 'categorical') {
             return;

@@ -1,16 +1,20 @@
 /*jshint -W084 */
 //text area provides a wrapping text block of a given type
 var d3 = require('d3');
+var themes = require('../themes');
 
-function textArea() {
+function textArea(options) {
     'use strict';
+
+    options = options || {};
 
     var xOffset = 0,
         yOffset = 0,
         width = 1000,
         lineHeight = 20,
         units = 'px', //pixels by default
-        bounds;
+        bounds,
+        theme = options.theme;
 
     function wrap(text, width) {
         text.each(function () {
@@ -55,8 +59,14 @@ function textArea() {
         g = g.append('g').attr('transform', 'translate(' + xOffset + ',' + yOffset + ')');
         g.append('text').text(accessor).call(wrap, width);
         bounds = g.node().getBoundingClientRect();
+        themes.applyTheme(g, theme);
     }
 
+    area.theme = function (themeUpdate) {
+        if (!arguments.length) return theme;
+        if (themeUpdate) theme = themeUpdate;
+        return area;
+    };
 
     area.bounds = function () {
         return bounds;
@@ -80,15 +90,15 @@ function textArea() {
         return area;
     };
 
-    area.yOffset = function (x) {
+    area.yOffset = function (y) {
         if (!arguments.length) return yOffset;
-        yOffset = x;
+        yOffset = y;
         return area;
     };
 
     area.xOffset = function (x) {
-        if (!arguments.length) return yOffset;
-        yOffset = x;
+        if (!arguments.length) return xOffset;
+        xOffset = x;
         return area;
     };
 

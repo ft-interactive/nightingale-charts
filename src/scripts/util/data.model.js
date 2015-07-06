@@ -182,6 +182,7 @@ function Model(chartType, opts) {
     };
     var m = {
         //layout stuff
+        theme: 'ft',
         chartType: chartType,
         height: undefined,
         tickSize: 5,
@@ -197,7 +198,6 @@ function Model(chartType, opts) {
         lineClasses: {},
         columnClasses: {},
         niceValue: true,
-        hideSource: false,
         stack: false,
         dependentAxisOrient: 'left',
         independentAxisOrient: 'bottom',
@@ -238,7 +238,7 @@ function Model(chartType, opts) {
     m.groupData = needsGrouping(m.units);
     m.independentDomain = independentDomain(m, chartType);
 	m.dependentDomain = dependentDomain(m, chartType);
-	m.lineStrokeWidth = lineThickness(m.lineThickness);
+	m.lineStrokeWidth = lineThickness(m.lineThickness, m.theme);
 	m.key = setKey(m);
 
     return m;
