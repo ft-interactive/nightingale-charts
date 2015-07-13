@@ -15,8 +15,10 @@ var y = [   { series: ['value', 'value2', 'value3'] },
             { series: ['value'] },
             { series: ['value'] },
             { series: ['value'] },
-            { series: ['Aluminium','Crude','Steel','Nickle','Zinc'] }];
+            { series: ['Aluminium','Crude','Steel','Nickle','Zinc'] },
+            { series: ['value'] }];
 var source = ['', '', 'tbc'];
+
 var dependentAxisOrient = ['left', 'right', 'left', 'right', 'right', 'right', 'right', 'right', 'right', 'left', 'right'];
 
 var quarterlyDataPlus =  [
@@ -52,7 +54,6 @@ var quarterlyDataMany =  [
     { date: new Date('10/01/08'), value: 1.348},
     { date: new Date('01/01/09'), value: 1.348}
 ];
-
 var dailyData = [
     { date: new Date('2015-12-12'), value: 4},
     { date: new Date('2015-12-13'), value: 6},
@@ -65,7 +66,6 @@ var dailyData = [
     { date: new Date('2015-12-20'), value: 6},
     { date: new Date('2015-12-21'), value: 6}
 ];
-
 var quarterlyDataDecade =  [
     { date: new Date('1/1/05'), value: 0.583},
     { date: new Date('4/01/05'), value: -1.027},
@@ -129,6 +129,7 @@ var reversed = [
     {date: new Date('2003-01-01T00:00:00.000Z'), value: 1.5, value2: -1, value3:1}
 ];
 
+
 var quatro = [
     {date: new Date('2000'),	Aluminium: 11.90527035, Crude:	12.88227647, Steel:	16.3249737	, Nickle: 5.964178172, Zinc:	14.94880367	},
     {date: new Date('2001'),	Aluminium: 14.90979838, Crude:	14.79618258, Steel:	19.85942869	, Nickle: 7.949482026, Zinc:	17.34996236	},
@@ -149,13 +150,17 @@ var quatro = [
     {date: new Date('2016'),	Aluminium: 46.28360061, Crude:	51.04121624, Steel:	45.26081474	, Nickle: 50.52739306, Zinc:	44.38709677 },
     {date: new Date('2017'),	Aluminium: 47.17123636, Crude:	51.75119632, Steel:	45.17639687	, Nickle: 51.01846341, Zinc:	44.01242236 },
     {date: new Date('2018'),	Aluminium: 47.83432356, Crude:	52.63445929, Steel:	45.08582303	, Nickle: 51.93488634, Zinc:	44.01       }
-]             ;
+];
+
+var intraDay = require('./data/intra-day');
+
+intraDay.intraDay = true;
 
 var data = [
     timeData,timeData,timeData,
     dataWithZeros,reversed,
     quarterlyDataPlus, quarterlyData5Months, quarterlyDataMany, quarterlyDataDecade,
-    dailyData, quatro ];
+    dailyData, quatro , intraDay];
 
 function getChartData(i) {
     var defaultData = {
@@ -164,13 +169,14 @@ function getChartData(i) {
         source: source[i],
         title: "Some Simple Lines: " + (i + 1),
         subtitle: "Drawn for you",
-        dependentAxisOrient: dependentAxisOrient[i], //todo: refactor onto y object
+        dependentAxisOrient: dependentAxisOrient[i] || 'right', //todo: refactor onto y object
         x: {
             series: {key: 'date', label: 'year'}
         },
         y: y[i],
         data: data[i]
     };
+
     if (i>=5){
         defaultData.subtitle = "Quarterly Axis";
         defaultData.units = ['quarterly', 'yearly'];
@@ -184,6 +190,7 @@ function getChartData(i) {
         defaultData.y.reverse = true;
         defaultData.units = false;
     }
+
     if (i === 10) {
         defaultData.height = 400;
         defaultData.width = 600;
@@ -191,15 +198,30 @@ function getChartData(i) {
         defaultData.keyWidth = 300;
         defaultData.keyColumns = 1;
     }
+
+    if (data[i].intraDay) {
+        defaultData.intraDay = true;
+        defaultData.subtitle = "Intra Day Axis";
+        defaultData.units = false;
+        defaultData.falseOrigin = true;
+    }
+
+
     return defaultData;
+
 }
+
 
 module.exports = {
     getChartData: getChartData,
     init: function () {
         for (var i = 0; i < data.length; i++) {
-            d3.select('body').append('div').attr('id', 'line-chart' + (i + 1));
-            d3.select('#line-chart' + (i + 1)).data([getChartData(i)]).call(oCharts.chart.line);
+            d3.select('body')
+                .append('div')
+                .attr('id', 'line-chart' + (i + 1));
+            d3.select('#line-chart' + (i + 1))
+                .data([getChartData(i)])
+                .call(oCharts.chart.line);
         }
     }
 };

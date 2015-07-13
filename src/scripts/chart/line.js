@@ -61,7 +61,10 @@ function lineChart(g) {
     chartSVG.attr('transform', model.translate(model.chartPosition));
 
     var creator = new axes.Create(chartSVG, model);
-    creator.createAxes({dependent:'number', independent: 'time'});
+    creator.createAxes({
+        dependent:'number',
+        independent: 'time'
+    });
 
     model.keyHover && dressing.addSeriesKey();
 

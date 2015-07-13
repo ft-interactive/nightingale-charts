@@ -14,6 +14,8 @@ module.exports = {
         dates: require('./util/dates.js')
     },
 
+    scale: require('./scales/index.js'),
+
     version: require('./util/version')
 
 };

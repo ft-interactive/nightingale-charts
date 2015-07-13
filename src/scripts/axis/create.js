@@ -4,6 +4,8 @@ var axis = {
     date: require('./date.js'),
     number: require('./number.js')
 };
+var intraDay = require('../scales/intra-day');
+
 
 var PADDING = 4;
 
@@ -31,6 +33,13 @@ function ordinalScale(model, options, orientation) {
 function timeScale(model, options, orientation) {
     var range = getRange(model, orientation);
     return d3.time.scale()
+        .domain(model.independentDomain)
+        .range(range);
+}
+
+function intraDayScale(model, options, orientation) {
+    var range = getRange(model, orientation);
+    return intraDay(model.open, model.close)
         .domain(model.independentDomain)
         .range(range);
 }
@@ -69,6 +78,13 @@ function setChartPosition(g, model){
 }
 
 function Create(svg, model) {
+    if (!model.independentAxisOrient) {
+        throw new Error("No independent axis orientation {left, right, top, bottom}");
+    }
+    if (!model.dependentAxisOrient) {
+        throw new Error("No dependent axis orientation {left, right, top, bottom}");
+    }
+
     this.model = model;
     this.chart = svg;
     this.margin = 0.2;
@@ -141,6 +157,9 @@ Create.prototype.independentScale = function (scale) {
     if(scale == 'ordinal'){
         this.independentAxisScale = ordinalScale(model, this, model.independentAxisOrient);
         this.independentAxis = axis.category().dataType(model.dataType);
+    } else if (model.intraDay) {
+        this.independentAxisScale = intraDayScale(model, this, model.independentAxisOrient);
+        this.independentAxis = axis.date();
     } else {
         this.independentAxisScale = timeScale(model, this, model.independentAxisOrient);
         this.independentAxis = axis.date();

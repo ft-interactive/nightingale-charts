@@ -50,6 +50,40 @@ function setExtents(model){
 	return extents;
 }
 
+function findOpenCloseTimes(model) {
+    var maxGap = Number.MIN_VALUE;
+    var gapIndex;
+    // brute force search for maximum gap.
+    // this will also work for weekend skips
+    // since intra-day skips weekends automatically
+    model.data.forEach(function(d, i) {
+        if (!i) return;
+        var prevdt = model.data[i-1][model.x.series.key];
+        var dt = d[model.x.series.key];
+        var gap = dt - prevdt;
+        if (gap > maxGap) {
+            gapIndex = i;
+            maxGap = gap;
+        }
+    });
+
+    var openTime = model.data[gapIndex][model.x.series.key];
+    var closeTime = model.data[gapIndex-1][model.x.series.key];
+
+    var fmt = d3.time.format("%H:%M");
+
+    var open = fmt(new Date(openTime-60*1000));
+    var close = fmt(new Date(closeTime.getTime()+60*1000));
+
+    // ;_; side effects ewww
+    model.open = open;
+    model.close = close;
+
+}
+
+
+
+
 function independentDomain(model, chartType) {
     if (model.independentDomain) { return model.independentDomain;  }
 
@@ -242,7 +276,9 @@ function Model(chartType, opts) {
 	m.dependentDomain = dependentDomain(m, chartType);
 	m.lineStrokeWidth = lineThickness(m.lineThickness, m.theme);
 	m.key = setKey(m);
-
+    if (m.intraDay) {
+        findOpenCloseTimes(m);
+    }
     return m;
 }
 

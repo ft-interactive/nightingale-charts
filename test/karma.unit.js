@@ -3,13 +3,22 @@ module.exports = function(config) {
         basePath: '..',
         browsers: ['Chrome'],
         frameworks: ['jasmine', 'browserify'],
-        reporters: ['mocha', 'coverage'],
+        reporters: [
+            'mocha',
+            'coverage'
+        ],
         preprocessors: {
             'test/unit/**/*.js': ['browserify'],
             '_site/*.html': ['html2js']
         },
         plugins: [
-            'karma-mocha-reporter', 'karma-browserify', 'karma-jasmine', 'karma-coverage', 'karma-phantomjs-launcher', 'karma-chrome-launcher', 'karma-html2js-preprocessor'
+            'karma-mocha-reporter',
+            'karma-browserify',
+            'karma-jasmine',
+            'karma-coverage',
+            'karma-phantomjs-launcher',
+            'karma-chrome-launcher',
+            'karma-html2js-preprocessor'
         ],
         coverageReporter: {
             dir : 'test/coverage/',

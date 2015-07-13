@@ -1,6 +1,7 @@
 var oCharts = require('../../../src/scripts/o-charts');
 var d3 = require('d3');
 var slug = require('slug');
+
 var margin = {
     top: 20, left: 50, bottom: 70, right: 50
 };
@@ -57,19 +58,38 @@ var axesDefinitions = [
         title: 'Months Overlapping',
         dateStart: new Date(1995, 5, 15),
         dateEnd: new Date(2005, 10, 14)
-    }];
+    },
+    {
+        title: 'Intra-day',
+        intraDay: true,
+        dateStart: new Date(2015, 6, 13),
+        dateEnd: new Date(2015, 6, 15),
+        open: "08:30",
+        close: "16:30"
+    }
+];
 
 function createAxesDefArrayOfWidth(axisWidth) {
 
     var sizedAxesDefinitions = [];
     axesDefinitions.forEach(function (axis){
+        var scale = d3.time.scale();
+
+        if (axis.intraDay) {
+            scale = oCharts.scale
+                .intraDay(axis.open, axis.close);
+        }
+
+        scale
+            .range([0, axisWidth])
+            .domain([axis.dateStart, axis.dateEnd]);
+
         var sizedAxis = {
             title: axis.title,
             simple: axis.simple,
-            scale: d3.time.scale()
-                .range([0, axisWidth])
-                .domain([axis.dateStart, axis.dateEnd])
+            scale: scale
         };
+
         sizedAxesDefinitions.push(sizedAxis);
     });
     return sizedAxesDefinitions;
@@ -84,7 +104,7 @@ function renderAxesArrayIntoDiv(div, axesDefinitionArray) {
 
     divs.append('h2')
         .text(function (d) {
-            return d.title
+            return d.title;
         });
 
     divs.append('svg')
