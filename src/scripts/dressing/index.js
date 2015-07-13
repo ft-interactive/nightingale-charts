@@ -17,35 +17,27 @@ function Dressing(svg, model) {
     this.subtitleFontSize = themes.check(model.theme, 'chart-subtitle').attributes['font-size'];
     this.sourceFontSize = themes.check(model.theme, 'dressing-source').attributes['font-size'];
     this.halfLineStrokeWidth = Math.ceil(model.lineStrokeWidth / 2);
-
     this.headerHeight = 0;
     this.footerHeight = 0;
 }
 
 Dressing.prototype.addHeader = function () {
-    this.addTitle();
-    this.addSubTitle();
+    this.addHeaderItem('title');
+    this.addHeaderItem('subtitle');
     this.addSeriesKey();
-    this.setPosition();
 };
 
 Dressing.prototype.addFooter = function () {
-    this.addFootNotes();
-    this.addSource();
+    var footerText = this.addFooterItem('footnote');
+    var sourceText = this.addFooterItem('source', this.model.sourcePrefix);
     this.setHeight();
     this.addLogo();
-};
-
-Dressing.prototype.addFooterTextArea = function(datum, attrClass){
-    var text = textArea().width(this.model.contentWidth - this.model.logoSize).lineHeight(this.footerLineHeight);
-    var gText = this.svg.append('g').attr('class', attrClass).datum(datum).call(text);
-    this.footerHeight += getHeight(gText);
-    return gText;
+    this.positionFooterItem(footerText, sourceText);
+    this.positionFooterItem(sourceText);
 };
 
 Dressing.prototype.addLogo = function () {
     var model = this.model;
-
     var logo = this.svg.append('g').attr('class', 'chart-logo').call(ftLogo, model.logoSize);
     logo.attr('transform', model.translate({
         left: model.width - model.logoSize - 3,
@@ -53,51 +45,23 @@ Dressing.prototype.addLogo = function () {
     }));
 };
 
-Dressing.prototype.addSubTitle = function () {
+Dressing.prototype.addHeaderItem = function(item){
+    if (!this.model[item]) return;
     var svg = this.svg;
     var model = this.model;
-
-    var subtitleLineHeight = Math.ceil(this.subtitleFontSize * this.defaultLineHeight);
-    var subtitleTextWrapper = textArea().width(model.contentWidth).lineHeight(subtitleLineHeight);
-    var subtitle = svg.append('g').attr('class', 'chart-subtitle').datum(model.subtitle).call(subtitleTextWrapper);
-    if (!this.subtitlePosition) {
-        if (model.subtitle) {
-            this.subtitlePosition = {top: this.headerHeight + this.subtitleFontSize, left: 0};
-            this.headerHeight += (getHeight(subtitle) + this.blockPadding);
-        } else {
-            this.subtitlePosition = {top: this.headerHeight, left: 0};
-        }
-    }
-    subtitle.attr('transform', model.translate(this.subtitlePosition));
-};
-
-Dressing.prototype.addTitle = function () {
-    var svg = this.svg;
-    var model = this.model;
-
-    var titleLineHeight = this.defaultLineHeight;
-    var titleLineHeightActual = Math.ceil(this.titleFontSize * titleLineHeight);
-    var titleLineSpacing = titleLineHeightActual - this.titleFontSize;
-    var titleTextWrapper = textArea().width(model.contentWidth).lineHeight(titleLineHeightActual);
-    var title = svg.append('g').attr('class', 'chart-title').datum(model.title).call(titleTextWrapper);
-    if (!this.titlePosition) {
-        if (model.title) {
-            this.titlePosition = {top: this.headerHeight + this.titleFontSize, left: 0};
-            this.headerHeight += (getHeight(title) + this.blockPadding - titleLineSpacing);
-        } else {
-            this.titlePosition = {top: this.headerHeight, left: 0};
-        }
-    }
-    title.attr('transform', model.translate(this.titlePosition));
+    var lineHeight = Math.ceil(this[item + 'FontSize'] * this.defaultLineHeight);
+    var textWrapper = textArea().width(model.contentWidth).lineHeight(lineHeight);
+    var gText = svg.append('g').attr('class', 'chart-' + item).datum(model[item]).call(textWrapper);
+    var currentPosition = {top: this.headerHeight + this[item + 'FontSize'], left: 0};
+    this.headerHeight += (getHeight(gText) + this.halfLineStrokeWidth);
+    gText.attr('transform', model.translate(currentPosition));
+    this.setPosition();
 };
 
 Dressing.prototype.addSeriesKey = function () {
+    if (!this.model.key) {        return;    }
     var svg = this.svg;
     var model = this.model;
-
-    if (!model.key) {
-        return;
-    }
 
     var chartKey = seriesKey({
         lineThickness: model.lineStrokeWidth,
@@ -114,41 +78,36 @@ Dressing.prototype.addSeriesKey = function () {
         return {key: d.label, value: d.className};
     });
 
-    var svgKey = svg.append('g').attr('class', 'chart__key').datum(entries).call(chartKey);
-    if (!this.keyPosition) {
-        this.keyPosition = {top: this.headerHeight, left: this.halfLineStrokeWidth};
-        this.headerHeight += (getHeight(svgKey) + this.blockPadding);
-    }
-    svgKey.attr('transform', model.translate(this.keyPosition));
+    var gText = svg.append('g').attr('class', 'chart__key').datum(entries).call(chartKey);
+    var currentPosition = {top: this.headerHeight + this.blockPadding, left: this.halfLineStrokeWidth};
+    this.headerHeight += getHeight(gText) + this.blockPadding;
+    gText.attr('transform', model.translate(currentPosition));
+    this.setPosition();
 };
 
-Dressing.prototype.addFootNotes = function () {
-    if (!this.model.footnote) return;
+Dressing.prototype.addFooterItem = function(item, prefix){
+    if (!this.model[item]) return;
     var model = this.model;
-
-    var gText = this.addFooterTextArea(model.footnote, 'chart-footnote');
-    var currentPosition = model.chartPosition.top + model.chartHeight;
-    gText.attr('transform', model.translate({top: currentPosition + this.footerLineHeight + this.blockPadding}));
+    var text = textArea().width(model.contentWidth - this.model.logoSize).lineHeight(this.footerLineHeight);
+    var gText = this.svg.append('g').attr('class', 'chart-' + item).datum((prefix || '') + this.model[item]).call(text);
+    this.footerHeight += getHeight(gText) + this.blockPadding;
+    gText.currentPosition = this.footerHeight;
+    return gText;
 };
 
-Dressing.prototype.addSource = function () {
-    if (!this.model.source) return;
+Dressing.prototype.positionFooterItem = function(gText){
+    if (!gText) return;
     var model = this.model;
-    var gText = this.addFooterTextArea(model.sourcePrefix + model.source, 'chart-source');
-    var currentPosition = model.chartPosition.top + model.chartHeight;
-    var sourceLineHeight = this.sourceFontSize * this.defaultLineHeight;
-    gText.attr('transform', model.translate({top: this.footerHeight + currentPosition + sourceLineHeight + this.blockPadding}));
+    gText.attr('transform', model.translate({top: model.chartPosition.top + model.chartHeight + gText.currentPosition + this.halfLineStrokeWidth}));
 };
 
 Dressing.prototype.setHeight = function () {
     var model = this.model;
-    var footerHeight = Math.max(this.footerHeight + this.blockPadding + this.blockPadding + this.blockPadding, model.logoSize);
+    var footerHeight = Math.max(this.footerHeight + this.blockPadding * 2, model.logoSize);
     if (model.height) {
         model.chartHeight = model.height - this.headerHeight - footerHeight;
         if (model.chartHeight < 0) {
-            model.error({
-                message: 'calculated plot height is less than zero'
-            });
+            model.error({ message: 'calculated plot height is less than zero' });
         }
     } else {
         model.height = this.headerHeight + model.chartHeight + footerHeight;
@@ -158,7 +117,7 @@ Dressing.prototype.setHeight = function () {
 
 Dressing.prototype.setPosition = function () {
     this.model.chartPosition = {
-        top: this.headerHeight + this.halfLineStrokeWidth,
+        top: this.headerHeight + this.halfLineStrokeWidth + this.blockPadding,
         left: (this.model.dependentAxisOrient === 'left' ? 0 : this.halfLineStrokeWidth)
     };
 };

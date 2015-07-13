@@ -145,10 +145,12 @@ describe('line-chart  ', function () {
 
         });
 
-        it('keeps correct line width', function(){
+        it('keeps correct positioning with custom height', function(){
             var lines = lineChart11.querySelector('.line.line--series2');
-            expect(lines.getBoundingClientRect().width).toBe(251);//253?
-        })
+            var footer = lineChart11.querySelector('.chart-footnote');
+            expect(lines.getBoundingClientRect().width).toBe(551);
+            expect(footer.getAttribute('transform')).toBe('translate(0,396)');
+        });
 
     });
 

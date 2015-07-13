@@ -184,6 +184,10 @@ function getChartData(i) {
         defaultData.y.reverse = true;
         defaultData.units = false;
     }
+    if (i === 10) {
+        defaultData.height = 400;
+        defaultData.width = 600;
+    }
     return defaultData;
 }
 
