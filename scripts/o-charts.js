@@ -9504,7 +9504,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
   this.d3 = d3;
 }();
 },{}],2:[function(require,module,exports){
-module.exports={"version":"0.5.0"}
+module.exports={"version":"0.5.1"}
 
 },{}],3:[function(require,module,exports){
 var d3 = require('d3');
@@ -11044,7 +11044,7 @@ Dressing.prototype.addSource = function () {
     var gText = this.addFooterTextArea(model.sourcePrefix + model.source, 'chart-source');
     var currentPosition = model.chartPosition.top + model.chartHeight;
     var sourceLineHeight = this.sourceFontSize * this.defaultLineHeight;
-    gText.attr('transform', model.translate({top: this.footerHeight + currentPosition + sourceLineHeight + (this.blockPadding * 2)}));
+    gText.attr('transform', model.translate({top: this.footerHeight + currentPosition + sourceLineHeight + this.blockPadding}));
 };
 
 Dressing.prototype.setHeight = function () {
