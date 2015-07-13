@@ -10,31 +10,64 @@
     svg {
         margin:5px;
     }
+    .demo{
+        clear: both;
+    }
 </style>
 <script src=scripts/vendor.js></script>
 <script src=scripts/o-charts.js></script>
 
-<div id="views"></div>
+<div id="basic" class="demo">
+</div>
 <script>
     var oCharts = require('o-charts');
     var d3 = require('d3');
-
-    d3.select('#views').append('div').data([{
+    var data = [
+        { key: 'red', value:      0.583, value2:      1.583},
+        { key: 'blue', value: 0.12, value2:  2},
+        { key: 'green machine', value: 1.03, value2:  1.4},
+        { key: 'purple', value:     1.348, value2:  1.9}
+    ];
+    d3.select('#basic').append('div').data([{
         comment: 'Column chart',
         title: 'Columns: ',
         subtitle: 'Categories, with a horizontal independent axis',
         dependentAxisOrient: 'left',
         independentAxisOrient: 'bottom',
-        hideSource: true,
+        footnote: 'my footnote',
         x: { series: 'key' },
         y: { series: ['value', 'value2'] },
-        data: [
-            { key: 'red', value:      0.583, value2:      1.583},
-            { key: 'blue', value: 0.12, value2:  2},
-            { key: 'green machine', value: 1.03, value2:  1.4},
-            { key: 'purple', value:     1.348, value2:  1.9}
-        ],
+        data: data,
         stack:true,
+        dataType : 'categorical'
+    }]).call(oCharts.chart.column);
+</script>
+
+
+<div id="set-dimensions" class="demo">
+</div>
+<script>
+    var oCharts = require('o-charts');
+    var d3 = require('d3');
+    var data = [
+        { key: 'red', value:      0.583, value2:      1.583},
+        { key: 'blue', value: 0.12, value2:  2},
+        { key: 'green machine', value: 1.03, value2:  1.4},
+        { key: 'purple', value:     1.348, value2:  1.9}
+    ];
+    d3.select('#set-dimensions').append('div').data([{
+        height: 338,
+        width: 600,
+        comment: 'Column chart',
+        title: 'Video Ratio: ',
+        subtitle: '16:9',
+        source: 'with a source',
+        footnote: 'my footnote',
+        dependentAxisOrient: 'left',
+        independentAxisOrient: 'bottom',
+        x: { series: 'key' },
+        y: { series: ['value', 'value2'] },
+        data: data,
         dataType : 'categorical'
     }]).call(oCharts.chart.column);
 </script>

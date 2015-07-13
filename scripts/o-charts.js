@@ -1,7 +1,7 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 !function() {
   var d3 = {
-    version: "3.5.5"
+    version: "3.5.6"
   };
   var d3_arraySlice = [].slice, d3_array = function(list) {
     return d3_arraySlice.call(list);
@@ -1464,8 +1464,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
     function zoomended(dispatch) {
       if (!--zooming) dispatch({
         type: "zoomend"
-      });
-      center0 = null;
+      }), center0 = null;
     }
     function mousedowned() {
       var that = this, target = d3.event.target, dispatch = event.of(that, arguments), dragged = 0, subject = d3.select(d3_window(that)).on(mousemove, moved).on(mouseup, ended), location0 = location(d3.mouse(that)), dragRestore = d3_event_dragSuppress(that);
@@ -1554,8 +1553,8 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
     }
     function mousewheeled() {
       var dispatch = event.of(this, arguments);
-      if (mousewheelTimer) clearTimeout(mousewheelTimer); else translate0 = location(center0 = center || d3.mouse(this)), 
-      d3_selection_interrupt.call(this), zoomstarted(dispatch);
+      if (mousewheelTimer) clearTimeout(mousewheelTimer); else d3_selection_interrupt.call(this), 
+      translate0 = location(center0 = center || d3.mouse(this)), zoomstarted(dispatch);
       mousewheelTimer = setTimeout(function() {
         mousewheelTimer = null;
         zoomended(dispatch);
@@ -1700,8 +1699,9 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
     return v < 16 ? "0" + Math.max(0, v).toString(16) : Math.min(255, v).toString(16);
   }
   function d3_rgb_parse(format, rgb, hsl) {
+    format = format.toLowerCase();
     var r = 0, g = 0, b = 0, m1, m2, color;
-    m1 = /([a-z]+)\((.*)\)/i.exec(format);
+    m1 = /([a-z]+)\((.*)\)/.exec(format);
     if (m1) {
       m2 = m1[2].split(",");
       switch (m1[1]) {
@@ -1716,7 +1716,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
         }
       }
     }
-    if (color = d3_rgb_names.get(format.toLowerCase())) {
+    if (color = d3_rgb_names.get(format)) {
       return rgb(color.r, color.g, color.b);
     }
     if (format != null && format.charAt(0) === "#" && !isNaN(color = parseInt(format.slice(1), 16))) {
@@ -5786,7 +5786,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
   }
   d3.interpolators = [ function(a, b) {
     var t = typeof b;
-    return (t === "string" ? d3_rgb_names.has(b) || /^(#|rgb\(|hsl\()/.test(b) ? d3_interpolateRgb : d3_interpolateString : b instanceof d3_color ? d3_interpolateRgb : Array.isArray(b) ? d3_interpolateArray : t === "object" && isNaN(b) ? d3_interpolateObject : d3_interpolateNumber)(a, b);
+    return (t === "string" ? d3_rgb_names.has(b.toLowerCase()) || /^(#|rgb\(|hsl\()/i.test(b) ? d3_interpolateRgb : d3_interpolateString : b instanceof d3_color ? d3_interpolateRgb : Array.isArray(b) ? d3_interpolateArray : t === "object" && isNaN(b) ? d3_interpolateObject : d3_interpolateNumber)(a, b);
   } ];
   d3.interpolateArray = d3_interpolateArray;
   function d3_interpolateArray(a, b) {
@@ -9504,11 +9504,11 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
   this.d3 = d3;
 }();
 },{}],2:[function(require,module,exports){
-module.exports={"version":"0.4.8"}
+module.exports={"version":"0.5.0"}
 
 },{}],3:[function(require,module,exports){
 var d3 = require('d3');
-var styler = require('../util/chart-attribute-styles');
+var themes = require('../themes');
 var labels = require('../util/labels.js');
 var dates = require('../util/dates.js');
 var timeDiff = dates.timeDiff;
@@ -9516,6 +9516,7 @@ var timeDiff = dates.timeDiff;
 function categoryAxis() {
 
     var config = {
+        theme: false,
         axes: [d3.svg.axis().orient('bottom')],
         scale: false,
         lineHeight: 20,
@@ -9541,7 +9542,7 @@ function categoryAxis() {
     function render(g) {
         var orientOffset = (isVertical()) ? -config.axes[0].tickSize() : 0;
         g = g.append('g').attr('transform', 'translate(' + (config.xOffset + orientOffset) + ',' + config.yOffset + ')');
-        g.append('g').attr('class', isVertical() ? 'y axis axis--independent' : 'x axis axis--independent').each(function () {
+        g.append('g').attr('class', isVertical() ? 'y axis axis--independent axis--category' : 'x axis axis--independent axis--category').each(function () {
             var g = d3.select(this);
             labels.add(g, config);
         });
@@ -9550,6 +9551,12 @@ function categoryAxis() {
             g.select('path.domain').remove();
         }
     }
+
+    render.theme = function (themeUpdate) {
+        if (!arguments.length) return config.theme;
+        config.theme = themeUpdate;
+        return render;
+    };
 
     render.simple = function (bool) {
         if (!arguments.length) return config.simple;
@@ -9642,7 +9649,7 @@ function categoryAxis() {
 
 module.exports = categoryAxis;
 
-},{"../util/chart-attribute-styles":22,"../util/dates.js":25,"../util/labels.js":27,"d3":1}],4:[function(require,module,exports){
+},{"../themes":24,"../util/dates.js":28,"../util/labels.js":29,"d3":1}],4:[function(require,module,exports){
 var d3 = require('d3');
 var axis = {
     category: require('./category.js'),
@@ -9728,7 +9735,9 @@ Create.prototype.hideTicks = function () {
 };
 
 Create.prototype.configureDependentScale = function (model) {
-    this.dependentAxis.tickFormat(model.numberAxisFormatter)
+    this.dependentAxis
+        .tickFormat(model.numberAxisFormatter)
+        .theme(model.theme)
         .simple(model.simpleValue)
         .orient(model.dependentAxisOrient)
         .reverse(model.y.reverse);
@@ -9751,6 +9760,7 @@ Create.prototype.configureDependentScale = function (model) {
 
 Create.prototype.configureIndependentScale = function (model) {
     this.independentAxis
+        .theme(model.theme)
         .simple(model.simpleDate)
         .tickSize(model.tickSize)
         .orient(model.independentAxisOrient);
@@ -9828,10 +9838,12 @@ var d3 = require('d3');
 var labels = require('../util/labels.js');
 var dates = require('../util/dates.js');
 var dateScale = require('./date.scale.js');
+var themes = require('../themes');
 var timeDiff = dates.timeDiff;
 
 function dateAxis() {
     var config = {
+        theme: false,
         axes: [d3.svg.axis().orient('bottom')],
         scale: false,
         lineHeight: 20,
@@ -9853,7 +9865,7 @@ function dateAxis() {
 
         g = g.append('g').attr('transform', 'translate(' + config.xOffset + ',' + config.yOffset + ')');
 
-        g.append('g').attr('class', 'x axis axis--independent').each(function () {
+        g.append('g').attr('class', 'x axis axis--independent axis--date').each(function () {
             labels.add(d3.select(this), config);
         });
 
@@ -9861,6 +9873,12 @@ function dateAxis() {
             g.select('path.domain').remove();
         }
     }
+
+    render.theme = function (themeUpdate) {
+        if (!arguments.length) return config.theme;
+        config.theme = themeUpdate;
+        return render;
+    };
 
     render.simple = function (bool) {
         if (!arguments.length) return config.simple;
@@ -9941,7 +9959,7 @@ function dateAxis() {
 
 module.exports = dateAxis;
 
-},{"../util/dates.js":25,"../util/labels.js":27,"./date.scale.js":6,"d3":1}],6:[function(require,module,exports){
+},{"../themes":24,"../util/dates.js":28,"../util/labels.js":29,"./date.scale.js":6,"d3":1}],6:[function(require,module,exports){
 var d3 = require('d3');
 var utils = require('../util/dates.js');
 
@@ -10020,7 +10038,7 @@ module.exports = {
     }
 };
 
-},{"../util/dates.js":25,"d3":1}],7:[function(require,module,exports){
+},{"../util/dates.js":28,"d3":1}],7:[function(require,module,exports){
 module.exports = {
     Create: require('./create.js'),
     Plot: require('./plot.js'),
@@ -10037,11 +10055,12 @@ module.exports = {
 var d3 = require('d3');
 var numberLabels = require('./number.labels');
 var numberScales = require('./number.scale');
-var styler = require('../util/chart-attribute-styles');
+var themes = require('../themes');
 
 function numericAxis() {
     'use strict';
 
+    var theme;
     var tickSize = 5;
     var a = d3.svg.axis().orient('left').tickSize(tickSize, 0);
     var lineHeight = 16;
@@ -10065,8 +10084,14 @@ function numericAxis() {
         if (noLabels) {
             g.selectAll('text').remove();
         }
-        styler(g);
+        themes.applyTheme(g, theme);
     }
+
+    axis.theme = function (themeUpdate) {
+        if (!arguments.length) return theme;
+        theme = themeUpdate;
+        return axis;
+    };
 
     axis.tickExtension = function (int) { // extend the axis ticks to the right/ left a specified distance
         if (!arguments.length) return tickExtension;
@@ -10166,7 +10191,7 @@ function numericAxis() {
 
 module.exports = numericAxis;
 
-},{"../util/chart-attribute-styles":22,"./number.labels":9,"./number.scale":10,"d3":1}],9:[function(require,module,exports){
+},{"../themes":24,"./number.labels":9,"./number.scale":10,"d3":1}],9:[function(require,module,exports){
 module.exports = {
 
     isVertical: function (axis) {
@@ -10216,7 +10241,7 @@ module.exports = {
     },
     render: function (g, config) {
         g.append('g')
-            .attr('class', (this.isVertical(config.axes)) ? 'axis axis--dependent y left' : 'axis axis--dependent x')
+            .attr('class', (this.isVertical(config.axes)) ? 'axis axis--dependent axis--number y left' : 'axis axis--dependent axis--number  x')
             .append('g')
             .attr('class', 'primary')
             .call(config.axes);
@@ -10414,8 +10439,8 @@ module.exports = Plot;
 var axes = require('../axis');
 var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');
-var Dressing = require('../util/dressing.js');
-var styler = require('../util/chart-attribute-styles');
+var Dressing = require('../dressing');
+var themes = require('../themes');
 
 function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
 	var data = formatData(model, series);
@@ -10451,7 +10476,7 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
             .text('n/a');
     }
 
-    styler(plotSVG);
+    themes.applyTheme(plotSVG, model.theme);
 
     if (!model.stack) {
         // make those labels who don't fit smaller
@@ -10526,7 +10551,7 @@ function barChart(g){
 
 module.exports = barChart;
 
-},{"../axis":7,"../util/chart-attribute-styles":22,"../util/data.model.js":24,"../util/dressing.js":26,"../util/metadata.js":30}],13:[function(require,module,exports){
+},{"../axis":7,"../dressing":18,"../themes":24,"../util/data.model.js":27,"../util/metadata.js":32}],13:[function(require,module,exports){
 //var d3 = require('d3');
 
 function blankChart() {
@@ -10602,8 +10627,8 @@ module.exports = blankChart;
 var axes = require('../axis');
 var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');
-var Dressing = require('../util/dressing.js');
-var styler = require('../util/chart-attribute-styles');
+var Dressing = require('../dressing');
+var themes = require('../themes');
 
 function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
 	var data = formatData(model, series);
@@ -10635,7 +10660,7 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
             .text('n/a');
     }
 
-    styler(plotSVG);
+    themes.applyTheme(plotSVG, model.theme);
 
     if (!model.stack) {
         // make those labels who don't fit smaller
@@ -10712,7 +10737,7 @@ function columnChart(g){
 
 module.exports = columnChart;
 
-},{"../axis":7,"../util/chart-attribute-styles":22,"../util/data.model.js":24,"../util/dressing.js":26,"../util/metadata.js":30}],15:[function(require,module,exports){
+},{"../axis":7,"../dressing":18,"../themes":24,"../util/data.model.js":27,"../util/metadata.js":32}],15:[function(require,module,exports){
 module.exports = {
     line: require('./line.js'),
     blank: require('./blank.js'),
@@ -10727,8 +10752,8 @@ var axes = require('../axis');
 var interpolator = require('../util/line-interpolators.js');
 var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');
-var Dressing = require('../util/dressing.js');
-var styler = require('../util/chart-attribute-styles');
+var Dressing = require('../dressing');
+var themes = require('../themes');
 
 function plotSeries(plotSVG, model, createdAxes, series) {
     var data = formatData(model, series);
@@ -10743,7 +10768,8 @@ function plotSeries(plotSVG, model, createdAxes, series) {
         .attr('class', function (d){ return 'line '  + series.className + (d.value < 0 ? ' negative' : ' positive');})
         .attr('stroke-width', model.lineStrokeWidth)
         .attr('d', function (d) { return line(d); });
-    styler(plotSVG);
+
+    themes.applyTheme(plotSVG, model.theme);
 }
 
 function formatData(model, series) {
@@ -10794,7 +10820,7 @@ function lineChart(g) {
 
 module.exports = lineChart;
 
-},{"../axis":7,"../util/chart-attribute-styles":22,"../util/data.model.js":24,"../util/dressing.js":26,"../util/line-interpolators.js":28,"../util/metadata.js":30,"d3":1}],17:[function(require,module,exports){
+},{"../axis":7,"../dressing":18,"../themes":24,"../util/data.model.js":27,"../util/line-interpolators.js":30,"../util/metadata.js":32,"d3":1}],17:[function(require,module,exports){
 //var d3 = require('d3');
 
 function pieChart() {
@@ -10879,6 +10905,174 @@ function pieChart() {
 module.exports = pieChart;
 
 },{}],18:[function(require,module,exports){
+var textArea = require('./text-area.js');
+var seriesKey = require('./series-key.js');
+var ftLogo = require('./logo.js');
+var themes = require('../themes');
+
+function getHeight(selection) {
+    return Math.ceil(selection.node().getBoundingClientRect().height);
+}
+
+function Dressing(svg, model) {
+    this.svg = svg;
+    this.model = model;
+    this.blockPadding = 8;
+    this.defaultLineHeight = 1.2;
+    this.titleFontSize = themes.check(model.theme, 'chart-title').attributes['font-size'];
+    this.footerLineHeight = themes.check(model.theme, 'dressing-footnote').attributes['line-height'];
+    this.subtitleFontSize = themes.check(model.theme, 'chart-subtitle').attributes['font-size'];
+    this.sourceFontSize = themes.check(model.theme, 'dressing-source').attributes['font-size'];
+    this.halfLineStrokeWidth = Math.ceil(model.lineStrokeWidth / 2);
+
+    this.headerHeight = 0;
+    this.footerHeight = 0;
+}
+
+Dressing.prototype.addHeader = function () {
+    this.addTitle();
+    this.addSubTitle();
+    this.addSeriesKey();
+    this.setPosition();
+};
+
+Dressing.prototype.addFooter = function () {
+    this.addFootNotes();
+    this.addSource();
+    this.setHeight();
+    this.addLogo();
+};
+
+Dressing.prototype.addFooterTextArea = function(datum, attrClass){
+    var text = textArea().width(this.model.contentWidth - this.model.logoSize).lineHeight(this.footerLineHeight);
+    var gText = this.svg.append('g').attr('class', attrClass).datum(datum).call(text);
+    this.footerHeight += getHeight(gText);
+    return gText;
+};
+
+Dressing.prototype.addLogo = function () {
+    var model = this.model;
+
+    var logo = this.svg.append('g').attr('class', 'chart-logo').call(ftLogo, model.logoSize);
+    logo.attr('transform', model.translate({
+        left: model.width - model.logoSize - 3,
+        top: model.height - getHeight(logo) - 3
+    }));
+};
+
+Dressing.prototype.addSubTitle = function () {
+    var svg = this.svg;
+    var model = this.model;
+
+    var subtitleLineHeight = Math.ceil(this.subtitleFontSize * this.defaultLineHeight);
+    var subtitleTextWrapper = textArea().width(model.contentWidth).lineHeight(subtitleLineHeight);
+    var subtitle = svg.append('g').attr('class', 'chart-subtitle').datum(model.subtitle).call(subtitleTextWrapper);
+    if (!this.subtitlePosition) {
+        if (model.subtitle) {
+            this.subtitlePosition = {top: this.headerHeight + this.subtitleFontSize, left: 0};
+            this.headerHeight += (getHeight(subtitle) + this.blockPadding);
+        } else {
+            this.subtitlePosition = {top: this.headerHeight, left: 0};
+        }
+    }
+    subtitle.attr('transform', model.translate(this.subtitlePosition));
+};
+
+Dressing.prototype.addTitle = function () {
+    var svg = this.svg;
+    var model = this.model;
+
+    var titleLineHeight = this.defaultLineHeight;
+    var titleLineHeightActual = Math.ceil(this.titleFontSize * titleLineHeight);
+    var titleLineSpacing = titleLineHeightActual - this.titleFontSize;
+    var titleTextWrapper = textArea().width(model.contentWidth).lineHeight(titleLineHeightActual);
+    var title = svg.append('g').attr('class', 'chart-title').datum(model.title).call(titleTextWrapper);
+    if (!this.titlePosition) {
+        if (model.title) {
+            this.titlePosition = {top: this.headerHeight + this.titleFontSize, left: 0};
+            this.headerHeight += (getHeight(title) + this.blockPadding - titleLineSpacing);
+        } else {
+            this.titlePosition = {top: this.headerHeight, left: 0};
+        }
+    }
+    title.attr('transform', model.translate(this.titlePosition));
+};
+
+Dressing.prototype.addSeriesKey = function () {
+    var svg = this.svg;
+    var model = this.model;
+
+    if (!model.key) {
+        return;
+    }
+
+    var chartKey = seriesKey({
+        lineThickness: model.lineStrokeWidth,
+        chartType: model.chartType,
+        theme: model.theme
+    })
+        .style(function (d) {
+            return d.value;
+        })
+        .label(function (d) {
+            return d.key;
+        });
+    var entries = model.y.series.map(function (d) {
+        return {key: d.label, value: d.className};
+    });
+
+    var svgKey = svg.append('g').attr('class', 'chart__key').datum(entries).call(chartKey);
+    if (!this.keyPosition) {
+        this.keyPosition = {top: this.headerHeight, left: this.halfLineStrokeWidth};
+        this.headerHeight += (getHeight(svgKey) + this.blockPadding);
+    }
+    svgKey.attr('transform', model.translate(this.keyPosition));
+};
+
+Dressing.prototype.addFootNotes = function () {
+    if (!this.model.footnote) return;
+    var model = this.model;
+
+    var gText = this.addFooterTextArea(model.footnote, 'chart-footnote');
+    var currentPosition = model.chartPosition.top + model.chartHeight;
+    gText.attr('transform', model.translate({top: currentPosition + this.footerLineHeight + this.blockPadding}));
+};
+
+Dressing.prototype.addSource = function () {
+    if (!this.model.source) return;
+    var model = this.model;
+    var gText = this.addFooterTextArea(model.sourcePrefix + model.source, 'chart-source');
+    var currentPosition = model.chartPosition.top + model.chartHeight;
+    var sourceLineHeight = this.sourceFontSize * this.defaultLineHeight;
+    gText.attr('transform', model.translate({top: this.footerHeight + currentPosition + sourceLineHeight + (this.blockPadding * 2)}));
+};
+
+Dressing.prototype.setHeight = function () {
+    var model = this.model;
+    var footerHeight = Math.max(this.footerHeight + this.blockPadding + this.blockPadding + this.blockPadding, model.logoSize);
+    if (model.height) {
+        model.chartHeight = model.height - this.headerHeight - footerHeight;
+        if (model.chartHeight < 0) {
+            model.error({
+                message: 'calculated plot height is less than zero'
+            });
+        }
+    } else {
+        model.height = this.headerHeight + model.chartHeight + footerHeight;
+    }
+    this.svg.attr('height', Math.ceil(model.height));
+};
+
+Dressing.prototype.setPosition = function () {
+    this.model.chartPosition = {
+        top: this.headerHeight + this.halfLineStrokeWidth,
+        left: (this.model.dependentAxisOrient === 'left' ? 0 : this.halfLineStrokeWidth)
+    };
+};
+
+module.exports = Dressing;
+
+},{"../themes":24,"./logo.js":19,"./series-key.js":20,"./text-area.js":21}],19:[function(require,module,exports){
 //the ft logo there's probably an easier ay to do this...
 //var d3 = require('d3');
 
@@ -10913,19 +11107,19 @@ module.exports = ftLogo;
  h3.075L110.955,1.959z"/>
  */
 
-},{}],19:[function(require,module,exports){
-//var d3 = require('d3');
+},{}],20:[function(require,module,exports){
 var lineThickness = require('../util/line-thickness.js');
-var styler = require('../util/chart-attribute-styles');
+var themes = require('../themes');
 
 function lineKey(options) {
     'use strict';
 
     options = options || {};
 
+    var theme = options.theme;
     var width = 300;
     var strokeLength = 15;
-    var lineHeight = 16;
+    var lineHeight = themes.check(options.theme, 'key-label').attributes['line-height'];
     var strokeWidth = lineThickness(options.lineThickness);
 
     var charts = {
@@ -10990,9 +11184,14 @@ function lineKey(options) {
             x: strokeLength + 10
         }).text(label);
 
-        styler(g);
-
+        themes.applyTheme(g, theme);
     }
+
+    key.theme = function (g, themeUpdate) {
+        if (!arguments.length) return theme;
+        if (themeUpdate) theme = themeUpdate;
+        return key;
+    };
 
     key.label = function (f) {
         if (!arguments.length) return label;
@@ -11023,20 +11222,24 @@ function lineKey(options) {
 
 module.exports = lineKey;
 
-},{"../util/chart-attribute-styles":22,"../util/line-thickness.js":29}],20:[function(require,module,exports){
+},{"../themes":24,"../util/line-thickness.js":31}],21:[function(require,module,exports){
 /*jshint -W084 */
 //text area provides a wrapping text block of a given type
 var d3 = require('d3');
+var themes = require('../themes');
 
-function textArea() {
+function textArea(options) {
     'use strict';
+
+    options = options || {};
 
     var xOffset = 0,
         yOffset = 0,
         width = 1000,
         lineHeight = 20,
         units = 'px', //pixels by default
-        bounds;
+        bounds,
+        theme = options.theme;
 
     function wrap(text, width) {
         text.each(function () {
@@ -11081,8 +11284,14 @@ function textArea() {
         g = g.append('g').attr('transform', 'translate(' + xOffset + ',' + yOffset + ')');
         g.append('text').text(accessor).call(wrap, width);
         bounds = g.node().getBoundingClientRect();
+        themes.applyTheme(g, theme);
     }
 
+    area.theme = function (themeUpdate) {
+        if (!arguments.length) return theme;
+        if (themeUpdate) theme = themeUpdate;
+        return area;
+    };
 
     area.bounds = function () {
         return bounds;
@@ -11106,15 +11315,15 @@ function textArea() {
         return area;
     };
 
-    area.yOffset = function (x) {
+    area.yOffset = function (y) {
         if (!arguments.length) return yOffset;
-        yOffset = x;
+        yOffset = y;
         return area;
     };
 
     area.xOffset = function (x) {
-        if (!arguments.length) return yOffset;
-        yOffset = x;
+        if (!arguments.length) return xOffset;
+        xOffset = x;
         return area;
     };
 
@@ -11123,7 +11332,295 @@ function textArea() {
 
 module.exports = textArea;
 
-},{"d3":1}],21:[function(require,module,exports){
+},{"../themes":24,"d3":1}],22:[function(require,module,exports){
+module.exports = {
+  line: [
+    '#af516c',
+    '#ecafaf',
+    '#d7706c',
+    '#76acb8',
+    '#7fd8f5',
+    '#3d7ab3',
+    '#b8b1a9'
+  ],
+  area: [
+    '#bb6d82',
+    '#ecafaf',
+    '#d7706c',
+    '#cb9f8c',
+    '#b07979',
+    '#ccc2c2',
+    '#8f7d95',
+    '#b8b1a9'
+  ],
+  accent: '#9e2f50'
+};
+
+},{}],23:[function(require,module,exports){
+var colours = require('./colours');
+
+module.exports = [
+    //general
+    {
+        'selector': 'svg text',
+        'attributes': {
+            'font-family': 'BentonSans, sans-serif',
+            'fill': '#a7a59b',
+            'stroke': 'none'
+        }
+    },
+    //axes
+    {
+        'selector': '.axis path, .axis line, .axis .tick',
+        'attributes': {
+            'shape-rendering': 'crispEdges',
+            'fill': 'none'
+        }
+    }, {
+        'selector': '.axis--dependent path.domain, .secondary path.domain, .secondary .tick line',
+        'attributes': {
+            'stroke': 'none'
+        }
+    },
+    {
+        'selector': '.axis--dependent .tick line',
+        'attributes': {
+            'stroke-dasharray': '2 2',
+            'stroke': 'rgba(0, 0, 0, 0.1)'
+        }
+    },
+    {
+        'selector': '.primary .origin line, .axis--independent .primary .tick line',
+        'attributes': {
+            'stroke': 'rgba(0, 0, 0, 0.3)',
+            'stroke-dasharray': 'none'
+        }
+    }, {
+        'selector': '.axis',
+        'attributes': {
+            'font-family': 'BentonSans, sans-serif',
+            'fill': 'none',
+            'stroke': 'rgba(0, 0, 0, 0.5)'
+        }
+    }, {
+        'selector': '.axis text',
+        'attributes': {
+            'stroke': 'none',
+            'fill': 'rgba(0, 0, 0, 0.5)'
+        }
+    }, {
+        'selector': '.x.axis.axis--category text',
+        'attributes': {
+            'text-anchor': 'middle'
+        }
+    }, {
+        'selector': '.y.axis text',
+        'attributes': {
+            'text-anchor': 'end'
+        }
+    }, {
+        'selector': '.x.axis.axis--number text, .x.axis.axis--date text, .y.axis.right text',
+        'attributes': {
+            'text-anchor': 'start'
+        }
+    }, {
+        'selector': '.axis--independent .primary path.domain',
+        'attributes': {
+            'stroke': '#757470'
+        }
+    },
+    //lines
+    {
+        'selector': 'path.line, line.key__line',
+        'attributes': {
+            'fill': 'none',
+            'stroke-linejoin': 'round',
+            'stroke-linecap': 'round'
+        }
+    }, {
+        'selector': '.line--series1',
+        'attributes': {
+            'stroke': colours.line[0]
+        }
+    }, {
+        'selector': '.line--series2',
+        'attributes': {
+            'stroke': colours.line[1]
+        }
+    }, {
+        'selector': '.line--series3',
+        'attributes': {
+            'stroke': colours.line[2]
+        }
+    }, {
+        'selector': '.line--series4',
+        'attributes': {
+            'stroke': colours.line[3]
+        }
+    }, {
+        'selector': '.line--series5',
+        'attributes': {
+            'stroke': colours.line[4]
+        }
+    }, {
+        'selector': '.line--series6',
+        'attributes': {
+            'stroke': colours.line[5]
+        }
+    }, {
+        'selector': '.line--series7',
+        'attributes': {
+            'stroke': colours.line[6]
+        }
+    },
+    //Columns
+    {
+        'selector': '.column, .key__column, .bar, .key__bar',
+        'attributes': {
+            'stroke': 'none'
+        }
+    }, {
+        'selector': '.column--series1, .bar--series1',
+        'attributes': {
+            'fill': colours.area[0]
+        }
+    }, {
+        'selector': '.column--series2, .bar--series2',
+        'attributes': {
+            'fill': colours.area[1]
+        }
+    }, {
+        'selector': '.column--series3, .bar--series3',
+        'attributes': {
+            'fill': colours.area[2]
+        }
+    }, {
+        'selector': '.column--series4, .bar--series4',
+        'attributes': {
+            'fill': colours.area[3]
+        }
+    }, {
+        'selector': '.column--series5, .bar--series5',
+        'attributes': {
+            'fill': colours.area[4]
+        }
+    }, {
+        'selector': '.column--series6, .bar--series6',
+        'attributes': {
+            'fill': colours.area[5]
+        }
+    }, {
+        'selector': '.column--series7, .bar--series7',
+        'attributes': {
+            'fill': colours.area[6]
+        }
+    }, {
+        'selector': 'path.accent, line.accent, rect.accent',
+        'attributes': {
+            'stroke': colours.accent
+        }
+    }, {
+        'selector': '.series text.null-label',
+        'attributes': {
+            'text-anchor': 'middle',
+            'font-size': 10,
+            'fill': 'rgba(0, 0, 0, 0.4)'
+        }
+    },
+
+    //text
+    {   'id': 'chart-title',
+        'selector': '.chart-title text, .chart-title tspan',
+        'attributes': {
+            'font-family': 'BentonSans, sans-serif',
+            'font-size': 18,
+            'fill': 'rgba(0, 0, 0, 0.8)'
+        }
+    },
+    {   'id': 'chart-subtitle',
+        'selector': '.chart-subtitle text, .chart-subtitle tspan',
+        'attributes': {
+            'font-family': 'BentonSans, sans-serif',
+            'font-size': 12,
+            'fill': 'rgba(0, 0, 0, 0.5)'
+        }
+    },
+    {   'id': 'dressing-source',
+        'selector': '.chart-source text, .chart-source tspan',
+        'attributes': {
+            'font-family': 'BentonSans, sans-serif',
+            'font-size': 10,
+            'fill': 'rgba(0, 0, 0, 0.5)'
+        }
+    },
+    {   'id': 'dressing-footnote',
+        'selector': '.chart-footnote text, .chart-footnote tspan',
+        'attributes': {
+            'font-family': 'BentonSans, sans-serif',
+            'font-size': 12,
+            'line-height': 15,
+            'fill': 'rgba(0, 0, 0, 0.5)'
+        }
+    },
+    {   'id': 'key-label',
+        'selector': 'text.key__label',
+        'attributes': {
+            'font-family': 'BentonSans, sans-serif',
+            'font-size': 12,
+            'line-height': 16,
+            'fill': 'rgba(0, 0, 0, 0.5)'
+        }
+    }, {
+        'selector': '.primary .tick text',
+        'attributes': {
+            'font-size': 12,
+            'fill': '#757470'
+        }
+    }, {
+        'selector': '.secondary .tick text',
+        'attributes': {
+            'font-size': 10,
+            'fill': '#757470'
+        }
+    }
+];
+
+},{"./colours":22}],24:[function(require,module,exports){
+// because of the need to export and convert browser rendered SVGs
+// we need a simple way to attach styles as attributes if necessary,
+// so, heres a list of attributes and the selectors to which they should be applied
+var d3 = require('d3');
+
+var themes = {
+    ft: require('./ft'),
+    video: require('./video'),
+    applyTheme: applyAttributes,
+    check: checkAttributes
+};
+
+function applyAttributes(g, theme, keepD3Styles) {
+    theme = theme || 'ft';
+    if (!keepD3Styles) {
+        (g || d3).selectAll('*').attr('style', null);
+    }
+    themes[theme].forEach(function (style, i) {
+        (g || d3).selectAll(style.selector).attr(style.attributes);
+    });
+    return true;
+}
+
+function checkAttributes(theme, selector) {
+    theme = theme || 'ft';
+    return themes[theme].filter(function (style, i) {
+        return (style.id == selector);
+    })[0];//return only a single object by id
+}
+
+module.exports = themes;
+
+},{"./ft":23,"./video":25,"d3":1}],25:[function(require,module,exports){
+arguments[4][23][0].apply(exports,arguments)
+},{"./colours":22,"dup":23}],26:[function(require,module,exports){
 // More info:
 // http://en.wikipedia.org/wiki/Aspect_ratio_%28image%29
 
@@ -11194,263 +11691,7 @@ module.exports = {
     }
 };
 
-},{}],22:[function(require,module,exports){
-// because of the need to export and convert browser rendered SVGs
-// we need a simple way to attach styles as attributes if necessary,
-// so, heres a list of attributes and the selectors to which they should be applied
-
-var d3 = require('d3');
-var colours = require('./colours');
-
-function applyAttributes(g, keepD3Styles) {
-    var styleList = [
-        //general
-        {
-            'selector': 'svg text',
-            'attributes': {
-                'font-family': 'BentonSans, sans-serif',
-                'fill': '#a7a59b',
-                'stroke': 'none'
-            }
-        },
-        //axes
-        {
-            'selector': '.axis path, .axis line',
-            'attributes': {
-                'shape-rendering': 'crispEdges',
-                'fill': 'none'
-            }
-        }, {
-            'selector': '.axis--dependent path.domain, .secondary path.domain, .secondary .tick line',
-            'attributes': {
-                'stroke': 'none'
-            }
-        },
-
-        {
-            'selector': '.axis--dependent .tick line',
-            'attributes': {
-                'stroke-dasharray': '2 2'
-            }
-        },
-        {
-            'selector': '.axis--dependent .origin line',
-            'attributes': {
-                'stroke': '#333',
-                'stroke-dasharray': 'none'
-            }
-        }, {
-            'selector': '.axis--dependent .origin.tick line',
-            'attributes': {
-                'stroke': '#333',
-                'stroke-dasharray': 'none'
-            }
-        }, {
-            'selector': '.primary .tick text',
-            'attributes': {
-                'font-size': 12,
-                'fill': '#757470'
-            }
-        }, {
-            'selector': '.secondary .tick text',
-            'attributes': {
-                'font-size': 10,
-                'fill': '#757470'
-            }
-        }, {
-            'selector': '.primary .tick line',
-            'attributes': {
-                'stroke': '#a7a59b'
-            }
-        }, {
-            'selector': '.y.axis.right text',
-            'attributes': {
-                'text-anchor': 'start'
-            }
-        }, {
-            'selector': '.y.axis.left text',
-            'attributes': {
-                'text-anchor': 'end'
-            }
-        }, {
-            'selector': '.axis--independent .primary path.domain',
-            'attributes': {
-                'stroke': '#757470'
-            }
-        },
-        //lines
-        {
-            'selector': 'path.line, line.key__line',
-            'attributes': {
-                'fill': 'none',
-                'stroke-linejoin': 'round',
-                'stroke-linecap': 'round'
-            }
-        }, {
-            'selector': '.line--series1',
-            'attributes': {
-                'stroke': colours.line[0]
-            }
-        }, {
-            'selector': '.line--series2',
-            'attributes': {
-                'stroke': colours.line[1]
-            }
-        }, {
-            'selector': '.line--series3',
-            'attributes': {
-                'stroke': colours.line[2]
-            }
-        }, {
-            'selector': '.line--series4',
-            'attributes': {
-                'stroke': colours.line[3]
-            }
-        }, {
-            'selector': '.line--series5',
-            'attributes': {
-                'stroke': colours.line[4]
-            }
-        }, {
-            'selector': '.line--series6',
-            'attributes': {
-                'stroke': colours.line[5]
-            }
-        }, {
-            'selector': '.line--series7',
-            'attributes': {
-                'stroke': colours.line[6]
-            }
-        },
-        //Columns
-        {
-            'selector': '.column, .key__column, .bar, .key__bar',
-            'attributes': {
-                'stroke': 'none'
-            }
-        }, {
-            'selector': '.column--series1, .bar--series1',
-            'attributes': {
-                'fill': colours.area[0]
-            }
-        }, {
-            'selector': '.column--series2, .bar--series2',
-            'attributes': {
-                'fill': colours.area[1]
-            }
-        }, {
-            'selector': '.column--series3, .bar--series3',
-            'attributes': {
-                'fill': colours.area[2]
-            }
-        }, {
-            'selector': '.column--series4, .bar--series4',
-            'attributes': {
-                'fill': colours.area[3]
-            }
-        }, {
-            'selector': '.column--series5, .bar--series5',
-            'attributes': {
-                'fill': colours.area[4]
-            }
-        }, {
-            'selector': '.column--series6, .bar--series6',
-            'attributes': {
-                'fill': colours.area[5]
-            }
-        }, {
-            'selector': '.column--series7, .bar--series7',
-            'attributes': {
-                'fill': colours.area[6]
-            }
-        }, {
-            'selector': 'path.accent, line.accent, rect.accent',
-            'attributes': {
-                'stroke': colours.accent
-            }
-        }, {
-            'selector': '.series text.null-label',
-            'attributes': {
-                'text-anchor': 'middle',
-                'font-size': 10,
-                'fill': 'rgba(0, 0, 0, 0.4)'
-            }
-        },
-
-        //text
-        {
-            'selector': '.chart-title text, .chart-title tspan',
-            'attributes': {
-                'font-family': 'BentonSans, sans-serif',
-                'font-size': 18,
-                'fill': 'rgba(0, 0, 0, 0.8)'
-            }
-        }, {
-            'selector': '.chart-subtitle text, .chart-subtitle tspan',
-            'attributes': {
-                'font-family': 'BentonSans, sans-serif',
-                'font-size': 12,
-                'fill': 'rgba(0, 0, 0, 0.5)'
-            }
-        }, {
-            'selector': '.chart-source text, .chart-source tspan',
-            'attributes': {
-                'font-family': 'BentonSans, sans-serif',
-                'font-size': 10,
-                'fill': 'rgba(0, 0, 0, 0.5)'
-            }
-        }, {
-            'selector': '.chart-footnote text, .chart-footnote tspan',
-            'attributes': {
-                'font-family': 'BentonSans, sans-serif',
-                'font-size': 12,
-                'fill': 'rgba(0, 0, 0, 0.5)'
-            }
-        }, {
-            'selector': 'text.key__label',
-            'attributes': {
-                'font-family': 'BentonSans, sans-serif',
-                'font-size': 12,
-                'fill': 'rgba(0, 0, 0, 0.5)'
-            }
-        }
-    ];
-    if (!keepD3Styles) {
-        (g || d3).selectAll('*').attr('style', null);
-    }
-    styleList.forEach(function (style, i) {
-        (g || d3).selectAll(style.selector).attr(style.attributes);
-    });
-    return true;
-}
-
-module.exports = applyAttributes;
-
-},{"./colours":23,"d3":1}],23:[function(require,module,exports){
-module.exports = {
-  line: [
-    '#af516c',
-    '#ecafaf',
-    '#d7706c',
-    '#76acb8',
-    '#7fd8f5',
-    '#3d7ab3',
-    '#b8b1a9'
-  ],
-  area: [
-    '#bb6d82',
-    '#ecafaf',
-    '#d7706c',
-    '#cb9f8c',
-    '#b07979',
-    '#ccc2c2',
-    '#8f7d95',
-    '#b8b1a9'
-  ],
-  accent: '#9e2f50'
-};
-
-},{}],24:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
 var ratios = require('../util/aspect-ratios.js');
@@ -11635,6 +11876,7 @@ function Model(chartType, opts) {
     };
     var m = {
         //layout stuff
+        theme: 'ft',
         chartType: chartType,
         height: undefined,
         tickSize: 5,
@@ -11650,7 +11892,6 @@ function Model(chartType, opts) {
         lineClasses: {},
         columnClasses: {},
         niceValue: true,
-        hideSource: false,
         stack: false,
         dependentAxisOrient: 'left',
         independentAxisOrient: 'bottom',
@@ -11691,7 +11932,7 @@ function Model(chartType, opts) {
     m.groupData = needsGrouping(m.units);
     m.independentDomain = independentDomain(m, chartType);
 	m.dependentDomain = dependentDomain(m, chartType);
-	m.lineStrokeWidth = lineThickness(m.lineThickness);
+	m.lineStrokeWidth = lineThickness(m.lineThickness, m.theme);
 	m.key = setKey(m);
 
     return m;
@@ -11702,7 +11943,7 @@ Model.prototype.error = function (err) {
 };
 module.exports = Model;
 
-},{"../util/aspect-ratios.js":21,"../util/dates.js":25,"../util/line-thickness.js":29,"../util/series-options.js":31,"d3":1}],25:[function(require,module,exports){
+},{"../util/aspect-ratios.js":26,"../util/dates.js":28,"../util/line-thickness.js":31,"../util/series-options.js":33,"d3":1}],28:[function(require,module,exports){
 var d3 = require('d3');
 
 var formatter = {
@@ -11861,196 +12102,10 @@ module.exports = {
     unitGenerator: unitGenerator
 };
 
-},{"d3":1}],26:[function(require,module,exports){
-var textArea = require('../element/text-area.js');
-var seriesKey = require('../element/series-key.js');
-var ftLogo = require('../element/logo.js');
-
-function getHeight(selection) {
-    return Math.ceil(selection.node().getBoundingClientRect().height);
-}
-
-function Dressing(svg, model) {
-    // TODO: don't hard-code the fontsize, get from CSS somehow.
-    // TODO: move calculation of lineheight to the textarea component;
-    this.svg = svg;
-    this.model = model;
-    this.blockPadding = 8;
-    this.defaultLineHeight = 1.2;
-    this.titleFontSize = 18;
-    this.footerLineHeight = 15;
-    this.subtitleFontSize = 12;
-    this.sourceFontSize = 10;
-    this.halfLineStrokeWidth = Math.ceil(model.lineStrokeWidth / 2);
-
-    this.headerHeight = 0;
-    this.footerHeight = 0;
-    this.sourceFontOffset = 0;
-}
-
-Dressing.prototype.addHeader = function () {
-    this.addTitle();
-    this.addSubTitle();
-    this.addSeriesKey();
-    this.setPosition();
-};
-
-Dressing.prototype.addFooter = function () {
-    this.addFootNotes();
-    this.addSource();
-    this.setHeight();
-    this.addLogo();
-};
-
-Dressing.prototype.addLogo = function () {
-    var svg = this.svg;
-    var model = this.model;
-
-    var logo = svg.append('g').attr('class', 'chart-logo').call(ftLogo, model.logoSize);
-    var heightOfFontDescenders = 3;
-    var baselineOfLastSourceLine = model.height - getHeight(logo) - heightOfFontDescenders - this.getSourceFontOffset();
-
-    logo.attr('transform', model.translate({
-        left: model.width - model.logoSize,
-        top: baselineOfLastSourceLine
-    }));
-};
-
-Dressing.prototype.addSubTitle = function () {
-    var svg = this.svg;
-    var model = this.model;
-
-    var subtitleLineHeight = this.defaultLineHeight;
-    var subtitleLineHeightActual = Math.ceil(this.subtitleFontSize * subtitleLineHeight);
-    var subtitleTextWrapper = textArea().width(model.contentWidth).lineHeight(subtitleLineHeightActual);
-    var subtitle = svg.append('g').attr('class', 'chart-subtitle').datum(model.subtitle).call(subtitleTextWrapper);
-    if (!this.subtitlePosition) {
-        if (model.subtitle) {
-            this.subtitlePosition = {top: this.headerHeight + this.subtitleFontSize, left: 0};
-            this.headerHeight += (getHeight(subtitle) + this.blockPadding);
-        } else {
-            this.subtitlePosition = {top: this.headerHeight, left: 0};
-        }
-    }
-    subtitle.attr('transform', model.translate(this.subtitlePosition));
-};
-
-Dressing.prototype.addTitle = function () {
-    var svg = this.svg;
-    var model = this.model;
-
-    var titleLineHeight = this.defaultLineHeight;
-    var titleLineHeightActual = Math.ceil(this.titleFontSize * titleLineHeight);
-    var titleLineSpacing = titleLineHeightActual - this.titleFontSize;
-    var titleTextWrapper = textArea().width(model.contentWidth).lineHeight(titleLineHeightActual);
-
-    var title = svg.append('g').attr('class', 'chart-title').datum(model.title).call(titleTextWrapper);
-    if (!this.titlePosition) {
-        if (model.title) {
-            this.titlePosition = {top: this.headerHeight + this.titleFontSize, left: 0};
-            this.headerHeight += (getHeight(title) + this.blockPadding - titleLineSpacing);
-        } else {
-            this.titlePosition = {top: this.headerHeight, left: 0};
-        }
-    }
-    title.attr('transform', model.translate(this.titlePosition));
-};
-
-Dressing.prototype.addSeriesKey = function () {
-    var svg = this.svg;
-    var model = this.model;
-
-    if (!model.key) {
-        return;
-    }
-    var chartKey = seriesKey({
-        lineThickness: model.lineStrokeWidth,
-        chartType: model.chartType
-    })
-        .style(function (d) {
-            return d.value;
-        })
-        .label(function (d) {
-            return d.key;
-        });
-    var entries = model.y.series.map(function (d) {
-        return {key: d.label, value: d.className};
-    });
-
-    var svgKey = svg.append('g').attr('class', 'chart__key').datum(entries).call(chartKey);
-    if (!this.keyPosition) {
-        this.keyPosition = {top: this.headerHeight, left: this.halfLineStrokeWidth};
-        this.headerHeight += (getHeight(svgKey) + this.blockPadding);
-    }
-    svgKey.attr('transform', model.translate(this.keyPosition));
-};
-
-
-Dressing.prototype.addFootNotes = function () {
-    var svg = this.svg;
-    var model = this.model;
-
-    var text = textArea().width(this.model.contentWidth - this.model.logoSize).lineHeight(this.footerLineHeight);
-    var footnotes = svg.append('g').attr('class', 'chart-footnote').datum(model.footnote).call(text);
-    var footnotesHeight = getHeight(footnotes);
-    var currentPosition = model.chartPosition.top + model.chartHeight;
-    footnotes.attr('transform', model.translate({top: currentPosition + this.footerLineHeight + this.blockPadding}));
-    this.footerHeight += footnotesHeight;
-};
-
-Dressing.prototype.addSource = function () {
-    var svg = this.svg;
-    var model = this.model;
-
-    var text = textArea().width(this.model.contentWidth - this.model.logoSize).lineHeight(this.footerLineHeight);
-    var sourceLineHeight = this.defaultLineHeight;
-    var sourceLineHeightActual = this.sourceFontSize * sourceLineHeight;
-    var source = svg.append('g').attr('class', 'chart-source').datum(model.sourcePrefix + model.source).call(text);
-    var sourceHeight = getHeight(source);
-    var currentPosition = model.chartPosition.top + model.chartHeight;
-
-    source.attr('transform', model.translate({top: this.footerHeight + currentPosition + sourceLineHeightActual + (this.blockPadding * 2)}));
-    if (model.hideSource) {
-        source.remove();
-        sourceHeight = 0;
-    }
-    this.sourceFontOffset = sourceLineHeightActual - this.sourceFontSize;
-    this.footerHeight += sourceHeight;
-};
-
-Dressing.prototype.getSourceFontOffset = function () {
-    return this.sourceFontOffset;
-};
-
-Dressing.prototype.setHeight = function () {
-    var model = this.model;
-    var footerHeight = Math.max(this.footerHeight + (this.blockPadding * 2), model.logoSize) + this.blockPadding;
-    if (!model.height) {
-        model.height = this.headerHeight + model.chartHeight + footerHeight;
-    } else {
-        model.chartHeight = model.height - this.headerHeight - footerHeight;
-        if (model.chartHeight < 0) {
-            model.error({
-                message: 'calculated plot height is less than zero'
-            });
-        }
-    }
-    this.svg.attr('height', Math.ceil(model.height));
-};
-
-Dressing.prototype.setPosition = function () {
-    this.model.chartPosition = {
-        top: this.headerHeight + this.halfLineStrokeWidth,
-        left: (this.model.dependentAxisOrient === 'left' ? 0 : this.halfLineStrokeWidth)
-    };
-};
-
-module.exports = Dressing;
-
-},{"../element/logo.js":18,"../element/series-key.js":19,"../element/text-area.js":20}],27:[function(require,module,exports){
+},{"d3":1}],29:[function(require,module,exports){
 var d3 = require('d3');
 var dates = require('../util/dates');
-var styler = require('./chart-attribute-styles');
+var themes = require('../themes');
 var dateFormatter = dates.formatter;
 
 module.exports = {
@@ -12099,7 +12154,7 @@ module.exports = {
 
         // style the row before we do any removing, to ensure that
         // collision detection is done correctly
-        styler(g, config.keepD3Style);
+        themes.applyTheme(g, config.theme, config.keepD3Style);
 
         if (config.dataType === 'categorical') {
             return;
@@ -12242,7 +12297,7 @@ module.exports = {
     }
 };
 
-},{"../util/dates":25,"./chart-attribute-styles":22,"d3":1}],28:[function(require,module,exports){
+},{"../themes":24,"../util/dates":28,"d3":1}],30:[function(require,module,exports){
 //a place to define custom line interpolators
 
 var d3 = require('d3');
@@ -12276,7 +12331,7 @@ module.exports = {
     gappedLine: gappedLineInterpolator
 };
 
-},{"d3":1}],29:[function(require,module,exports){
+},{"d3":1}],31:[function(require,module,exports){
 var thicknesses = {
     small: 2,
     medium: 4,
@@ -12304,7 +12359,7 @@ module.exports = function (value) {
     }
 };
 
-},{}],30:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 //example:
 //http://codinginparadise.org/projects/svgweb-staging/tests/htmlObjectHarness/basic-metadata-example-01-b.html
 var svgSchema = 'http://www.w3.org/2000/svg';
@@ -12355,7 +12410,7 @@ module.exports = {
     create: create
 };
 
-},{}],31:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 function isTruthy(value) {
     return !!value;
 }
@@ -12401,7 +12456,7 @@ module.exports = {
     normalise: normalise
 };
 
-},{}],32:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 var app = require('../../app.json');
 module.exports = app.version;
 
@@ -12411,13 +12466,14 @@ module.exports = {
 
     axis: require('./axis/index.js'),
 
-    element: {
-        seriesKey: require('./element/series-key.js'),
-        textArea: require('./element/text-area.js')
+    dressing: {
+        seriesKey: require('./dressing/series-key.js'),
+        textArea: require('./dressing/text-area.js'),
+        logo: require('./dressing/logo.js')
     },
 
     util: {
-        attributeStyler: require('./util/chart-attribute-styles.js'),
+        themes: require('./themes'),
         dates: require('./util/dates.js')
     },
 
@@ -12425,4 +12481,4 @@ module.exports = {
 
 };
 
-},{"./axis/index.js":7,"./chart/index.js":15,"./element/series-key.js":19,"./element/text-area.js":20,"./util/chart-attribute-styles.js":22,"./util/dates.js":25,"./util/version":32}]},{},["o-charts"]);
+},{"./axis/index.js":7,"./chart/index.js":15,"./dressing/logo.js":19,"./dressing/series-key.js":20,"./dressing/text-area.js":21,"./themes":24,"./util/dates.js":28,"./util/version":34}]},{},["o-charts"]);
