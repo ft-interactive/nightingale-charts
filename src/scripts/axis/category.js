@@ -1,5 +1,5 @@
 var d3 = require('d3');
-var styler = require('../util/chart-attribute-styles');
+var themes = require('../themes');
 var labels = require('../util/labels.js');
 var dates = require('../util/dates.js');
 var timeDiff = dates.timeDiff;
@@ -7,6 +7,7 @@ var timeDiff = dates.timeDiff;
 function categoryAxis() {
 
     var config = {
+        theme: false,
         axes: [d3.svg.axis().orient('bottom')],
         scale: false,
         lineHeight: 20,
@@ -32,7 +33,7 @@ function categoryAxis() {
     function render(g) {
         var orientOffset = (isVertical()) ? -config.axes[0].tickSize() : 0;
         g = g.append('g').attr('transform', 'translate(' + (config.xOffset + orientOffset) + ',' + config.yOffset + ')');
-        g.append('g').attr('class', isVertical() ? 'y axis axis--independent' : 'x axis axis--independent').each(function () {
+        g.append('g').attr('class', isVertical() ? 'y axis axis--independent axis--category' : 'x axis axis--independent axis--category').each(function () {
             var g = d3.select(this);
             labels.add(g, config);
         });
@@ -41,6 +42,12 @@ function categoryAxis() {
             g.select('path.domain').remove();
         }
     }
+
+    render.theme = function (themeUpdate) {
+        if (!arguments.length) return config.theme;
+        config.theme = themeUpdate;
+        return render;
+    };
 
     render.simple = function (bool) {
         if (!arguments.length) return config.simple;

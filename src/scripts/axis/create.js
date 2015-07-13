@@ -83,7 +83,9 @@ Create.prototype.hideTicks = function () {
 };
 
 Create.prototype.configureDependentScale = function (model) {
-    this.dependentAxis.tickFormat(model.numberAxisFormatter)
+    this.dependentAxis
+        .tickFormat(model.numberAxisFormatter)
+        .theme(model.theme)
         .simple(model.simpleValue)
         .orient(model.dependentAxisOrient)
         .reverse(model.y.reverse);
@@ -106,6 +108,7 @@ Create.prototype.configureDependentScale = function (model) {
 
 Create.prototype.configureIndependentScale = function (model) {
     this.independentAxis
+        .theme(model.theme)
         .simple(model.simpleDate)
         .tickSize(model.tickSize)
         .orient(model.independentAxisOrient);

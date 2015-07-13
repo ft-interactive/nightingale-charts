@@ -1,27 +1,25 @@
-var textArea = require('../element/text-area.js');
-var seriesKey = require('../element/series-key.js');
-var ftLogo = require('../element/logo.js');
+var textArea = require('./text-area.js');
+var seriesKey = require('./series-key.js');
+var ftLogo = require('./logo.js');
+var themes = require('../themes');
 
 function getHeight(selection) {
     return Math.ceil(selection.node().getBoundingClientRect().height);
 }
 
 function Dressing(svg, model) {
-    // TODO: don't hard-code the fontsize, get from CSS somehow.
-    // TODO: move calculation of lineheight to the textarea component;
     this.svg = svg;
     this.model = model;
     this.blockPadding = 8;
     this.defaultLineHeight = 1.2;
-    this.titleFontSize = 18;
-    this.footerLineHeight = 15;
-    this.subtitleFontSize = 12;
-    this.sourceFontSize = 10;
+    this.titleFontSize = themes.check(model.theme, 'chart-title').attributes['font-size'];
+    this.footerLineHeight = themes.check(model.theme, 'dressing-footnote').attributes['line-height'];
+    this.subtitleFontSize = themes.check(model.theme, 'chart-subtitle').attributes['font-size'];
+    this.sourceFontSize = themes.check(model.theme, 'dressing-source').attributes['font-size'];
     this.halfLineStrokeWidth = Math.ceil(model.lineStrokeWidth / 2);
 
     this.headerHeight = 0;
     this.footerHeight = 0;
-    this.sourceFontOffset = 0;
 }
 
 Dressing.prototype.addHeader = function () {
@@ -38,17 +36,20 @@ Dressing.prototype.addFooter = function () {
     this.addLogo();
 };
 
+Dressing.prototype.addFooterTextArea = function(datum, attrClass){
+    var text = textArea().width(this.model.contentWidth - this.model.logoSize).lineHeight(this.footerLineHeight);
+    var gText = this.svg.append('g').attr('class', attrClass).datum(datum).call(text);
+    this.footerHeight += getHeight(gText);
+    return gText;
+};
+
 Dressing.prototype.addLogo = function () {
-    var svg = this.svg;
     var model = this.model;
 
-    var logo = svg.append('g').attr('class', 'chart-logo').call(ftLogo, model.logoSize);
-    var heightOfFontDescenders = 3;
-    var baselineOfLastSourceLine = model.height - getHeight(logo) - heightOfFontDescenders - this.getSourceFontOffset();
-
+    var logo = this.svg.append('g').attr('class', 'chart-logo').call(ftLogo, model.logoSize);
     logo.attr('transform', model.translate({
-        left: model.width - model.logoSize,
-        top: baselineOfLastSourceLine
+        left: model.width - model.logoSize - 3,
+        top: model.height - getHeight(logo) - 3
     }));
 };
 
@@ -56,9 +57,8 @@ Dressing.prototype.addSubTitle = function () {
     var svg = this.svg;
     var model = this.model;
 
-    var subtitleLineHeight = this.defaultLineHeight;
-    var subtitleLineHeightActual = Math.ceil(this.subtitleFontSize * subtitleLineHeight);
-    var subtitleTextWrapper = textArea().width(model.contentWidth).lineHeight(subtitleLineHeightActual);
+    var subtitleLineHeight = Math.ceil(this.subtitleFontSize * this.defaultLineHeight);
+    var subtitleTextWrapper = textArea().width(model.contentWidth).lineHeight(subtitleLineHeight);
     var subtitle = svg.append('g').attr('class', 'chart-subtitle').datum(model.subtitle).call(subtitleTextWrapper);
     if (!this.subtitlePosition) {
         if (model.subtitle) {
@@ -79,7 +79,6 @@ Dressing.prototype.addTitle = function () {
     var titleLineHeightActual = Math.ceil(this.titleFontSize * titleLineHeight);
     var titleLineSpacing = titleLineHeightActual - this.titleFontSize;
     var titleTextWrapper = textArea().width(model.contentWidth).lineHeight(titleLineHeightActual);
-
     var title = svg.append('g').attr('class', 'chart-title').datum(model.title).call(titleTextWrapper);
     if (!this.titlePosition) {
         if (model.title) {
@@ -99,9 +98,11 @@ Dressing.prototype.addSeriesKey = function () {
     if (!model.key) {
         return;
     }
+
     var chartKey = seriesKey({
         lineThickness: model.lineStrokeWidth,
-        chartType: model.chartType
+        chartType: model.chartType,
+        theme: model.theme
     })
         .style(function (d) {
             return d.value;
@@ -121,55 +122,36 @@ Dressing.prototype.addSeriesKey = function () {
     svgKey.attr('transform', model.translate(this.keyPosition));
 };
 
-
 Dressing.prototype.addFootNotes = function () {
-    var svg = this.svg;
+    if (!this.model.footnote) return;
     var model = this.model;
 
-    var text = textArea().width(this.model.contentWidth - this.model.logoSize).lineHeight(this.footerLineHeight);
-    var footnotes = svg.append('g').attr('class', 'chart-footnote').datum(model.footnote).call(text);
-    var footnotesHeight = getHeight(footnotes);
+    var gText = this.addFooterTextArea(model.footnote, 'chart-footnote');
     var currentPosition = model.chartPosition.top + model.chartHeight;
-    footnotes.attr('transform', model.translate({top: currentPosition + this.footerLineHeight + this.blockPadding}));
-    this.footerHeight += footnotesHeight;
+    gText.attr('transform', model.translate({top: currentPosition + this.footerLineHeight + this.blockPadding}));
 };
 
 Dressing.prototype.addSource = function () {
-    var svg = this.svg;
+    if (!this.model.source) return;
     var model = this.model;
-
-    var text = textArea().width(this.model.contentWidth - this.model.logoSize).lineHeight(this.footerLineHeight);
-    var sourceLineHeight = this.defaultLineHeight;
-    var sourceLineHeightActual = this.sourceFontSize * sourceLineHeight;
-    var source = svg.append('g').attr('class', 'chart-source').datum(model.sourcePrefix + model.source).call(text);
-    var sourceHeight = getHeight(source);
+    var gText = this.addFooterTextArea(model.sourcePrefix + model.source, 'chart-source');
     var currentPosition = model.chartPosition.top + model.chartHeight;
-
-    source.attr('transform', model.translate({top: this.footerHeight + currentPosition + sourceLineHeightActual + (this.blockPadding * 2)}));
-    if (model.hideSource) {
-        source.remove();
-        sourceHeight = 0;
-    }
-    this.sourceFontOffset = sourceLineHeightActual - this.sourceFontSize;
-    this.footerHeight += sourceHeight;
-};
-
-Dressing.prototype.getSourceFontOffset = function () {
-    return this.sourceFontOffset;
+    var sourceLineHeight = this.sourceFontSize * this.defaultLineHeight;
+    gText.attr('transform', model.translate({top: this.footerHeight + currentPosition + sourceLineHeight + (this.blockPadding * 2)}));
 };
 
 Dressing.prototype.setHeight = function () {
     var model = this.model;
-    var footerHeight = Math.max(this.footerHeight + (this.blockPadding * 2), model.logoSize) + this.blockPadding;
-    if (!model.height) {
-        model.height = this.headerHeight + model.chartHeight + footerHeight;
-    } else {
+    var footerHeight = Math.max(this.footerHeight + this.blockPadding + this.blockPadding + this.blockPadding, model.logoSize);
+    if (model.height) {
         model.chartHeight = model.height - this.headerHeight - footerHeight;
         if (model.chartHeight < 0) {
             model.error({
                 message: 'calculated plot height is less than zero'
             });
         }
+    } else {
+        model.height = this.headerHeight + model.chartHeight + footerHeight;
     }
     this.svg.attr('height', Math.ceil(model.height));
 };

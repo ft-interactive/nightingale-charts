@@ -1,5 +1,5 @@
 {
-  "version": "0.4.8",
+  "version": "0.5.0",
   "name": "o-charts",
   "description": "FT style charts, axes, scales etc",
   "private": true,
@@ -17,7 +17,11 @@
     "start-test": "caddy serve ./_test",
     "tdd": "caddy test tdd",
     "test": "jshint src && caddy build && caddy test",
-    "regression": "caddy serve & sleep 4 && casperjs test test/regression/"
+    "test-regression": "caddy serve & sleep 4 && npm run regression",
+    "regression": "npm run clean-regression && casperjs test test/regression/",
+    "clean-regression": "rm -rf test/regression/failures & rm -rf test/regression/new & rm -rf test/regression/reference/*diff.png & rm -rf test/regression/reference/*fail.png",
+    "sort-regression": "mkdir -p test/regression/new && mv test/regression/reference/*diff.png test/regression/new & rm -rf test/regression/reference/*.fail.png && npm run rename-regression",
+    "rename-regression": "for fname in test/regression/new/*.diff.png ; do mv \"$fname\" \"$(echo \"$fname\" | sed 's/\\.diff//')\" ; done; for fname in test/regression/failures/*.fail.png ; do mv \"$fname\" \"$(echo \"$fname\" | sed 's/\\.fail//')\" ; done;"
   },
   "repository": {
     "type": "git",
@@ -28,9 +32,9 @@
   "devDependencies": {
     "browserify-istanbul": "^0.2.1",
     "jshint": "^2.6.3",
-    "web-caddy": "^2.0.1",
     "phantomcss": "^0.10.1",
-    "slug": "^0.9.1"
+    "slug": "^0.9.1",
+    "web-caddy": "^2.0.1"
   },
   "browser": {
     "d3": "./bower_components/d3/d3.js"

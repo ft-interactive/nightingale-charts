@@ -23,7 +23,9 @@ if behind a proxy run, setup git to use https:
 1. Run `npm run regression` to create reference shots
 2. Run `git checkout -b my-feature`
 3. Hack, test, hack, test
-1. Run `npm run regression` to make sure nothing has broken
+1. Run `npm run regression`
+1. Run `npm run sort-regression`
+1. Manually check the folders within `test/regression` (new, failures + reference)
 4. `git rebase master`
 5. If necessary, rebase your commits into logical chunks, without errors.
 6. `git push origin my-feature`

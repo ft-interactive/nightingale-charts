@@ -44,6 +44,13 @@ d3.select(svg)
     .call(oCharts.chart.line);
 ```
 
+## Themes
+
+Charts (and chart components) can now be 'themed'. Currently only `ft` is available (by default).  Set this by adding the following to the data config object:
+
+`theme: 'ft'`
+
+
 ##date axis
 ft.charts.dateAxis()
 For drawing a date axis in the ft style (horizontal only)

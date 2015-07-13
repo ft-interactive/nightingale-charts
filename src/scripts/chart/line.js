@@ -3,8 +3,8 @@ var axes = require('../axis');
 var interpolator = require('../util/line-interpolators.js');
 var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');
-var Dressing = require('../util/dressing.js');
-var styler = require('../util/chart-attribute-styles');
+var Dressing = require('../dressing');
+var themes = require('../themes');
 
 function plotSeries(plotSVG, model, createdAxes, series) {
     var data = formatData(model, series);
@@ -19,7 +19,8 @@ function plotSeries(plotSVG, model, createdAxes, series) {
         .attr('class', function (d){ return 'line '  + series.className + (d.value < 0 ? ' negative' : ' positive');})
         .attr('stroke-width', model.lineStrokeWidth)
         .attr('d', function (d) { return line(d); });
-    styler(plotSVG);
+
+    themes.applyTheme(plotSVG, model.theme);
 }
 
 function formatData(model, series) {

@@ -2,10 +2,12 @@ var d3 = require('d3');
 var labels = require('../util/labels.js');
 var dates = require('../util/dates.js');
 var dateScale = require('./date.scale.js');
+var themes = require('../themes');
 var timeDiff = dates.timeDiff;
 
 function dateAxis() {
     var config = {
+        theme: false,
         axes: [d3.svg.axis().orient('bottom')],
         scale: false,
         lineHeight: 20,
@@ -27,7 +29,7 @@ function dateAxis() {
 
         g = g.append('g').attr('transform', 'translate(' + config.xOffset + ',' + config.yOffset + ')');
 
-        g.append('g').attr('class', 'x axis axis--independent').each(function () {
+        g.append('g').attr('class', 'x axis axis--independent axis--date').each(function () {
             labels.add(d3.select(this), config);
         });
 
@@ -35,6 +37,12 @@ function dateAxis() {
             g.select('path.domain').remove();
         }
     }
+
+    render.theme = function (themeUpdate) {
+        if (!arguments.length) return config.theme;
+        config.theme = themeUpdate;
+        return render;
+    };
 
     render.simple = function (bool) {
         if (!arguments.length) return config.simple;

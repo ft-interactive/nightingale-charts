@@ -15,7 +15,7 @@ var data = [
 module.exports = {
     init: function(){
 
-        var text = oCharts.element.textArea()
+        var text = oCharts.dressing.textArea()
             .width(100)
             .lineHeight(16);
 

@@ -1,15 +1,15 @@
-//var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
-var styler = require('../util/chart-attribute-styles');
+var themes = require('../themes');
 
 function lineKey(options) {
     'use strict';
 
     options = options || {};
 
+    var theme = options.theme;
     var width = 300;
     var strokeLength = 15;
-    var lineHeight = 16;
+    var lineHeight = themes.check(options.theme, 'key-label').attributes['line-height'];
     var strokeWidth = lineThickness(options.lineThickness);
 
     var charts = {
@@ -74,9 +74,14 @@ function lineKey(options) {
             x: strokeLength + 10
         }).text(label);
 
-        styler(g);
-
+        themes.applyTheme(g, theme);
     }
+
+    key.theme = function (g, themeUpdate) {
+        if (!arguments.length) return theme;
+        if (themeUpdate) theme = themeUpdate;
+        return key;
+    };
 
     key.label = function (f) {
         if (!arguments.length) return label;

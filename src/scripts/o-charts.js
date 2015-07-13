@@ -3,13 +3,14 @@ module.exports = {
 
     axis: require('./axis/index.js'),
 
-    element: {
-        seriesKey: require('./element/series-key.js'),
-        textArea: require('./element/text-area.js')
+    dressing: {
+        seriesKey: require('./dressing/series-key.js'),
+        textArea: require('./dressing/text-area.js'),
+        logo: require('./dressing/logo.js')
     },
 
     util: {
-        attributeStyler: require('./util/chart-attribute-styles.js'),
+        themes: require('./themes'),
         dates: require('./util/dates.js')
     },
 

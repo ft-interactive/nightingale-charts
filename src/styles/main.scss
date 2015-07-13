@@ -1,7 +1,12 @@
 @import "variables";
-@import "axes";
-@import "textarea";
+//todo: remove me!
+.axis {
+    font-family: $chart-font-family;
+}
 
+.primary .tick text {
+    font-size: 12px;
+}
 
 .accent {
     stroke: rgb(184, 177, 169);
@@ -10,5 +15,3 @@
 .forecast {
     stroke-dasharray: 4, 5;
 }
-
-

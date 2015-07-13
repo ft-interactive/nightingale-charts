@@ -23,11 +23,11 @@ var columnData = [
 module.exports = {
     init: function(){
 
-        var lineKey = oCharts.element.seriesKey({chartType: 'line'})
+        var lineKey = oCharts.dressing.seriesKey({chartType: 'line'})
             .width(100)
             .lineHeight(19);
 
-        var columnKey = oCharts.element.seriesKey({chartType: 'column'})
+        var columnKey = oCharts.dressing.seriesKey({chartType: 'column'})
             .width(100)
             .lineHeight(19);
 
