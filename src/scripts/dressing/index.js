@@ -137,7 +137,7 @@ Dressing.prototype.addSource = function () {
     var gText = this.addFooterTextArea(model.sourcePrefix + model.source, 'chart-source');
     var currentPosition = model.chartPosition.top + model.chartHeight;
     var sourceLineHeight = this.sourceFontSize * this.defaultLineHeight;
-    gText.attr('transform', model.translate({top: this.footerHeight + currentPosition + sourceLineHeight + (this.blockPadding * 2)}));
+    gText.attr('transform', model.translate({top: this.footerHeight + currentPosition + sourceLineHeight + this.blockPadding}));
 };
 
 Dressing.prototype.setHeight = function () {
