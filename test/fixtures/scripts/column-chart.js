@@ -262,11 +262,11 @@ var fixtures = {
         {date: new Date('12/30/05'), value: 34, value2: 10, value3: null}
     ],
     nullStack:[
-        {myDateColumn: new Date('3/31/05'), value: 50, value2: 99, value3: 26, value4: 40, value5: 15},
-        {myDateColumn: new Date('6/30/05'), value: 25, value2: 10, value3: 21, value4: 36, value5: null},
-        {myDateColumn: new Date('9/30/05'), value: 75, value2: 70, value3: null, value4: 12, value5: 110},
-        {myDateColumn: new Date('12/30/05'), value: null, value2: 10, value3: 29, value4: 31, value5: 40},
-        {myDateColumn: new Date('5/30/06'), value: 133, value2: 25, value3: 72, value4: 105, value5: 200}
+        {myDateColumn: new Date('3/31/05'), value: 50, value2value2: 99, value3value3value3: 26, value4value4value4value4: 40, value5: 15},
+        {myDateColumn: new Date('6/30/05'), value: 25, value2value2: 10, value3value3value3: 21, value4value4value4value4: 36, value5: null},
+        {myDateColumn: new Date('9/30/05'), value: 75, value2value2: 70, value3value3value3: null, value4value4value4value4: 12, value5: 110},
+        {myDateColumn: new Date('12/30/05'), value: null, value2value2: 10, value3value3value3: 29, value4value4value4value4: 31, value5: 40},
+        {myDateColumn: new Date('5/30/06'), value: 133, value2value2: 25, value3value3value3: 72, value4value4value4value4: 105, value5: 200}
     ],
     weekly : [
         { date: new Date('5/07/2014'), value:      0.368069},
@@ -358,7 +358,7 @@ var ySeriesData = {
     nullMultiple: ['value', 'value2', 'value3'],
     multipleWithNegatives: ['value', 'value2', 'value3'],
     stack: ['value', 'value2', 'value3', 'value4', 'value5'],
-    nullStack: ['value', 'value2', 'value3', 'value4', 'value5'],
+    nullStack: ['value', 'value2value2', 'value3value3value3', 'value4value4value4value4', 'value5'],
     stackWithNegatives: ['value', 'value2', 'value3', 'value4', 'value5'],
     stackWithAllNegatives: ['value', 'value2', 'value3', 'value4', 'value5'],
     stackMonthly: ['value', 'value2', 'value3', 'value4', 'value5']

@@ -63,11 +63,7 @@ Dressing.prototype.addSeriesKey = function () {
     var svg = this.svg;
     var model = this.model;
 
-    var chartKey = seriesKey({
-        lineThickness: model.lineStrokeWidth,
-        chartType: model.chartType,
-        theme: model.theme
-    })
+    var chartKey = seriesKey(model)
         .style(function (d) {
             return d.value;
         })

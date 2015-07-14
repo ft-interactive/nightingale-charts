@@ -7,7 +7,8 @@ function lineKey(options) {
     options = options || {};
 
     var theme = options.theme;
-    var width = 300;
+    var columns = options.columns || 1;
+    var width = options.width || 300;
     var strokeLength = 15;
     var lineHeight = themes.check(options.theme, 'key-label').attributes['line-height'];
     var strokeWidth = lineThickness(options.lineThickness);
@@ -30,7 +31,7 @@ function lineKey(options) {
         return true;
     };
 
-    function addLineKeys(keyItems, label){
+    function addLineKeys(keyItems){
         keyItems.append('line').attr({
             'class': style,
             x1: 1,
@@ -38,12 +39,12 @@ function lineKey(options) {
             x2: strokeLength,
             y2: -5
         })
-            .attr('stroke-width', strokeWidth)
-            .classed('key__line', true);
+        .attr('stroke-width', strokeWidth)
+        .classed('key__line', true);
 
     }
 
-    function addColumnKeys(keyItems, label){
+    function addColumnKeys(keyItems){
         keyItems.append('rect').attr({
             'class': style,
             x: 1,
@@ -55,8 +56,35 @@ function lineKey(options) {
 
     }
 
+    function addKey(keyItems){
+        charts[options.chartType](keyItems);
+        keyItems.append('text').attr({
+            'class': 'key__label',
+            x: strokeLength + 10
+        }).text(label);
+    }
+
+    function positionKey(keyItems){
+        var columnWidth = 10;
+        keyItems.each(function(d, i){
+            if (i == keyItems[0].length-1) return;
+            columnWidth = Math.max(this.getBoundingClientRect().width, columnWidth) + 10;
+        });
+        while (columnWidth * columns > width) columns --;
+
+        keyItems.attr({
+            'class': 'key__item',
+            'transform': function (d, i) {
+                var column = (i % columns);
+                var row = Math.ceil((i + 1) / columns);
+                var x = column * columnWidth;
+                var y = row * lineHeight;
+                return 'translate(' + x + ',' + y  + ')';
+            }
+        });
+    }
+
     function key(g) {
-        var addKey = charts[options.chartType];
         g = g.append('g').attr('class', 'key');
         var keyItems = g.selectAll('g').data(g.datum().filter(filter))
             .enter()
@@ -67,13 +95,8 @@ function lineKey(options) {
                 }
             });
 
-        addKey(keyItems, label);
-
-        keyItems.append('text').attr({
-            'class': 'key__label',
-            x: strokeLength + 10
-        }).text(label);
-
+        addKey(keyItems);
+        positionKey(keyItems);
         themes.applyTheme(g, theme);
     }
 
@@ -104,6 +127,12 @@ function lineKey(options) {
     key.lineHeight = function (x) {
         if (!arguments.length) return lineHeight;
         lineHeight = x;
+        return key;
+    };
+
+    key.columns = function (x) {
+        if (!arguments.length) return columns;
+        columns = x;
         return key;
     };
 

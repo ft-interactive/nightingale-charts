@@ -184,6 +184,7 @@ function Model(chartType, opts) {
         //layout stuff
         theme: 'ft',
         chartType: chartType,
+        columns: (chartType == 'column' ? 5 : 1),
         height: undefined,
         tickSize: 5,
         width: 300,

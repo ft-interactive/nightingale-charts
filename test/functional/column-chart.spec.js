@@ -1,10 +1,47 @@
+require('../helper').loadAssets('column-chart');
+require('../fixtures/scripts/column-chart').init();
+
 describe('column-chart.js', function(){
 
     beforeEach(function(){
         //pm: hack to stop spec rewriting dom too early :(
         require('../helper').loadAssets('column-chart');
         require('../fixtures/scripts/column-chart').init();
-    })
+    });
+
+    describe('has the key  ', function(){
+        var stackedColumnsL = document.querySelectorAll('.width600 svg')[8].querySelectorAll('.key__item');
+        var stackedColumnsS = document.querySelectorAll('.width300 svg')[8].querySelectorAll('.key__item');
+        var verticalColumnsS = document.querySelectorAll('.width300 svg')[18].querySelectorAll('.key__item');
+
+        it('horizontal when all items fit', function() {
+            expect(stackedColumnsL.length).toBe(5);
+            expect(stackedColumnsL[0].getAttribute('transform')).toContain(',16)');
+            expect(stackedColumnsL[1].getAttribute('transform')).toContain(',16)');
+            expect(stackedColumnsL[2].getAttribute('transform')).toContain(',16)');
+            expect(stackedColumnsL[3].getAttribute('transform')).toContain(',16)');
+            expect(stackedColumnsL[4].getAttribute('transform')).toContain(',16)');
+        });
+
+        it('columns when only some items fit', function(){
+            expect(stackedColumnsS.length).toBe(5);
+            expect(stackedColumnsS[0].getAttribute('transform')).toContain(',16)');
+            expect(stackedColumnsS[1].getAttribute('transform')).toContain(',16)');
+            expect(stackedColumnsS[2].getAttribute('transform')).toContain(',16)');
+            expect(stackedColumnsS[3].getAttribute('transform')).toContain(',32)');
+            expect(stackedColumnsS[4].getAttribute('transform')).toContain(',32)');
+        });
+
+        it('vertical when not all items fit', function(){
+            expect(verticalColumnsS.length).toBe(5);
+            expect(verticalColumnsS[0].getAttribute('transform')).toContain(',16)');
+            expect(verticalColumnsS[1].getAttribute('transform')).toContain(',32)');
+            expect(verticalColumnsS[2].getAttribute('transform')).toContain(',48)');
+            expect(verticalColumnsS[3].getAttribute('transform')).toContain(',64)');
+            expect(verticalColumnsS[4].getAttribute('transform')).toContain(',80)');
+        });
+
+    });
 
     describe('has ticks ', function(){
 
