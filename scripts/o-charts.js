@@ -9504,7 +9504,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
   this.d3 = d3;
 }();
 },{}],2:[function(require,module,exports){
-module.exports={"version":"0.5.3"}
+module.exports={"version":"0.5.4"}
 
 },{}],3:[function(require,module,exports){
 var d3 = require('d3');
@@ -11135,7 +11135,7 @@ function lineKey(options) {
             if (i == keyItems[0].length-1) return;
             columnWidth = Math.max(this.getBoundingClientRect().width, columnWidth) + 10;
         });
-        while (columnWidth * columns > width) columns --;
+        while (columnWidth * columns > width && columns>1) columns --;
 
         keyItems.attr({
             'class': 'key__item',
