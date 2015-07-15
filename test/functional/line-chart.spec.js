@@ -42,6 +42,12 @@ describe('line-chart  ', function () {
             expect(labels[1].textContent).toBe('Another function Value');
         });
 
+        it('hovering over the chart', function(){
+            var chart = lineChart11.querySelectorAll('.chart')[0].getBoundingClientRect() ;
+            var key = lineChart11.querySelectorAll('.chart__key')[0].getBoundingClientRect() ;
+            expect(chart.top + 5).toBeGreaterThan(key.top);
+        });
+
     });
 
     describe('shows titles', function () {

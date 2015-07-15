@@ -19,6 +19,9 @@ function Dressing(svg, model) {
     this.halfLineStrokeWidth = Math.ceil(model.lineStrokeWidth / 2);
     this.headerHeight = 0;
     this.footerHeight = 0;
+    this.entries = model.y.series.map(function (d) {
+        return {key: d.label, value: d.className};
+    });
 }
 
 Dressing.prototype.addHeader = function () {
@@ -55,13 +58,29 @@ Dressing.prototype.addHeaderItem = function(item){
     var currentPosition = {top: this.headerHeight + this[item + 'FontSize'], left: 0};
     this.headerHeight += (getHeight(gText) + this.halfLineStrokeWidth);
     gText.attr('transform', model.translate(currentPosition));
-    this.setPosition();
+    this.setChartPosition();
 };
 
 Dressing.prototype.addSeriesKey = function () {
     if (!this.model.key) {        return;    }
-    var svg = this.svg;
     var model = this.model;
+
+    model.keyPosition = model.keyPosition || {
+            top: this.headerHeight + this.blockPadding,
+            left: this.halfLineStrokeWidth
+        };
+
+    var labelWidth = model.yLabelWidth + this.blockPadding;
+    var labelHeight = model.xLabelHeight + this.blockPadding;
+    var hasTopAxis = [model.dependentAxisOrient,model.independentAxisOrient].indexOf('top')>-1;
+    var hasLeftAxis = [model.dependentAxisOrient,model.independentAxisOrient].indexOf('left')>-1;
+    if (hasLeftAxis && model.keyHover && model.keyPosition.left < labelWidth) {
+        model.keyPosition.left = labelWidth;
+        model.keyWidth = model.keyWidth || model.width - labelWidth;
+    }
+    if (hasTopAxis && model.keyHover && model.keyPosition.top < labelHeight) {
+        model.keyPosition.top = labelHeight;
+    }
 
     var chartKey = seriesKey(model)
         .style(function (d) {
@@ -69,16 +88,16 @@ Dressing.prototype.addSeriesKey = function () {
         })
         .label(function (d) {
             return d.key;
-        });
-    var entries = model.y.series.map(function (d) {
-        return {key: d.label, value: d.className};
-    });
+        })
+        .width(model.keyWidth || model.width);
 
-    var gText = svg.append('g').attr('class', 'chart__key').datum(entries).call(chartKey);
-    var currentPosition = {top: this.headerHeight + this.blockPadding, left: this.halfLineStrokeWidth};
-    this.headerHeight += getHeight(gText) + this.blockPadding;
-    gText.attr('transform', model.translate(currentPosition));
-    this.setPosition();
+    var gText = this.svg.append('g').attr('class', 'chart__key').datum(this.entries).call(chartKey);
+    gText.attr('transform', model.translate(model.keyPosition));
+
+    if (!model.keyHover){
+        this.headerHeight += getHeight(gText) + this.blockPadding;
+    }
+    this.setChartPosition();
 };
 
 Dressing.prototype.addFooterItem = function(item, prefix){
@@ -111,7 +130,7 @@ Dressing.prototype.setHeight = function () {
     this.svg.attr('height', Math.ceil(model.height));
 };
 
-Dressing.prototype.setPosition = function () {
+Dressing.prototype.setChartPosition = function () {
     this.model.chartPosition = {
         top: this.headerHeight + this.halfLineStrokeWidth + this.blockPadding,
         left: (this.model.dependentAxisOrient === 'left' ? 0 : this.halfLineStrokeWidth)
