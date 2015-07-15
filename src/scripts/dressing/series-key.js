@@ -70,7 +70,7 @@ function lineKey(options) {
             if (i == keyItems[0].length-1) return;
             columnWidth = Math.max(this.getBoundingClientRect().width, columnWidth) + 10;
         });
-        while (columnWidth * columns > width) columns --;
+        while (columnWidth * columns > width && columns>1) columns --;
 
         keyItems.attr({
             'class': 'key__item',
