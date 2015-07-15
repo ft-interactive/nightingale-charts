@@ -9504,7 +9504,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
   this.d3 = d3;
 }();
 },{}],2:[function(require,module,exports){
-module.exports={"version":"0.5.2"}
+module.exports={"version":"0.5.3"}
 
 },{}],3:[function(require,module,exports){
 var d3 = require('d3');
@@ -10970,11 +10970,7 @@ Dressing.prototype.addSeriesKey = function () {
     var svg = this.svg;
     var model = this.model;
 
-    var chartKey = seriesKey({
-        lineThickness: model.lineStrokeWidth,
-        chartType: model.chartType,
-        theme: model.theme
-    })
+    var chartKey = seriesKey(model)
         .style(function (d) {
             return d.value;
         })
@@ -11076,7 +11072,8 @@ function lineKey(options) {
     options = options || {};
 
     var theme = options.theme;
-    var width = 300;
+    var columns = options.columns || 1;
+    var width = options.width || 300;
     var strokeLength = 15;
     var lineHeight = themes.check(options.theme, 'key-label').attributes['line-height'];
     var strokeWidth = lineThickness(options.lineThickness);
@@ -11099,7 +11096,7 @@ function lineKey(options) {
         return true;
     };
 
-    function addLineKeys(keyItems, label){
+    function addLineKeys(keyItems){
         keyItems.append('line').attr({
             'class': style,
             x1: 1,
@@ -11107,12 +11104,12 @@ function lineKey(options) {
             x2: strokeLength,
             y2: -5
         })
-            .attr('stroke-width', strokeWidth)
-            .classed('key__line', true);
+        .attr('stroke-width', strokeWidth)
+        .classed('key__line', true);
 
     }
 
-    function addColumnKeys(keyItems, label){
+    function addColumnKeys(keyItems){
         keyItems.append('rect').attr({
             'class': style,
             x: 1,
@@ -11124,8 +11121,35 @@ function lineKey(options) {
 
     }
 
+    function addKey(keyItems){
+        charts[options.chartType](keyItems);
+        keyItems.append('text').attr({
+            'class': 'key__label',
+            x: strokeLength + 10
+        }).text(label);
+    }
+
+    function positionKey(keyItems){
+        var columnWidth = 10;
+        keyItems.each(function(d, i){
+            if (i == keyItems[0].length-1) return;
+            columnWidth = Math.max(this.getBoundingClientRect().width, columnWidth) + 10;
+        });
+        while (columnWidth * columns > width) columns --;
+
+        keyItems.attr({
+            'class': 'key__item',
+            'transform': function (d, i) {
+                var column = (i % columns);
+                var row = Math.ceil((i + 1) / columns);
+                var x = column * columnWidth;
+                var y = row * lineHeight;
+                return 'translate(' + x + ',' + y  + ')';
+            }
+        });
+    }
+
     function key(g) {
-        var addKey = charts[options.chartType];
         g = g.append('g').attr('class', 'key');
         var keyItems = g.selectAll('g').data(g.datum().filter(filter))
             .enter()
@@ -11136,13 +11160,8 @@ function lineKey(options) {
                 }
             });
 
-        addKey(keyItems, label);
-
-        keyItems.append('text').attr({
-            'class': 'key__label',
-            x: strokeLength + 10
-        }).text(label);
-
+        addKey(keyItems);
+        positionKey(keyItems);
         themes.applyTheme(g, theme);
     }
 
@@ -11173,6 +11192,12 @@ function lineKey(options) {
     key.lineHeight = function (x) {
         if (!arguments.length) return lineHeight;
         lineHeight = x;
+        return key;
+    };
+
+    key.columns = function (x) {
+        if (!arguments.length) return columns;
+        columns = x;
         return key;
     };
 
@@ -11837,6 +11862,7 @@ function Model(chartType, opts) {
         //layout stuff
         theme: 'ft',
         chartType: chartType,
+        columns: (chartType == 'column' ? 5 : 1),
         height: undefined,
         tickSize: 5,
         width: 300,
