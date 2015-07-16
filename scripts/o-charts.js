@@ -9504,7 +9504,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
   this.d3 = d3;
 }();
 },{}],2:[function(require,module,exports){
-module.exports={"version":"0.5.4"}
+module.exports={"version":"0.5.5"}
 
 },{}],3:[function(require,module,exports){
 var d3 = require('d3');
@@ -10530,7 +10530,9 @@ function barChart(g){
 	metadata.create(svg, model);
 
 	var dressing = new Dressing(svg, model);
-    dressing.addHeader();
+    dressing.addHeaderItem('title');
+    dressing.addHeaderItem('subtitle');
+    !model.keyHover && dressing.addSeriesKey();
     dressing.addFooter();
 
 	var chartSVG = svg.append('g').attr('class', 'chart');
@@ -10540,6 +10542,8 @@ function barChart(g){
     var independent = (model.groupData || model.dataType === 'categorical') ? 'ordinal' : 'time';
     var creator = new axes.Create(chartSVG, model);
     creator.createAxes({dependent:'number', independent: independent});
+
+    model.keyHover && dressing.addSeriesKey();
 
 	var plotSVG = chartSVG.append('g').attr('class', 'plot');
     var i = 0;
@@ -10716,7 +10720,9 @@ function columnChart(g){
 	metadata.create(svg, model);
 
 	var dressing = new Dressing(svg, model);
-    dressing.addHeader();
+    dressing.addHeaderItem('title');
+    dressing.addHeaderItem('subtitle');
+    !model.keyHover && dressing.addSeriesKey();
     dressing.addFooter();
 
 	var chartSVG = svg.append('g').attr('class', 'chart');
@@ -10724,8 +10730,9 @@ function columnChart(g){
 
     var independent = (model.groupData || model.dataType === 'categorical') ? 'ordinal' : 'time';
 	var creator = new axes.Create(chartSVG, model);
-
     creator.createAxes({dependent:'number', independent: independent});
+
+    model.keyHover && dressing.addSeriesKey();
 
 	var plotSVG = chartSVG.append('g').attr('class', 'plot');
     var i = 0;
@@ -10801,7 +10808,9 @@ function lineChart(g) {
     metadata.create(svg, model);
 
     var dressing = new Dressing(svg, model);
-    dressing.addHeader();
+    dressing.addHeaderItem('title');
+    dressing.addHeaderItem('subtitle');
+    !model.keyHover && dressing.addSeriesKey();
     dressing.addFooter();
 
     var chartSVG = svg.append('g').attr('class', 'chart');
@@ -10809,6 +10818,8 @@ function lineChart(g) {
 
     var creator = new axes.Create(chartSVG, model);
     creator.createAxes({dependent:'number', independent: 'time'});
+
+    model.keyHover && dressing.addSeriesKey();
 
     var plotSVG = chartSVG.append('g').attr('class', 'plot');
     var i = model.y.series.length;
@@ -10926,6 +10937,9 @@ function Dressing(svg, model) {
     this.halfLineStrokeWidth = Math.ceil(model.lineStrokeWidth / 2);
     this.headerHeight = 0;
     this.footerHeight = 0;
+    this.entries = model.y.series.map(function (d) {
+        return {key: d.label, value: d.className};
+    });
 }
 
 Dressing.prototype.addHeader = function () {
@@ -10962,13 +10976,29 @@ Dressing.prototype.addHeaderItem = function(item){
     var currentPosition = {top: this.headerHeight + this[item + 'FontSize'], left: 0};
     this.headerHeight += (getHeight(gText) + this.halfLineStrokeWidth);
     gText.attr('transform', model.translate(currentPosition));
-    this.setPosition();
+    this.setChartPosition();
 };
 
 Dressing.prototype.addSeriesKey = function () {
     if (!this.model.key) {        return;    }
-    var svg = this.svg;
     var model = this.model;
+
+    model.keyPosition = model.keyPosition || {
+            top: this.headerHeight + this.blockPadding,
+            left: this.halfLineStrokeWidth
+        };
+
+    var labelWidth = model.yLabelWidth + this.blockPadding;
+    var labelHeight = model.xLabelHeight + this.blockPadding;
+    var hasTopAxis = [model.dependentAxisOrient,model.independentAxisOrient].indexOf('top')>-1;
+    var hasLeftAxis = [model.dependentAxisOrient,model.independentAxisOrient].indexOf('left')>-1;
+    if (hasLeftAxis && model.keyHover && model.keyPosition.left < labelWidth) {
+        model.keyPosition.left = labelWidth;
+        model.keyWidth = model.keyWidth || model.width - labelWidth;
+    }
+    if (hasTopAxis && model.keyHover && model.keyPosition.top < labelHeight) {
+        model.keyPosition.top = labelHeight;
+    }
 
     var chartKey = seriesKey(model)
         .style(function (d) {
@@ -10976,16 +11006,16 @@ Dressing.prototype.addSeriesKey = function () {
         })
         .label(function (d) {
             return d.key;
-        });
-    var entries = model.y.series.map(function (d) {
-        return {key: d.label, value: d.className};
-    });
+        })
+        .width(model.keyWidth || model.width);
 
-    var gText = svg.append('g').attr('class', 'chart__key').datum(entries).call(chartKey);
-    var currentPosition = {top: this.headerHeight + this.blockPadding, left: this.halfLineStrokeWidth};
-    this.headerHeight += getHeight(gText) + this.blockPadding;
-    gText.attr('transform', model.translate(currentPosition));
-    this.setPosition();
+    var gText = this.svg.append('g').attr('class', 'chart__key').datum(this.entries).call(chartKey);
+    gText.attr('transform', model.translate(model.keyPosition));
+
+    if (!model.keyHover){
+        this.headerHeight += getHeight(gText) + this.blockPadding;
+    }
+    this.setChartPosition();
 };
 
 Dressing.prototype.addFooterItem = function(item, prefix){
@@ -11018,7 +11048,7 @@ Dressing.prototype.setHeight = function () {
     this.svg.attr('height', Math.ceil(model.height));
 };
 
-Dressing.prototype.setPosition = function () {
+Dressing.prototype.setChartPosition = function () {
     this.model.chartPosition = {
         top: this.headerHeight + this.halfLineStrokeWidth + this.blockPadding,
         left: (this.model.dependentAxisOrient === 'left' ? 0 : this.halfLineStrokeWidth)
@@ -11072,8 +11102,8 @@ function lineKey(options) {
     options = options || {};
 
     var theme = options.theme;
-    var columns = options.columns || 1;
-    var width = options.width || 300;
+    var columns = options.keyColumns || 1;
+    var width = options.keyWidth || options.width || 300;
     var strokeLength = 15;
     var lineHeight = themes.check(options.theme, 'key-label').attributes['line-height'];
     var strokeWidth = lineThickness(options.lineThickness);
@@ -11153,12 +11183,7 @@ function lineKey(options) {
         g = g.append('g').attr('class', 'key');
         var keyItems = g.selectAll('g').data(g.datum().filter(filter))
             .enter()
-            .append('g').attr({
-                'class': 'key__item',
-                'transform': function (d, i) {
-                    return 'translate(0,' + (lineHeight + i * lineHeight) + ')';
-                }
-            });
+            .append('g').attr({ 'class': 'key__item' });
 
         addKey(keyItems);
         positionKey(keyItems);
@@ -11862,7 +11887,8 @@ function Model(chartType, opts) {
         //layout stuff
         theme: 'ft',
         chartType: chartType,
-        columns: (chartType == 'column' ? 5 : 1),
+        keyColumns: (chartType == 'column' ? 5 : 1),
+        keyHover: false,
         height: undefined,
         tickSize: 5,
         width: 300,
