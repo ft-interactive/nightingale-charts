@@ -10,129 +10,139 @@ var themes = require('../themes');
 function numericAxis() {
     'use strict';
 
-    var theme;
-    var tickSize = 5;
-    var a = d3.svg.axis().orient('left').tickSize(tickSize, 0);
-    var lineHeight = 16;
-    var userTicks = [];
-    var hardRules = [0];
-    var yOffset = 0;
-    var xOffset = 0;
-    var reverse = false;
-    var simple = false;
-    var noLabels = false;
-    var pixelsPerTick = 100;
-    var tickExtension = 0;
+    var config = {
+        theme: undefined,
+        axes: d3.svg.axis().orient('left').tickSize(5, 0),
+        tickSize: 5,
+        lineHeight: 16,
+        userTicks: [],
+        hardRules: [0],
+        yOffset: 0,
+        xOffset: 0,
+        reverse: false,
+        simple: false,
+        noLabels: false,
+        pixelsPerTick: 100,
+        tickExtension: 0,
+        attr: {}
+    };
 
     function axis(g) {
-        var orientOffset = (a.orient() === 'right') ? -a.tickSize() : 0;
+        var orientOffset = (config.axes.orient() === 'right') ? -config.axes.tickSize() : 0;
 
-        g = g.append('g').attr('transform', 'translate(' + (xOffset + orientOffset) + ',' + yOffset + ')');
-        numberLabels.render(g, {
-            axes: a, lineHeight: lineHeight, hardRules: hardRules, extension: tickExtension
-        });
-        if (noLabels) {
+        g = g.append('g').attr('transform', 'translate(' + (config.xOffset + orientOffset) + ',' + config.yOffset + ')');
+        numberLabels.render(g, config);
+        if (config.noLabels) {
             g.selectAll('text').remove();
         }
-        themes.applyTheme(g, theme);
+        themes.applyTheme(g, config.theme);
     }
 
     axis.theme = function (themeUpdate) {
-        if (!arguments.length) return theme;
-        theme = themeUpdate;
+        if (!arguments.length) return config.theme;
+        config.theme = themeUpdate;
         return axis;
     };
 
     axis.tickExtension = function (int) { // extend the axis ticks to the right/ left a specified distance
-        if (!arguments.length) return tickExtension;
-        tickExtension = int;
+        if (!arguments.length) return config.tickExtension;
+        config.tickExtension = int;
         return axis;
     };
 
     axis.tickSize = function (int) {
-        if (!arguments.length) return a.tickSize();
-        a.tickSize(-int);
+        if (!arguments.length) return config.axes.tickSize();
+        config.axes.tickSize(-int);
         return axis;
     };
 
     axis.ticks = function (int) {
-        if (!arguments.length) return a.ticks();
+        if (!arguments.length) return config.axes.ticks();
         if (int.length > 0) {
-            userTicks = int;
+            config.userTicks = int;
         }
         return axis;
     };
 
     axis.orient = function (string) {
-        if (!arguments.length) return a.orient();
+        if (!arguments.length) return config.axes.orient();
         if (string) {
-            a.orient(string);
+            config.axes.orient(string);
         }
         return axis;
     };
 
     axis.reverse = function (bool) {
-        if (!arguments.length) return reverse;
-        reverse = bool;
-        if (reverse){
-            a.scale().domain(a.scale().domain().reverse());
+        if (!arguments.length) return config.reverse;
+        config.reverse = bool;
+        if (config.reverse){
+            config.axes.scale().domain(config.axes.scale().domain().reverse());
         }
         return axis;
     };
 
     axis.simple = function (bool) {
-        if (!arguments.length) return simple;
-        simple = bool;
+        if (!arguments.length) return config.simple;
+        config.simple = bool;
         return axis;
     };
 
     axis.pixelsPerTick = function (int) {
-        if (!arguments.length) return pixelsPerTick;
-        pixelsPerTick = int;
+        if (!arguments.length) return config.pixelsPerTick;
+        config.pixelsPerTick = int;
         return axis;
     };
 
     axis.scale = function (x) {
-        if (!arguments.length) return a.scale();
-        a.scale(x);
-        axis.reverse(reverse);
-        if (userTicks.length > 0) {
-            a.tickValues(userTicks);
+        if (!arguments.length) return config.axes.scale();
+        config.axes.scale(x);
+        axis.reverse(config.reverse);
+        if (config.userTicks.length > 0) {
+            config.axes.tickValues(config.userTicks);
         } else {
-            var customTicks = numberScales.customTicks(a.scale(), pixelsPerTick, hardRules, simple, reverse);
-            a.tickValues(customTicks);
+            var customTicks = numberScales.customTicks(config);
+            config.axes.tickValues(customTicks);
         }
-        reverse = false; //only reverse once, even if scale is called twice i.e. in redraw
+        config.reverse = false; //only reverse once, even if scale is called twice i.e. in redraw
         return axis;
     };
 
     axis.hardRules = function (int) { //this allows you to set which lines will be solid rather than dotted, by default it's just zero and the bottom of the chart
-        if (!arguments.length) return hardRules;
-        hardRules = int;
+        if (!arguments.length) return config.hardRules;
+        config.hardRules = int;
         return axis;
     };
 
     axis.yOffset = function (int) {
-        if (!arguments.length) return yOffset;
-        yOffset = int;
+        if (!arguments.length) return config.yOffset;
+        config.yOffset = int;
         return axis;
     };
 
     axis.xOffset = function (int) {
-        if (!arguments.length) return xOffset;
-        xOffset = int;
+        if (!arguments.length) return config.xOffset;
+        config.xOffset = int;
         return axis;
     };
 
     axis.tickFormat = function (format) {
-        if (!arguments.length) return a.tickFormat();
-        a.tickFormat(format);
+        if (!arguments.length) return config.axes.tickFormat();
+        config.axes.tickFormat(format);
         return axis;
     };
 
     axis.noLabels = function (bool) {
-        if (!arguments.length) return noLabels;
-        noLabels = bool;
+        if (!arguments.length) return config.noLabels;
+        config.noLabels = bool;
+        return axis;
+    };
+
+    axis.attrs = function (obj) {
+        if (!arguments.length) return config.attr;
+        if (typeof obj !== "undefined") config.attr = obj;
+        //for (var prop in config.attr){
+        //    if (axis[prop]) axis[prop](obj[prop]);
+        //}
         return axis;
     };
 

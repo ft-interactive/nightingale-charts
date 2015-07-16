@@ -8,6 +8,8 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
 	var data = formatData(model, series);
     var plot = new axes.Plot(model, createdAxes);
     var s = plotSVG.append('g').attr('class', 'series');
+    var attr = themes.check(model.theme, 'bars').attributes;
+    attr.fill = model.gradients[series.index] || model.colours[series.index];
 
     s.selectAll('rect')
         .data(data)
@@ -18,7 +20,8 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
         .attr('x',      function (d, i){ return plot.x(d.value, i); })
         .attr('y',      function (d, i){ return plot.y(d.key, seriesNumber); })
         .attr('height', function (d, i){ return plot.barHeight(d, i); })
-        .attr('width',  function (d, i){ return plot.barWidth(d.value, i); });
+        .attr('width',  function (d, i){ return plot.barWidth(d.value, i); })
+        .attr(attr);
 
     if (!model.stack) {
         // add N/As for null values
@@ -26,19 +29,19 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
             .data(data._nulls)
             .enter()
             .append('text')
-            .attr('class', 'null-label')
             .attr('x',  function (d, i) { return plot.x(d.value, i); })
             .attr('y',  function (d, i) {
                 var yPos = plot.y(d.key, seriesNumber);
                 var halfHeight = plot.barHeight(d, i) / 2;
                 return yPos + halfHeight;
             })
-            .attr('dx', '1em')
-            .attr('dy', '0.31em')
+            .attr({
+                'class': 'null-label',
+                'dx': '1em',
+                'dy': '0.31em'
+            }).attr(themes.check(model.theme, 'null-label').attributes)
             .text('n/a');
     }
-
-    themes.applyTheme(plotSVG, model.theme);
 
     if (!model.stack) {
         // make those labels who don't fit smaller
@@ -88,8 +91,9 @@ function barChart(g){
 			width: model.width,
 			xmlns: 'http://www.w3.org/2000/svg',
 			version: '1.2'
-		});
+		}).attr(themes.check(model.theme, 'svg').attributes);
 	metadata.create(svg, model);
+    themes.createDefinitions(svg, model);
 
 	var dressing = new Dressing(svg, model);
     dressing.addHeaderItem('title');

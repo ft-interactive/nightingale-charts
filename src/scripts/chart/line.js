@@ -5,22 +5,27 @@ var DataModel = require('../util/data.model.js');
 var metadata = require('../util/metadata.js');
 var Dressing = require('../dressing');
 var themes = require('../themes');
+var extend = require('util')._extend;
 
-function plotSeries(plotSVG, model, createdAxes, series) {
-    var data = formatData(model, series);
+function drawLine(plotSVG, data, attrs){
+    plotSVG.append('path').datum(data).attr(attrs);
+}
+
+function plotSeries(plotSVG, model, createdAxes, series, lineAttr, borderAttrs) {
     var plot = new axes.Plot(model, createdAxes);
     var line = d3.svg.line()
         .interpolate(interpolator.gappedLine)
         .x(function (d, i) { return plot.x(d.key, 0); })
         .y(function (d, i) { return plot.y(d.value, i);});
-
-    plotSVG.append('path')
-        .datum(data)
-        .attr('class', function (d){ return 'line '  + series.className + (d.value < 0 ? ' negative' : ' positive');})
-        .attr('stroke-width', model.lineStrokeWidth)
-        .attr('d', function (d) { return line(d); });
-
-    themes.applyTheme(plotSVG, model.theme);
+    var data = formatData(model, series);
+    lineAttr.d = function (d) { return line(d); };
+    lineAttr.class = 'line '  + series.className;
+    lineAttr.stroke = model.colours[series.index];
+    if (lineAttr.border){
+        borderAttrs.d = lineAttr.d;
+        drawLine(plotSVG, data, borderAttrs);
+    }
+    drawLine(plotSVG, data, lineAttr);
 }
 
 function formatData(model, series) {
@@ -48,7 +53,7 @@ function lineChart(g) {
             width: model.width,
             xmlns: 'http://www.w3.org/2000/svg',
             version: '1.2'
-        });
+        }).attr(themes.check(model.theme, 'svg').attributes);
     metadata.create(svg, model);
 
     var dressing = new Dressing(svg, model);
@@ -70,9 +75,16 @@ function lineChart(g) {
 
     var plotSVG = chartSVG.append('g').attr('class', 'plot');
     var i = model.y.series.length;
+    var lineAttr = extend(
+        themes.check(model.theme, 'lines').attributes,
+        {'stroke-width': model.lineStrokeWidth});
+    var borderAttrs = extend({}, lineAttr);
+    borderAttrs.class = 'line line__border';
+    borderAttrs['stroke-width'] =  lineAttr['stroke-width'] * 2;
+    borderAttrs.stroke = lineAttr.border;
 
     while (i--) {
-        plotSeries(plotSVG, model, creator, model.y.series[i], i);
+        plotSeries(plotSVG, model, creator, model.y.series[i], lineAttr, borderAttrs);
     }
 }
 

@@ -1,5 +1,4 @@
 var d3 = require('d3');
-var themes = require('../themes');
 var labels = require('../util/labels.js');
 var dates = require('../util/dates.js');
 var timeDiff = dates.timeDiff;
@@ -23,7 +22,8 @@ function categoryAxis() {
         labelWidth: 0,
         showDomain: false,
         dataType: 'categorical',
-        keepD3Style: true
+        keepD3Style: true,
+        attr: {}
     };
 
     function isVertical(){
@@ -132,6 +132,15 @@ function categoryAxis() {
         }
 
         config.axes = axes;
+        return render;
+    };
+
+    render.attrs = function (obj) {
+        if (!arguments.length) return config.attr;
+        if (typeof obj !== "undefined") config.attr = obj;
+        //for (var prop in config.attr){
+        //    if (render[prop]) render[prop](obj[prop]);
+        //}
         return render;
     };
 

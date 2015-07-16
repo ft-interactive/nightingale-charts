@@ -2,7 +2,6 @@ var d3 = require('d3');
 var labels = require('../util/labels.js');
 var dates = require('../util/dates.js');
 var dateScale = require('./date.scale.js');
-var themes = require('../themes');
 var timeDiff = dates.timeDiff;
 
 function dateAxis() {
@@ -22,7 +21,8 @@ function dateAxis() {
         xOffset: 0,
         labelWidth: 0,
         showDomain: false,
-        keepD3Style: false
+        keepD3Style: false,
+        attr: {}
     };
 
     function render(g) {
@@ -76,7 +76,7 @@ function dateAxis() {
 
     render.orient = function (string) {
         if (!arguments.length) return config.axes[0].orient();
-        if (!config.axes.length) return; //todo: why i sthis being called when axes dont exist
+        if (!config.axes.length) return render;
         config.axes[0].orient(string);
         return render;
     };
@@ -96,6 +96,15 @@ function dateAxis() {
     render.stack = function (bool) {
         if (!arguments.length) return config.stack;
         config.stack = bool;
+        return render;
+    };
+
+    render.attrs = function (obj) {
+        if (!arguments.length) return config.attr;
+        if (typeof obj !== "undefined") config.attr = obj;
+        //for (var prop in config.attr){
+        //    if (render[prop]) render[prop](obj[prop]);
+        //}
         return render;
     };
 

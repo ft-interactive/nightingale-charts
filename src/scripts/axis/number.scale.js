@@ -59,15 +59,16 @@ module.exports = {
         }
         return count;
     },
-    customTicks: function (scale, pixelsPerTick, hardRules, simple, reverse) {
+    customTicks: function (config){
         var customTicks = [];
-        if (simple) {
+        var scale = config.axes.scale();
+        if (config.simple) {
             customTicks = this.simpleTicks(scale);
         } else {
-            customTicks = this.detailedTicks(scale, pixelsPerTick);
+            customTicks = this.detailedTicks(scale, config.pixelsPerTick);
             var pos = scale.domain()[0] > scale.domain()[1] ? 1 : 0;
-            if (reverse) pos = 1 - pos;
-            hardRules.push(scale.domain()[pos]);
+            if (config.reverse) pos = 1 - pos;
+            config.hardRules.push(scale.domain()[pos]);
         }
         customTicks = this.removeDuplicateTicks(scale, customTicks);
         return customTicks;

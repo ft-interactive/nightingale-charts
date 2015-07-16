@@ -3,6 +3,7 @@ var lineThickness = require('../util/line-thickness.js');
 var ratios = require('../util/aspect-ratios.js');
 var seriesOptions = require('../util/series-options.js');
 var dateUtil = require('../util/dates.js');
+var themes = require('../themes');
 
 function isDate(d) {
     return d && d instanceof Date && !isNaN(+d);
@@ -21,7 +22,8 @@ function chartWidth(model) {
         return model.chartWidth;
     }
     var rightGutter = model.contentWidth < 260 ? 16 : 26;
-    return model.contentWidth - rightGutter;
+    if (model.paddingX) rightGutter = 0;
+    return model.contentWidth - rightGutter - model.chartPadding * 2;
 }
 
 function setExtents(model){
@@ -136,12 +138,12 @@ function dependentDomain(model, chartType){
 
 function chartHeight(model) {
     if (model.chartHeight) {
-        return model.chartHeight;
+        return model.chartHeight - model.paddingY*2;
     }
     var isNarrow = model.chartWidth < 220;
     var isWide = model.chartWidth > 400;
     var ratio = isNarrow ? 1.1 : (isWide ? ratios.commonRatios.widescreen : ratios.commonRatios.standard);
-    return ratios.heightFromWidth(model.chartWidth, ratio);
+    return ratios.heightFromWidth(model.chartWidth, ratio) - model.paddingY*2;
 }
 
 function verifyData(model) {
@@ -221,6 +223,8 @@ function Model(chartType, opts) {
         keyColumns: (chartType == 'column' ? 5 : 1),
         keyHover: false,
         height: undefined,
+        paddingX: 0,
+        paddingY: 0,
         tickSize: 5,
         width: 300,
         chartHeight: undefined,
@@ -241,6 +245,7 @@ function Model(chartType, opts) {
         lineThickness: undefined,
         yLabelWidth: 0,
         xLabelHeight: 0,
+        gradients: false,
         x: {
             series: '&'
         },
@@ -255,6 +260,9 @@ function Model(chartType, opts) {
         m[key] = opts[key];
     }
 
+    m.paddingX = themes.check(m.theme, 'svg').attributes['padding-x'] || 0;
+    m.paddingY = themes.check(m.theme, 'svg').attributes['padding-y'] || 0;
+    m.chartPadding = themes.check(m.theme, 'chart').attributes.padding || 0;
     m.x.series = seriesOptions.normalise(m.x.series);
     m.y.series = seriesOptions.normaliseY(m.y.series)
         .filter(function (d) {
@@ -265,8 +273,8 @@ function Model(chartType, opts) {
             d.className = classes[chartType][i];
             return d;
         });
-
-	m.contentWidth = m.width - (m.margin * 2);
+    m.colours = themes[m.theme].colours[m.chartType];
+	m.contentWidth = m.width - (m.margin * 2) - (m.paddingX * 2);
 	m.chartWidth = chartWidth(m);
 	m.chartHeight = chartHeight(m);
 	m.translate = translate(0);
@@ -278,6 +286,9 @@ function Model(chartType, opts) {
 	m.key = setKey(m);
     if (m.intraDay) {
         findOpenCloseTimes(m);
+    }
+    if (themes[m.theme].gradients && !m.stack){
+        m.gradients = themes[m.theme].gradients[m.chartType];
     }
     return m;
 }

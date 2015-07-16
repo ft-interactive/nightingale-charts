@@ -44,28 +44,32 @@ describe('number scale', function () {
 
         spyOn(numberScale, 'detailedTicks').and.callFake(function(){return [0, 20, 40, 60,80,0];});
         spyOn(numberScale, 'removeDuplicateTicks').and.callFake(function(){return [0, 20, 40, 60,80,0];});
-        var scale = {
-            ticks: function(){ return [0, 20, 40, 60]; },
-            domain: function() { return [70, 0]; }
+        var scale = function () {
+            return {
+                ticks: function(){ return [0, 20, 40, 60]; },
+                domain: function() { return [70, 0]; }
+            }
         };
-        var hardRule = [0];
-        numberScale.customTicks(scale, 100, hardRule, false);
-        expect(hardRule[0]).toBe(0);
-        expect(hardRule[1]).toBe(0);
+        var config = {axes:{scale:scale}, pixelsPerTick: 100, hardRules: [0], simple:false};
+        numberScale.customTicks(config);
+        expect(config.hardRules[0]).toBe(0);
+        expect(config.hardRules[1]).toBe(0);
     });
 
     it('hardRule to show zero + negative when some negative ', function(){
 
         spyOn(numberScale, 'detailedTicks').and.callFake(function(){return [-3, -2, -1, 0, 1, 2, 3, 4, -4];});
         spyOn(numberScale, 'removeDuplicateTicks').and.callFake(function(){return [-3.5,3.5, 4, -4];});
-        var scale = {
+        var scale = function () {
+            return {
             ticks: function(){ return [-3, -2, -1, 0, 1, 2, 3]; },
             domain: function() { return [-3.5,3.5]; }
+            }
         };
-        var hardRule = [0];
-        numberScale.customTicks(scale, 100, hardRule, false);
-        expect(hardRule[0]).toBe(0);
-        expect(hardRule[1]).toBe(-3.5);
+        var config = {axes:{scale:scale}, pixelsPerTick: 100, hardRules: [0], simple:false};
+        numberScale.customTicks(config);
+        expect(config.hardRules[0]).toBe(0);
+        expect(config.hardRules[1]).toBe(-3.5);
     });
 
 });
