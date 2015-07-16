@@ -187,6 +187,9 @@ function getChartData(i) {
     if (i === 10) {
         defaultData.height = 400;
         defaultData.width = 600;
+        defaultData.keyHover = true;
+        defaultData.keyWidth = 300;
+        defaultData.keyColumns = 1;
     }
     return defaultData;
 }

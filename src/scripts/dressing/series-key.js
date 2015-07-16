@@ -7,8 +7,8 @@ function lineKey(options) {
     options = options || {};
 
     var theme = options.theme;
-    var columns = options.columns || 1;
-    var width = options.width || 300;
+    var columns = options.keyColumns || 1;
+    var width = options.keyWidth || options.width || 300;
     var strokeLength = 15;
     var lineHeight = themes.check(options.theme, 'key-label').attributes['line-height'];
     var strokeWidth = lineThickness(options.lineThickness);
@@ -88,12 +88,7 @@ function lineKey(options) {
         g = g.append('g').attr('class', 'key');
         var keyItems = g.selectAll('g').data(g.datum().filter(filter))
             .enter()
-            .append('g').attr({
-                'class': 'key__item',
-                'transform': function (d, i) {
-                    return 'translate(0,' + (lineHeight + i * lineHeight) + ')';
-                }
-            });
+            .append('g').attr({ 'class': 'key__item' });
 
         addKey(keyItems);
         positionKey(keyItems);

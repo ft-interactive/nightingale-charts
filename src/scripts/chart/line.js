@@ -52,7 +52,9 @@ function lineChart(g) {
     metadata.create(svg, model);
 
     var dressing = new Dressing(svg, model);
-    dressing.addHeader();
+    dressing.addHeaderItem('title');
+    dressing.addHeaderItem('subtitle');
+    !model.keyHover && dressing.addSeriesKey();
     dressing.addFooter();
 
     var chartSVG = svg.append('g').attr('class', 'chart');
@@ -60,6 +62,8 @@ function lineChart(g) {
 
     var creator = new axes.Create(chartSVG, model);
     creator.createAxes({dependent:'number', independent: 'time'});
+
+    model.keyHover && dressing.addSeriesKey();
 
     var plotSVG = chartSVG.append('g').attr('class', 'plot');
     var i = model.y.series.length;
