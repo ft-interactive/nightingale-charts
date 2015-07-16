@@ -8,6 +8,9 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
 	var data = formatData(model, series);
     var plot = new axes.Plot(model, createdAxes);
     var s = plotSVG.append('g').attr('class', 'series');
+    var attr = themes.check(model.theme, 'columns').attributes;
+    attr.fill = model.gradients[series.index] || model.colours[series.index];
+
     s.selectAll('rect')
         .data(data)
         .enter()
@@ -17,8 +20,8 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
         .attr('x',      function (d, i){ return plot.x(d.key, seriesNumber); })
         .attr('y',      function (d, i){ return plot.y(d.value, i); })
         .attr('height', function (d, i){ return plot.columnHeight(d.value); })
-        .attr('width',  function (d, i){ return plot.columnWidth(d, i); });
-
+        .attr('width',  function (d, i){ return plot.columnWidth(d, i); })
+        .attr(attr);
 
     if (!model.stack) {
         // add N/As for null values
@@ -33,8 +36,6 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
             .attr('dx', function (d, i) { return plot.columnWidth(d, i) / 2;})
             .text('n/a');
     }
-
-    themes.applyTheme(plotSVG, model.theme);
 
     if (!model.stack) {
         // make those labels who don't fit smaller
@@ -75,41 +76,40 @@ function formatData(model, series) {
 }
 
 function columnChart(g){
-	'use strict';
-
-	var model = new DataModel('column', Object.create(g.data()[0]));
-	var svg = g.append('svg')
-		.attr({
+    var model = new DataModel('column', Object.create(g.data()[0]));
+    var svg = g.append('svg')
+        .attr({
             'id': model.id,
-			'class': 'graphic column-chart',
-			height: model.height,
-			width: model.width,
-			xmlns: 'http://www.w3.org/2000/svg',
-			version: '1.2'
-		});
-	metadata.create(svg, model);
+            'class': 'graphic column-chart',
+            height: model.height,
+            width: model.width,
+            xmlns: 'http://www.w3.org/2000/svg',
+            version: '1.2'
+        }).attr(themes.check(model.theme, 'svg').attributes);
+    metadata.create(svg, model);
+    themes.createDefinitions(svg, model);
 
-	var dressing = new Dressing(svg, model);
+    var dressing = new Dressing(svg, model);
     dressing.addHeaderItem('title');
     dressing.addHeaderItem('subtitle');
     !model.keyHover && dressing.addSeriesKey();
     dressing.addFooter();
 
-	var chartSVG = svg.append('g').attr('class', 'chart');
+    var chartSVG = svg.append('g').attr('class', 'chart');
     chartSVG.attr('transform', model.translate(model.chartPosition));
 
     var independent = (model.groupData || model.dataType === 'categorical') ? 'ordinal' : 'time';
-	var creator = new axes.Create(chartSVG, model);
+    var creator = new axes.Create(chartSVG, model);
     creator.createAxes({dependent:'number', independent: independent});
 
     model.keyHover && dressing.addSeriesKey();
 
-	var plotSVG = chartSVG.append('g').attr('class', 'plot');
+    var plotSVG = chartSVG.append('g').attr('class', 'plot');
     var i = 0;
 
-	for(i; i < model.y.series.length; i++){
-		plotSeries(plotSVG, model, creator, model.y.series[i], i);
-	}
+    for(i; i < model.y.series.length; i++){
+        plotSeries(plotSVG, model, creator, model.y.series[i], i);
+    }
 }
 
 module.exports = columnChart;

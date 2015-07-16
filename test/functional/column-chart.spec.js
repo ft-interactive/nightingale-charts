@@ -1,6 +1,3 @@
-require('../helper').loadAssets('column-chart');
-require('../fixtures/scripts/column-chart').init();
-
 describe('column-chart.js', function(){
 
     beforeEach(function(){
@@ -10,35 +7,35 @@ describe('column-chart.js', function(){
     });
 
     describe('has the key  ', function(){
-        var stackedColumnsL = document.querySelectorAll('.width600 svg')[8].querySelectorAll('.key__item');
-        var stackedColumnsS = document.querySelectorAll('.width300 svg')[8].querySelectorAll('.key__item');
-        var verticalColumnsS = document.querySelectorAll('.width300 svg')[18].querySelectorAll('.key__item');
 
         it('horizontal when all items fit', function() {
+            var stackedColumnsL = document.querySelectorAll('.width600 svg')[8].querySelectorAll('.key__item');
             expect(stackedColumnsL.length).toBe(5);
-            expect(stackedColumnsL[0].getAttribute('transform')).toContain(',16)');
-            expect(stackedColumnsL[1].getAttribute('transform')).toContain(',16)');
-            expect(stackedColumnsL[2].getAttribute('transform')).toContain(',16)');
-            expect(stackedColumnsL[3].getAttribute('transform')).toContain(',16)');
-            expect(stackedColumnsL[4].getAttribute('transform')).toContain(',16)');
+            expect(stackedColumnsL[0].getAttribute('transform')).toContain(',24)');
+            expect(stackedColumnsL[1].getAttribute('transform')).toContain(',24)');
+            expect(stackedColumnsL[2].getAttribute('transform')).toContain(',24)');
+            expect(stackedColumnsL[3].getAttribute('transform')).toContain(',24)');
+            expect(stackedColumnsL[4].getAttribute('transform')).toContain(',24)');
         });
 
         it('columns when only some items fit', function(){
+            var stackedColumnsS = document.querySelectorAll('.width300 svg')[8].querySelectorAll('.key__item');
             expect(stackedColumnsS.length).toBe(5);
-            expect(stackedColumnsS[0].getAttribute('transform')).toContain(',16)');
-            expect(stackedColumnsS[1].getAttribute('transform')).toContain(',16)');
-            expect(stackedColumnsS[2].getAttribute('transform')).toContain(',16)');
-            expect(stackedColumnsS[3].getAttribute('transform')).toContain(',32)');
-            expect(stackedColumnsS[4].getAttribute('transform')).toContain(',32)');
+            expect(stackedColumnsS[0].getAttribute('transform')).toContain(',24)');
+            expect(stackedColumnsS[1].getAttribute('transform')).toContain(',24)');
+            expect(stackedColumnsS[2].getAttribute('transform')).toContain(',24)');
+            expect(stackedColumnsS[3].getAttribute('transform')).toContain(',40)');
+            expect(stackedColumnsS[4].getAttribute('transform')).toContain(',40)');
         });
 
         it('vertical when not all items fit', function(){
+            var verticalColumnsS = document.querySelectorAll('.width300 svg')[18].querySelectorAll('.key__item');
             expect(verticalColumnsS.length).toBe(5);
-            expect(verticalColumnsS[0].getAttribute('transform')).toContain(',16)');
-            expect(verticalColumnsS[1].getAttribute('transform')).toContain(',32)');
-            expect(verticalColumnsS[2].getAttribute('transform')).toContain(',48)');
-            expect(verticalColumnsS[3].getAttribute('transform')).toContain(',64)');
-            expect(verticalColumnsS[4].getAttribute('transform')).toContain(',80)');
+            expect(verticalColumnsS[0].getAttribute('transform')).toContain(',24)');
+            expect(verticalColumnsS[1].getAttribute('transform')).toContain(',40)');
+            expect(verticalColumnsS[2].getAttribute('transform')).toContain(',56)');
+            expect(verticalColumnsS[3].getAttribute('transform')).toContain(',72)');
+            expect(verticalColumnsS[4].getAttribute('transform')).toContain(',88)');
         });
 
     });
@@ -166,49 +163,6 @@ describe('column-chart.js', function(){
             expect(columns.length).toBe(4);
         });
 
-        it('match d3 and >= 0', function(){
-            var cols = document.querySelectorAll('.width600 svg')[0].querySelectorAll('rect');
-            var max = 0;
-            var i = cols.length;
-
-            while(i--){
-                expect(cols[i].__data__.value).toBe(Number(cols[i].getAttribute('data-value')));
-                max = (cols[i].__data__.value > 0) ? cols[i].__data__.value : max;
-            }
-
-            expect(cols.length).toBe(4);
-            expect(max).toBeGreaterThan(0);
-        });
-
-        it('match d3 with some values < 0', function(){
-            var cols = document.querySelectorAll('.width600 svg')[1].querySelectorAll('rect');
-            var min = 0;
-            var i = cols.length;
-
-            while(i--){
-                expect(cols[i].__data__.value).toBe(Number(cols[i].getAttribute('data-value')));
-                min = (cols[i].__data__.value < 0) ? cols[i].__data__.value : min;
-            }
-
-            expect(cols.length).toBe(4);
-            expect(min).toBeLessThan(0);
-        });
-
-
-        it('match d3 with primary labels appearing as abbreviated months', function(){
-            var txt = document.querySelectorAll('.width600 svg')[5].querySelectorAll('g.x.axis .primary text');
-            var cols = document.querySelectorAll('.width600 svg')[5].querySelectorAll('rect');
-            var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            var i = txt.length;
-
-            while(i--){
-                expect(cols[i].__data__.value).toBe(Number(cols[i].getAttribute('data-value')));
-                expect(months.indexOf(txt[i].textContent)).toBeGreaterThan(-1);
-            }
-
-            expect(cols.length).toBe(4);
-        });
-
         xit('to display empty month columns even if date is missing', function(){
             var txt = document.querySelectorAll('.width600 svg')[2].querySelectorAll('g.x.axis .primary text');
 //todo: Months card is later!
@@ -279,7 +233,7 @@ describe('column-chart.js', function(){
 
             var plot = document.querySelectorAll('.width600 svg')[1].querySelector('.chart .plot rect');
             expect(plot.getAttribute('stroke-width')).toBe(null);
-            expect(plot.getAttribute('stroke')).toBe('none');
+            expect(plot.getAttribute('stroke')).toBe(null);
             expect(plot.getAttribute('fill')).toBeTruthy();
 
         });
@@ -288,7 +242,7 @@ describe('column-chart.js', function(){
 
             var plot = document.querySelectorAll('.width600 svg')[6].querySelector('.chart__key rect');
             expect(plot.getAttribute('stroke-width')).toBe(null);
-            expect(plot.getAttribute('stroke')).toBe('none');
+            expect(plot.getAttribute('stroke')).toBe(null);
             expect(plot.getAttribute('fill')).toBeTruthy();
 
         });

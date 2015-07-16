@@ -1,30 +1,30 @@
-require('../helper').loadAssets('category-axes');
 var d3 = require('d3');
-var catAxes = require('../fixtures/scripts/category-axes');
-catAxes.init();
 
 describe('category axis', function () {
 
+    var catAxes;
+
     beforeEach(function(){
         require('../helper').loadAssets('category-axes');
-        require('../fixtures/scripts/category-axes').init();
+        catAxes = require('../fixtures/scripts/category-axes');
+        catAxes.init();
     });
 
     describe('daily scale', function () {
-        var days = document.querySelectorAll('svg')[0];
-        var manyDays = document.querySelectorAll('svg')[1];
 
         it('shows all ticks', function () {
-            var tickss = days.querySelectorAll('.x.axis .primary .tick');
-            expect(tickss.length).toBe(catAxes.fixtures.days.length);
+            var days = document.querySelectorAll('svg')[0];
+            var manyDays = document.querySelectorAll('svg')[1];
+            var ticksS = days.querySelectorAll('.x.axis .primary .tick');
+            expect(ticksS.length).toBe(catAxes.fixtures.days.length);
             var fmt = function(d, str) {
                 str = d3.time.format('%e')(d);
                 return (str[0] === ' ') ? str.substring(1) : str;
             };
 
             var txt;
-            for (var i = 0; i < tickss.length; i++) {
-                txt = tickss[i].querySelector('text').textContent;
+            for (var i = 0; i < ticksS.length; i++) {
+                txt = ticksS[i].querySelector('text').textContent;
                 expect(txt).toBe(fmt(catAxes.fixtures.days[i].date));
             }
 
@@ -33,6 +33,8 @@ describe('category axis', function () {
         });
 
         it('shows one month for the small time period', function () {
+            var days = document.querySelectorAll('svg')[0];
+            var manyDays = document.querySelectorAll('svg')[1];
             var labels = days.querySelectorAll('.x.axis .primary .tick text');
             expect(labels.length).toBe(9);
         });
@@ -40,10 +42,11 @@ describe('category axis', function () {
     });
 
     describe('weekly scale', function() {
-        var weeks = document.querySelectorAll('svg')[2];
-        var manyWeeks = document.querySelectorAll('svg')[3];
 
         it('shows all ticks', function() {
+            var weeks = document.querySelectorAll('svg')[2];
+            var manyWeeks = document.querySelectorAll('svg')[3];
+
             var xs = weeks.querySelector('.x.axis');
             var tickss = xs.querySelectorAll('.primary .tick');
             expect(tickss.length).toBe(catAxes.fixtures.weeks.length);
@@ -54,6 +57,9 @@ describe('category axis', function () {
         });
 
         it('shows three months for the small time period', function() {
+            var weeks = document.querySelectorAll('svg')[2];
+            var manyWeeks = document.querySelectorAll('svg')[3];
+
             var labels = weeks.querySelectorAll('.x.axis .primary .tick text');
             expect(labels.length).toBe(3);
             expect(labels[0].textContent).toBe('May');
@@ -64,10 +70,10 @@ describe('category axis', function () {
 
 
     describe('monthly scale', function () {
-        var months = document.querySelectorAll('svg')[4];
-        var manyMonths = document.querySelectorAll('svg')[5];
 
         it('shows all months for a small time period ', function () {
+            var months = document.querySelectorAll('svg')[4];
+            var manyMonths = document.querySelectorAll('svg')[5];
             var x = months.querySelector('.x.axis');
             var ticks = x.querySelectorAll('.primary .tick');
             var labels = x.querySelectorAll('.primary .tick text');
@@ -86,6 +92,8 @@ describe('category axis', function () {
         });
 
         it('extends ticks when months labels are removed', function(){
+            var months = document.querySelectorAll('svg')[4];
+            var manyMonths = document.querySelectorAll('svg')[5];
             var x = manyMonths.querySelector('.x.axis');
             var ticks = x.querySelectorAll('.primary .tick line');
             var labels = x.querySelectorAll('.primary .tick text');
@@ -112,10 +120,10 @@ describe('category axis', function () {
     });
 
     describe('quarterly scale', function () {
-        var quarters = document.querySelectorAll('svg')[6];
-        var manyQuarters = document.querySelectorAll('svg')[7];
 
         it('shows all quarters for a small time period ', function () {
+            var quarters = document.querySelectorAll('svg')[6];
+            var manyQuarters = document.querySelectorAll('svg')[7];
             var x = quarters.querySelector('.x.axis');
             var ticks = x.querySelectorAll('.primary .tick');
             var labels = x.querySelectorAll('.primary .tick text');
@@ -129,6 +137,8 @@ describe('category axis', function () {
         });
 
         it('extends ticks when quarter labels are removed', function(){
+            var quarters = document.querySelectorAll('svg')[6];
+            var manyQuarters = document.querySelectorAll('svg')[7];
             var x = manyQuarters.querySelector('.x.axis');
             var ticks = x.querySelectorAll('.primary .tick line');
             var labels = x.querySelectorAll('.primary .tick text');
@@ -151,10 +161,10 @@ describe('category axis', function () {
     });
 
     describe('yearly scale', function () {
-        var years = document.querySelectorAll('svg')[8];
-        var manyYears = document.querySelectorAll('svg')[9];
 
         it('shows all years for a small time period ', function () {
+            var years = document.querySelectorAll('svg')[8];
+            var manyYears = document.querySelectorAll('svg')[9];
             var x = years.querySelector('.x.axis');
             var ticks = x.querySelectorAll('.primary .tick');
             var labels = x.querySelectorAll('.primary .tick text');

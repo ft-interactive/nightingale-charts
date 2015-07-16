@@ -5,10 +5,11 @@
     <title>lines</title>
 </head>
 <body class="ft">
-<script src=scripts/vendor.js></script>
-<script src=scripts/line-chart.js></script>
-<script>
-    require('line-chart').init()
-</script>
+    {{ > _partials/top.html }}
+    <script src=scripts/vendor.js></script>
+    <script src=scripts/line-chart.js></script>
+    <script>
+        require('line-chart').init()
+    </script>
 </body>
 </html>

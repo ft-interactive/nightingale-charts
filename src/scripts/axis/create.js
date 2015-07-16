@@ -5,6 +5,7 @@ var axis = {
     number: require('./number.js')
 };
 var intraDay = require('../scales/intra-day');
+var themes = require('../themes');
 
 
 var PADDING = 4;
@@ -88,7 +89,15 @@ function Create(svg, model) {
     this.model = model;
     this.chart = svg;
     this.margin = 0.2;
+    this.attrs = {};
 }
+
+Create.prototype.getAttr = function(id){
+    if (!this.attrs[id]){
+        this.attrs[id] = themes.check(this.model.theme, id).attributes;
+    }
+    return this.attrs[id];
+};
 
 Create.prototype.hideTicks = function () {
     var tickCount = this.chart.selectAll('.x.axis .primary line')[0].length;
@@ -104,9 +113,14 @@ Create.prototype.configureDependentScale = function (model) {
         .theme(model.theme)
         .simple(model.simpleValue)
         .orient(model.dependentAxisOrient)
-        .reverse(model.y.reverse);
+        .reverse(model.y.reverse)
+        .attrs(this.getAttr('axis-text'));
 
     if (isVertical(model.dependentAxisOrient)) {
+        //todo: remove hack?
+        if(model.dependentAxisOrient === 'left' && model.chartType === 'line'){
+            model.yLabelWidth = Math.abs(getWidth(this.chart) - model.chartWidth);
+        }
         this.dependentAxis.tickSize(model.plotWidth)
             .tickExtension(model.yLabelWidth);
     } else {
@@ -127,7 +141,8 @@ Create.prototype.configureIndependentScale = function (model) {
         .theme(model.theme)
         .simple(model.simpleDate)
         .tickSize(model.tickSize)
-        .orient(model.independentAxisOrient);
+        .orient(model.independentAxisOrient)
+        .attrs(this.getAttr('axis-text'));
     if (!isVertical(model.independentAxisOrient)) {
         this.independentAxis.yOffset(model.plotHeight);	//position the axis at the bottom of the chart
     }

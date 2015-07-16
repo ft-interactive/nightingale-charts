@@ -28,7 +28,7 @@
         { key: 'green machine', value: 1.03, value2:  1.4},
         { key: 'purple', value:     1.348, value2:  1.9}
     ];
-    d3.select('#basic').append('div').data([{
+    var chartBasic = d3.select('#basic').append('div').data([{
         comment: 'Column chart',
         title: 'Columns: ',
         subtitle: 'Categories, with a horizontal independent axis',
@@ -40,7 +40,12 @@
         data: data,
         stack:true,
         dataType : 'categorical'
-    }]).call(oCharts.chart.column);
+    }]);
+
+    oCharts.addFont('BentonSans')
+        .then(function(){
+            chartBasic.call(oCharts.chart.column)
+        });
 </script>
 
 
@@ -55,23 +60,63 @@
         { key: 'green machine', value: 1.03, value2:  1.4},
         { key: 'purple', value:     1.348, value2:  1.9}
     ];
-    d3.select('#set-dimensions').append('div').data([{
+    var chartVideo = d3.select('#set-dimensions').append('div').data([{
         height: 338,
         width: 600,
+        theme: 'video',
         comment: 'Column chart',
         title: 'Video Ratio: ',
         subtitle: '16:9',
         source: 'with a source',
         footnote: 'my footnote',
-        dependentAxisOrient: 'left',
+        dependentAxisOrient: 'right',
         independentAxisOrient: 'bottom',
         x: { series: 'key' },
         y: { series: ['value', 'value2'] },
         data: data,
         dataType : 'categorical'
-    }]).call(oCharts.chart.column);
+    }]);
+
+    oCharts.addFont('MetricWebSemiBold')
+        .then(function(){
+            chartVideo.call(oCharts.chart.column)
+        });
 </script>
 
+
+<div id="print" class="demo">
+</div>
+<script>
+    var oCharts = require('o-charts');
+    var d3 = require('d3');
+    var data = [
+        { key: 'red', value:      0.583, value2:      1.583},
+        { key: 'blue', value: 0.12, value2:  2},
+        { key: 'green machine', value: 1.03, value2:  1.4},
+        { key: 'purple', value:     1.348, value2:  1.9}
+    ];
+    var chartPrint = d3.select('#print').append('div').data([{
+        height: 245,
+        width: 200,
+        theme: 'print',
+        comment: 'Column chart',
+        title: 'Video Ratio: ',
+        subtitle: '16:9',
+        source: 'with a source',
+        footnote: 'my footnote',
+        dependentAxisOrient: 'right',
+        independentAxisOrient: 'bottom',
+        x: { series: 'key' },
+        y: { series: ['value', 'value2'] },
+        data: data,
+        dataType : 'categorical'
+    }]);
+
+    oCharts.addFont(['MetricWeb','MetricWebSemiBold'])
+        .then(function(){
+            chartPrint.call(oCharts.chart.column)
+        });
+</script>
 
 </body>
 </html>

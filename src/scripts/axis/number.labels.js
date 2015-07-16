@@ -12,12 +12,12 @@ module.exports = {
             g.selectAll('text').attr('transform', 'translate( ' + textWidth + ', ' + -(lineHeight / 2) + ' )');
         }
     },
-    extendAxis: function (g, axes, extension) {
+    extendAxis: function (g, axes, tickExtension) {
         var rules = g.selectAll('line');
         if (axes.orient() == 'right') {
-            rules.attr('x1', extension);
+            rules.attr('x1', tickExtension);
         } else {
-            rules.attr('x1', -extension);
+            rules.attr('x1', -tickExtension);
         }
     },
     textWidth: function (g, orient) {
@@ -51,11 +51,11 @@ module.exports = {
             .append('g')
             .attr('class', 'primary')
             .call(config.axes);
-
+        g.selectAll('text').attr(config.attr);
         this.removeDecimals(g);
         this.arrangeTicks(g, config.axes, config.lineHeight, config.hardRules);
         if (this.isVertical(config.axes)) {
-            this.extendAxis(g, config.axes, config.extension);
+            this.extendAxis(g, config.axes, config.tickExtension);
         }
     }
 

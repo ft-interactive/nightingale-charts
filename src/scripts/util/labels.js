@@ -32,7 +32,7 @@ module.exports = {
         });
 
         //remove text-anchor attribute from year positions
-        g.selectAll('.x.axis .primary text').attr({
+        g.selectAll('.x.axis .primary text').attr(config.attr).attr({
             x: null,
             y: null,
             dy: 15 + config.tickSize

@@ -1,5 +1,5 @@
 var d3 = require('d3');
-var colours = require('../../../src/scripts/themes/colours');
+var colours = require('../../../src/scripts/themes/ft').theme.colours;
 
 
 module.exports = {
@@ -9,7 +9,7 @@ module.exports = {
     var views = d3.select('#views');
 
     var areaSwatches = views.selectAll('div.area-colour-swatch')
-      .data(colours.area)
+      .data(colours.bar)
 
     areaSwatches.enter()
       .append('div')

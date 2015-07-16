@@ -31,10 +31,9 @@
   "author": "tom pearson",
   "license": "ISC",
   "devDependencies": {
+    "brfs": "^1.4.0",
     "browserify-istanbul": "^0.2.1",
     "jshint": "^2.6.3",
-    "phantomcss": "^0.10.2",
-    "slug": "^0.9.1",
     "karma": "^0.13.1",
     "karma-browserify": "^4.2.1",
     "karma-chrome-launcher": "^0.2.0",
@@ -43,10 +42,17 @@
     "karma-jasmine": "^0.3.3",
     "karma-mocha-reporter": "^1.0.2",
     "karma-phantomjs-launcher": "^0.2.0",
+    "phantomcss": "^0.10.2",
+    "slug": "^0.9.1",
     "web-caddy": "^2.1.1"
   },
   "browser": {
     "d3": "./bower_components/d3/d3.js"
+  },
+  "browserify": {
+    "transform": [
+      "brfs"
+    ]
   },
   "browserify-shim": {}
 }

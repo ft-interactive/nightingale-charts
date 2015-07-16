@@ -16,6 +16,8 @@ module.exports = {
 
     scale: require('./scales/index.js'),
 
+    addFont: require('./fonts'),
+
     version: require('./util/version')
 
 };

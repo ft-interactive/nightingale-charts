@@ -25,7 +25,6 @@
             subtitle: 'Categories, with a vertical independent axis',
             dependentAxisOrient: 'bottom',
             independentAxisOrient: 'left',
-            hideSource: true,
             x: { series: 'key' },
             y: { series: ['value', 'value2'] },
             data: [
@@ -37,6 +36,71 @@
             stack:true,
             dataType : 'categorical'
         }]).call(oCharts.chart.bar);
+    </script>
+
+
+    <div id="video"></div>
+	<script>
+        var oCharts = require('o-charts');
+        var d3 = require('d3');
+        var videoChart = d3.select('#video').append('div').data([{
+            height: 338,
+            width: 600,
+            theme: 'video',
+            comment: 'Bar chart',
+            title: 'Bars: ',
+            keyColumns: 2,
+            subtitle: 'Video themes categories, with a vertical independent axis, and a comment that goes on to two lines. woah!',
+            dependentAxisOrient: 'bottom',
+            independentAxisOrient: 'left',
+            x: { series: 'key' },
+            y: { series: ['value', 'value2'] },
+            data: [
+                { key: 'red', value:      0.583, value2:      1.583},
+                { key: 'blue', value: 0.12, value2:  2},
+                { key: 'green machine', value: 1.03, value2:  1.4},
+                { key: 'purple', value:     1.348, value2:  1.9}
+            ],
+            stack:true,
+            dataType : 'categorical'
+        }]);
+
+        oCharts.addFont(['MetricWebSemiBold'])
+            .then(function(){
+                videoChart.call(oCharts.chart.bar)
+            });
+    </script>
+
+    <div id="print"></div>
+	<script>
+        var oCharts = require('o-charts');
+        var d3 = require('d3');
+        var printChart = d3.select('#video').append('div').data([{
+            height: 245,
+            width: 200,
+            theme: 'print',
+            comment: 'Bar chart',
+            title: 'Bars: ',
+            keyColumns: 2,
+            subtitle: 'Print themes categories, with a vertical independent axis, and a comment that goes on to two lines. woah!',
+            dependentAxisOrient: 'bottom',
+            independentAxisOrient: 'left',
+            x: { series: 'key' },
+            y: { series: ['value', 'value2'] },
+            data: [
+                { key: 'red', value:      0.583, value2:      1.583},
+                { key: 'blue', value: 0.12, value2:  2},
+                { key: 'green machine', value: 1.03, value2:  1.4},
+                { key: 'purple', value:     1.348, value2:  1.9}
+            ],
+            stack:true,
+            dataType : 'categorical'
+        }]);
+
+        oCharts.addFont(['MetricWeb','MetricWebSemiBold'])
+            .then(function(){
+                printChart.call(oCharts.chart.bar)
+            });
     </script>
 
 

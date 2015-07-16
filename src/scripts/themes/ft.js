@@ -1,12 +1,29 @@
-var colours = require('./colours');
+var colours = {
+    line: [
+        '#af516c', '#ecafaf', '#d7706c', '#76acb8', '#7fd8f5', '#3d7ab3', '#b8b1a9'
+    ],
+    column: [
+        '#bb6d82', '#ecafaf', '#d7706c', '#cb9f8c', '#b07979', '#ccc2c2', '#8f7d95', '#b8b1a9'
+    ],
+    bar: [
+        '#bb6d82', '#ecafaf', '#d7706c', '#cb9f8c', '#b07979', '#ccc2c2', '#8f7d95', '#b8b1a9'
+    ],
+    accent: '#9e2f50'
+};
 
-module.exports = [
+module.exports.theme = [
     //general
+    {
+        'id': 'svg',
+        'selector': 'svg',
+        'attributes': {
+            'background': '#fff1e0'
+        }
+    },
     {
         'selector': 'svg text',
         'attributes': {
             'font-family': 'BentonSans, sans-serif',
-            'fill': '#a7a59b',
             'stroke': 'none'
         }
     },
@@ -37,17 +54,13 @@ module.exports = [
             'stroke-dasharray': 'none'
         }
     }, {
-        'selector': '.axis',
-        'attributes': {
-            'font-family': 'BentonSans, sans-serif',
-            'fill': 'none',
-            'stroke': 'rgba(0, 0, 0, 0.5)'
-        }
-    }, {
+        'id': 'axis-text',
         'selector': '.axis text',
         'attributes': {
+            'font-size': 12,
+            'font-family': 'BentonSans, sans-serif',
             'stroke': 'none',
-            'fill': 'rgba(0, 0, 0, 0.5)'
+            'fill': '#757470'
         }
     }, {
         'selector': '.x.axis.axis--category text',
@@ -69,98 +82,44 @@ module.exports = [
         'attributes': {
             'stroke': '#757470'
         }
+    }, {
+        'selector': '.axis .secondary text',
+        'attributes': {
+            'font-size': 10,
+            'fill': '#757470'
+        }
     },
     //lines
     {
+        'id': 'lines',
         'selector': 'path.line, line.key__line',
         'attributes': {
             'fill': 'none',
             'stroke-linejoin': 'round',
             'stroke-linecap': 'round'
         }
-    }, {
-        'selector': '.line--series1',
-        'attributes': {
-            'stroke': colours.line[0]
-        }
-    }, {
-        'selector': '.line--series2',
-        'attributes': {
-            'stroke': colours.line[1]
-        }
-    }, {
-        'selector': '.line--series3',
-        'attributes': {
-            'stroke': colours.line[2]
-        }
-    }, {
-        'selector': '.line--series4',
-        'attributes': {
-            'stroke': colours.line[3]
-        }
-    }, {
-        'selector': '.line--series5',
-        'attributes': {
-            'stroke': colours.line[4]
-        }
-    }, {
-        'selector': '.line--series6',
-        'attributes': {
-            'stroke': colours.line[5]
-        }
-    }, {
-        'selector': '.line--series7',
-        'attributes': {
-            'stroke': colours.line[6]
-        }
     },
-    //Columns
+    ////Columns
+    //{   'id': 'columns',
+    //    'selector': '.column, .key__column',
+    //    'attributes': {
+    //        'stroke': 'none'
+    //    }
+    //},
+    ////Bars
+    //{   'id': 'bars',
+    //    'selector': '.column, .key__column',
+    //    'attributes': {
+    //        'stroke': 'none'
+    //    }
+    //},
     {
-        'selector': '.column, .key__column, .bar, .key__bar',
-        'attributes': {
-            'stroke': 'none'
-        }
-    }, {
-        'selector': '.column--series1, .bar--series1',
-        'attributes': {
-            'fill': colours.area[0]
-        }
-    }, {
-        'selector': '.column--series2, .bar--series2',
-        'attributes': {
-            'fill': colours.area[1]
-        }
-    }, {
-        'selector': '.column--series3, .bar--series3',
-        'attributes': {
-            'fill': colours.area[2]
-        }
-    }, {
-        'selector': '.column--series4, .bar--series4',
-        'attributes': {
-            'fill': colours.area[3]
-        }
-    }, {
-        'selector': '.column--series5, .bar--series5',
-        'attributes': {
-            'fill': colours.area[4]
-        }
-    }, {
-        'selector': '.column--series6, .bar--series6',
-        'attributes': {
-            'fill': colours.area[5]
-        }
-    }, {
-        'selector': '.column--series7, .bar--series7',
-        'attributes': {
-            'fill': colours.area[6]
-        }
-    }, {
         'selector': 'path.accent, line.accent, rect.accent',
         'attributes': {
             'stroke': colours.accent
         }
     }, {
+        'id': 'null-label',
         'selector': '.series text.null-label',
         'attributes': {
             'text-anchor': 'middle',
@@ -171,7 +130,7 @@ module.exports = [
 
     //text
     {   'id': 'chart-title',
-        'selector': '.chart-title text, .chart-title tspan',
+        'selector': '.chart-title text',
         'attributes': {
             'font-family': 'BentonSans, sans-serif',
             'font-size': 18,
@@ -179,23 +138,24 @@ module.exports = [
         }
     },
     {   'id': 'chart-subtitle',
-        'selector': '.chart-subtitle text, .chart-subtitle tspan',
+        'selector': '.chart-subtitle text',
         'attributes': {
             'font-family': 'BentonSans, sans-serif',
             'font-size': 12,
             'fill': 'rgba(0, 0, 0, 0.5)'
         }
     },
-    {   'id': 'dressing-source',
-        'selector': '.chart-source text, .chart-source tspan',
+    {   'id': 'chart-source',
+        'selector': '.chart-source text',
         'attributes': {
             'font-family': 'BentonSans, sans-serif',
             'font-size': 10,
+            'line-height': 12,
             'fill': 'rgba(0, 0, 0, 0.5)'
         }
     },
-    {   'id': 'dressing-footnote',
-        'selector': '.chart-footnote text, .chart-footnote tspan',
+    {   'id': 'chart-footnote',
+        'selector': '.chart-footnote text',
         'attributes': {
             'font-family': 'BentonSans, sans-serif',
             'font-size': 12,
@@ -203,25 +163,15 @@ module.exports = [
             'fill': 'rgba(0, 0, 0, 0.5)'
         }
     },
-    {   'id': 'key-label',
-        'selector': 'text.key__label',
+    {   'id': 'key',
+        'selector': '.key',
         'attributes': {
             'font-family': 'BentonSans, sans-serif',
             'font-size': 12,
             'line-height': 16,
-            'fill': 'rgba(0, 0, 0, 0.5)'
-        }
-    }, {
-        'selector': '.primary .tick text',
-        'attributes': {
-            'font-size': 12,
-            'fill': '#757470'
-        }
-    }, {
-        'selector': '.secondary .tick text',
-        'attributes': {
-            'font-size': 10,
-            'fill': '#757470'
+            'fill': 'rgba(0, 0, 0, 0.5)',
+            'padding-y': 8
         }
     }
 ];
+module.exports.theme.colours = colours;

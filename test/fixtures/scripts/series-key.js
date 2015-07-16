@@ -26,22 +26,39 @@ module.exports = {
         var lineKey = oCharts.dressing.seriesKey({chartType: 'line'})
             .width(100)
             .lineHeight(19);
+        d3.select('svg#line')
+            .attr('width',600)
+            .attr('height',150)
+            .datum(lineData)
+            .call(lineKey);
+
+        var lineVideoKey = oCharts.dressing.seriesKey({chartType: 'line', theme:'video'})
+            .width(100)
+            .lineHeight(19);
+        d3.select('svg#lineVideo')
+            .attr('width',600)
+            .attr('height',150)
+            .datum(lineData)
+            .call(lineVideoKey);
+
 
         var columnKey = oCharts.dressing.seriesKey({chartType: 'column'})
             .width(100)
             .lineHeight(19);
-
-        d3.select('svg#line')
-            .attr('width',600)
-            .attr('height',200)
-            .datum(lineData)
-            .call(lineKey);
-
         d3.select('svg#column')
             .attr('width',600)
-            .attr('height',200)
+            .attr('height',150)
             .datum(columnData)
             .call(columnKey);
+
+        var columnVideoKey = oCharts.dressing.seriesKey({chartType: 'column', theme:'video'})
+            .width(100)
+            .lineHeight(19);
+        d3.select('svg#columnVideo')
+            .attr('width',600)
+            .attr('height',150)
+            .datum(columnData)
+            .call(columnVideoKey);
 
     }
 };

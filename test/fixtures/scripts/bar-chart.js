@@ -267,5 +267,27 @@ module.exports = {
                     .data([data]).call(oCharts.chart.bar);
             });
         });
+
+        d3.select('#video').append('div').data([{
+            height: 338,
+            width: 600,
+            theme: 'video',
+            comment: 'Bar chart',
+            title: 'Bars: ',
+            subtitle: 'Video themes categories, with a vertical independent axis, and a comment that goes on to two lines. woah!',
+            dependentAxisOrient: 'bottom',
+            independentAxisOrient: 'left',
+            keyColumns: 2,
+            x: { series: 'key' },
+            y: { series: ['value', 'value2'] },
+            data: [
+                { key: 'red', value:      0.583, value2:      1.583},
+                { key: 'blue', value: 0.12, value2:  2},
+                { key: 'green machine', value: 1.03, value2:  1.4},
+                { key: 'purple', value:     1.348, value2:  1.9}
+            ],
+            stack:true,
+            dataType : 'categorical'
+        }]).call(oCharts.chart.bar);
     }
 };

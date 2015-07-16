@@ -14,7 +14,7 @@ module.exports = {
         release: ['git', 'gh-pages']
     },
     browserify: {
-        insertGlobals: false,
+        insertGlobals: true,
         detectGlobals: false,
         noParse: [
             './bower_components/d3/d3.js'
