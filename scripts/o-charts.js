@@ -9504,7 +9504,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
   this.d3 = d3;
 }();
 },{}],2:[function(require,module,exports){
-module.exports={"version":"0.5.5"}
+module.exports={"version":"0.5.6"}
 
 },{}],3:[function(require,module,exports){
 var d3 = require('d3');
@@ -9649,13 +9649,15 @@ function categoryAxis() {
 
 module.exports = categoryAxis;
 
-},{"../themes":24,"../util/dates.js":28,"../util/labels.js":29,"d3":1}],4:[function(require,module,exports){
+},{"../themes":29,"../util/dates.js":33,"../util/labels.js":34,"d3":1}],4:[function(require,module,exports){
 var d3 = require('d3');
 var axis = {
     category: require('./category.js'),
     date: require('./date.js'),
     number: require('./number.js')
 };
+var intraDay = require('../scales/intra-day');
+
 
 var PADDING = 4;
 
@@ -9683,6 +9685,13 @@ function ordinalScale(model, options, orientation) {
 function timeScale(model, options, orientation) {
     var range = getRange(model, orientation);
     return d3.time.scale()
+        .domain(model.independentDomain)
+        .range(range);
+}
+
+function intraDayScale(model, options, orientation) {
+    var range = getRange(model, orientation);
+    return intraDay(model.open, model.close)
         .domain(model.independentDomain)
         .range(range);
 }
@@ -9721,6 +9730,13 @@ function setChartPosition(g, model){
 }
 
 function Create(svg, model) {
+    if (!model.independentAxisOrient) {
+        throw new Error("No independent axis orientation {left, right, top, bottom}");
+    }
+    if (!model.dependentAxisOrient) {
+        throw new Error("No dependent axis orientation {left, right, top, bottom}");
+    }
+
     this.model = model;
     this.chart = svg;
     this.margin = 0.2;
@@ -9793,6 +9809,9 @@ Create.prototype.independentScale = function (scale) {
     if(scale == 'ordinal'){
         this.independentAxisScale = ordinalScale(model, this, model.independentAxisOrient);
         this.independentAxis = axis.category().dataType(model.dataType);
+    } else if (model.intraDay) {
+        this.independentAxisScale = intraDayScale(model, this, model.independentAxisOrient);
+        this.independentAxis = axis.date();
     } else {
         this.independentAxisScale = timeScale(model, this, model.independentAxisOrient);
         this.independentAxis = axis.date();
@@ -9833,7 +9852,7 @@ Create.prototype.createAxes = function (axesSpec) {
 
 module.exports = Create;
 
-},{"./category.js":3,"./date.js":5,"./number.js":8,"d3":1}],5:[function(require,module,exports){
+},{"../scales/intra-day":26,"./category.js":3,"./date.js":5,"./number.js":8,"d3":1}],5:[function(require,module,exports){
 var d3 = require('d3');
 var labels = require('../util/labels.js');
 var dates = require('../util/dates.js');
@@ -9959,7 +9978,7 @@ function dateAxis() {
 
 module.exports = dateAxis;
 
-},{"../themes":24,"../util/dates.js":28,"../util/labels.js":29,"./date.scale.js":6,"d3":1}],6:[function(require,module,exports){
+},{"../themes":29,"../util/dates.js":33,"../util/labels.js":34,"./date.scale.js":6,"d3":1}],6:[function(require,module,exports){
 var d3 = require('d3');
 var utils = require('../util/dates.js');
 
@@ -10038,7 +10057,7 @@ module.exports = {
     }
 };
 
-},{"../util/dates.js":28,"d3":1}],7:[function(require,module,exports){
+},{"../util/dates.js":33,"d3":1}],7:[function(require,module,exports){
 module.exports = {
     Create: require('./create.js'),
     Plot: require('./plot.js'),
@@ -10191,7 +10210,7 @@ function numericAxis() {
 
 module.exports = numericAxis;
 
-},{"../themes":24,"./number.labels":9,"./number.scale":10,"d3":1}],9:[function(require,module,exports){
+},{"../themes":29,"./number.labels":9,"./number.scale":10,"d3":1}],9:[function(require,module,exports){
 module.exports = {
 
     isVertical: function (axis) {
@@ -10555,7 +10574,7 @@ function barChart(g){
 
 module.exports = barChart;
 
-},{"../axis":7,"../dressing":18,"../themes":24,"../util/data.model.js":27,"../util/metadata.js":32}],13:[function(require,module,exports){
+},{"../axis":7,"../dressing":18,"../themes":29,"../util/data.model.js":32,"../util/metadata.js":37}],13:[function(require,module,exports){
 //var d3 = require('d3');
 
 function blankChart() {
@@ -10744,7 +10763,7 @@ function columnChart(g){
 
 module.exports = columnChart;
 
-},{"../axis":7,"../dressing":18,"../themes":24,"../util/data.model.js":27,"../util/metadata.js":32}],15:[function(require,module,exports){
+},{"../axis":7,"../dressing":18,"../themes":29,"../util/data.model.js":32,"../util/metadata.js":37}],15:[function(require,module,exports){
 module.exports = {
     line: require('./line.js'),
     blank: require('./blank.js'),
@@ -10817,7 +10836,10 @@ function lineChart(g) {
     chartSVG.attr('transform', model.translate(model.chartPosition));
 
     var creator = new axes.Create(chartSVG, model);
-    creator.createAxes({dependent:'number', independent: 'time'});
+    creator.createAxes({
+        dependent:'number',
+        independent: 'time'
+    });
 
     model.keyHover && dressing.addSeriesKey();
 
@@ -10831,7 +10853,7 @@ function lineChart(g) {
 
 module.exports = lineChart;
 
-},{"../axis":7,"../dressing":18,"../themes":24,"../util/data.model.js":27,"../util/line-interpolators.js":30,"../util/metadata.js":32,"d3":1}],17:[function(require,module,exports){
+},{"../axis":7,"../dressing":18,"../themes":29,"../util/data.model.js":32,"../util/line-interpolators.js":35,"../util/metadata.js":37,"d3":1}],17:[function(require,module,exports){
 //var d3 = require('d3');
 
 function pieChart() {
@@ -11057,7 +11079,7 @@ Dressing.prototype.setChartPosition = function () {
 
 module.exports = Dressing;
 
-},{"../themes":24,"./logo.js":19,"./series-key.js":20,"./text-area.js":21}],19:[function(require,module,exports){
+},{"../themes":29,"./logo.js":19,"./series-key.js":20,"./text-area.js":21}],19:[function(require,module,exports){
 //the ft logo there's probably an easier ay to do this...
 //var d3 = require('d3');
 
@@ -11231,7 +11253,7 @@ function lineKey(options) {
 
 module.exports = lineKey;
 
-},{"../themes":24,"../util/line-thickness.js":31}],21:[function(require,module,exports){
+},{"../themes":29,"../util/line-thickness.js":36}],21:[function(require,module,exports){
 /*jshint -W084 */
 //text area provides a wrapping text block of a given type
 var d3 = require('d3');
@@ -11341,7 +11363,438 @@ function textArea(options) {
 
 module.exports = textArea;
 
-},{"../themes":24,"d3":1}],22:[function(require,module,exports){
+},{"../themes":29,"d3":1}],22:[function(require,module,exports){
+var d3 = require('d3');
+var identity = require('./discontinuityProviders/identity');
+
+
+module.exports = function() {
+    return discontinuableDateTime();
+};
+
+// obtains the ticks from the given scale, transforming the result to ensure
+// it does not include any discontinuities
+module.exports.tickTransformer = function(ticks, discontinuityProvider, domain) {
+    var clampedTicks = ticks.map(function(tick, index) {
+        if (index < ticks.length - 1) {
+            return discontinuityProvider.clampUp(tick);
+        } else {
+            var clampedTick = discontinuityProvider.clampUp(tick);
+            return clampedTick < domain[1] ?
+                clampedTick : discontinuityProvider.clampDown(tick);
+        }
+    });
+    var uniqueTicks = clampedTicks.reduce(function(arr, tick) {
+        if (arr.filter(function(f) { return f.getTime() === tick.getTime(); }).length === 0) {
+            arr.push(tick);
+        }
+        return arr;
+    }, []);
+    return uniqueTicks;
+};
+
+/**
+* The `discontinuableDateTime` scale renders a discontinuous date time scale, i.e. a time scale that incorporates gaps.
+* As an example, you can use this scale to render a chart where the weekends are skipped.
+*/
+function discontinuableDateTime(adaptedScale, discontinuityProvider) {
+
+    if (!arguments.length) {
+        adaptedScale = d3.time.scale();
+        discontinuityProvider = identity();
+    }
+
+    function scale(date) {
+        var domain = adaptedScale.domain();
+        var range = adaptedScale.range();
+
+        // The discontinuityProvider is responsible for determine the distance between two points
+        // along a scale that has discontinuities (i.e. sections that have been removed).
+        // the scale for the given point 'x' is calculated as the ratio of the discontinuous distance
+        // over the domain of this axis, versus the discontinuous distance to 'x'
+        var totalDomainDistance = discontinuityProvider.distance(domain[0], domain[1]);
+        var distanceToX = discontinuityProvider.distance(domain[0], date);
+        var ratioToX = distanceToX / totalDomainDistance;
+        var scaledByRange = ratioToX * (range[1] - range[0]) + range[0];
+        return scaledByRange;
+    }
+
+    scale.invert = function(x) {
+        var domain = adaptedScale.domain();
+        var range = adaptedScale.range();
+
+        var ratioToX = (x - range[0]) / (range[1] - range[0]);
+        var totalDomainDistance = discontinuityProvider.distance(domain[0], domain[1]);
+        var distanceToX = ratioToX * totalDomainDistance;
+        return discontinuityProvider.offset(domain[0], distanceToX);
+    };
+
+    scale.domain = function(x) {
+        if (!arguments.length) {
+            return adaptedScale.domain();
+        }
+        // clamp the upper and lower domain values to ensure they
+        // do not fall within a discontinuity
+        var domainLower = discontinuityProvider.clampUp(x[0]);
+        var domainUpper = discontinuityProvider.clampDown(x[1]);
+        adaptedScale.domain([domainLower, domainUpper]);
+        return scale;
+    };
+
+    scale.nice = function() {
+        adaptedScale.nice();
+        var domain = adaptedScale.domain();
+        var domainLower = discontinuityProvider.clampUp(domain[0]);
+        var domainUpper = discontinuityProvider.clampDown(domain[1]);
+        adaptedScale.domain([domainLower, domainUpper]);
+        return scale;
+    };
+
+    scale.ticks = function() {
+        var ticks = adaptedScale.ticks.apply(this, arguments);
+        return module.exports.tickTransformer(ticks, discontinuityProvider, scale.domain());
+    };
+
+    scale.copy = function() {
+        return discontinuableDateTime(adaptedScale.copy(), discontinuityProvider.copy());
+    };
+
+    scale.discontinuityProvider = function(x) {
+        if (!arguments.length) {
+            return discontinuityProvider;
+        }
+        discontinuityProvider = x;
+        return scale;
+    };
+
+    return d3.rebind(scale, adaptedScale, 'range', 'rangeRound', 'interpolate', 'clamp',
+        'tickFormat');
+}
+
+},{"./discontinuityProviders/identity":23,"d3":1}],23:[function(require,module,exports){
+var d3 = require('d3');
+
+
+/**
+    # Discontinuity Providers
+
+    The `fc.scale.dateTime` scale renders a discontinuous date time scale, i.e. a time scale that incorporates gaps. As an
+    example, you can use this scale to render a chart where the weekends are skipped.
+
+    You can use a discontinuity provider to inform the `dateTime` scale of the discontinuities between a particular range of dates. In order
+    to achieve this, the discontinuity provider must expose the following functions:
+
+     + `clampUp` - When given a date, if it falls within a discontinuity (i.e. an excluded period of time) it should be shifted
+     forwards in time to the discontinuity boundary. Otherwise, it should be returned unchanged.
+     + `clampDown` - When given a date, if it falls within a discontinuity (i.e. an excluded period of time) it should be shifted
+     backwards in time to the discontinuity boundary. Otherwise, it should be returned unchanged.
+     + `distance` - When given a pair of dates this function returns the number of milliseconds between the two dates minus any
+     discontinuities.
+     + `offset` - When given a date and a number of milliseconds, the date should be advanced by the number of milliseconds, skipping
+     any discontinuities, to return the final date.
+     + `copy` - When the `dateTime` scale is copied, the discontinuity provider is also copied.
+ */
+module.exports = function() {
+
+    var identity = {};
+
+    identity.distance = function(startDate, endDate) {
+        return endDate.getTime() - startDate.getTime();
+    };
+
+    identity.offset = function(startDate, ms) {
+        return new Date(startDate.getTime() + ms);
+    };
+
+    identity.clampUp = function(date) {
+        return date;
+    };
+
+    identity.clampDown = function(date) {
+        return date;
+    };
+
+    identity.copy = function() { return identity; };
+
+    return identity;
+};
+
+},{"d3":1}],24:[function(require,module,exports){
+var d3 = require('d3');
+
+var createIntraDay = function(openTime, closeTime) {
+
+    if (!openTime) {
+        throw new Error("You need to provide an opening time as 24H time, i.e. 08:30");
+    }
+
+    if (!closeTime) {
+        throw new Error("You need to provide a closing time as 24H time, i.e. 16:30");
+    }
+
+    var open = openTime;
+    var close = closeTime;
+
+
+    var millisPerDay = 864e5;
+    var millisPerWorkDay = calculateMillis();
+    var millisPerWorkWeek = millisPerWorkDay * 5;
+    var millisPerWeek = millisPerDay * 7;
+
+    var intraDay = {};
+
+
+    function calculateMillis() {
+        var openHour = +open.split(':')[0];
+        var openMinute = +open.split(':')[1];
+        var closeHour = +close.split(':')[0];
+        var closeMinute = +close.split(':')[1];
+        var openDate = new Date(1970, 0, 0, openHour, openMinute);
+        var closeDate = new Date(1970, 0, 0, closeHour, closeMinute);
+        return closeDate.getTime() - openDate.getTime();
+    }
+
+    function isWeekend(date) {
+        return [0, 6].indexOf(date.getDay()) >= 0;
+    }
+
+    function isTradingHours(date) {
+
+        if (isWeekend(date)) {
+            return false;
+        }
+
+        var openDate = dateFromTime(date, open);
+        var closeDate = dateFromTime(date, close);
+
+        return (openDate <= date) && (date <= closeDate);
+    }
+
+    // given a date and a time in 24h,
+    // create a new date with the time
+    // specified
+    function dateFromTime(date, time) {
+        var hour = +time.split(':')[0];
+        var minute = +time.split(':')[1];
+        return new Date(
+            date.getFullYear(),
+            date.getMonth(),
+            date.getDate(),
+            hour,
+            minute
+        );
+    }
+
+    function calculateOpenTimeFor(date) {
+        return dateFromTime(date, open);
+    }
+
+    function calculateCloseTimeFor(date) {
+        return dateFromTime(date, close);
+    }
+
+    function moveToNextBoundary(date) {
+        var openTimeToday = calculateOpenTimeFor(date);
+        var closeTimeToday = calculateCloseTimeFor(date);
+
+        if (date.getTime() === closeTimeToday.getTime()) {
+            // add a second and clamp, you'll get tomorrow
+            date = intraDay.clampUp(new Date(date.getTime() + 1000));
+            return date;
+        }
+
+        return closeTimeToday;
+
+    }
+
+    function moveToPrevBoundary(date) {
+        var openTimeToday = calculateOpenTimeFor(date);
+        var closeTimeToday = calculateCloseTimeFor(date);
+
+        if (date.getTime() === openTimeToday.getTime()) {
+            // add a second and clamp, you'll get tomorrow
+            return intraDay.clampDown(new Date(date.getTime() - 1000));
+        }
+
+        return openTimeToday;
+
+    }
+
+
+
+    intraDay.clampDown = function(date) {
+        // first move the date back into the week
+        // if it's in the weekend
+        if (isWeekend(date)) {
+            var daysToSubtract = date.getDay() === 0 ? 2 : 1;
+            var newDate = d3.time.day.ceil(date);
+            date = d3.time.day.offset(newDate, -daysToSubtract);
+        }
+        // and now check if it's working hours
+        if (isTradingHours(date)) {
+            return date;
+        }
+
+        // when we get here, we know it's not a weekend or working hours, so
+        // we have to find the closest date
+        var openTimeToday = calculateOpenTimeFor(date);
+        var closeTimeToday = calculateCloseTimeFor(date);
+
+        // date is before open time
+        if (date < openTimeToday) {
+            // we gotta return yesterday's close time, if it is
+            // monday, then it's 3 days back, otherwise it is just one
+            var prevWorkDays = date.getDay() === 1 ? 3 : 1;
+            var yesterdayClose = d3.time.day.offset(closeTimeToday, -prevWorkDays);
+            return yesterdayClose;
+        }
+
+        // date is after close time today
+        if (date > closeTimeToday) {
+            return closeTimeToday;
+        }
+
+    };
+
+    intraDay.clampUp = function(date) {
+        // first move the date forward into the week
+        // if it's in the weekend
+        if (isWeekend(date)) {
+            var daysToAdd = date.getDay() === 0 ? 2 : 1;
+            var newDate = d3.time.day.ceil(date);
+            date = d3.time.day.offset(newDate, daysToAdd);
+        }
+
+        // check if it's working hours after moving it
+        // out of the weekend
+        if (isTradingHours(date)) {
+            return date;
+        }
+
+        var openTimeToday = calculateOpenTimeFor(date);
+        var closeTimeToday = calculateCloseTimeFor(date);
+
+        // date is before open time
+        if (date < openTimeToday) {
+            return openTimeToday;
+        }
+
+        if (date > closeTimeToday) {
+            var nextWorkDays = (date.getDay() === 5) ? 3 : 1;
+            var tomorrowOpen = d3.time.day.offset(openTimeToday, nextWorkDays);
+            return tomorrowOpen;
+        }
+
+    };
+
+    // number of ms within discontinuities along the scale
+    intraDay.distance = function(startDate, endDate) {
+        startDate = intraDay.clampUp(startDate);
+        endDate = intraDay.clampDown(endDate);
+
+        var openTimeStart = calculateOpenTimeFor(startDate);
+        var closeTimeStart = calculateCloseTimeFor(startDate);
+        var openTimeEnd = calculateOpenTimeFor(endDate);
+        var closeTimeEnd = calculateCloseTimeFor(endDate);
+
+        if (endDate < closeTimeStart) {
+            return endDate.getTime() - startDate.getTime();
+        }
+
+        var msStartDayAdded = closeTimeStart.getTime() - startDate.getTime();
+        var msEndDayRemoved = openTimeEnd.getTime() - endDate.getTime();
+
+        // move the end date to the end of week boundary
+        var offsetStart = d3.time.saturday.ceil(startDate);
+        var offsetEnd = d3.time.saturday.ceil(endDate);
+        // determine how many weeks there are between these two dates
+        var weeks = (offsetEnd.getTime() - offsetStart.getTime()) / millisPerWeek;
+
+        if (!weeks) {
+            var offsetDayStart = d3.time.day.ceil(startDate);
+            var offsetDayEnd = d3.time.day.ceil(endDate);
+            var days = (offsetDayEnd.getTime() - offsetDayStart.getTime()) / millisPerDay;
+
+            if (days > 1) {
+                return days * millisPerWorkDay + msStartDayAdded - msEndDayRemoved;
+            }
+        }
+
+        return weeks * millisPerWorkWeek + msStartDayAdded - msEndDayRemoved;
+    };
+
+    intraDay.offset = function(startDate, ms) {
+        var date = isTradingHours(startDate) ? startDate : intraDay.clampUp(startDate);
+        var remainingms = Math.abs(ms);
+        var diff;
+
+        if (ms >= 0) {
+            while (remainingms > 0) {
+                var closeTimeStart = calculateCloseTimeFor(date);
+                diff = closeTimeStart.getTime() - date.getTime();
+                if (diff < remainingms) {
+                    date = new Date(date.getTime() + diff);
+                    remainingms -= diff;
+
+                    // we've crossed a boundary;
+                    date = moveToNextBoundary(date);
+                } else {
+                    return new Date(date.getTime() + remainingms);
+                }
+
+            }
+        } else {
+            // we're going backwards!
+            while (remainingms > 0) {
+                var openTimeStart = calculateOpenTimeFor(date);
+                diff = date.getTime() - openTimeStart.getTime();
+                if (diff < remainingms) {
+                    date = new Date(date.getTime() - diff);
+                    remainingms -= diff;
+
+                    date = moveToPrevBoundary(date);
+                } else {
+                    return new Date(date.getTime() - remainingms);
+                }
+
+            }
+        }
+
+        return date;
+
+    };
+
+    intraDay.copy = function() {
+        return createIntraDay(open, close);
+    };
+
+    return intraDay;
+};
+
+module.exports = createIntraDay;
+
+},{"d3":1}],25:[function(require,module,exports){
+module.exports = {
+    intraDay: require('./intra-day.js')
+};
+
+},{"./intra-day.js":26}],26:[function(require,module,exports){
+var discontScale = require('./discontinuableDateTime');
+var intraDayDiscontinuity = require('./discontinuityProviders/intra-day');
+
+
+/*
+this is just a wrapper for the discontinuity scale, so that we get
+a scale
+ */
+module.exports = function(open, close) {
+
+    return discontScale()
+        .discontinuityProvider(intraDayDiscontinuity(open, close));
+
+};
+
+},{"./discontinuableDateTime":22,"./discontinuityProviders/intra-day":24}],27:[function(require,module,exports){
 module.exports = {
   line: [
     '#af516c',
@@ -11365,7 +11818,7 @@ module.exports = {
   accent: '#9e2f50'
 };
 
-},{}],23:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 var colours = require('./colours');
 
 module.exports = [
@@ -11594,7 +12047,7 @@ module.exports = [
     }
 ];
 
-},{"./colours":22}],24:[function(require,module,exports){
+},{"./colours":27}],29:[function(require,module,exports){
 // because of the need to export and convert browser rendered SVGs
 // we need a simple way to attach styles as attributes if necessary,
 // so, heres a list of attributes and the selectors to which they should be applied
@@ -11627,9 +12080,9 @@ function checkAttributes(theme, selector) {
 
 module.exports = themes;
 
-},{"./ft":23,"./video":25,"d3":1}],25:[function(require,module,exports){
-arguments[4][23][0].apply(exports,arguments)
-},{"./colours":22,"dup":23}],26:[function(require,module,exports){
+},{"./ft":28,"./video":30,"d3":1}],30:[function(require,module,exports){
+arguments[4][28][0].apply(exports,arguments)
+},{"./colours":27,"dup":28}],31:[function(require,module,exports){
 // More info:
 // http://en.wikipedia.org/wiki/Aspect_ratio_%28image%29
 
@@ -11700,7 +12153,7 @@ module.exports = {
     }
 };
 
-},{}],27:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
 var ratios = require('../util/aspect-ratios.js');
@@ -11752,6 +12205,40 @@ function setExtents(model){
 	});
 	return extents;
 }
+
+function findOpenCloseTimes(model) {
+    var maxGap = Number.MIN_VALUE;
+    var gapIndex;
+    // brute force search for maximum gap.
+    // this will also work for weekend skips
+    // since intra-day skips weekends automatically
+    model.data.forEach(function(d, i) {
+        if (!i) return;
+        var prevdt = model.data[i-1][model.x.series.key];
+        var dt = d[model.x.series.key];
+        var gap = dt - prevdt;
+        if (gap > maxGap) {
+            gapIndex = i;
+            maxGap = gap;
+        }
+    });
+
+    var openTime = model.data[gapIndex][model.x.series.key];
+    var closeTime = model.data[gapIndex-1][model.x.series.key];
+
+    var fmt = d3.time.format("%H:%M");
+
+    var open = fmt(new Date(openTime-60*1000));
+    var close = fmt(new Date(closeTime.getTime()+60*1000));
+
+    // ;_; side effects ewww
+    model.open = open;
+    model.close = close;
+
+}
+
+
+
 
 function independentDomain(model, chartType) {
     if (model.independentDomain) { return model.independentDomain;  }
@@ -11945,7 +12432,9 @@ function Model(chartType, opts) {
 	m.dependentDomain = dependentDomain(m, chartType);
 	m.lineStrokeWidth = lineThickness(m.lineThickness, m.theme);
 	m.key = setKey(m);
-
+    if (m.intraDay) {
+        findOpenCloseTimes(m);
+    }
     return m;
 }
 
@@ -11954,7 +12443,7 @@ Model.prototype.error = function (err) {
 };
 module.exports = Model;
 
-},{"../util/aspect-ratios.js":26,"../util/dates.js":28,"../util/line-thickness.js":31,"../util/series-options.js":33,"d3":1}],28:[function(require,module,exports){
+},{"../util/aspect-ratios.js":31,"../util/dates.js":33,"../util/line-thickness.js":36,"../util/series-options.js":38,"d3":1}],33:[function(require,module,exports){
 var d3 = require('d3');
 
 var formatter = {
@@ -12113,7 +12602,7 @@ module.exports = {
     unitGenerator: unitGenerator
 };
 
-},{"d3":1}],29:[function(require,module,exports){
+},{"d3":1}],34:[function(require,module,exports){
 var d3 = require('d3');
 var dates = require('../util/dates');
 var themes = require('../themes');
@@ -12308,7 +12797,7 @@ module.exports = {
     }
 };
 
-},{"../themes":24,"../util/dates":28,"d3":1}],30:[function(require,module,exports){
+},{"../themes":29,"../util/dates":33,"d3":1}],35:[function(require,module,exports){
 //a place to define custom line interpolators
 
 var d3 = require('d3');
@@ -12342,7 +12831,7 @@ module.exports = {
     gappedLine: gappedLineInterpolator
 };
 
-},{"d3":1}],31:[function(require,module,exports){
+},{"d3":1}],36:[function(require,module,exports){
 var thicknesses = {
     small: 2,
     medium: 4,
@@ -12370,7 +12859,7 @@ module.exports = function (value) {
     }
 };
 
-},{}],32:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 //example:
 //http://codinginparadise.org/projects/svgweb-staging/tests/htmlObjectHarness/basic-metadata-example-01-b.html
 var svgSchema = 'http://www.w3.org/2000/svg';
@@ -12421,7 +12910,7 @@ module.exports = {
     create: create
 };
 
-},{}],33:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 function isTruthy(value) {
     return !!value;
 }
@@ -12467,7 +12956,7 @@ module.exports = {
     normalise: normalise
 };
 
-},{}],34:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 var app = require('../../app.json');
 module.exports = app.version;
 
@@ -12488,8 +12977,10 @@ module.exports = {
         dates: require('./util/dates.js')
     },
 
+    scale: require('./scales/index.js'),
+
     version: require('./util/version')
 
 };
 
-},{"./axis/index.js":7,"./chart/index.js":15,"./dressing/logo.js":19,"./dressing/series-key.js":20,"./dressing/text-area.js":21,"./themes":24,"./util/dates.js":28,"./util/version":34}]},{},["o-charts"]);
+},{"./axis/index.js":7,"./chart/index.js":15,"./dressing/logo.js":19,"./dressing/series-key.js":20,"./dressing/text-area.js":21,"./scales/index.js":25,"./themes":29,"./util/dates.js":33,"./util/version":39}]},{},["o-charts"]);
