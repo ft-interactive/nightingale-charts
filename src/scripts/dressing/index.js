@@ -103,8 +103,13 @@ Dressing.prototype.addSeriesKey = function () {
 Dressing.prototype.addFooterItem = function(item, prefix){
     if (!this.model[item]) return;
     var model = this.model;
-    var text = textArea().width(model.contentWidth - this.model.logoSize).lineHeight(this.footerLineHeight);
-    var gText = this.svg.append('g').attr('class', 'chart-' + item).datum((prefix || '') + this.model[item]).call(text);
+    var text = textArea()
+        .width(model.contentWidth - this.model.logoSize)
+        .lineHeight(this.footerLineHeight);
+    var gText = this.svg.append('g')
+        .attr('class', 'chart-' + item)
+        .datum((prefix || '') + this.model[item])
+        .call(text);
     this.footerHeight += getHeight(gText) + this.blockPadding;
     gText.currentPosition = this.footerHeight;
     return gText;
@@ -113,7 +118,13 @@ Dressing.prototype.addFooterItem = function(item, prefix){
 Dressing.prototype.positionFooterItem = function(gText){
     if (!gText) return;
     var model = this.model;
-    gText.attr('transform', model.translate({top: model.chartPosition.top + model.chartHeight + gText.currentPosition + this.halfLineStrokeWidth}));
+    // when tspans have been wrapped, we have to move the
+    // group up by the height of every nth-child(1+n);
+    var spans = gText.selectAll('tspan').size();
+    var gHeight = (gText.node().getBBox().height / (spans)) * (spans - 1);
+    var yTrans = model.chartPosition.top + model.chartHeight + gText.currentPosition + this.halfLineStrokeWidth - gHeight;
+
+    gText.attr('transform', model.translate({top:yTrans}));
 };
 
 Dressing.prototype.setHeight = function () {
