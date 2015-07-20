@@ -10,7 +10,6 @@ module.exports = {
     tasks: {
         build: ['sass', 'mustache', 'browserify'],
         serve: 'staticApp',
-        test: 'karma',
         bump: ['package.json', 'src/app.json'],
         release: ['git', 'gh-pages']
     },
@@ -24,6 +23,5 @@ module.exports = {
             {file: './bower_components/d3/d3.js', expose: 'd3'}
         ],
         vendorTarget: 'scripts/vendor.js'
-    },
-    karma: [ './test/karma.unit.js', './test/karma.functional.js']
+    }
 };

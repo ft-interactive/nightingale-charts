@@ -1,5 +1,5 @@
 {
-  "version": "0.5.6",
+  "version": "0.5.7",
   "name": "o-charts",
   "description": "FT style charts, axes, scales etc",
   "private": true,
@@ -15,8 +15,9 @@
     "report": "caddy serve test/coverage/chrome/",
     "start": "caddy build -dev && caddy serve",
     "start-test": "caddy serve ./_test",
-    "tdd": "caddy test tdd",
-    "test": "jshint src && caddy build && caddy test",
+    "unit": "karma start test/karma.unit.js",
+    "functional": "karma start test/karma.functional.js",
+    "test": "jshint src && caddy build && karma start test/karma.unit.js --single-run && karma start test/karma.functional.js --single-run",
     "test-regression": "caddy serve & sleep 4 && npm run regression",
     "regression": "npm run clean-regression && casperjs test test/regression/",
     "clean-regression": "rm -rf test/regression/failures & rm -rf test/regression/new & rm -rf test/regression/reference/*diff.png & rm -rf test/regression/reference/*fail.png",
@@ -32,9 +33,17 @@
   "devDependencies": {
     "browserify-istanbul": "^0.2.1",
     "jshint": "^2.6.3",
-    "phantomcss": "^0.10.1",
+    "phantomcss": "^0.10.2",
     "slug": "^0.9.1",
-    "web-caddy": "^2.0.1"
+    "karma": "^0.13.1",
+    "karma-browserify": "^4.2.1",
+    "karma-chrome-launcher": "^0.2.0",
+    "karma-coverage": "^0.4.2",
+    "karma-html2js-preprocessor": "^0.1.0",
+    "karma-jasmine": "^0.3.3",
+    "karma-mocha-reporter": "^1.0.2",
+    "karma-phantomjs-launcher": "^0.2.0",
+    "web-caddy": "^2.1.1"
   },
   "browser": {
     "d3": "./bower_components/d3/d3.js"
