@@ -1,5 +1,5 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-module.exports={"version":"0.5.7"}
+module.exports={"version":"0.5.8"}
 
 },{}],2:[function(require,module,exports){
 var d3 = require('d3');
@@ -1538,8 +1538,13 @@ Dressing.prototype.addSeriesKey = function () {
 Dressing.prototype.addFooterItem = function(item, prefix){
     if (!this.model[item]) return;
     var model = this.model;
-    var text = textArea().width(model.contentWidth - this.model.logoSize).lineHeight(this.footerLineHeight);
-    var gText = this.svg.append('g').attr('class', 'chart-' + item).datum((prefix || '') + this.model[item]).call(text);
+    var text = textArea()
+        .width(model.contentWidth - this.model.logoSize)
+        .lineHeight(this.footerLineHeight);
+    var gText = this.svg.append('g')
+        .attr('class', 'chart-' + item)
+        .datum((prefix || '') + this.model[item])
+        .call(text);
     this.footerHeight += getHeight(gText) + this.blockPadding;
     gText.currentPosition = this.footerHeight;
     return gText;
@@ -1548,7 +1553,13 @@ Dressing.prototype.addFooterItem = function(item, prefix){
 Dressing.prototype.positionFooterItem = function(gText){
     if (!gText) return;
     var model = this.model;
-    gText.attr('transform', model.translate({top: model.chartPosition.top + model.chartHeight + gText.currentPosition + this.halfLineStrokeWidth}));
+    // when tspans have been wrapped, we have to move the
+    // group up by the height of every nth-child(1+n);
+    var spans = gText.selectAll('tspan').size();
+    var gHeight = (gText.node().getBBox().height / (spans)) * (spans - 1);
+    var yTrans = model.chartPosition.top + model.chartHeight + gText.currentPosition + this.halfLineStrokeWidth - gHeight;
+
+    gText.attr('transform', model.translate({top:yTrans}));
 };
 
 Dressing.prototype.setHeight = function () {
