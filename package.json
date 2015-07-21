@@ -1,5 +1,5 @@
 {
-  "version": "0.5.7",
+  "version": "0.5.8",
   "name": "o-charts",
   "description": "FT style charts, axes, scales etc",
   "private": true,
@@ -48,6 +48,5 @@
   "browser": {
     "d3": "./bower_components/d3/d3.js"
   },
-  "browserify-shim" : {}
-
+  "browserify-shim": {}
 }
