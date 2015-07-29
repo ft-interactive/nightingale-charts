@@ -58,3 +58,9 @@ For drawing a date axis in the ft style (horizontal only)
 ##value axis
 ft.charts.valueAxis()
 For drawing a value axis in the ft style (horizontal or vertical)
+
+## Licence
+
+Copyright (c) 2015 Financial Times Ltd. All rights reserved.
+
+This software is published under the [MIT licence](http://opensource.org/licenses/MIT).
