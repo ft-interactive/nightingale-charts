@@ -32,7 +32,7 @@ module.exports = {
         });
 
         //remove text-anchor attribute from year positions
-        g.selectAll('.x.axis .primary text').attr(config.attr).attr({
+        g.selectAll('.x.axis .primary text').attr({
             x: null,
             y: null,
             dy: 15 + config.tickSize
@@ -42,7 +42,7 @@ module.exports = {
 
     addRow: function(g, axis, options, config){
         var rowClass = (options.row) ? 'secondary': 'primary';
-        g.append('g')
+        g.append('g').attr(config.attr)
             .attr('class', rowClass)
             .attr('transform', 'translate(0,' + (options.row * config.lineHeight) + ')')
             .call(axis);

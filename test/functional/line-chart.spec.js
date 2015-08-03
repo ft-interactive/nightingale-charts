@@ -154,7 +154,7 @@ describe('line-chart  ', function () {
         it('keeps correct positioning with custom height', function(){
             var lines = lineChart11.querySelector('.line.line--series2');
             var footer = lineChart11.querySelector('.chart-footnote');
-            expect(lines.getBoundingClientRect().width).toBe(553);
+            expect(lines.getBoundingClientRect().width).toBe(552);
             expect(footer.getAttribute('transform')).toBe('translate(0,394)');
         });
 
@@ -171,7 +171,6 @@ describe('line-chart  ', function () {
         });
 
     });
-
 
     describe('has ticks ', function(){
 

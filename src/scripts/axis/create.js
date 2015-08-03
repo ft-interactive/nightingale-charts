@@ -117,15 +117,11 @@ Create.prototype.configureDependentScale = function (model) {
         .attrs(this.getAttr('axis-text'));
 
     if (isVertical(model.dependentAxisOrient)) {
-        //todo: remove hack?
-        if(model.dependentAxisOrient === 'left' && model.chartType === 'line'){
-            model.yLabelWidth = Math.abs(getWidth(this.chart) - model.chartWidth);
-        }
         this.dependentAxis.tickSize(model.plotWidth)
             .tickExtension(model.yLabelWidth);
     } else {
         this.dependentAxis.tickSize(model.plotHeight)
-        .yOffset(model.dependentAxisOrient =='bottom' ? model.plotHeight : 0);
+            .yOffset(model.dependentAxisOrient =='bottom' ? model.plotHeight : 0);
         //this.dependentAxis.noLabels(true);
     }
     // THIS IS A HACK BECAUSE FOR SOME REASON THE
@@ -192,6 +188,14 @@ Create.prototype.dependentScale = function (scale) {
     this.configureDependentScale(this.model);
 };
 
+Create.prototype.yLabelWidth = function () {
+    var widest  = 0;
+    this.chart.selectAll('.axis.y text').each(function(d, i){
+        widest = Math.max(getWidth(d3.select(this)) + PADDING, widest);
+    });
+    return widest;
+};
+
 Create.prototype.createAxes = function (axesSpec) {
     var model = this.model;
     var spacing = model.tickSize + (PADDING * 2);
@@ -200,9 +204,9 @@ Create.prototype.createAxes = function (axesSpec) {
     if (isVertical(model.dependentAxisOrient)) {
         model.xLabelHeight = getHeight(this.chart) + spacing;
         this.dependentScale(axesSpec.dependent); //create Y
-        model.yLabelWidth = getWidth(this.chart) - model.chartWidth;// measure Y
+        model.yLabelWidth = this.yLabelWidth();
     } else {
-        model.yLabelWidth = getWidth(this.chart) + spacing;// measure Y
+        model.yLabelWidth = this.yLabelWidth();
         this.dependentScale(axesSpec.dependent);
         model.xLabelHeight = getHeight(this.chart) - model.chartHeight;
     }
