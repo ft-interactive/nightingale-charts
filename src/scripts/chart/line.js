@@ -86,6 +86,7 @@ function lineChart(g) {
     while (i--) {
         plotSeries(plotSVG, model, creator, model.y.series[i], lineAttr, borderAttrs);
     }
+    chartSVG.selectAll('path.domain').attr('fill', 'none');
 }
 
 module.exports = lineChart;

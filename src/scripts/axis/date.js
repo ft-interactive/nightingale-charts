@@ -6,11 +6,9 @@ var timeDiff = dates.timeDiff;
 
 function dateAxis() {
     var config = {
-        theme: false,
         axes: [d3.svg.axis().orient('bottom')],
         scale: false,
         lineHeight: 20,
-        stack: false,
         tickSize: 5,
         simple: false,//axis has only first and last points as ticks, i.e. the scale's domain extent
         nice: false,
@@ -21,14 +19,29 @@ function dateAxis() {
         xOffset: 0,
         labelWidth: 0,
         showDomain: false,
-        keepD3Style: false,
-        attr: {}
+        attr: {
+            ticks: {
+                'stroke': 'rgba(0, 0, 0, 0.3)',
+                'shape-rendering': 'crispEdges'
+            },
+            primary: {
+                fill:'#757470',
+                'font-family': 'BentonSans, sans-serif',
+                'font-size': 12
+            },
+            secondary:{}
+        }
     };
 
+    function isVertical(){
+        return ['right','left'].indexOf(config.axes[0].orient())>-1;
+    }
+
     function render(g) {
+        config.attr.primary['text-anchor'] = isVertical() ? 'end' : 'start';
+        config.attr.secondary['text-anchor'] = isVertical() ? 'end' : 'start';
 
         g = g.append('g').attr('transform', 'translate(' + config.xOffset + ',' + config.yOffset + ')');
-
         g.append('g').attr('class', 'x axis axis--independent axis--date').each(function () {
             labels.add(d3.select(this), config);
         });
@@ -37,12 +50,6 @@ function dateAxis() {
             g.select('path.domain').remove();
         }
     }
-
-    render.theme = function (themeUpdate) {
-        if (!arguments.length) return config.theme;
-        config.theme = themeUpdate;
-        return render;
-    };
 
     render.simple = function (bool) {
         if (!arguments.length) return config.simple;
@@ -93,15 +100,9 @@ function dateAxis() {
         return render;
     };
 
-    render.stack = function (bool) {
-        if (!arguments.length) return config.stack;
-        config.stack = bool;
-        return render;
-    };
-
-    render.attrs = function (obj) {
-        if (!arguments.length) return config.attr;
-        if (typeof obj !== "undefined") config.attr = obj;
+    render.attrs = function (obj, target) {
+        if (!arguments.length) return config.attr[target || 'primary'];
+        if (typeof obj !== "undefined") config.attr[target || 'primary'] = obj;
         //for (var prop in config.attr){
         //    if (render[prop]) render[prop](obj[prop]);
         //}

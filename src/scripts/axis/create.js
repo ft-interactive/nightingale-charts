@@ -110,11 +110,12 @@ Create.prototype.hideTicks = function () {
 Create.prototype.configureDependentScale = function (model) {
     this.dependentAxis
         .tickFormat(model.numberAxisFormatter)
-        .theme(model.theme)
         .simple(model.simpleValue)
         .orient(model.dependentAxisOrient)
         .reverse(model.y.reverse)
-        .attrs(this.getAttr('axis-text'));
+        .attrs(this.getAttr('dependent-ticks'), 'ticks')
+        .attrs(this.getAttr('origin-ticks'), 'origin')
+        .attrs(this.getAttr('axis-text'), 'primary');
 
     if (isVertical(model.dependentAxisOrient)) {
         this.dependentAxis.tickSize(model.plotWidth)
@@ -134,11 +135,13 @@ Create.prototype.configureDependentScale = function (model) {
 
 Create.prototype.configureIndependentScale = function (model) {
     this.independentAxis
-        .theme(model.theme)
         .simple(model.simpleDate)
         .tickSize(model.tickSize)
         .orient(model.independentAxisOrient)
-        .attrs(this.getAttr('axis-text'));
+        .attrs(this.getAttr('independent-ticks'), 'ticks')
+        .attrs(this.getAttr('origin-ticks'), 'origin')
+        .attrs(this.getAttr('axis-text'), 'primary')
+        .attrs(this.getAttr('axis-secondary-text'), 'secondary');
     if (!isVertical(model.independentAxisOrient)) {
         this.independentAxis.yOffset(model.plotHeight);	//position the axis at the bottom of the chart
     }

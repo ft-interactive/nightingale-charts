@@ -6,11 +6,9 @@ var timeDiff = dates.timeDiff;
 function categoryAxis() {
 
     var config = {
-        theme: false,
         axes: [d3.svg.axis().orient('bottom')],
         scale: false,
         lineHeight: 20,
-        stack: false,
         tickSize: 5,
         simple: false,//axis has only first and last points as ticks, i.e. the scale's domain extent
         nice: false,
@@ -22,8 +20,19 @@ function categoryAxis() {
         labelWidth: 0,
         showDomain: false,
         dataType: 'categorical',
-        keepD3Style: true,
-        attr: {}
+        attr: {
+            ticks: {
+                'stroke-dasharray': 'none',
+                'stroke': 'rgba(0, 0, 0, 0.3)',
+                'shape-rendering': 'crispEdges'
+            },
+            primary: {
+                fill:'#757470',
+                'font-family': 'BentonSans, sans-serif',
+                'font-size': 12
+            },
+            secondary:{}
+        }
     };
 
     function isVertical(){
@@ -32,22 +41,20 @@ function categoryAxis() {
 
     function render(g) {
         var orientOffset = (isVertical()) ? -config.axes[0].tickSize() : 0;
-        g = g.append('g').attr('transform', 'translate(' + (config.xOffset + orientOffset) + ',' + config.yOffset + ')');
-        g.append('g').attr('class', isVertical() ? 'y axis axis--independent axis--category' : 'x axis axis--independent axis--category').each(function () {
-            var g = d3.select(this);
-            labels.add(g, config);
-        });
+        var className = isVertical() ? 'y' : 'x';
+        config.attr.primary['text-anchor'] = isVertical() ? 'end' : 'middle';
+        config.attr.secondary['text-anchor'] = isVertical() ? 'end' : 'middle';
+
+        g = g.append('g')
+            .attr('transform', 'translate(' + (config.xOffset + orientOffset) + ',' + config.yOffset + ')')
+            .attr('class', className + ' axis axis--independent axis--category').each(function () {
+                labels.add(d3.select(this), config);
+            });
 
         if (!config.showDomain) {
             g.select('path.domain').remove();
         }
     }
-
-    render.theme = function (themeUpdate) {
-        if (!arguments.length) return config.theme;
-        config.theme = themeUpdate;
-        return render;
-    };
 
     render.simple = function (bool) {
         if (!arguments.length) return config.simple;
@@ -103,9 +110,12 @@ function categoryAxis() {
         return render;
     };
 
-    render.stack = function (bool) {
-        if (!arguments.length) return config.stack;
-        config.stack = bool;
+    render.attrs = function (obj, target) {
+        if (!arguments.length) return config.attr[target || 'primary'];
+        if (typeof obj !== "undefined") config.attr[target || 'primary'] = obj;
+        //for (var prop in config.attr){
+        //    if (render[prop]) render[prop](obj[prop]);
+        //}
         return render;
     };
 
@@ -132,15 +142,6 @@ function categoryAxis() {
         }
 
         config.axes = axes;
-        return render;
-    };
-
-    render.attrs = function (obj) {
-        if (!arguments.length) return config.attr;
-        if (typeof obj !== "undefined") config.attr = obj;
-        //for (var prop in config.attr){
-        //    if (render[prop]) render[prop](obj[prop]);
-        //}
         return render;
     };
 

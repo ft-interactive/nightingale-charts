@@ -20,82 +20,19 @@ var colours = {
 // background:applied to 'text' elements (dressing/index.js does this)
 // border:    applied to 'line' and 'path' elements (dressing/index.js does this)
 
-module.exports.colours = colours;
 module.exports.theme = [
-    //general
+    {
+        'selector': 'path.accent, line.accent, rect.accent',
+        'attributes': {
+            'stroke': colours.accent
+        }
+    },
     {
         'id': 'svg',
-        'selector': 'svg',
         'attributes': {
             'padding-x': 8,
             'padding-y': 10,
             background: 'rgba(255,255,255,1)'
-        }
-    },
-    {
-        'selector': 'svg text',
-        'attributes': {
-            'font-family': 'MetricWeb, sans-serif',
-            'font-weight': '600',
-            'fill': 'rgba(0, 0, 0, 0.8)',
-            'stroke': 'none'
-        }
-    },
-    {   'id': 'chart-logo',
-        'selector': '.chart-logo',
-        'attributes': {
-            'display': 'none'
-        }
-    },
-    //axes
-    {
-        'selector': '.axis path, .axis line, .axis .tick',
-        'attributes': {
-            'shape-rendering': 'crispEdges',
-            'fill': 'none'
-        }
-    }, {
-        'selector': '.axis--dependent path.domain, .secondary path.domain, .secondary .tick line',
-        'attributes': {
-            'stroke': 'none'
-        }
-    },
-    {
-        'id': 'axis-tick',
-        'selector': '.axis--dependent .tick line, .primary .origin line, .axis--independent .primary .tick line',
-        'attributes': {
-            'stroke-dasharray': 'none',
-            'stroke': 'rgba(54, 51, 52, 1)',
-            'stroke-width': 1
-        }
-    }, {
-        'id': 'axis-text',
-        'selector': '.axis text',
-        'attributes': {
-            'font-size': 12,
-            'font-family': 'MetricWeb, sans-serif',
-            'stroke': 'none',
-            'fill': 'rgba(0, 0, 0, 0.8)'
-        }
-    }, {
-        'selector': '.x.axis.axis--category text',
-        'attributes': {
-            'text-anchor': 'middle'
-        }
-    }, {
-        'selector': '.y.axis text',
-        'attributes': {
-            'text-anchor': 'end'
-        }
-    }, {
-        'selector': '.x.axis.axis--number text, .x.axis.axis--date text, .y.axis.right text',
-        'attributes': {
-            'text-anchor': 'start'
-        }
-    }, {
-        'selector': '.axis--independent .primary path.domain',
-        'attributes': {
-            'stroke': '#757470'
         }
     },
     //lines
@@ -110,7 +47,6 @@ module.exports.theme = [
     },
     //Columns
     {   'id': 'columns',
-        'selector': '.column, .key__column',
         'attributes': {
             stroke: 'rgb(243, 236, 228)',
             'stroke-width': 1
@@ -118,20 +54,13 @@ module.exports.theme = [
     },
     //bars
     {   'id': 'bars',
-        'selector': '.bar, .key__bar',
         'attributes': {
             stroke: 'rgb(243, 236, 228)',
             'stroke-width': 1
         }
     },
     {
-        'selector': 'path.accent, line.accent, rect.accent',
-        'attributes': {
-            'stroke': colours.accent
-        }
-    }, {
         'id': 'null-label',
-        'selector': '.series text.null-label',
         'attributes': {
             'text-anchor': 'middle',
             'font-size': 10,
@@ -141,7 +70,6 @@ module.exports.theme = [
 
     //text
     {   'id': 'chart-title',
-        'selector': '.chart-title text',
         'attributes': {
             'font-family': 'MetricWebSemiBold, sans-serif',
             'font-size': 12,
@@ -151,7 +79,6 @@ module.exports.theme = [
         }
     },
     {   'id': 'chart-subtitle',
-        'selector': '.chart-subtitle text',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
             'font-size': 10,
@@ -161,7 +88,6 @@ module.exports.theme = [
         }
     },
     {   'id': 'key',
-        'selector': '.key',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
             'font-size': 12,
@@ -173,7 +99,6 @@ module.exports.theme = [
         }
     },
     {   'id': 'chart-source',
-        'selector': '.chart-source text',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
             'font-size': 8,
@@ -181,25 +106,52 @@ module.exports.theme = [
         }
     }, {
         'id': 'chart-footnote',
-        'selector': '.chart-footnote text',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
             'font-size': 12,
             'line-height': 16
         }
-    }, {
-        'selector': '.primary .tick text',
+    },
+    {   'id': 'dependent-ticks',
+        'attributes': {
+            'shape-rendering': 'crispEdges',
+            'stroke': 'rgba(54, 51, 52, 1)',
+            'stroke-width': 1
+        }
+    },
+    {   'id': 'independent-ticks',
+        'attributes': {
+            'shape-rendering': 'crispEdges',
+            'stroke': 'rgba(54, 51, 52, 1)',
+            'stroke-width': 1
+        }
+    },
+    {   'id': 'origin-ticks',
+        'attributes': {
+            'shape-rendering': 'crispEdges',
+            'stroke': 'rgba(54, 51, 52, 1)',
+            'stroke-width': 1
+        }
+    },
+    {   'id': 'axis-text',
         'attributes': {
             'font-size': 12,
+            'font-family': 'MetricWeb, sans-serif',
+            'stroke': 'none',
             'font-weight': '600',
             'fill': 'rgba(0, 0, 0, 0.8)'
         }
-    }, {
-        'selector': '.secondary .tick text',
+    },
+    {   'id': 'axis-secondary-text',
         'attributes': {
             'font-size': 10,
             'font-weight': '600',
             'fill': 'rgba(0, 0, 0, 0.8)'
+        }
+    },
+    {   'id': 'chart-logo',
+        'attributes': {
+            'display': 'none'
         }
     }
 ];

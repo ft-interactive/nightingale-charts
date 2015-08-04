@@ -95,7 +95,9 @@
                 var axis = oCharts.axis.category()
                     .dataType(d.dataType)
                     .orient(d.orient)
-                    .scale(d.scale, d.units);
+                    .scale(d.scale, d.units)
+                    .attrs({fill:'rgb(100,100,220)', 'font-size': '14', 'font-family':'arial'})
+                    .attrs({fill:'rgba(100,100,220,0.8)','font-size': '12'}, 'secondary');
 
                 d3.select(this)
                     .append('g')
@@ -163,7 +165,8 @@
                 var axis = oCharts.axis.category()
                     .dataType(d.dataType)
                     .orient(d.orient)
-                    .scale(d.scale, d.units);
+                    .scale(d.scale, d.units)
+                    .attrs({fill:'grey', 'font-size': '12', 'font-family':'arial'});
 
                 d3.select(this)
                     .append('g')

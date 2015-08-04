@@ -57,9 +57,9 @@ Dressing.prototype.addFooter = function () {
     this.addBackground(this.svg, [0,0, this.model.width, this.model.height]);
 };
 
-
 Dressing.prototype.addLogo = function () {
     var model = this.model;
+    if (!model.logoSize) return;
     var logo = this.svg.append('g').attr('class', 'chart-logo').call(ftLogo, model.logoSize);
     logo.attr('transform', model.translate({
         left: model.width - model.logoSize - 3,

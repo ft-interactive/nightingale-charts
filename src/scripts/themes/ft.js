@@ -11,82 +11,26 @@ var colours = {
     accent: '#9e2f50'
 };
 
+// SPECIAL 'non-svg' ATTRIBUTES:
+// padding-x: applied to the SVG (affects svg > child) and 'text' elements (dressing/index.js does this)
+// padding-y: applied to the SVG (affects svg > child) and 'text' elements (dressing/index.js does this)
+// padding:   applied to 'text' elements (dressing/index.js does this)
+// align:     applied to 'text' elements (dressing/index.js does this)
+// background:applied to 'text' elements (dressing/index.js does this)
+// border:    applied to 'line' and 'path' elements (dressing/index.js does this)
+
 module.exports.theme = [
-    //general
+    {
+        'selector': 'path.accent, line.accent, rect.accent',
+        'attributes': {
+            'stroke': colours.accent
+        }
+    },
     {
         'id': 'svg',
         'selector': 'svg',
         'attributes': {
             'background': '#fff1e0'
-        }
-    },
-    {
-        'selector': 'svg text',
-        'attributes': {
-            'font-family': 'BentonSans, sans-serif',
-            'stroke': 'none'
-        }
-    },
-    //axes
-    {
-        'selector': '.axis path, .axis line, .axis .tick',
-        'attributes': {
-            'shape-rendering': 'crispEdges',
-            'fill': 'none'
-        }
-    }, {
-        'selector': '.axis--dependent path.domain, .secondary path.domain, .secondary .tick line',
-        'attributes': {
-            'stroke': 'none'
-        }
-    },
-    {
-        'selector': '.axis--dependent .tick line',
-        'attributes': {
-            'stroke-dasharray': '2 2',
-            'stroke': 'rgba(0, 0, 0, 0.1)'
-        }
-    },
-    {
-        'selector': '.primary .origin line, .axis--independent .primary .tick line',
-        'attributes': {
-            'stroke': 'rgba(0, 0, 0, 0.3)',
-            'stroke-dasharray': 'none'
-        }
-    }, {
-        'id': 'axis-text',
-        'selector': '.axis text',
-        'attributes': {
-            'font-size': 12,
-            'font-family': 'BentonSans, sans-serif',
-            'stroke': 'none',
-            'fill': '#757470'
-        }
-    }, {
-        'selector': '.x.axis.axis--category text',
-        'attributes': {
-            'text-anchor': 'middle'
-        }
-    }, {
-        'selector': '.y.axis text',
-        'attributes': {
-            'text-anchor': 'end'
-        }
-    }, {
-        'selector': '.x.axis.axis--number text, .x.axis.axis--date text, .y.axis.right text',
-        'attributes': {
-            'text-anchor': 'start'
-        }
-    }, {
-        'selector': '.axis--independent .primary path.domain',
-        'attributes': {
-            'stroke': '#757470'
-        }
-    }, {
-        'selector': '.axis .secondary text',
-        'attributes': {
-            'font-size': 10,
-            'fill': '#757470'
         }
     },
     //lines
@@ -101,26 +45,18 @@ module.exports.theme = [
     },
     ////Columns
     //{   'id': 'columns',
-    //    'selector': '.column, .key__column',
     //    'attributes': {
     //        'stroke': 'none'
     //    }
     //},
     ////Bars
     //{   'id': 'bars',
-    //    'selector': '.column, .key__column',
     //    'attributes': {
     //        'stroke': 'none'
     //    }
     //},
     {
-        'selector': 'path.accent, line.accent, rect.accent',
-        'attributes': {
-            'stroke': colours.accent
-        }
-    }, {
         'id': 'null-label',
-        'selector': '.series text.null-label',
         'attributes': {
             'text-anchor': 'middle',
             'font-size': 10,
@@ -130,7 +66,6 @@ module.exports.theme = [
 
     //text
     {   'id': 'chart-title',
-        'selector': '.chart-title text',
         'attributes': {
             'font-family': 'BentonSans, sans-serif',
             'font-size': 18,
@@ -138,7 +73,6 @@ module.exports.theme = [
         }
     },
     {   'id': 'chart-subtitle',
-        'selector': '.chart-subtitle text',
         'attributes': {
             'font-family': 'BentonSans, sans-serif',
             'font-size': 12,
@@ -146,7 +80,6 @@ module.exports.theme = [
         }
     },
     {   'id': 'chart-source',
-        'selector': '.chart-source text',
         'attributes': {
             'font-family': 'BentonSans, sans-serif',
             'font-size': 10,
@@ -155,7 +88,6 @@ module.exports.theme = [
         }
     },
     {   'id': 'chart-footnote',
-        'selector': '.chart-footnote text',
         'attributes': {
             'font-family': 'BentonSans, sans-serif',
             'font-size': 12,
@@ -164,13 +96,48 @@ module.exports.theme = [
         }
     },
     {   'id': 'key',
-        'selector': '.key',
         'attributes': {
             'font-family': 'BentonSans, sans-serif',
             'font-size': 12,
             'line-height': 16,
             'fill': 'rgba(0, 0, 0, 0.5)',
             'padding-y': 8
+        }
+    },
+    {   'id': 'independent-ticks',
+        'attributes': {
+            'shape-rendering': 'crispEdges',
+            'stroke': 'rgba(0, 0, 0, 0.3)',
+            'stroke-dasharray': 'none'
+        }
+    },
+    {   'id': 'dependent-ticks',
+        'attributes': {
+            'shape-rendering': 'crispEdges',
+            'stroke': 'rgba(0, 0, 0, 0.1)',
+            'stroke-dasharray': '2 2'
+        }
+    },
+    {   'id': 'origin-ticks',
+        'attributes': {
+            'shape-rendering': 'crispEdges',
+            'stroke': 'rgba(0, 0, 0, 0.3)',
+            'stroke-dasharray': 'none'
+        }
+    },
+    {   'id': 'axis-text',
+        'attributes': {
+            'font-size': 12,
+            'font-family': 'BentonSans, sans-serif',
+            'stroke': 'none',
+            'fill': '#757470'
+        }
+    },
+    {   'id': 'axis-secondary-text',
+        'selector': '.axis .secondary text',
+        'attributes': {
+            'font-size': 10,
+            'fill': '#757470'
         }
     }
 ];

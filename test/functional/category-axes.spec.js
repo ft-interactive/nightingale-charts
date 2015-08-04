@@ -191,7 +191,7 @@ describe('category axis', function () {
             var ticks = primaryTicks.concat(secondaryTicks);
 
             for (var i = 0; i < ticks.length; i++) {
-                expect(ticks[i].style.textAnchor).toEqual('middle');
+                expect(ticks[i].getAttribute('text-anchor')).toEqual('middle');
             }
 
         });
