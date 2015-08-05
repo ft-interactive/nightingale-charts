@@ -619,7 +619,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 },{"./support/isBuffer":2,"inherits":1}],4:[function(require,module,exports){
-module.exports={"version":"0.6.1"}
+module.exports={"version":"0.6.2"}
 
 },{}],5:[function(require,module,exports){
 var d3 = require('d3');
@@ -630,11 +630,9 @@ var timeDiff = dates.timeDiff;
 function categoryAxis() {
 
     var config = {
-        theme: false,
         axes: [d3.svg.axis().orient('bottom')],
         scale: false,
         lineHeight: 20,
-        stack: false,
         tickSize: 5,
         simple: false,//axis has only first and last points as ticks, i.e. the scale's domain extent
         nice: false,
@@ -646,8 +644,19 @@ function categoryAxis() {
         labelWidth: 0,
         showDomain: false,
         dataType: 'categorical',
-        keepD3Style: true,
-        attr: {}
+        attr: {
+            ticks: {
+                'stroke-dasharray': 'none',
+                'stroke': 'rgba(0, 0, 0, 0.3)',
+                'shape-rendering': 'crispEdges'
+            },
+            primary: {
+                fill:'#757470',
+                'font-family': 'BentonSans, sans-serif',
+                'font-size': 12
+            },
+            secondary:{}
+        }
     };
 
     function isVertical(){
@@ -656,22 +665,20 @@ function categoryAxis() {
 
     function render(g) {
         var orientOffset = (isVertical()) ? -config.axes[0].tickSize() : 0;
-        g = g.append('g').attr('transform', 'translate(' + (config.xOffset + orientOffset) + ',' + config.yOffset + ')');
-        g.append('g').attr('class', isVertical() ? 'y axis axis--independent axis--category' : 'x axis axis--independent axis--category').each(function () {
-            var g = d3.select(this);
-            labels.add(g, config);
-        });
+        var className = isVertical() ? 'y' : 'x';
+        config.attr.primary['text-anchor'] = isVertical() ? 'end' : 'middle';
+        config.attr.secondary['text-anchor'] = isVertical() ? 'end' : 'middle';
+
+        g = g.append('g')
+            .attr('transform', 'translate(' + (config.xOffset + orientOffset) + ',' + config.yOffset + ')')
+            .attr('class', className + ' axis axis--independent axis--category').each(function () {
+                labels.add(d3.select(this), config);
+            });
 
         if (!config.showDomain) {
             g.select('path.domain').remove();
         }
     }
-
-    render.theme = function (themeUpdate) {
-        if (!arguments.length) return config.theme;
-        config.theme = themeUpdate;
-        return render;
-    };
 
     render.simple = function (bool) {
         if (!arguments.length) return config.simple;
@@ -727,9 +734,12 @@ function categoryAxis() {
         return render;
     };
 
-    render.stack = function (bool) {
-        if (!arguments.length) return config.stack;
-        config.stack = bool;
+    render.attrs = function (obj, target) {
+        if (!arguments.length) return config.attr[target || 'primary'];
+        if (typeof obj !== "undefined") config.attr[target || 'primary'] = obj;
+        //for (var prop in config.attr){
+        //    if (render[prop]) render[prop](obj[prop]);
+        //}
         return render;
     };
 
@@ -756,15 +766,6 @@ function categoryAxis() {
         }
 
         config.axes = axes;
-        return render;
-    };
-
-    render.attrs = function (obj) {
-        if (!arguments.length) return config.attr;
-        if (typeof obj !== "undefined") config.attr = obj;
-        //for (var prop in config.attr){
-        //    if (render[prop]) render[prop](obj[prop]);
-        //}
         return render;
     };
 
@@ -886,11 +887,12 @@ Create.prototype.hideTicks = function () {
 Create.prototype.configureDependentScale = function (model) {
     this.dependentAxis
         .tickFormat(model.numberAxisFormatter)
-        .theme(model.theme)
         .simple(model.simpleValue)
         .orient(model.dependentAxisOrient)
         .reverse(model.y.reverse)
-        .attrs(this.getAttr('axis-text'));
+        .attrs(this.getAttr('dependent-ticks'), 'ticks')
+        .attrs(this.getAttr('origin-ticks'), 'origin')
+        .attrs(this.getAttr('axis-text'), 'primary');
 
     if (isVertical(model.dependentAxisOrient)) {
         this.dependentAxis.tickSize(model.plotWidth)
@@ -910,11 +912,13 @@ Create.prototype.configureDependentScale = function (model) {
 
 Create.prototype.configureIndependentScale = function (model) {
     this.independentAxis
-        .theme(model.theme)
         .simple(model.simpleDate)
         .tickSize(model.tickSize)
         .orient(model.independentAxisOrient)
-        .attrs(this.getAttr('axis-text'));
+        .attrs(this.getAttr('independent-ticks'), 'ticks')
+        .attrs(this.getAttr('origin-ticks'), 'origin')
+        .attrs(this.getAttr('axis-text'), 'primary')
+        .attrs(this.getAttr('axis-secondary-text'), 'secondary');
     if (!isVertical(model.independentAxisOrient)) {
         this.independentAxis.yOffset(model.plotHeight);	//position the axis at the bottom of the chart
     }
@@ -1004,11 +1008,9 @@ var timeDiff = dates.timeDiff;
 
 function dateAxis() {
     var config = {
-        theme: false,
         axes: [d3.svg.axis().orient('bottom')],
         scale: false,
         lineHeight: 20,
-        stack: false,
         tickSize: 5,
         simple: false,//axis has only first and last points as ticks, i.e. the scale's domain extent
         nice: false,
@@ -1019,14 +1021,29 @@ function dateAxis() {
         xOffset: 0,
         labelWidth: 0,
         showDomain: false,
-        keepD3Style: false,
-        attr: {}
+        attr: {
+            ticks: {
+                'stroke': 'rgba(0, 0, 0, 0.3)',
+                'shape-rendering': 'crispEdges'
+            },
+            primary: {
+                fill:'#757470',
+                'font-family': 'BentonSans, sans-serif',
+                'font-size': 12
+            },
+            secondary:{}
+        }
     };
 
+    function isVertical(){
+        return ['right','left'].indexOf(config.axes[0].orient())>-1;
+    }
+
     function render(g) {
+        config.attr.primary['text-anchor'] = isVertical() ? 'end' : 'start';
+        config.attr.secondary['text-anchor'] = isVertical() ? 'end' : 'start';
 
         g = g.append('g').attr('transform', 'translate(' + config.xOffset + ',' + config.yOffset + ')');
-
         g.append('g').attr('class', 'x axis axis--independent axis--date').each(function () {
             labels.add(d3.select(this), config);
         });
@@ -1035,12 +1052,6 @@ function dateAxis() {
             g.select('path.domain').remove();
         }
     }
-
-    render.theme = function (themeUpdate) {
-        if (!arguments.length) return config.theme;
-        config.theme = themeUpdate;
-        return render;
-    };
 
     render.simple = function (bool) {
         if (!arguments.length) return config.simple;
@@ -1091,15 +1102,9 @@ function dateAxis() {
         return render;
     };
 
-    render.stack = function (bool) {
-        if (!arguments.length) return config.stack;
-        config.stack = bool;
-        return render;
-    };
-
-    render.attrs = function (obj) {
-        if (!arguments.length) return config.attr;
-        if (typeof obj !== "undefined") config.attr = obj;
+    render.attrs = function (obj, target) {
+        if (!arguments.length) return config.attr[target || 'primary'];
+        if (typeof obj !== "undefined") config.attr[target || 'primary'] = obj;
         //for (var prop in config.attr){
         //    if (render[prop]) render[prop](obj[prop]);
         //}
@@ -1226,13 +1231,11 @@ module.exports = {
 var d3 = require('d3');
 var numberLabels = require('./number.labels');
 var numberScales = require('./number.scale');
-var themes = require('../themes');
 
 function numericAxis() {
     'use strict';
 
     var config = {
-        theme: undefined,
         axes: d3.svg.axis().orient('left').tickSize(5, 0),
         tickSize: 5,
         lineHeight: 16,
@@ -1245,25 +1248,39 @@ function numericAxis() {
         noLabels: false,
         pixelsPerTick: 100,
         tickExtension: 0,
-        attr: {}
+        attr: {
+            ticks: {
+                'stroke': 'rgba(0, 0, 0, 0.1)',
+                'shape-rendering': 'crispEdges'
+            },
+            origin: {
+                'stroke': 'rgba(0, 0, 0, 0.3)',
+                'stroke-dasharray': 'none'
+            },
+            primary:{
+                fill:'#757470',
+                'font-family': 'BentonSans, sans-serif',
+                'font-size': 12
+            },
+            secondary:{}
+        }
     };
+
+    function isVertical(){
+        return ['right','left'].indexOf(config.axes.orient())>-1;
+    }
 
     function axis(g) {
         var orientOffset = (config.axes.orient() === 'right') ? -config.axes.tickSize() : 0;
+        config.attr.primary['text-anchor'] = isVertical() ? 'end' : 'start';
+        config.attr.secondary['text-anchor'] = isVertical() ? 'end' : 'start';
 
         g = g.append('g').attr('transform', 'translate(' + (config.xOffset + orientOffset) + ',' + config.yOffset + ')');
         numberLabels.render(g, config);
         if (config.noLabels) {
             g.selectAll('text').remove();
         }
-        themes.applyTheme(g, config.theme);
     }
-
-    axis.theme = function (themeUpdate) {
-        if (!arguments.length) return config.theme;
-        config.theme = themeUpdate;
-        return axis;
-    };
 
     axis.tickExtension = function (int) { // extend the axis ticks to the right/ left a specified distance
         if (!arguments.length) return config.tickExtension;
@@ -1358,9 +1375,9 @@ function numericAxis() {
         return axis;
     };
 
-    axis.attrs = function (obj) {
-        if (!arguments.length) return config.attr;
-        if (typeof obj !== "undefined") config.attr = obj;
+    axis.attrs = function (obj, target) {
+        if (!arguments.length) return config.attr[target || 'primary'];
+        if (typeof obj !== "undefined") config.attr[target || 'primary'] = obj;
         //for (var prop in config.attr){
         //    if (axis[prop]) axis[prop](obj[prop]);
         //}
@@ -1372,19 +1389,22 @@ function numericAxis() {
 
 module.exports = numericAxis;
 
-},{"../themes":31,"./number.labels":11,"./number.scale":12,"d3":"d3"}],11:[function(require,module,exports){
+},{"./number.labels":11,"./number.scale":12,"d3":"d3"}],11:[function(require,module,exports){
 module.exports = {
 
     isVertical: function (axis) {
         return axis.orient() === 'left' || axis.orient() === 'right';
     },
-    arrangeTicks: function (g, axes, lineHeight, hardRules) {
-        var textWidth = this.textWidth(g, axes.orient());
-        g.selectAll('.tick').classed('origin', function (d, i) {
-            return hardRules.indexOf(d) > -1;
-        });
-        if (this.isVertical(axes)) {
-            g.selectAll('text').attr('transform', 'translate( ' + textWidth + ', ' + -(lineHeight / 2) + ' )');
+    arrangeTicks: function (g, config) {
+        var textWidth = this.textWidth(g, config.axes.orient());
+        g.selectAll('.tick')
+            .classed('origin', function (d, i) {
+                return config.hardRules.indexOf(d) > -1;
+            });
+        g.selectAll('line').attr(config.attr.ticks);
+        g.selectAll('.origin line').attr(config.attr.origin);
+        if (this.isVertical(config.axes)) {
+            g.selectAll('text').attr('transform', 'translate( ' + textWidth + ', ' + -(config.lineHeight / 2) + ' )');
         }
     },
     extendAxis: function (g, axes, tickExtension) {
@@ -1421,14 +1441,18 @@ module.exports = {
         }
     },
     render: function (g, config) {
+        var xOrY = (this.isVertical(config.axes)) ? 'y' : 'x';
+        var orient = config.axes.orient();
         g.append('g')
-            .attr('class', (this.isVertical(config.axes)) ? 'axis axis--dependent axis--number y left' : 'axis axis--dependent axis--number  x')
+            .attr('class', 'axis axis--dependent axis--number ' + xOrY + ' ' + orient)
             .append('g')
             .attr('class', 'primary')
             .call(config.axes);
-        g.selectAll('text').attr(config.attr);
+
+        g.selectAll('text').attr('style','').attr(config.attr.primary);
+
         this.removeDecimals(g);
-        this.arrangeTicks(g, config.axes, config.lineHeight, config.hardRules);
+        this.arrangeTicks(g, config);
         if (this.isVertical(config.axes)) {
             this.extendAxis(g, config.axes, config.tickExtension);
         }
@@ -1737,6 +1761,7 @@ function barChart(g){
 	for(i; i < model.y.series.length; i++){
 		plotSeries(plotSVG, model, creator, model.y.series[i], i);
 	}
+    chartSVG.selectAll('path.domain').attr('fill', 'none');
 }
 
 module.exports = barChart;
@@ -1926,6 +1951,7 @@ function columnChart(g){
     for(i; i < model.y.series.length; i++){
         plotSeries(plotSVG, model, creator, model.y.series[i], i);
     }
+    chartSVG.selectAll('path.domain').attr('fill', 'none');
 }
 
 module.exports = columnChart;
@@ -2028,6 +2054,7 @@ function lineChart(g) {
     while (i--) {
         plotSeries(plotSVG, model, creator, model.y.series[i], lineAttr, borderAttrs);
     }
+    chartSVG.selectAll('path.domain').attr('fill', 'none');
 }
 
 module.exports = lineChart;
@@ -2176,9 +2203,9 @@ Dressing.prototype.addFooter = function () {
     this.addBackground(this.svg, [0,0, this.model.width, this.model.height]);
 };
 
-
 Dressing.prototype.addLogo = function () {
     var model = this.model;
+    if (!model.logoSize) return;
     var logo = this.svg.append('g').attr('class', 'chart-logo').call(ftLogo, model.logoSize);
     logo.attr('transform', model.translate({
         left: model.width - model.logoSize - 3,
@@ -3234,82 +3261,26 @@ var colours = {
     accent: '#9e2f50'
 };
 
+// SPECIAL 'non-svg' ATTRIBUTES:
+// padding-x: applied to the SVG (affects svg > child) and 'text' elements (dressing/index.js does this)
+// padding-y: applied to the SVG (affects svg > child) and 'text' elements (dressing/index.js does this)
+// padding:   applied to 'text' elements (dressing/index.js does this)
+// align:     applied to 'text' elements (dressing/index.js does this)
+// background:applied to 'text' elements (dressing/index.js does this)
+// border:    applied to 'line' and 'path' elements (dressing/index.js does this)
+
 module.exports.theme = [
-    //general
+    {
+        'selector': 'path.accent, line.accent, rect.accent',
+        'attributes': {
+            'stroke': colours.accent
+        }
+    },
     {
         'id': 'svg',
         'selector': 'svg',
         'attributes': {
             'background': '#fff1e0'
-        }
-    },
-    {
-        'selector': 'svg text',
-        'attributes': {
-            'font-family': 'BentonSans, sans-serif',
-            'stroke': 'none'
-        }
-    },
-    //axes
-    {
-        'selector': '.axis path, .axis line, .axis .tick',
-        'attributes': {
-            'shape-rendering': 'crispEdges',
-            'fill': 'none'
-        }
-    }, {
-        'selector': '.axis--dependent path.domain, .secondary path.domain, .secondary .tick line',
-        'attributes': {
-            'stroke': 'none'
-        }
-    },
-    {
-        'selector': '.axis--dependent .tick line',
-        'attributes': {
-            'stroke-dasharray': '2 2',
-            'stroke': 'rgba(0, 0, 0, 0.1)'
-        }
-    },
-    {
-        'selector': '.primary .origin line, .axis--independent .primary .tick line',
-        'attributes': {
-            'stroke': 'rgba(0, 0, 0, 0.3)',
-            'stroke-dasharray': 'none'
-        }
-    }, {
-        'id': 'axis-text',
-        'selector': '.axis text',
-        'attributes': {
-            'font-size': 12,
-            'font-family': 'BentonSans, sans-serif',
-            'stroke': 'none',
-            'fill': '#757470'
-        }
-    }, {
-        'selector': '.x.axis.axis--category text',
-        'attributes': {
-            'text-anchor': 'middle'
-        }
-    }, {
-        'selector': '.y.axis text',
-        'attributes': {
-            'text-anchor': 'end'
-        }
-    }, {
-        'selector': '.x.axis.axis--number text, .x.axis.axis--date text, .y.axis.right text',
-        'attributes': {
-            'text-anchor': 'start'
-        }
-    }, {
-        'selector': '.axis--independent .primary path.domain',
-        'attributes': {
-            'stroke': '#757470'
-        }
-    }, {
-        'selector': '.axis .secondary text',
-        'attributes': {
-            'font-size': 10,
-            'fill': '#757470'
         }
     },
     //lines
@@ -3324,26 +3295,18 @@ module.exports.theme = [
     },
     ////Columns
     //{   'id': 'columns',
-    //    'selector': '.column, .key__column',
     //    'attributes': {
     //        'stroke': 'none'
     //    }
     //},
     ////Bars
     //{   'id': 'bars',
-    //    'selector': '.column, .key__column',
     //    'attributes': {
     //        'stroke': 'none'
     //    }
     //},
     {
-        'selector': 'path.accent, line.accent, rect.accent',
-        'attributes': {
-            'stroke': colours.accent
-        }
-    }, {
         'id': 'null-label',
-        'selector': '.series text.null-label',
         'attributes': {
             'text-anchor': 'middle',
             'font-size': 10,
@@ -3353,7 +3316,6 @@ module.exports.theme = [
 
     //text
     {   'id': 'chart-title',
-        'selector': '.chart-title text',
         'attributes': {
             'font-family': 'BentonSans, sans-serif',
             'font-size': 18,
@@ -3361,7 +3323,6 @@ module.exports.theme = [
         }
     },
     {   'id': 'chart-subtitle',
-        'selector': '.chart-subtitle text',
         'attributes': {
             'font-family': 'BentonSans, sans-serif',
             'font-size': 12,
@@ -3369,7 +3330,6 @@ module.exports.theme = [
         }
     },
     {   'id': 'chart-source',
-        'selector': '.chart-source text',
         'attributes': {
             'font-family': 'BentonSans, sans-serif',
             'font-size': 10,
@@ -3378,7 +3338,6 @@ module.exports.theme = [
         }
     },
     {   'id': 'chart-footnote',
-        'selector': '.chart-footnote text',
         'attributes': {
             'font-family': 'BentonSans, sans-serif',
             'font-size': 12,
@@ -3387,13 +3346,48 @@ module.exports.theme = [
         }
     },
     {   'id': 'key',
-        'selector': '.key',
         'attributes': {
             'font-family': 'BentonSans, sans-serif',
             'font-size': 12,
             'line-height': 16,
             'fill': 'rgba(0, 0, 0, 0.5)',
             'padding-y': 8
+        }
+    },
+    {   'id': 'independent-ticks',
+        'attributes': {
+            'shape-rendering': 'crispEdges',
+            'stroke': 'rgba(0, 0, 0, 0.3)',
+            'stroke-dasharray': 'none'
+        }
+    },
+    {   'id': 'dependent-ticks',
+        'attributes': {
+            'shape-rendering': 'crispEdges',
+            'stroke': 'rgba(0, 0, 0, 0.1)',
+            'stroke-dasharray': '2 2'
+        }
+    },
+    {   'id': 'origin-ticks',
+        'attributes': {
+            'shape-rendering': 'crispEdges',
+            'stroke': 'rgba(0, 0, 0, 0.3)',
+            'stroke-dasharray': 'none'
+        }
+    },
+    {   'id': 'axis-text',
+        'attributes': {
+            'font-size': 12,
+            'font-family': 'BentonSans, sans-serif',
+            'stroke': 'none',
+            'fill': '#757470'
+        }
+    },
+    {   'id': 'axis-secondary-text',
+        'selector': '.axis .secondary text',
+        'attributes': {
+            'font-size': 10,
+            'fill': '#757470'
         }
     }
 ];
@@ -3412,7 +3406,6 @@ var themes = {
     ft: ft.theme,
     video: video.theme,
     print: print.theme,
-    applyTheme: applyAttributes,
     check: checkAttributes,
     createDefinitions: createDefinitions
 };
@@ -3437,20 +3430,8 @@ function createDefinitions(g, model) {
     elDefs.node().innerHTML += defs.join('');
 }
 
-function applyAttributes(g, theme, keepD3Styles) {
-    theme = theme || 'ft';
-    if (!keepD3Styles) {
-        (g || d3).selectAll('*').attr('style', null);
-    }
-    themes[theme].forEach(function (style, i){
-        var els = (g || d3).selectAll(style.selector);
-        els.attr(style.attributes);
-    });
-}
-
 function checkAttributes(theme, selector) {
-    theme = theme || 'ft';
-    return themes[theme].filter(function (style, i) {
+    return themes[theme || 'ft'].filter(function (style, i) {
         return (style.id == selector);
     })[0] || {attributes:{}};//return only a single object by id
 }
@@ -3480,82 +3461,19 @@ var colours = {
 // background:applied to 'text' elements (dressing/index.js does this)
 // border:    applied to 'line' and 'path' elements (dressing/index.js does this)
 
-module.exports.colours = colours;
 module.exports.theme = [
-    //general
+    {
+        'selector': 'path.accent, line.accent, rect.accent',
+        'attributes': {
+            'stroke': colours.accent
+        }
+    },
     {
         'id': 'svg',
-        'selector': 'svg',
         'attributes': {
             'padding-x': 8,
             'padding-y': 10,
             background: 'rgba(255,255,255,1)'
-        }
-    },
-    {
-        'selector': 'svg text',
-        'attributes': {
-            'font-family': 'MetricWeb, sans-serif',
-            'font-weight': '600',
-            'fill': 'rgba(0, 0, 0, 0.8)',
-            'stroke': 'none'
-        }
-    },
-    {   'id': 'chart-logo',
-        'selector': '.chart-logo',
-        'attributes': {
-            'display': 'none'
-        }
-    },
-    //axes
-    {
-        'selector': '.axis path, .axis line, .axis .tick',
-        'attributes': {
-            'shape-rendering': 'crispEdges',
-            'fill': 'none'
-        }
-    }, {
-        'selector': '.axis--dependent path.domain, .secondary path.domain, .secondary .tick line',
-        'attributes': {
-            'stroke': 'none'
-        }
-    },
-    {
-        'id': 'axis-tick',
-        'selector': '.axis--dependent .tick line, .primary .origin line, .axis--independent .primary .tick line',
-        'attributes': {
-            'stroke-dasharray': 'none',
-            'stroke': 'rgba(54, 51, 52, 1)',
-            'stroke-width': 1
-        }
-    }, {
-        'id': 'axis-text',
-        'selector': '.axis text',
-        'attributes': {
-            'font-size': 12,
-            'font-family': 'MetricWeb, sans-serif',
-            'stroke': 'none',
-            'fill': 'rgba(0, 0, 0, 0.8)'
-        }
-    }, {
-        'selector': '.x.axis.axis--category text',
-        'attributes': {
-            'text-anchor': 'middle'
-        }
-    }, {
-        'selector': '.y.axis text',
-        'attributes': {
-            'text-anchor': 'end'
-        }
-    }, {
-        'selector': '.x.axis.axis--number text, .x.axis.axis--date text, .y.axis.right text',
-        'attributes': {
-            'text-anchor': 'start'
-        }
-    }, {
-        'selector': '.axis--independent .primary path.domain',
-        'attributes': {
-            'stroke': '#757470'
         }
     },
     //lines
@@ -3570,7 +3488,6 @@ module.exports.theme = [
     },
     //Columns
     {   'id': 'columns',
-        'selector': '.column, .key__column',
         'attributes': {
             stroke: 'rgb(243, 236, 228)',
             'stroke-width': 1
@@ -3578,20 +3495,13 @@ module.exports.theme = [
     },
     //bars
     {   'id': 'bars',
-        'selector': '.bar, .key__bar',
         'attributes': {
             stroke: 'rgb(243, 236, 228)',
             'stroke-width': 1
         }
     },
     {
-        'selector': 'path.accent, line.accent, rect.accent',
-        'attributes': {
-            'stroke': colours.accent
-        }
-    }, {
         'id': 'null-label',
-        'selector': '.series text.null-label',
         'attributes': {
             'text-anchor': 'middle',
             'font-size': 10,
@@ -3601,7 +3511,6 @@ module.exports.theme = [
 
     //text
     {   'id': 'chart-title',
-        'selector': '.chart-title text',
         'attributes': {
             'font-family': 'MetricWebSemiBold, sans-serif',
             'font-size': 12,
@@ -3611,7 +3520,6 @@ module.exports.theme = [
         }
     },
     {   'id': 'chart-subtitle',
-        'selector': '.chart-subtitle text',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
             'font-size': 10,
@@ -3621,7 +3529,6 @@ module.exports.theme = [
         }
     },
     {   'id': 'key',
-        'selector': '.key',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
             'font-size': 12,
@@ -3633,7 +3540,6 @@ module.exports.theme = [
         }
     },
     {   'id': 'chart-source',
-        'selector': '.chart-source text',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
             'font-size': 8,
@@ -3641,25 +3547,52 @@ module.exports.theme = [
         }
     }, {
         'id': 'chart-footnote',
-        'selector': '.chart-footnote text',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
             'font-size': 12,
             'line-height': 16
         }
-    }, {
-        'selector': '.primary .tick text',
+    },
+    {   'id': 'dependent-ticks',
+        'attributes': {
+            'shape-rendering': 'crispEdges',
+            'stroke': 'rgba(54, 51, 52, 1)',
+            'stroke-width': 1
+        }
+    },
+    {   'id': 'independent-ticks',
+        'attributes': {
+            'shape-rendering': 'crispEdges',
+            'stroke': 'rgba(54, 51, 52, 1)',
+            'stroke-width': 1
+        }
+    },
+    {   'id': 'origin-ticks',
+        'attributes': {
+            'shape-rendering': 'crispEdges',
+            'stroke': 'rgba(54, 51, 52, 1)',
+            'stroke-width': 1
+        }
+    },
+    {   'id': 'axis-text',
         'attributes': {
             'font-size': 12,
+            'font-family': 'MetricWeb, sans-serif',
+            'stroke': 'none',
             'font-weight': '600',
             'fill': 'rgba(0, 0, 0, 0.8)'
         }
-    }, {
-        'selector': '.secondary .tick text',
+    },
+    {   'id': 'axis-secondary-text',
         'attributes': {
             'font-size': 10,
             'font-weight': '600',
             'fill': 'rgba(0, 0, 0, 0.8)'
+        }
+    },
+    {   'id': 'chart-logo',
+        'attributes': {
+            'display': 'none'
         }
     }
 ];
@@ -3733,90 +3666,33 @@ module.exports.defs = {
 module.exports.theme = [
     //general
     {
+        'selector': 'path.accent, line.accent, rect.accent',
+        'attributes': {
+            'stroke': colours.accent
+        }
+    },
+    {
         'id': 'svg',
-        'selector': 'svg',
         'attributes': {
             'padding-x': 52,
             'padding-y': 25,
             'background': 'rgb(229,216,196)'
         }
     },
-    {
-        'selector': 'svg text',
-        'attributes': {
-            'font-family': 'MetricWebSemiBold, sans-serif',
-            'font-weight': '600',
-            'fill': 'rgba(0, 0, 0, 0.8)',
-            'stroke': 'none'
-        }
-    },
     {   'id': 'chart',
-        'selector': '.chart',
         'attributes': {
             'padding': PADDING
         }
     },
     {   'id': 'chart-logo',
-        'selector': '.chart-logo',
         'attributes': {
             'display': 'none'
         }
     },
-    //axes
-    {
-        'selector': '.axis path, .axis line, .axis .tick',
-        'attributes': {
-            'shape-rendering': 'crispEdges',
-            'fill': 'none'
-        }
-    }, {
-        'selector': '.axis--dependent path.domain, .secondary path.domain, .secondary .tick line',
-        'attributes': {
-            'stroke': 'none'
-        }
-    },
-    {
-        'id': 'axis-tick',
-        'selector': '.axis--dependent .tick line, .primary .origin line, .axis--independent .primary .tick line',
-        'attributes': {
-            'stroke-dasharray': 'none',
-            'stroke': 'rgba(255, 255, 255, 1)',
-            'stroke-width': 2
-        }
-    }, {
-        'id': 'axis-text',
-        'selector': '.axis text',
-        'attributes': {
-            'font-size': 12,
-            'font-family': 'MetricWebSemiBold, sans-serif',
-            'stroke': 'none',
-            'fill': 'rgba(0, 0, 0, 0.8)'
-        }
-    }, {
-        'selector': '.x.axis.axis--category text',
-        'attributes': {
-            'text-anchor': 'middle'
-        }
-    }, {
-        'selector': '.y.axis text',
-        'attributes': {
-            'text-anchor': 'end'
-        }
-    }, {
-        'selector': '.x.axis.axis--number text, .x.axis.axis--date text, .y.axis.right text',
-        'attributes': {
-            'text-anchor': 'start'
-        }
-    }, {
-        'selector': '.axis--independent .primary path.domain',
-        'attributes': {
-            'stroke': '#757470'
-        }
-    },
+
     //lines
     {
         'id': 'lines',
-        'selector': 'path.line, line.key__line',
         'attributes': {
             'border': colours.border,
             'fill': 'none',
@@ -3826,7 +3702,6 @@ module.exports.theme = [
     },
     //Columns
     {   'id': 'columns',
-        'selector': '.column, .key__column',
         'attributes': {
             stroke: 'rgb(243, 236, 228)',
             'stroke-width': 2
@@ -3834,20 +3709,13 @@ module.exports.theme = [
     },
     //bars
     {   'id': 'bars',
-        'selector': '.bar, .key__bar',
         'attributes': {
             stroke: 'rgb(243, 236, 228)',
             'stroke-width': 2
         }
     },
     {
-        'selector': 'path.accent, line.accent, rect.accent',
-        'attributes': {
-            'stroke': colours.accent
-        }
-    }, {
         'id': 'null-label',
-        'selector': '.series text.null-label',
         'attributes': {
             'text-anchor': 'middle',
             'font-size': 10,
@@ -3857,7 +3725,6 @@ module.exports.theme = [
 
     //text
     {   'id': 'chart-title',
-        'selector': '.chart-title text',
         'attributes': {
             'font-family': 'MetricWebSemiBold, sans-serif',
             'font-size': 20,
@@ -3868,57 +3735,81 @@ module.exports.theme = [
         }
     },
     {   'id': 'chart-subtitle',
-        'selector': '.chart-subtitle text',
         'attributes': {
             'font-family': 'MetricWebSemiBold, sans-serif',
             'font-size': 14,
             'line-height': 14,
+            'fill': '#43423e',
             'padding': PADDING
         }
     },
     {   'id': 'key',
-        'selector': '.key',
         'attributes': {
             'font-family': 'MetricWebSemiBold, sans-serif',
-            'font-size': 12,
+            'font-size': 14,
             'line-height': 16,
             'font-weight': '600',
-            'fill': 'rgba(0, 0, 0, 0.8)',
+            'fill': '#43423e',
             'padding': PADDING
         }
     },
     {   'id': 'chart-source',
-        'selector': '.chart-source text',
         'attributes': {
             'font-family': 'MetricWebSemiBold, sans-serif',
             'font-size': 12,
             'line-height': 14,
+            'fill': '#43423e',
             float: 'right',
             'padding-x': PADDING
         }
     },
     {   'id': 'chart-footnote',
-        'selector': '.chart-footnote text',
         'attributes': {
             'font-family': 'MetricWebSemiBold, sans-serif',
             'font-size': 12,
             'line-height': 16,
+            'fill': '#43423e',
             align: 'left',
             'padding-x': PADDING
         }
-    }, {
-        'selector': '.primary .tick text',
+    },
+    {   'id': 'dependent-ticks',
+        'attributes': {
+            'shape-rendering': 'crispEdges',
+            'stroke': 'rgba(255, 255, 255, 1)',
+            'stroke-width': 2
+        }
+    },
+    {   'id': 'independent-ticks',
+        'attributes': {
+            'shape-rendering': 'crispEdges',
+            'stroke': 'rgba(255, 255, 255, 1)',
+            'stroke-width': 2
+        }
+    },
+    {   'id': 'origin-ticks',
+        'attributes': {
+            'shape-rendering': 'crispEdges',
+            'stroke': 'rgba(255, 255, 255, 1)',
+            'stroke-width': 2
+        }
+    },
+    {
+        'id': 'axis-text',
+        'attributes': {
+            'font-size': 14,
+            'font-family': 'MetricWebSemiBold, sans-serif',
+            'stroke': 'none',
+            'font-weight': '600',
+            'fill': '#43423e'
+        }
+    },
+    {
+        'id': 'axis-secondary-text',
         'attributes': {
             'font-size': 12,
             'font-weight': '600',
-            'fill': 'rgba(0, 0, 0, 0.8)'
-        }
-    }, {
-        'selector': '.secondary .tick text',
-        'attributes': {
-            'font-size': 10,
-            'font-weight': '600',
-            'fill': 'rgba(0, 0, 0, 0.8)'
+            'fill': '#43423e'
         }
     }
 ];
@@ -4460,7 +4351,6 @@ module.exports = {
 },{"d3":"d3"}],37:[function(require,module,exports){
 var d3 = require('d3');
 var dates = require('../util/dates');
-var themes = require('../themes');
 var dateFormatter = dates.formatter;
 
 module.exports = {
@@ -4490,26 +4380,26 @@ module.exports = {
             self.addRow(g, axis, options, config);
             options.row ++;
         });
+        g.selectAll('.axis .primary line').attr(config.attr.ticks);
 
         //remove text-anchor attribute from year positions
-        g.selectAll('.x.axis .primary text').attr({
-            x: null,
-            y: null,
-            dy: 15 + config.tickSize
-        });
-
+        g.selectAll('.x.axis .primary text')
+            .attr({
+                x: null,
+                y: null,
+                dy: 15 + config.tickSize
+            });
     },
 
     addRow: function(g, axis, options, config){
         var rowClass = (options.row) ? 'secondary': 'primary';
-        g.append('g').attr(config.attr)
+        var attr = config.attr[rowClass] || config.attr.primary;
+        g.append('g')
             .attr('class', rowClass)
             .attr('transform', 'translate(0,' + (options.row * config.lineHeight) + ')')
             .call(axis);
 
-        // style the row before we do any removing, to ensure that
-        // collision detection is done correctly
-        themes.applyTheme(g, config.theme, config.keepD3Style);
+        g.selectAll('.axis .' + rowClass + ' text').attr('style','').attr(attr);
 
         if (config.dataType === 'categorical') {
             return;
@@ -4652,7 +4542,7 @@ module.exports = {
     }
 };
 
-},{"../themes":31,"../util/dates":36,"d3":"d3"}],38:[function(require,module,exports){
+},{"../util/dates":36,"d3":"d3"}],38:[function(require,module,exports){
 //a place to define custom line interpolators
 
 var d3 = require('d3');
