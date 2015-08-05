@@ -3,13 +3,16 @@ module.exports = {
     isVertical: function (axis) {
         return axis.orient() === 'left' || axis.orient() === 'right';
     },
-    arrangeTicks: function (g, axes, lineHeight, hardRules) {
-        var textWidth = this.textWidth(g, axes.orient());
-        g.selectAll('.tick').classed('origin', function (d, i) {
-            return hardRules.indexOf(d) > -1;
-        });
-        if (this.isVertical(axes)) {
-            g.selectAll('text').attr('transform', 'translate( ' + textWidth + ', ' + -(lineHeight / 2) + ' )');
+    arrangeTicks: function (g, config) {
+        var textWidth = this.textWidth(g, config.axes.orient());
+        g.selectAll('.tick')
+            .classed('origin', function (d, i) {
+                return config.hardRules.indexOf(d) > -1;
+            });
+        g.selectAll('line').attr(config.attr.ticks);
+        g.selectAll('.origin line').attr(config.attr.origin);
+        if (this.isVertical(config.axes)) {
+            g.selectAll('text').attr('transform', 'translate( ' + textWidth + ', ' + -(config.lineHeight / 2) + ' )');
         }
     },
     extendAxis: function (g, axes, tickExtension) {
@@ -46,14 +49,18 @@ module.exports = {
         }
     },
     render: function (g, config) {
+        var xOrY = (this.isVertical(config.axes)) ? 'y' : 'x';
+        var orient = config.axes.orient();
         g.append('g')
-            .attr('class', (this.isVertical(config.axes)) ? 'axis axis--dependent axis--number y left' : 'axis axis--dependent axis--number  x')
+            .attr('class', 'axis axis--dependent axis--number ' + xOrY + ' ' + orient)
             .append('g')
             .attr('class', 'primary')
             .call(config.axes);
-        g.selectAll('text').attr(config.attr);
+
+        g.selectAll('text').attr('style','').attr(config.attr.primary);
+
         this.removeDecimals(g);
-        this.arrangeTicks(g, config.axes, config.lineHeight, config.hardRules);
+        this.arrangeTicks(g, config);
         if (this.isVertical(config.axes)) {
             this.extendAxis(g, config.axes, config.tickExtension);
         }

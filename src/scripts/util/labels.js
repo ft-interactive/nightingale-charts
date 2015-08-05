@@ -1,6 +1,5 @@
 var d3 = require('d3');
 var dates = require('../util/dates');
-var themes = require('../themes');
 var dateFormatter = dates.formatter;
 
 module.exports = {
@@ -30,26 +29,26 @@ module.exports = {
             self.addRow(g, axis, options, config);
             options.row ++;
         });
+        g.selectAll('.axis .primary line').attr(config.attr.ticks);
 
         //remove text-anchor attribute from year positions
-        g.selectAll('.x.axis .primary text').attr({
-            x: null,
-            y: null,
-            dy: 15 + config.tickSize
-        });
-
+        g.selectAll('.x.axis .primary text')
+            .attr({
+                x: null,
+                y: null,
+                dy: 15 + config.tickSize
+            });
     },
 
     addRow: function(g, axis, options, config){
         var rowClass = (options.row) ? 'secondary': 'primary';
-        g.append('g').attr(config.attr)
+        var attr = config.attr[rowClass] || config.attr.primary;
+        g.append('g')
             .attr('class', rowClass)
             .attr('transform', 'translate(0,' + (options.row * config.lineHeight) + ')')
             .call(axis);
 
-        // style the row before we do any removing, to ensure that
-        // collision detection is done correctly
-        themes.applyTheme(g, config.theme, config.keepD3Style);
+        g.selectAll('.axis .' + rowClass + ' text').attr('style','').attr(attr);
 
         if (config.dataType === 'categorical') {
             return;

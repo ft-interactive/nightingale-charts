@@ -117,6 +117,7 @@ function barChart(g){
 	for(i; i < model.y.series.length; i++){
 		plotSeries(plotSVG, model, creator, model.y.series[i], i);
 	}
+    chartSVG.selectAll('path.domain').attr('fill', 'none');
 }
 
 module.exports = barChart;

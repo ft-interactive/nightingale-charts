@@ -5,13 +5,11 @@
 var d3 = require('d3');
 var numberLabels = require('./number.labels');
 var numberScales = require('./number.scale');
-var themes = require('../themes');
 
 function numericAxis() {
     'use strict';
 
     var config = {
-        theme: undefined,
         axes: d3.svg.axis().orient('left').tickSize(5, 0),
         tickSize: 5,
         lineHeight: 16,
@@ -24,25 +22,39 @@ function numericAxis() {
         noLabels: false,
         pixelsPerTick: 100,
         tickExtension: 0,
-        attr: {}
+        attr: {
+            ticks: {
+                'stroke': 'rgba(0, 0, 0, 0.1)',
+                'shape-rendering': 'crispEdges'
+            },
+            origin: {
+                'stroke': 'rgba(0, 0, 0, 0.3)',
+                'stroke-dasharray': 'none'
+            },
+            primary:{
+                fill:'#757470',
+                'font-family': 'BentonSans, sans-serif',
+                'font-size': 12
+            },
+            secondary:{}
+        }
     };
+
+    function isVertical(){
+        return ['right','left'].indexOf(config.axes.orient())>-1;
+    }
 
     function axis(g) {
         var orientOffset = (config.axes.orient() === 'right') ? -config.axes.tickSize() : 0;
+        config.attr.primary['text-anchor'] = isVertical() ? 'end' : 'start';
+        config.attr.secondary['text-anchor'] = isVertical() ? 'end' : 'start';
 
         g = g.append('g').attr('transform', 'translate(' + (config.xOffset + orientOffset) + ',' + config.yOffset + ')');
         numberLabels.render(g, config);
         if (config.noLabels) {
             g.selectAll('text').remove();
         }
-        themes.applyTheme(g, config.theme);
     }
-
-    axis.theme = function (themeUpdate) {
-        if (!arguments.length) return config.theme;
-        config.theme = themeUpdate;
-        return axis;
-    };
 
     axis.tickExtension = function (int) { // extend the axis ticks to the right/ left a specified distance
         if (!arguments.length) return config.tickExtension;
@@ -137,9 +149,9 @@ function numericAxis() {
         return axis;
     };
 
-    axis.attrs = function (obj) {
-        if (!arguments.length) return config.attr;
-        if (typeof obj !== "undefined") config.attr = obj;
+    axis.attrs = function (obj, target) {
+        if (!arguments.length) return config.attr[target || 'primary'];
+        if (typeof obj !== "undefined") config.attr[target || 'primary'] = obj;
         //for (var prop in config.attr){
         //    if (axis[prop]) axis[prop](obj[prop]);
         //}
