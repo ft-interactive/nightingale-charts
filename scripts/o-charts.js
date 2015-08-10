@@ -619,7 +619,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 },{"./support/isBuffer":2,"inherits":1}],4:[function(require,module,exports){
-module.exports={"version":"0.6.2"}
+module.exports={"version":"0.6.3"}
 
 },{}],5:[function(require,module,exports){
 var d3 = require('d3');
@@ -999,7 +999,7 @@ Create.prototype.createAxes = function (axesSpec) {
 
 module.exports = Create;
 
-},{"../scales/intra-day":29,"../themes":31,"./category.js":5,"./date.js":7,"./number.js":10,"d3":"d3"}],7:[function(require,module,exports){
+},{"../scales/intra-day":29,"../themes":33,"./category.js":5,"./date.js":7,"./number.js":10,"d3":"d3"}],7:[function(require,module,exports){
 var d3 = require('d3');
 var labels = require('../util/labels.js');
 var dates = require('../util/dates.js');
@@ -1036,6 +1036,7 @@ function dateAxis() {
     };
 
     function isVertical(){
+        if (!config.axes.length) return true; //todo: log error. no axis
         return ['right','left'].indexOf(config.axes[0].orient())>-1;
     }
 
@@ -1766,7 +1767,7 @@ function barChart(g){
 
 module.exports = barChart;
 
-},{"../axis":9,"../dressing":20,"../themes":31,"../util/data.model.js":35,"../util/metadata.js":40}],15:[function(require,module,exports){
+},{"../axis":9,"../dressing":20,"../themes":33,"../util/data.model.js":35,"../util/metadata.js":40}],15:[function(require,module,exports){
 //var d3 = require('d3');
 
 function blankChart() {
@@ -1956,7 +1957,7 @@ function columnChart(g){
 
 module.exports = columnChart;
 
-},{"../axis":9,"../dressing":20,"../themes":31,"../util/data.model.js":35,"../util/metadata.js":40}],17:[function(require,module,exports){
+},{"../axis":9,"../dressing":20,"../themes":33,"../util/data.model.js":35,"../util/metadata.js":40}],17:[function(require,module,exports){
 module.exports = {
     line: require('./line.js'),
     blank: require('./blank.js'),
@@ -2059,7 +2060,7 @@ function lineChart(g) {
 
 module.exports = lineChart;
 
-},{"../axis":9,"../dressing":20,"../themes":31,"../util/data.model.js":35,"../util/line-interpolators.js":38,"../util/metadata.js":40,"d3":"d3","util":3}],19:[function(require,module,exports){
+},{"../axis":9,"../dressing":20,"../themes":33,"../util/data.model.js":35,"../util/line-interpolators.js":38,"../util/metadata.js":40,"d3":"d3","util":3}],19:[function(require,module,exports){
 //var d3 = require('d3');
 
 function pieChart() {
@@ -2334,7 +2335,7 @@ Dressing.prototype.setChartPosition = function () {
 
 module.exports = Dressing;
 
-},{"../themes":31,"./logo.js":21,"./series-key.js":22,"./text-area.js":23}],21:[function(require,module,exports){
+},{"../themes":33,"./logo.js":21,"./series-key.js":22,"./text-area.js":23}],21:[function(require,module,exports){
 //the ft logo there's probably an easier ay to do this...
 //var d3 = require('d3');
 
@@ -2588,7 +2589,7 @@ function seriesKey(options) {
 
 module.exports = seriesKey;
 
-},{"../themes":31,"../util/line-thickness.js":39,"d3":"d3"}],23:[function(require,module,exports){
+},{"../themes":33,"../util/line-thickness.js":39,"d3":"d3"}],23:[function(require,module,exports){
 /*jshint -W084 */
 //text area provides a wrapping text block of a given type
 var d3 = require('d3');
@@ -3248,197 +3249,6 @@ module.exports = function(open, close) {
 };
 
 },{"./discontinuableDateTime":25,"./discontinuityProviders/intra-day":27}],30:[function(require,module,exports){
-var colours = {
-    line: [
-        '#af516c', '#ecafaf', '#d7706c', '#76acb8', '#7fd8f5', '#3d7ab3', '#b8b1a9'
-    ],
-    column: [
-        '#bb6d82', '#ecafaf', '#d7706c', '#cb9f8c', '#b07979', '#ccc2c2', '#8f7d95', '#b8b1a9'
-    ],
-    bar: [
-        '#bb6d82', '#ecafaf', '#d7706c', '#cb9f8c', '#b07979', '#ccc2c2', '#8f7d95', '#b8b1a9'
-    ],
-    accent: '#9e2f50'
-};
-
-// SPECIAL 'non-svg' ATTRIBUTES:
-// padding-x: applied to the SVG (affects svg > child) and 'text' elements (dressing/index.js does this)
-// padding-y: applied to the SVG (affects svg > child) and 'text' elements (dressing/index.js does this)
-// padding:   applied to 'text' elements (dressing/index.js does this)
-// align:     applied to 'text' elements (dressing/index.js does this)
-// background:applied to 'text' elements (dressing/index.js does this)
-// border:    applied to 'line' and 'path' elements (dressing/index.js does this)
-
-module.exports.theme = [
-    {
-        'selector': 'path.accent, line.accent, rect.accent',
-        'attributes': {
-            'stroke': colours.accent
-        }
-    },
-    {
-        'id': 'svg',
-        'selector': 'svg',
-        'attributes': {
-            'background': '#fff1e0'
-        }
-    },
-    //lines
-    {
-        'id': 'lines',
-        'selector': 'path.line, line.key__line',
-        'attributes': {
-            'fill': 'none',
-            'stroke-linejoin': 'round',
-            'stroke-linecap': 'round'
-        }
-    },
-    ////Columns
-    //{   'id': 'columns',
-    //    'attributes': {
-    //        'stroke': 'none'
-    //    }
-    //},
-    ////Bars
-    //{   'id': 'bars',
-    //    'attributes': {
-    //        'stroke': 'none'
-    //    }
-    //},
-    {
-        'id': 'null-label',
-        'attributes': {
-            'text-anchor': 'middle',
-            'font-size': 10,
-            'fill': 'rgba(0, 0, 0, 0.4)'
-        }
-    },
-
-    //text
-    {   'id': 'chart-title',
-        'attributes': {
-            'font-family': 'BentonSans, sans-serif',
-            'font-size': 18,
-            'fill': 'rgba(0, 0, 0, 0.8)'
-        }
-    },
-    {   'id': 'chart-subtitle',
-        'attributes': {
-            'font-family': 'BentonSans, sans-serif',
-            'font-size': 12,
-            'fill': 'rgba(0, 0, 0, 0.5)'
-        }
-    },
-    {   'id': 'chart-source',
-        'attributes': {
-            'font-family': 'BentonSans, sans-serif',
-            'font-size': 10,
-            'line-height': 12,
-            'fill': 'rgba(0, 0, 0, 0.5)'
-        }
-    },
-    {   'id': 'chart-footnote',
-        'attributes': {
-            'font-family': 'BentonSans, sans-serif',
-            'font-size': 12,
-            'line-height': 15,
-            'fill': 'rgba(0, 0, 0, 0.5)'
-        }
-    },
-    {   'id': 'key',
-        'attributes': {
-            'font-family': 'BentonSans, sans-serif',
-            'font-size': 12,
-            'line-height': 16,
-            'fill': 'rgba(0, 0, 0, 0.5)',
-            'padding-y': 8
-        }
-    },
-    {   'id': 'independent-ticks',
-        'attributes': {
-            'shape-rendering': 'crispEdges',
-            'stroke': 'rgba(0, 0, 0, 0.3)',
-            'stroke-dasharray': 'none'
-        }
-    },
-    {   'id': 'dependent-ticks',
-        'attributes': {
-            'shape-rendering': 'crispEdges',
-            'stroke': 'rgba(0, 0, 0, 0.1)',
-            'stroke-dasharray': '2 2'
-        }
-    },
-    {   'id': 'origin-ticks',
-        'attributes': {
-            'shape-rendering': 'crispEdges',
-            'stroke': 'rgba(0, 0, 0, 0.3)',
-            'stroke-dasharray': 'none'
-        }
-    },
-    {   'id': 'axis-text',
-        'attributes': {
-            'font-size': 12,
-            'font-family': 'BentonSans, sans-serif',
-            'stroke': 'none',
-            'fill': '#757470'
-        }
-    },
-    {   'id': 'axis-secondary-text',
-        'selector': '.axis .secondary text',
-        'attributes': {
-            'font-size': 10,
-            'fill': '#757470'
-        }
-    }
-];
-module.exports.theme.colours = colours;
-
-},{}],31:[function(require,module,exports){
-// because of the need to export and convert browser rendered SVGs
-// we need a simple way to attach styles as attributes if necessary,
-// so, heres a list of attributes and the selectors to which they should be applied
-var d3 = require('d3');
-var ft = require('./ft');
-var video = require('./video');
-var print = require('./print');
-
-var themes = {
-    ft: ft.theme,
-    video: video.theme,
-    print: print.theme,
-    check: checkAttributes,
-    createDefinitions: createDefinitions
-};
-var definitions = {
-    ft: ft.defs,
-    video: video.defs,
-    print: print.defs
-};
-
-function createDefinitions(g, model) {
-    if (!model.gradients) return;
-
-    var theme = model.theme;
-    var series = model.y.series.length;
-    var defs = model.gradients.map(function(grad, i){
-        if (i >= series) return;
-        var id = grad.match(/url\(#(.*)\)/)[1];
-        return definitions[theme][id];
-    });
-    var elDefs = g.select('.chart-definitions');
-    if (!elDefs.size()) elDefs = g.append('g').attr('class', 'chart-definitions');
-    elDefs.node().innerHTML += defs.join('');
-}
-
-function checkAttributes(theme, selector) {
-    return themes[theme || 'ft'].filter(function (style, i) {
-        return (style.id == selector);
-    })[0] || {attributes:{}};//return only a single object by id
-}
-
-module.exports = themes;
-
-},{"./ft":30,"./print":32,"./video":33,"d3":"d3"}],32:[function(require,module,exports){
 var PADDING = 0;
 var colours = {
     line: [
@@ -3598,7 +3408,7 @@ module.exports.theme = [
 ];
 module.exports.theme.colours = colours;
 
-},{}],33:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 var PADDING = 8;
 var colours = {
     line: [
@@ -3817,7 +3627,198 @@ module.exports.theme = [
 module.exports.theme.colours = colours;
 module.exports.theme.gradients = gradients;
 
-},{}],34:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
+var colours = {
+    line: [
+        '#af516c', '#ecafaf', '#d7706c', '#76acb8', '#7fd8f5', '#3d7ab3', '#b8b1a9'
+    ],
+    column: [
+        '#bb6d82', '#ecafaf', '#d7706c', '#cb9f8c', '#b07979', '#ccc2c2', '#8f7d95', '#b8b1a9'
+    ],
+    bar: [
+        '#bb6d82', '#ecafaf', '#d7706c', '#cb9f8c', '#b07979', '#ccc2c2', '#8f7d95', '#b8b1a9'
+    ],
+    accent: '#9e2f50'
+};
+
+// SPECIAL 'non-svg' ATTRIBUTES:
+// padding-x: applied to the SVG (affects svg > child) and 'text' elements (dressing/index.js does this)
+// padding-y: applied to the SVG (affects svg > child) and 'text' elements (dressing/index.js does this)
+// padding:   applied to 'text' elements (dressing/index.js does this)
+// align:     applied to 'text' elements (dressing/index.js does this)
+// background:applied to 'text' elements (dressing/index.js does this)
+// border:    applied to 'line' and 'path' elements (dressing/index.js does this)
+
+module.exports.theme = [
+    {
+        'selector': 'path.accent, line.accent, rect.accent',
+        'attributes': {
+            'stroke': colours.accent
+        }
+    },
+    {
+        'id': 'svg',
+        'selector': 'svg',
+        'attributes': {
+            'background': '#fff1e0'
+        }
+    },
+    //lines
+    {
+        'id': 'lines',
+        'selector': 'path.line, line.key__line',
+        'attributes': {
+            'fill': 'none',
+            'stroke-linejoin': 'round',
+            'stroke-linecap': 'round'
+        }
+    },
+    ////Columns
+    //{   'id': 'columns',
+    //    'attributes': {
+    //        'stroke': 'none'
+    //    }
+    //},
+    ////Bars
+    //{   'id': 'bars',
+    //    'attributes': {
+    //        'stroke': 'none'
+    //    }
+    //},
+    {
+        'id': 'null-label',
+        'attributes': {
+            'text-anchor': 'middle',
+            'font-size': 10,
+            'fill': 'rgba(0, 0, 0, 0.4)'
+        }
+    },
+
+    //text
+    {   'id': 'chart-title',
+        'attributes': {
+            'font-family': 'BentonSans, sans-serif',
+            'font-size': 18,
+            'fill': 'rgba(0, 0, 0, 0.8)'
+        }
+    },
+    {   'id': 'chart-subtitle',
+        'attributes': {
+            'font-family': 'BentonSans, sans-serif',
+            'font-size': 12,
+            'fill': 'rgba(0, 0, 0, 0.5)'
+        }
+    },
+    {   'id': 'chart-source',
+        'attributes': {
+            'font-family': 'BentonSans, sans-serif',
+            'font-size': 10,
+            'line-height': 12,
+            'fill': 'rgba(0, 0, 0, 0.5)'
+        }
+    },
+    {   'id': 'chart-footnote',
+        'attributes': {
+            'font-family': 'BentonSans, sans-serif',
+            'font-size': 12,
+            'line-height': 15,
+            'fill': 'rgba(0, 0, 0, 0.5)'
+        }
+    },
+    {   'id': 'key',
+        'attributes': {
+            'font-family': 'BentonSans, sans-serif',
+            'font-size': 12,
+            'line-height': 16,
+            'fill': 'rgba(0, 0, 0, 0.5)',
+            'padding-y': 8
+        }
+    },
+    {   'id': 'independent-ticks',
+        'attributes': {
+            'shape-rendering': 'crispEdges',
+            'stroke': 'rgba(0, 0, 0, 0.3)',
+            'stroke-dasharray': 'none'
+        }
+    },
+    {   'id': 'dependent-ticks',
+        'attributes': {
+            'shape-rendering': 'crispEdges',
+            'stroke': 'rgba(0, 0, 0, 0.1)',
+            'stroke-dasharray': '2 2'
+        }
+    },
+    {   'id': 'origin-ticks',
+        'attributes': {
+            'shape-rendering': 'crispEdges',
+            'stroke': 'rgba(0, 0, 0, 0.3)',
+            'stroke-dasharray': 'none'
+        }
+    },
+    {   'id': 'axis-text',
+        'attributes': {
+            'font-size': 12,
+            'font-family': 'BentonSans, sans-serif',
+            'stroke': 'none',
+            'fill': '#757470'
+        }
+    },
+    {   'id': 'axis-secondary-text',
+        'selector': '.axis .secondary text',
+        'attributes': {
+            'font-size': 10,
+            'fill': '#757470'
+        }
+    }
+];
+module.exports.theme.colours = colours;
+
+},{}],33:[function(require,module,exports){
+// because of the need to export and convert browser rendered SVGs
+// we need a simple way to attach styles as attributes if necessary,
+// so, heres a list of attributes and the selectors to which they should be applied
+var d3 = require('d3');
+var web = require('./ft-web');
+var video = require('./ft-video');
+var print = require('./ft-print');
+
+var themes = {
+    'ft-web': web.theme,
+    'ft-video': video.theme,
+    'ft-print': print.theme,
+    check: checkAttributes,
+    createDefinitions: createDefinitions
+};
+var definitions = {
+    'ft-web': web.defs,
+    'ft-video': video.defs,
+    'ft-print': print.defs
+};
+
+function createDefinitions(g, model) {
+    if (!model.gradients) return;
+
+    var theme = model.theme;
+    var series = model.y.series.length;
+    var defs = model.gradients.map(function(grad, i){
+        if (i >= series) return;
+        var id = grad.match(/url\(#(.*)\)/)[1];
+        return definitions[theme][id];
+    });
+    var elDefs = g.select('.chart-definitions');
+    if (!elDefs.size()) elDefs = g.append('g').attr('class', 'chart-definitions');
+    elDefs.node().innerHTML += defs.join('');
+}
+
+function checkAttributes(theme, selector) {
+    return themes[theme || 'ft-web'].filter(function (style, i) {
+        return (style.id == selector);
+    })[0] || {attributes:{}};//return only a single object by id
+}
+
+module.exports = themes;
+
+},{"./ft-print":30,"./ft-video":31,"./ft-web":32,"d3":"d3"}],34:[function(require,module,exports){
 // More info:
 // http://en.wikipedia.org/wiki/Aspect_ratio_%28image%29
 
@@ -4109,7 +4110,7 @@ function Model(chartType, opts) {
     };
     var m = {
         //layout stuff
-        theme: 'ft',
+        theme: 'ft-web',
         chartType: chartType,
         keyColumns: (chartType == 'column' ? 5 : 1),
         keyHover: false,
@@ -4189,7 +4190,7 @@ Model.prototype.error = function (err) {
 };
 module.exports = Model;
 
-},{"../themes":31,"../util/aspect-ratios.js":34,"../util/dates.js":36,"../util/line-thickness.js":39,"../util/series-options.js":41,"d3":"d3"}],36:[function(require,module,exports){
+},{"../themes":33,"../util/aspect-ratios.js":34,"../util/dates.js":36,"../util/line-thickness.js":39,"../util/series-options.js":41,"d3":"d3"}],36:[function(require,module,exports){
 var d3 = require('d3');
 
 var formatter = {
@@ -4730,4 +4731,4 @@ module.exports = {
 
 };
 
-},{"./axis/index.js":9,"./chart/index.js":17,"./dressing/logo.js":21,"./dressing/series-key.js":22,"./dressing/text-area.js":23,"./fonts":24,"./scales/index.js":28,"./themes":31,"./util/dates.js":36,"./util/version":42}]},{},["o-charts"]);
+},{"./axis/index.js":9,"./chart/index.js":17,"./dressing/logo.js":21,"./dressing/series-key.js":22,"./dressing/text-area.js":23,"./fonts":24,"./scales/index.js":28,"./themes":33,"./util/dates.js":36,"./util/version":42}]},{},["o-charts"]);
