@@ -271,7 +271,7 @@ module.exports = {
         d3.select('#video').append('div').data([{
             height: 338,
             width: 600,
-            theme: 'video',
+            theme: 'ft-video',
             comment: 'Bar chart',
             title: 'Bars: ',
             subtitle: 'Video themes categories, with a vertical independent axis, and a comment that goes on to two lines. woah!',

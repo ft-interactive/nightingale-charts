@@ -227,7 +227,7 @@ module.exports = {
             .append('div')
             .attr('id', 'video');
         d3.select('#video').append('div').data([{
-            theme: 'video',
+            theme: 'ft-video',
             title: 'Video Style: ',
             subtitle: 'Dates, with a vertical independent axis',
             dependentAxisOrient: 'left',

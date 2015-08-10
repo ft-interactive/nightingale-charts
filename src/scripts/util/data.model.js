@@ -218,7 +218,7 @@ function Model(chartType, opts) {
     };
     var m = {
         //layout stuff
-        theme: 'ft',
+        theme: 'ft-web',
         chartType: chartType,
         keyColumns: (chartType == 'column' ? 5 : 1),
         keyHover: false,

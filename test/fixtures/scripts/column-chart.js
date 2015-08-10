@@ -429,7 +429,7 @@ module.exports = {
             .attr('class', 'width' + 600).data([{
             height: 338,
             width: 600,
-            theme: 'video',
+            theme: 'ft-video',
             comment: 'Column chart',
             title: 'Video Ratio: ',
             subtitle: '16:9',

@@ -2,21 +2,21 @@
 // we need a simple way to attach styles as attributes if necessary,
 // so, heres a list of attributes and the selectors to which they should be applied
 var d3 = require('d3');
-var ft = require('./ft');
-var video = require('./video');
-var print = require('./print');
+var web = require('./ft-web');
+var video = require('./ft-video');
+var print = require('./ft-print');
 
 var themes = {
-    ft: ft.theme,
-    video: video.theme,
-    print: print.theme,
+    'ft-web': web.theme,
+    'ft-video': video.theme,
+    'ft-print': print.theme,
     check: checkAttributes,
     createDefinitions: createDefinitions
 };
 var definitions = {
-    ft: ft.defs,
-    video: video.defs,
-    print: print.defs
+    'ft-web': web.defs,
+    'ft-video': video.defs,
+    'ft-print': print.defs
 };
 
 function createDefinitions(g, model) {
@@ -35,7 +35,7 @@ function createDefinitions(g, model) {
 }
 
 function checkAttributes(theme, selector) {
-    return themes[theme || 'ft'].filter(function (style, i) {
+    return themes[theme || 'ft-web'].filter(function (style, i) {
         return (style.id == selector);
     })[0] || {attributes:{}};//return only a single object by id
 }

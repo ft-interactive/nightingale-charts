@@ -34,6 +34,7 @@ function dateAxis() {
     };
 
     function isVertical(){
+        if (!config.axes.length) return true; //todo: log error. no axis
         return ['right','left'].indexOf(config.axes[0].orient())>-1;
     }
 

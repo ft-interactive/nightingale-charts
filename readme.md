@@ -46,9 +46,9 @@ d3.select(svg)
 
 ## Themes
 
-Charts (and chart components) can now be 'themed'. Currently `ft` (default), `video` and `print`.  Set this by adding the following to the data config object:
+Charts (and chart components) can now be 'themed'. Currently `ft-web` (default), `ft-video` and `ft-print`.  Set this by adding the following to the data config object:
 
-`theme: 'ft'`
+`theme: 'ft-web'`
 
 
 ##date axis

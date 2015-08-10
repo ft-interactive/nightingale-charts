@@ -32,7 +32,7 @@ module.exports = {
             .datum(lineData)
             .call(lineKey);
 
-        var lineVideoKey = oCharts.dressing.seriesKey({chartType: 'line', theme:'video'})
+        var lineVideoKey = oCharts.dressing.seriesKey({chartType: 'line', theme:'ft-video'})
             .width(100)
             .lineHeight(19);
         d3.select('svg#lineVideo')
@@ -51,7 +51,7 @@ module.exports = {
             .datum(columnData)
             .call(columnKey);
 
-        var columnVideoKey = oCharts.dressing.seriesKey({chartType: 'column', theme:'video'})
+        var columnVideoKey = oCharts.dressing.seriesKey({chartType: 'column', theme:'ft-video'})
             .width(100)
             .lineHeight(19);
         d3.select('svg#columnVideo')

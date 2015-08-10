@@ -1,5 +1,5 @@
 var d3 = require('d3');
-var colours = require('../../../src/scripts/themes/ft').theme.colours;
+var colours = require('../../../src/scripts/themes/ft-web').theme.colours;
 
 
 module.exports = {
