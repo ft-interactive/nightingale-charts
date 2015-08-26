@@ -619,7 +619,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 },{"./support/isBuffer":2,"inherits":1}],4:[function(require,module,exports){
-module.exports={"version":"0.6.3"}
+module.exports={"version":"0.6.4"}
 
 },{}],5:[function(require,module,exports){
 var d3 = require('d3');
@@ -774,7 +774,7 @@ function categoryAxis() {
 
 module.exports = categoryAxis;
 
-},{"../util/dates.js":36,"../util/labels.js":37,"d3":"d3"}],6:[function(require,module,exports){
+},{"../util/dates.js":37,"../util/labels.js":38,"d3":"d3"}],6:[function(require,module,exports){
 var d3 = require('d3');
 var axis = {
     category: require('./category.js'),
@@ -999,7 +999,7 @@ Create.prototype.createAxes = function (axesSpec) {
 
 module.exports = Create;
 
-},{"../scales/intra-day":29,"../themes":33,"./category.js":5,"./date.js":7,"./number.js":10,"d3":"d3"}],7:[function(require,module,exports){
+},{"../scales/intra-day":30,"../themes":34,"./category.js":5,"./date.js":7,"./number.js":10,"d3":"d3"}],7:[function(require,module,exports){
 var d3 = require('d3');
 var labels = require('../util/labels.js');
 var dates = require('../util/dates.js');
@@ -1136,7 +1136,7 @@ function dateAxis() {
 
 module.exports = dateAxis;
 
-},{"../util/dates.js":36,"../util/labels.js":37,"./date.scale.js":8,"d3":"d3"}],8:[function(require,module,exports){
+},{"../util/dates.js":37,"../util/labels.js":38,"./date.scale.js":8,"d3":"d3"}],8:[function(require,module,exports){
 var d3 = require('d3');
 var utils = require('../util/dates.js');
 
@@ -1215,7 +1215,7 @@ module.exports = {
     }
 };
 
-},{"../util/dates.js":36,"d3":"d3"}],9:[function(require,module,exports){
+},{"../util/dates.js":37,"d3":"d3"}],9:[function(require,module,exports){
 module.exports = {
     Create: require('./create.js'),
     Plot: require('./plot.js'),
@@ -1767,7 +1767,7 @@ function barChart(g){
 
 module.exports = barChart;
 
-},{"../axis":9,"../dressing":20,"../themes":33,"../util/data.model.js":35,"../util/metadata.js":40}],15:[function(require,module,exports){
+},{"../axis":9,"../dressing":20,"../themes":34,"../util/data.model.js":36,"../util/metadata.js":41}],15:[function(require,module,exports){
 //var d3 = require('d3');
 
 function blankChart() {
@@ -1957,7 +1957,7 @@ function columnChart(g){
 
 module.exports = columnChart;
 
-},{"../axis":9,"../dressing":20,"../themes":33,"../util/data.model.js":35,"../util/metadata.js":40}],17:[function(require,module,exports){
+},{"../axis":9,"../dressing":20,"../themes":34,"../util/data.model.js":36,"../util/metadata.js":41}],17:[function(require,module,exports){
 module.exports = {
     line: require('./line.js'),
     blank: require('./blank.js'),
@@ -2060,7 +2060,7 @@ function lineChart(g) {
 
 module.exports = lineChart;
 
-},{"../axis":9,"../dressing":20,"../themes":33,"../util/data.model.js":35,"../util/line-interpolators.js":38,"../util/metadata.js":40,"d3":"d3","util":3}],19:[function(require,module,exports){
+},{"../axis":9,"../dressing":20,"../themes":34,"../util/data.model.js":36,"../util/line-interpolators.js":39,"../util/metadata.js":41,"d3":"d3","util":3}],19:[function(require,module,exports){
 //var d3 = require('d3');
 
 function pieChart() {
@@ -2335,7 +2335,7 @@ Dressing.prototype.setChartPosition = function () {
 
 module.exports = Dressing;
 
-},{"../themes":33,"./logo.js":21,"./series-key.js":22,"./text-area.js":23}],21:[function(require,module,exports){
+},{"../themes":34,"./logo.js":21,"./series-key.js":22,"./text-area.js":23}],21:[function(require,module,exports){
 //the ft logo there's probably an easier ay to do this...
 //var d3 = require('d3');
 
@@ -2589,7 +2589,7 @@ function seriesKey(options) {
 
 module.exports = seriesKey;
 
-},{"../themes":33,"../util/line-thickness.js":39,"d3":"d3"}],23:[function(require,module,exports){
+},{"../themes":34,"../util/line-thickness.js":40,"d3":"d3"}],23:[function(require,module,exports){
 /*jshint -W084 */
 //text area provides a wrapping text block of a given type
 var d3 = require('d3');
@@ -3074,6 +3074,20 @@ var createIntraDay = function(openTime, closeTime) {
 
     }
 
+    function findWeekends(startDate, endDate) {
+        var counter = new Date(startDate.getTime());
+        var weekendDays = 0;
+
+        while (counter < endDate) {
+            if (isWeekend(counter)) {
+                weekendDays++;
+            }
+            counter = d3.time.day.offset(counter, 1);
+        }
+
+        return weekendDays * millisPerWorkDay;
+
+    }
 
 
     intraDay.clampDown = function(date) {
@@ -3107,6 +3121,8 @@ var createIntraDay = function(openTime, closeTime) {
         if (date > closeTimeToday) {
             return closeTimeToday;
         }
+
+        return date;
 
     };
 
@@ -3158,23 +3174,14 @@ var createIntraDay = function(openTime, closeTime) {
         var msStartDayAdded = closeTimeStart.getTime() - startDate.getTime();
         var msEndDayRemoved = openTimeEnd.getTime() - endDate.getTime();
 
-        // move the end date to the end of week boundary
-        var offsetStart = d3.time.saturday.ceil(startDate);
-        var offsetEnd = d3.time.saturday.ceil(endDate);
-        // determine how many weeks there are between these two dates
-        var weeks = (offsetEnd.getTime() - offsetStart.getTime()) / millisPerWeek;
+        var offsetDayStart = d3.time.day.ceil(startDate);
+        var offsetDayEnd = d3.time.day.floor(endDate);
+        var days = (offsetDayEnd.getTime() - offsetDayStart.getTime()) / millisPerDay;
 
-        if (!weeks) {
-            var offsetDayStart = d3.time.day.ceil(startDate);
-            var offsetDayEnd = d3.time.day.ceil(endDate);
-            var days = (offsetDayEnd.getTime() - offsetDayStart.getTime()) / millisPerDay;
+        var weekendTime = findWeekends(startDate, endDate);
 
-            if (days > 1) {
-                return days * millisPerWorkDay + msStartDayAdded - msEndDayRemoved;
-            }
-        }
+        return days * millisPerWorkDay + msStartDayAdded - msEndDayRemoved - weekendTime;
 
-        return weeks * millisPerWorkWeek + msStartDayAdded - msEndDayRemoved;
     };
 
     intraDay.offset = function(startDate, ms) {
@@ -3228,14 +3235,108 @@ var createIntraDay = function(openTime, closeTime) {
 module.exports = createIntraDay;
 
 },{"d3":"d3"}],28:[function(require,module,exports){
+var d3 = require('d3');
+
+module.exports = function () {
+    var millisPerDay = 24 * 3600 * 1000;
+    var millisPerWorkWeek = millisPerDay * 5;
+    var millisPerWeek = millisPerDay * 7;
+
+    var skipWeekends = {};
+
+    function isWeekend(date) {
+        return date.getDay() === 0 || date.getDay() === 6;
+    }
+
+    skipWeekends.clampDown = function(date) {
+        if (isWeekend(date)) {
+            var daysToSubtract = date.getDay() === 0 ? 2 : 1;
+            // round the date up to midnight
+            var newDate = d3.time.day.ceil(date);
+            // then subtract the required number of days
+            return d3.time.day.offset(newDate, -daysToSubtract);
+        } else {
+            return date;
+        }
+    };
+
+    skipWeekends.clampUp = function(date) {
+        if (isWeekend(date)) {
+            var daysToAdd = date.getDay() === 0 ? 1 : 2;
+            // round the date down to midnight
+            var newDate = d3.time.day.floor(date);
+            // then add the required number of days
+            return d3.time.day.offset(newDate, daysToAdd);
+        } else {
+            return date;
+        }
+    };
+
+    // returns the number of included milliseconds (i.e. those which do not fall)
+    // within discontinuities, along this scale
+    skipWeekends.distance = function(startDate, endDate) {
+        startDate = skipWeekends.clampUp(startDate);
+        endDate = skipWeekends.clampDown(endDate);
+
+        // move the start date to the end of week boundary
+        var offsetStart = d3.time.saturday.ceil(startDate);
+        if (endDate < offsetStart) {
+            return endDate.getTime() - startDate.getTime();
+        }
+
+        var msAdded = offsetStart.getTime() - startDate.getTime();
+
+        // move the end date to the end of week boundary
+        var offsetEnd = d3.time.saturday.ceil(endDate);
+        var msRemoved = offsetEnd.getTime() - endDate.getTime();
+
+        // determine how many weeks there are between these two dates
+        var weeks = (offsetEnd.getTime() - offsetStart.getTime()) / millisPerWeek;
+
+        return weeks * millisPerWorkWeek + msAdded - msRemoved;
+    };
+
+    skipWeekends.offset = function(startDate, ms) {
+        var date = isWeekend(startDate) ? skipWeekends.clampUp(startDate) : startDate;
+        var remainingms = ms;
+
+        // move to the end of week boundary
+        var endOfWeek = d3.time.saturday.ceil(date);
+        remainingms -= (endOfWeek.getTime() - date.getTime());
+
+        // if the distance to the boundary is greater than the number of ms
+        // simply add the ms to the current date
+        if (remainingms < 0) {
+            return new Date(date.getTime() + ms);
+        }
+
+        // skip the weekend
+        date = d3.time.day.offset(endOfWeek, 2);
+
+        // add all of the complete weeks to the date
+        var completeWeeks = Math.floor(remainingms / millisPerWorkWeek);
+        date = d3.time.day.offset(date, completeWeeks * 7);
+        remainingms -= completeWeeks * millisPerWorkWeek;
+
+        // add the remaining time
+        date = new Date(date.getTime() + remainingms);
+        return date;
+    };
+
+    skipWeekends.copy = function() { return skipWeekends; };
+
+    return skipWeekends;
+};
+
+},{"d3":"d3"}],29:[function(require,module,exports){
 module.exports = {
     intraDay: require('./intra-day.js')
 };
 
-},{"./intra-day.js":29}],29:[function(require,module,exports){
+},{"./intra-day.js":30}],30:[function(require,module,exports){
 var discontScale = require('./discontinuableDateTime');
 var intraDayDiscontinuity = require('./discontinuityProviders/intra-day');
-
+var skipWeekends = require('./discontinuityProviders/skipWeekends');
 
 /*
 this is just a wrapper for the discontinuity scale, so that we get
@@ -3248,7 +3349,7 @@ module.exports = function(open, close) {
 
 };
 
-},{"./discontinuableDateTime":25,"./discontinuityProviders/intra-day":27}],30:[function(require,module,exports){
+},{"./discontinuableDateTime":25,"./discontinuityProviders/intra-day":27,"./discontinuityProviders/skipWeekends":28}],31:[function(require,module,exports){
 var PADDING = 0;
 var colours = {
     line: [
@@ -3408,7 +3509,7 @@ module.exports.theme = [
 ];
 module.exports.theme.colours = colours;
 
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 var PADDING = 8;
 var colours = {
     line: [
@@ -3627,7 +3728,7 @@ module.exports.theme = [
 module.exports.theme.colours = colours;
 module.exports.theme.gradients = gradients;
 
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 var colours = {
     line: [
         '#af516c', '#ecafaf', '#d7706c', '#76acb8', '#7fd8f5', '#3d7ab3', '#b8b1a9'
@@ -3773,7 +3874,7 @@ module.exports.theme = [
 ];
 module.exports.theme.colours = colours;
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 // because of the need to export and convert browser rendered SVGs
 // we need a simple way to attach styles as attributes if necessary,
 // so, heres a list of attributes and the selectors to which they should be applied
@@ -3818,7 +3919,7 @@ function checkAttributes(theme, selector) {
 
 module.exports = themes;
 
-},{"./ft-print":30,"./ft-video":31,"./ft-web":32,"d3":"d3"}],34:[function(require,module,exports){
+},{"./ft-print":31,"./ft-video":32,"./ft-web":33,"d3":"d3"}],35:[function(require,module,exports){
 // More info:
 // http://en.wikipedia.org/wiki/Aspect_ratio_%28image%29
 
@@ -3889,7 +3990,7 @@ module.exports = {
     }
 };
 
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 var d3 = require('d3');
 var lineThickness = require('../util/line-thickness.js');
 var ratios = require('../util/aspect-ratios.js');
@@ -3947,6 +4048,8 @@ function setExtents(model){
 function findOpenCloseTimes(model) {
     var maxGap = Number.MIN_VALUE;
     var gapIndex;
+
+    var gaps = [];
     // brute force search for maximum gap.
     // this will also work for weekend skips
     // since intra-day skips weekends automatically
@@ -3955,6 +4058,12 @@ function findOpenCloseTimes(model) {
         var prevdt = model.data[i-1][model.x.series.key];
         var dt = d[model.x.series.key];
         var gap = dt - prevdt;
+
+        // weekend gaps
+        if (gap > 1000 * 60 * 60 * 24 * 2) {
+            return;
+        }
+        gaps.push([i, gap]);
         if (gap > maxGap) {
             gapIndex = i;
             maxGap = gap;
@@ -3966,8 +4075,8 @@ function findOpenCloseTimes(model) {
 
     var fmt = d3.time.format("%H:%M");
 
-    var open = fmt(new Date(openTime-60*1000));
-    var close = fmt(new Date(closeTime.getTime()+60*1000));
+    var open = fmt(new Date(openTime.getTime()));
+    var close = fmt(new Date(closeTime.getTime()));
 
     // ;_; side effects ewww
     model.open = open;
@@ -4190,7 +4299,7 @@ Model.prototype.error = function (err) {
 };
 module.exports = Model;
 
-},{"../themes":33,"../util/aspect-ratios.js":34,"../util/dates.js":36,"../util/line-thickness.js":39,"../util/series-options.js":41,"d3":"d3"}],36:[function(require,module,exports){
+},{"../themes":34,"../util/aspect-ratios.js":35,"../util/dates.js":37,"../util/line-thickness.js":40,"../util/series-options.js":42,"d3":"d3"}],37:[function(require,module,exports){
 var d3 = require('d3');
 
 var formatter = {
@@ -4349,7 +4458,7 @@ module.exports = {
     unitGenerator: unitGenerator
 };
 
-},{"d3":"d3"}],37:[function(require,module,exports){
+},{"d3":"d3"}],38:[function(require,module,exports){
 var d3 = require('d3');
 var dates = require('../util/dates');
 var dateFormatter = dates.formatter;
@@ -4543,7 +4652,7 @@ module.exports = {
     }
 };
 
-},{"../util/dates":36,"d3":"d3"}],38:[function(require,module,exports){
+},{"../util/dates":37,"d3":"d3"}],39:[function(require,module,exports){
 //a place to define custom line interpolators
 
 var d3 = require('d3');
@@ -4577,7 +4686,7 @@ module.exports = {
     gappedLine: gappedLineInterpolator
 };
 
-},{"d3":"d3"}],39:[function(require,module,exports){
+},{"d3":"d3"}],40:[function(require,module,exports){
 var thicknesses = {
     small: 2,
     medium: 4,
@@ -4605,7 +4714,7 @@ module.exports = function (value) {
     }
 };
 
-},{}],40:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 //example:
 //http://codinginparadise.org/projects/svgweb-staging/tests/htmlObjectHarness/basic-metadata-example-01-b.html
 var svgSchema = 'http://www.w3.org/2000/svg';
@@ -4656,7 +4765,7 @@ module.exports = {
     create: create
 };
 
-},{}],41:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 function isTruthy(value) {
     return !!value;
 }
@@ -4702,7 +4811,7 @@ module.exports = {
     normalise: normalise
 };
 
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 var app = require('../../app.json');
 module.exports = app.version;
 
@@ -4731,4 +4840,4 @@ module.exports = {
 
 };
 
-},{"./axis/index.js":9,"./chart/index.js":17,"./dressing/logo.js":21,"./dressing/series-key.js":22,"./dressing/text-area.js":23,"./fonts":24,"./scales/index.js":28,"./themes":33,"./util/dates.js":36,"./util/version":42}]},{},["o-charts"]);
+},{"./axis/index.js":9,"./chart/index.js":17,"./dressing/logo.js":21,"./dressing/series-key.js":22,"./dressing/text-area.js":23,"./fonts":24,"./scales/index.js":29,"./themes":34,"./util/dates.js":37,"./util/version":43}]},{},["o-charts"]);
