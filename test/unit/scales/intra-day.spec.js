@@ -15,10 +15,10 @@ describe('intra-day scale', function() {
     it('should map to a range correctly', function() {
         var scaled = scale(new Date("2015-07-13T08:00:00"));
         expect(scaled).toEqual(0);
-        var scaled = scale(new Date("2015-07-17T17:00:00"));
+        scaled = scale(new Date("2015-07-17T17:00:00"));
         expect(scaled).toEqual(1000);
-        var scaled = scale(new Date("2015-07-13T15:00:00"));
-        expect(Math.ceil(scaled)).toEqual(130);
+        scaled = scale(new Date("2015-07-13T15:00:00"));
+        expect(Math.ceil(scaled)).toEqual(156);
     });
 
 });

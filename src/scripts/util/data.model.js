@@ -55,6 +55,8 @@ function setExtents(model){
 function findOpenCloseTimes(model) {
     var maxGap = Number.MIN_VALUE;
     var gapIndex;
+
+    var gaps = [];
     // brute force search for maximum gap.
     // this will also work for weekend skips
     // since intra-day skips weekends automatically
@@ -63,6 +65,12 @@ function findOpenCloseTimes(model) {
         var prevdt = model.data[i-1][model.x.series.key];
         var dt = d[model.x.series.key];
         var gap = dt - prevdt;
+
+        // weekend gaps
+        if (gap > 1000 * 60 * 60 * 24 * 2) {
+            return;
+        }
+        gaps.push([i, gap]);
         if (gap > maxGap) {
             gapIndex = i;
             maxGap = gap;
@@ -74,8 +82,8 @@ function findOpenCloseTimes(model) {
 
     var fmt = d3.time.format("%H:%M");
 
-    var open = fmt(new Date(openTime-60*1000));
-    var close = fmt(new Date(closeTime.getTime()+60*1000));
+    var open = fmt(new Date(openTime.getTime()));
+    var close = fmt(new Date(closeTime.getTime()));
 
     // ;_; side effects ewww
     model.open = open;

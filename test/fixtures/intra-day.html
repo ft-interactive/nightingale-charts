@@ -1,0 +1,15 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+    {{ > _partials/styles.html }}
+    <title>lines</title>
+</head>
+<body class="ft">
+    {{ > _partials/top.html }}
+    <script src=scripts/vendor.js></script>
+    <script src=scripts/intra-day.js></script>
+    <script>
+        require('intra-day').init()
+    </script>
+</body>
+</html>

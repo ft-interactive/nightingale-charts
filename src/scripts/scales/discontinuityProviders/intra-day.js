@@ -98,6 +98,20 @@ var createIntraDay = function(openTime, closeTime) {
 
     }
 
+    function findWeekends(startDate, endDate) {
+        var counter = new Date(startDate.getTime());
+        var weekendDays = 0;
+
+        while (counter < endDate) {
+            if (isWeekend(counter)) {
+                weekendDays++;
+            }
+            counter = d3.time.day.offset(counter, 1);
+        }
+
+        return weekendDays * millisPerWorkDay;
+
+    }
 
 
     intraDay.clampDown = function(date) {
@@ -131,6 +145,8 @@ var createIntraDay = function(openTime, closeTime) {
         if (date > closeTimeToday) {
             return closeTimeToday;
         }
+
+        return date;
 
     };
 
@@ -182,23 +198,14 @@ var createIntraDay = function(openTime, closeTime) {
         var msStartDayAdded = closeTimeStart.getTime() - startDate.getTime();
         var msEndDayRemoved = openTimeEnd.getTime() - endDate.getTime();
 
-        // move the end date to the end of week boundary
-        var offsetStart = d3.time.saturday.ceil(startDate);
-        var offsetEnd = d3.time.saturday.ceil(endDate);
-        // determine how many weeks there are between these two dates
-        var weeks = (offsetEnd.getTime() - offsetStart.getTime()) / millisPerWeek;
+        var offsetDayStart = d3.time.day.ceil(startDate);
+        var offsetDayEnd = d3.time.day.floor(endDate);
+        var days = (offsetDayEnd.getTime() - offsetDayStart.getTime()) / millisPerDay;
 
-        if (!weeks) {
-            var offsetDayStart = d3.time.day.ceil(startDate);
-            var offsetDayEnd = d3.time.day.ceil(endDate);
-            var days = (offsetDayEnd.getTime() - offsetDayStart.getTime()) / millisPerDay;
+        var weekendTime = findWeekends(startDate, endDate);
 
-            if (days > 1) {
-                return days * millisPerWorkDay + msStartDayAdded - msEndDayRemoved;
-            }
-        }
+        return days * millisPerWorkDay + msStartDayAdded - msEndDayRemoved - weekendTime;
 
-        return weeks * millisPerWorkWeek + msStartDayAdded - msEndDayRemoved;
     };
 
     intraDay.offset = function(startDate, ms) {

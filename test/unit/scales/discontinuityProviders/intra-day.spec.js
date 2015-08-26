@@ -108,28 +108,28 @@ describe('intra-day discontinuity Provider', function() {
             var fromDate = new Date("2015-07-13T08:00");
             var toDate = new Date("2015-07-17T08:00");
             var distance = disco.distance(fromDate, toDate);
-            expect(distance).toBe(27e6 * 5);
+            expect(distance).toBe(108e6);
         });
         it('calculates the distance correctly between moments in the different weeks where end is later', function() {
             var disco = intraDayDisco("09:00", "16:30");
             var fromDate = new Date("2015-07-13T08:00");
             var toDate = new Date("2015-07-22T10:00");
             var distance = disco.distance(fromDate, toDate);
-            expect(distance).toBe((27e6 * 6) + (2 * 60 * 60 * 1000));
+            expect(distance).toBe(1962e5);
         });
         it('calculates the distance correctly between moments at different times on different weeks', function() {
             var disco = intraDayDisco("09:00", "16:30");
             var fromDate = new Date("2015-07-13T12:00");
             var toDate = new Date("2015-07-22T08:00");
             var distance = disco.distance(fromDate, toDate);
-            expect(distance).toBe((27e6 * 6) - (4 * 60 * 60 * 1000));
+            expect(distance).toBe(1746e5);
         });
         it('calculates the distance correctly between moments in the different weeks', function() {
             var disco = intraDayDisco("09:00", "16:30");
             var fromDate = new Date("2015-07-13T08:00");
             var toDate = new Date("2015-07-22T08:00");
             var distance = disco.distance(fromDate, toDate);
-            expect(distance).toBe(27e6 * 6);
+            expect(distance).toBe(189e6);
         });
     });
 
