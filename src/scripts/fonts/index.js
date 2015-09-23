@@ -31,7 +31,20 @@ function addOne(fontName) {
     svg.insertAdjacentHTML('afterbegin', '<defs>' + style + '</defs>');
 
     document.body.appendChild(svg);
-    return document.fonts.load('1em ' + fontName);
+    var dF = document.fonts;
+
+    if(document.fonts === undefined) {
+        var ffTrigger = document.createElement('div');
+
+        ffTrigger.setAttribute("style", "font-family: 1em " + fontName + ";");
+
+        document.body.appendChild(ffTrigger);
+
+        return true;
+    } else {
+        return dF.load('1em ' + fontName);
+    }
+
 }
 
 module.exports = function addMultiple(fontNames){
