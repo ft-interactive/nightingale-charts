@@ -24,6 +24,7 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
         .attr(attr);
 
     if (!model.stack) {
+
         // add N/As for null values
         s.selectAll('text.null-label')
             .data(data._nulls)
@@ -33,7 +34,10 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
             .attr('x',  function (d, i) { return plot.x(d.key, seriesNumber); })
             .attr('y',  function (d, i) { return plot.y(d.value, i); })
             .attr('dy', '-0.5em')
-            .attr('dx', function (d, i) { return plot.columnWidth(d, i) / 2;})
+            .attr('dx', function (d, i) { return plot.columnWidth(d, i) / 4; })
+            .attr('font-family', "BentonSans, sans-serif")
+            .attr('font-size', '10')
+            .attr('fill', "rgba(0,0,0,0.4)")
             .text('n/a');
     }
 
