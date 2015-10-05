@@ -619,7 +619,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 },{"./support/isBuffer":2,"inherits":1}],4:[function(require,module,exports){
-module.exports={"version":"0.6.4"}
+module.exports={"version":"0.6.5"}
 
 },{}],5:[function(require,module,exports){
 var d3 = require('d3');
@@ -2813,7 +2813,20 @@ function addOne(fontName) {
     svg.insertAdjacentHTML('afterbegin', '<defs>' + style + '</defs>');
 
     document.body.appendChild(svg);
-    return document.fonts.load('1em ' + fontName);
+    var dF = document.fonts;
+
+    if(document.fonts === undefined) {
+        var ffTrigger = document.createElement('div');
+
+        ffTrigger.setAttribute("style", "font-family: 1em " + fontName + ";");
+
+        document.body.appendChild(ffTrigger);
+
+        return true;
+    } else {
+        return dF.load('1em ' + fontName);
+    }
+
 }
 
 module.exports = function addMultiple(fontNames){
