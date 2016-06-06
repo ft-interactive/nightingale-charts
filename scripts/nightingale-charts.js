@@ -619,7 +619,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 },{"./support/isBuffer":2,"inherits":1}],4:[function(require,module,exports){
-module.exports={"version":"0.6.5"}
+module.exports={"version":"1.0.0"}
 
 },{}],5:[function(require,module,exports){
 var d3 = require('d3');
