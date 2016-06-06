@@ -12,11 +12,11 @@
 		}
 	</style>
 	<script src=scripts/vendor.js></script>
-	<script src=scripts/o-charts.js></script>
+	<script src=scripts/nightingale-charts.js></script>
 
     <div id="views"></div>
 	<script>
-        var oCharts = require('o-charts');
+        var oCharts = require('nightingale-charts');
         var d3 = require('d3');
 
         d3.select('#views').append('div').data([{
@@ -41,7 +41,7 @@
 
     <div id="video"></div>
 	<script>
-        var oCharts = require('o-charts');
+        var oCharts = require('nightingale-charts');
         var d3 = require('d3');
         var videoChart = d3.select('#video').append('div').data([{
             height: 338,
@@ -73,7 +73,7 @@
 
     <div id="print"></div>
 	<script>
-        var oCharts = require('o-charts');
+        var oCharts = require('nightingale-charts');
         var d3 = require('d3');
         var printChart = d3.select('#video').append('div').data([{
             height: 245,

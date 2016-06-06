@@ -2797,7 +2797,7 @@ function fontFace(name) {
 }
 
 function addOne(fontName) {
-    var id = 'o-charts__webfonts';
+    var id = 'nightingale-charts__webfonts';
     var svg = document.querySelector('#' + id);
     if (!svg){
         svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -4832,7 +4832,7 @@ module.exports = {
 var app = require('../../app.json');
 module.exports = app.version;
 
-},{"../../app.json":4}],"o-charts":[function(require,module,exports){
+},{"../../app.json":4}],"nightingale-charts":[function(require,module,exports){
 module.exports = {
     chart: require('./chart/index.js'),
 
@@ -4857,4 +4857,4 @@ module.exports = {
 
 };
 
-},{"./axis/index.js":9,"./chart/index.js":17,"./dressing/logo.js":21,"./dressing/series-key.js":22,"./dressing/text-area.js":23,"./fonts":24,"./scales/index.js":29,"./themes":34,"./util/dates.js":37,"./util/version":43}]},{},["o-charts"]);
+},{"./axis/index.js":9,"./chart/index.js":17,"./dressing/logo.js":21,"./dressing/series-key.js":22,"./dressing/text-area.js":23,"./fonts":24,"./scales/index.js":29,"./themes":34,"./util/dates.js":37,"./util/version":43}]},{},["nightingale-charts"]);
