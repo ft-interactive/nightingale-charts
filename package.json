@@ -1,5 +1,5 @@
 {
-  "version": "0.6.5",
+  "version": "1.0.0",
   "name": "nightingale-charts",
   "description": "FT style charts, axes, scales etc",
   "main": "src/scripts/nightingale-charts.js",
