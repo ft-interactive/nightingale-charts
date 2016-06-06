@@ -1,4 +1,4 @@
-var oCharts = require('../../../src/scripts/o-charts');
+var oCharts = require('../../../src/scripts/nightingale-charts');
 var d3 = require('d3');
 
 var dependentAxisOrient = ['left', 'right', 'left'];

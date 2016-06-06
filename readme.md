@@ -1,10 +1,10 @@
-# o-charts [![Circle CI](https://circleci.com/gh/ft-interactive/o-charts/tree/master.svg?style=svg)](https://circleci.com/gh/ft-interactive/o-charts/tree/master)
+# nightingale-charts [![Circle CI](https://circleci.com/gh/ft-interactive/nightingale-charts/tree/master.svg?style=svg)](https://circleci.com/gh/ft-interactive/nightingale-charts/tree/master)
 
 ## usage
 
 ```javascript
 var d3 = require('d3');
-var oCharts = require('o-charts');
+var oCharts = require('nightingale-charts');
 
 // the element to draw the chart into
 var svg = document.createElement('svg');

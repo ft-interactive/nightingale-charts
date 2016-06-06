@@ -15,7 +15,7 @@ function loadAssets(page){
     //appendCSS({path: '_test/styles/demo.css'});
     //appendCSS({path: '_test/styles/main.css'});
     appendScript({path: '_site/scripts/vendor.js'});
-    !page && appendScript({path: '_site/scripts/o-charts.js'});
+    !page && appendScript({path: '_site/scripts/nightingale-charts.js'});
     page && appendScript({path: '_test/scripts/' + (page ) + '.js'});
 }
 

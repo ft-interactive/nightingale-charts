@@ -1,8 +1,8 @@
 {
   "version": "0.6.5",
-  "name": "o-charts",
+  "name": "nightingale-charts",
   "description": "FT style charts, axes, scales etc",
-  "main": "src/scripts/o-charts.js",
+  "main": "src/scripts/nightingale-charts.js",
   "bin": {
     "casperjs": "node_modules/phantomcss/node_modules/.bin/casperjs"
   },
@@ -25,7 +25,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ft-interactive/o-charts.git"
+    "url": "https://github.com/ft-interactive/nightingale-charts.git"
   },
   "author": "tom pearson",
   "license": "ISC",
