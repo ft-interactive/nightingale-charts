@@ -12,7 +12,7 @@ To build the Nightingale locally, you'll need to install:
 
 ## pre-requisits
 
-1. `git clone git@github.com:ft-interactive/o-charts.git`
+1. `git clone git@github.com:ft-interactive/nightingale-charts.git`
 2. `npm i`
 
 if behind a proxy run, setup git to use https:
@@ -38,9 +38,9 @@ if behind a proxy run, setup git to use https:
 
 ## Check your changes in nightingale
 
-`o-charts` should be linked within bower and [nightingale](https://github.com/Financial-Times/nightingale) so that the changes can be checked locally.
+`nightingale-charts` should be linked within bower and [nightingale](https://github.com/Financial-Times/nightingale) so that the changes can be checked locally.
 Do this by:
- * `bower link` within o-charts root directory
- * `bower link o-charts` within nightingale root directory
+ * `bower link` within nightingale-charts root directory
+ * `bower link nightingale-charts` within nightingale root directory
 
 When you have run nightingale locally to ensure any changes haven't broken it you can `unlink` in the same way.

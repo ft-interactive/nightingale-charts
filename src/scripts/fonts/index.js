@@ -15,7 +15,7 @@ function fontFace(name) {
 }
 
 function addOne(fontName) {
-    var id = 'o-charts__webfonts';
+    var id = 'nightingale-charts__webfonts';
     var svg = document.querySelector('#' + id);
     if (!svg){
         svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');

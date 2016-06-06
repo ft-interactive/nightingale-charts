@@ -10,7 +10,7 @@
     "origamiType": "module",
     "origamiVersion": 1,
     "ci": {
-        "travis": "https://api.travis-ci.org/repos/ft-interactive/o-charts/builds.json"
+        "travis": "https://api.travis-ci.org/repos/ft-interactive/nightingale-charts/builds.json"
     },
     "demos": [
     ]
