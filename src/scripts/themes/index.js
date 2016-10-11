@@ -11,7 +11,7 @@ var themes = {
     'ft-web': web.theme,
     'ft-video': video.theme,
     'ft-print': print.theme,
-    'ft-nar': print.nar,
+    'ft-nar': print.theme,
     check: checkAttributes,
     createDefinitions: createDefinitions
 };
