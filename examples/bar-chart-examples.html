@@ -104,5 +104,30 @@
     </script>
 
 
+    <div id="nar"></div>
+  <script>
+        var oCharts = require('nightingale-charts');
+        var d3 = require('d3');
+
+        d3.select('#nar').append('div').data([{
+            comment: 'Bar chart',
+            title: 'Bars: ',
+            theme: 'ft-nar',
+            subtitle: 'Categories, with a vertical independent axis',
+            dependentAxisOrient: 'bottom',
+            independentAxisOrient: 'left',
+            x: { series: 'key' },
+            y: { series: ['value', 'value2'] },
+            data: [
+                { key: 'red', value:      0.583, value2:      1.583},
+                { key: 'blue', value: 0.12, value2:  2},
+                { key: 'green machine', value: 1.03, value2:  1.4},
+                { key: 'purple', value:     1.348, value2:  1.9}
+            ],
+            stack:true,
+            dataType : 'categorical'
+        }]).call(oCharts.chart.bar);
+    </script>
+
 </body>
 </html>
