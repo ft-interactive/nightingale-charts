@@ -139,6 +139,11 @@ module.exports.theme = [
             'font-size': 10,
             'fill': '#757470'
         }
+    },
+    {   'id': 'chart-logo',
+        'attributes': {
+            'display': 'none'
+        }
     }
 ];
 module.exports.theme.colours = colours;
