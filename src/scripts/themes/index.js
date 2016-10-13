@@ -11,7 +11,7 @@ var themes = {
     'ft-web': web.theme,
     'ft-video': video.theme,
     'ft-print': print.theme,
-    'ft-nar': print.theme,
+    'ft-nar': nar.theme,
     check: checkAttributes,
     createDefinitions: createDefinitions
 };
@@ -19,7 +19,7 @@ var definitions = {
     'ft-web': web.defs,
     'ft-video': video.defs,
     'ft-print': print.defs,
-    'ft-nar': print.defs
+    'ft-nar': nar.defs
 };
 
 function createDefinitions(g, model) {
