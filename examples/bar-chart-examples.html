@@ -127,6 +127,11 @@
             stack:true,
             dataType : 'categorical'
         }]).call(oCharts.chart.bar);
+
+        oCharts.addFont(['AvenirLight', 'AvenirLightOblique', 'AvenirHeavy'])
+            .then(function(){
+                printChart.call(oCharts.chart.bar)
+            });
     </script>
 
 </body>

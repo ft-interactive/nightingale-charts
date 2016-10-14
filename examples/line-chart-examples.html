@@ -115,9 +115,9 @@
     var d3 = require('d3');
 
     d3.select('#nar').append('div').data([{
+        theme: 'ft-nar',
         comment: 'Line chart',
         title: 'Lines: ',
-        theme: 'ft-nar',
         subtitle: 'Dates, with a vertical independent axis',
         dependentAxisOrient: 'left',
         independentAxisOrient: 'bottom',
@@ -133,6 +133,11 @@
         ],
         dataType : 'time'
     }]).call(oCharts.chart.line);
+
+    oCharts.addFont(['AvenirLight', 'AvenirLightOblique', 'AvenirHeavy'])
+        .then(function(){
+            printChart.call(oCharts.chart.line)
+        });
 </script>
 </body>
 </html>
