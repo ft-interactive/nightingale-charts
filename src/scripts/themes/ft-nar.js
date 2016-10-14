@@ -108,21 +108,21 @@ module.exports.theme = [
         'attributes': {
             'shape-rendering': 'crispEdges',
             'stroke': 'rgba(0, 0, 0, 0.3)',
-            'stroke-dasharray': 'none'
+            'stroke-width': 1
         }
     },
     {   'id': 'dependent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
             'stroke': 'rgba(0, 0, 0, 0.1)',
-            'stroke-dasharray': '2 2'
+            'stroke-width': 1
         }
     },
     {   'id': 'origin-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
             'stroke': 'rgba(0, 0, 0, 0.3)',
-            'stroke-dasharray': 'none'
+            'stroke-width': 1
         }
     },
     {   'id': 'axis-text',
