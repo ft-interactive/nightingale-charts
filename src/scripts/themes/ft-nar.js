@@ -76,7 +76,7 @@ module.exports.theme = [
         'attributes': {
             'font-family': 'AvenirLightOblique, sans-serif',
             'font-size': 12,
-            'fill': 'rgba(0, 0, 0, 0.5)'
+            'fill': 'rgba(0, 0, 0, 0.8)'
         }
     },
     {   'id': 'chart-source',
@@ -84,7 +84,7 @@ module.exports.theme = [
             'font-family': 'AvenirLight, sans-serif',
             'font-size': 10,
             'line-height': 12,
-            'fill': 'rgba(0, 0, 0, 0.5)'
+            'fill': 'rgba(0, 0, 0, 0.8)'
         }
     },
     {   'id': 'chart-footnote',
@@ -92,7 +92,7 @@ module.exports.theme = [
             'font-family': 'AvenirLightOblique, sans-serif',
             'font-size': 12,
             'line-height': 15,
-            'fill': 'rgba(0, 0, 0, 0.5)'
+            'fill': 'rgba(0, 0, 0, 0.8)'
         }
     },
     {   'id': 'key',
@@ -100,7 +100,7 @@ module.exports.theme = [
             'font-family': 'AvenirLight, sans-serif',
             'font-size': 12,
             'line-height': 16,
-            'fill': 'rgba(0, 0, 0, 0.5)',
+            'fill': 'rgba(0, 0, 0, 0.8)',
             'padding-y': 8
         }
     },
