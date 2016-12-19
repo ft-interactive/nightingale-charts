@@ -81,18 +81,18 @@ module.exports.theme = [
     },
     {   'id': 'chart-source',
         'attributes': {
-            'font-family': 'AvenirLight, sans-serif',
+            'font-family': 'AvenirLightOblique, sans-serif',
             'font-size': 10,
             'line-height': 12,
-            'fill': 'rgba(0, 0, 0, 0.8)'
+            'fill': 'rgba(0, 0, 0, 1)'
         }
     },
     {   'id': 'chart-footnote',
         'attributes': {
             'font-family': 'AvenirLightOblique, sans-serif',
-            'font-size': 12,
-            'line-height': 15,
-            'fill': 'rgba(0, 0, 0, 0.8)'
+            'font-size': 10,
+            'line-height': 12,
+            'fill': 'rgba(0, 0, 0, 1)'
         }
     },
     {   'id': 'key',
@@ -130,14 +130,14 @@ module.exports.theme = [
             'font-size': 12,
             'font-family': 'AvenirLight, sans-serif',
             'stroke': 'none',
-            'fill': '#757470'
+            'fill': 'rgba(0, 0, 0, 1)'
         }
     },
     {   'id': 'axis-secondary-text',
         'selector': '.axis .secondary text',
         'attributes': {
             'font-size': 10,
-            'fill': '#757470'
+            'fill': 'rgba(0, 0, 0, 1)'
         }
     },
     {   'id': 'chart-logo',

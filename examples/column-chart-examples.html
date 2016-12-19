@@ -136,11 +136,12 @@
         subtitle: 'Categories, with a horizontal independent axis',
         dependentAxisOrient: 'left',
         independentAxisOrient: 'bottom',
-        footnote: 'my footnote',
+        footnote: 'My footnote',
+        source: 'With a source',
         x: { series: 'key' },
         y: { series: ['value', 'value2'] },
         data: data,
-        stack:true,
+        stack:false,
         dataType : 'categorical'
     }]).call(oCharts.chart.column);
 
