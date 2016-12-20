@@ -121,7 +121,7 @@ module.exports.theme = [
     {   'id': 'origin-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': 'rgba(0, 0, 0, 0.3)',
+            'stroke': 'rgba(0, 0, 0, 1)',
             'stroke-width': 1
         }
     },
