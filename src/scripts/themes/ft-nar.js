@@ -41,7 +41,8 @@ module.exports.theme = [
             'fill': 'none',
             'stroke-linejoin': 'round',
             'stroke-linecap': 'round'
-        }
+        },
+
     },
     ////Columns
     //{   'id': 'columns',
@@ -123,6 +124,12 @@ module.exports.theme = [
             'shape-rendering': 'crispEdges',
             'stroke': 'rgba(0, 0, 0, 1)',
             'stroke-width': 1
+        }
+    },
+    // position plot lines, options: 'front', 'back'
+    {   'id': 'axis-layer',
+        'attributes': {
+            'position': 'front'
         }
     },
     {   'id': 'axis-text',

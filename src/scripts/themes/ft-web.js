@@ -125,6 +125,12 @@ module.exports.theme = [
             'stroke-dasharray': 'none'
         }
     },
+    // position plot lines, options: 'front', 'back'
+    {   'id': 'axis-layer',
+        'attributes': {
+            'position': 'back'
+        }
+    },
     {   'id': 'axis-text',
         'attributes': {
             'font-size': 12,

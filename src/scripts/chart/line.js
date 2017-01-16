@@ -7,6 +7,7 @@ var Dressing = require('../dressing');
 var themes = require('../themes');
 var extend = require('util')._extend;
 
+
 function drawLine(plotSVG, data, attrs){
     plotSVG.append('path').datum(data).attr(attrs);
 }
@@ -75,7 +76,9 @@ function lineChart(g) {
     model.keyHover && dressing.addSeriesKey();
 
     // Set up the SVG to plot the line
-    var plotSVG = chartSVG.append('g').attr('class', 'plot');
+    var axisLayer = themes.check(model.theme, 'axis-layer').attributes.position || 'back';
+    var plotSVG = axisLayer === 'front' ? chartSVG.insert('g', ':first-child').attr('class', 'plot') : chartSVG.append('g').attr('class', 'plot');
+
     var i = model.y.series.length;
     var lineAttr = extend(
         themes.check(model.theme, 'lines').attributes,
@@ -93,23 +96,8 @@ function lineChart(g) {
     // Add transparency
     chartSVG.selectAll('path.domain').attr('fill', 'none');
 
-    // Plot an overlay axis to sit on top of the plotted lines
-    var model2 = new DataModel('line',Object.create(g.data()[0]));
-    model2.chartPosition = {};
-    model2.chartPosition.top = 0
-    model2.chartPosition.left = 0
 
-    var chartSVG2 = chartSVG.append('g').attr('class', 'chart');
-    chartSVG.attr('transform', model.translate(model.chartPosition));
 
-    var creator2 = new axes.Create(chartSVG2, model2);
-    creator2.createAxes({
-      dependent:'number',
-      independent: 'time'
-    }, false);
-
-    // Add transparency
-    chartSVG2.selectAll('path.domain').attr('fill', 'none');
 }
 
 module.exports = lineChart;
