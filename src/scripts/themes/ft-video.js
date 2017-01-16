@@ -193,6 +193,12 @@ module.exports.theme = [
             'stroke-width': 2
         }
     },
+    // position plot lines, options: 'front', 'back'
+    {   'id': 'axis-layer',
+        'attributes': {
+            'position': 'back'
+        }
+    },
     {
         'id': 'axis-text',
         'attributes': {
