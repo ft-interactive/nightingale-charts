@@ -65,14 +65,16 @@ function lineChart(g) {
     var chartSVG = svg.append('g').attr('class', 'chart');
     chartSVG.attr('transform', model.translate(model.chartPosition));
 
+    // Add the axis to the SVG
     var creator = new axes.Create(chartSVG, model);
     creator.createAxes({
         dependent:'number',
         independent: 'time'
-    });
+    }, true);
 
     model.keyHover && dressing.addSeriesKey();
 
+    // Set up the SVG to plot the line
     var plotSVG = chartSVG.append('g').attr('class', 'plot');
     var i = model.y.series.length;
     var lineAttr = extend(
@@ -83,10 +85,31 @@ function lineChart(g) {
     borderAttrs['stroke-width'] =  lineAttr['stroke-width'] * 2;
     borderAttrs.stroke = lineAttr.border;
 
+    // Plot the line
     while (i--) {
         plotSeries(plotSVG, model, creator, model.y.series[i], lineAttr, borderAttrs);
     }
+
+    // Add transparency
     chartSVG.selectAll('path.domain').attr('fill', 'none');
+
+    // Plot an overlay axis to sit on top of the plotted lines
+    var model2 = new DataModel('line',Object.create(g.data()[0]));
+    model2.chartPosition = {};
+    model2.chartPosition.top = 0
+    model2.chartPosition.left = 0
+
+    var chartSVG2 = chartSVG.append('g').attr('class', 'chart');
+    chartSVG.attr('transform', model.translate(model.chartPosition));
+
+    var creator2 = new axes.Create(chartSVG2, model2);
+    creator2.createAxes({
+      dependent:'number',
+      independent: 'time'
+    }, false);
+
+    // Add transparency
+    chartSVG2.selectAll('path.domain').attr('fill', 'none');
 }
 
 module.exports = lineChart;

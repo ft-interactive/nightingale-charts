@@ -199,7 +199,7 @@ Create.prototype.yLabelWidth = function () {
     return widest;
 };
 
-Create.prototype.createAxes = function (axesSpec) {
+Create.prototype.createAxes = function (axesSpec, test) {
     var model = this.model;
     var spacing = model.tickSize + (PADDING * 2);
     this.independentScale(axesSpec.independent);
@@ -217,7 +217,7 @@ Create.prototype.createAxes = function (axesSpec) {
     this.chart.selectAll('*').remove();
     this.repositionAxis();
     model.chartPosition = setChartPosition(this.chart, model);
-    this.chart.attr('transform', model.translate(model.chartPosition));
+    if (test) {this.chart.attr('transform', model.translate(model.chartPosition))};
 };
 
 module.exports = Create;
