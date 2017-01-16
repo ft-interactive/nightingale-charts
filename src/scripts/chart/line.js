@@ -71,7 +71,7 @@ function lineChart(g) {
     creator.createAxes({
         dependent:'number',
         independent: 'time'
-    }, true);
+    });
 
     model.keyHover && dressing.addSeriesKey();
 
