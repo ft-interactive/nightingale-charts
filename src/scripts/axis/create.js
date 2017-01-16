@@ -217,7 +217,9 @@ Create.prototype.createAxes = function (axesSpec, test) {
     this.chart.selectAll('*').remove();
     this.repositionAxis();
     model.chartPosition = setChartPosition(this.chart, model);
-    if (test) {this.chart.attr('transform', model.translate(model.chartPosition))};
+    if (test) {
+      this.chart.attr('transform', model.translate(model.chartPosition));
+    }
 };
 
 module.exports = Create;
