@@ -12,7 +12,7 @@ module.exports = {
         g.selectAll('line').attr(config.attr.ticks);
         g.selectAll('.origin line').attr(config.attr.origin);
         if (this.isVertical(config.axes)) {
-            //g.selectAll('text').attr('transform', 'translate( ' + textWidth + ', ' + -(config.lineHeight / 2) + ' )');
+            g.selectAll('text').attr('transform', 'translate( ' + textWidth + ', ' + -(config.lineHeight / 2) + ' )');
         }
     },
     extendAxis: function (g, axes, tickExtension) {
