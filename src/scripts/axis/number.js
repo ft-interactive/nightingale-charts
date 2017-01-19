@@ -36,7 +36,13 @@ function numericAxis() {
                 'font-family': 'BentonSans, sans-serif',
                 'font-size': 12
             },
-            secondary:{}
+            secondary:{},
+            xAxis:{
+              'text-anchor': 'start'
+            },
+            yAxis:{
+              'text-anchor': 'end'
+            }
         }
     };
 
@@ -46,7 +52,8 @@ function numericAxis() {
 
     function axis(g) {
         var orientOffset = (config.axes.orient() === 'right') ? -config.axes.tickSize() : 0;
-        config.attr.primary['text-anchor'] = isVertical() ? 'end' : 'start';
+
+        config.attr.primary['text-anchor'] = isVertical() ?  config.attr.yAxis['text-anchor'] : config.attr.xAxis['text-anchor'];
         config.attr.secondary['text-anchor'] = isVertical() ? 'end' : 'start';
 
         g = g.append('g').attr('transform', 'translate(' + (config.xOffset + orientOffset) + ',' + config.yOffset + ')');

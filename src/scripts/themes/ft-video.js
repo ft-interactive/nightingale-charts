@@ -210,6 +210,18 @@ module.exports.theme = [
             'font-weight': '600',
             'fill': '#43423e'
         }
+    },
+    {
+        'id': 'x-axis-text',
+        'attributes': {
+            'text-anchor': 'start'
+        }
+    },
+    {
+        'id': 'y-axis-text',
+        'attributes': {
+            'text-anchor': 'end'
+        }
     }
 ];
 

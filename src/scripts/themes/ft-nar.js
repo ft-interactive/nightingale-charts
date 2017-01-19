@@ -140,6 +140,18 @@ module.exports.theme = [
             'fill': 'rgba(0, 0, 0, 1)'
         }
     },
+    {
+        'id': 'x-axis-text',
+        'attributes': {
+            'text-anchor': 'middle'
+        }
+    },
+    {
+        'id': 'y-axis-text',
+        'attributes': {
+            'text-anchor': 'end'
+        }
+    },
     {   'id': 'chart-logo',
         'attributes': {
             'display': 'none'

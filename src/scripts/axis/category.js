@@ -31,7 +31,13 @@ function categoryAxis() {
                 'font-family': 'BentonSans, sans-serif',
                 'font-size': 12
             },
-            secondary:{}
+            secondary:{},
+            xAxis:{
+              'text-anchor': 'start'
+            },
+            yAxis:{
+              'text-anchor': 'end'
+            }
         }
     };
 
