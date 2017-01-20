@@ -12,15 +12,17 @@ module.exports = {
         g.selectAll('line').attr(config.attr.ticks);
         g.selectAll('.origin line').attr(config.attr.origin);
         if (this.isVertical(config.axes)) {
-            g.selectAll('text').attr('transform', 'translate( ' + textWidth + ', ' + -(config.lineHeight / 2) + ' )');
+            var configYAxisTranslate = config.attr.yAxisLabel['transform'] || 'translate( ' + textWidth + ', ' + -(config.lineHeight / 2) + ' )';
+            g.selectAll('text').attr('transform', configYAxisTranslate);
         }
     },
-    extendAxis: function (g, axes, tickExtension) {
+    extendAxis: function (g, axes, yLabelLine, tickExtension) {
+        var lineX1 = yLabelLine !== undefined ? yLabelLine : tickExtension;
         var rules = g.selectAll('line');
-        if (axes.orient() == 'right') {
-            rules.attr('x1', tickExtension);
+        if (axes.orient() === 'right') {
+            rules.attr('x1', lineX1);
         } else {
-            rules.attr('x1', -tickExtension);
+            rules.attr('x1', (lineX1 === 0 ? 0 : -lineX1));
         }
     },
     textWidth: function (g, orient) {
@@ -62,7 +64,7 @@ module.exports = {
         this.removeDecimals(g);
         this.arrangeTicks(g, config);
         if (this.isVertical(config.axes)) {
-            this.extendAxis(g, config.axes, config.tickExtension);
+            this.extendAxis(g, config.axes, config.attr.yAxisLine.x1, config.tickExtension);
         }
     }
 
