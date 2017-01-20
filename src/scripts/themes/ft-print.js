@@ -48,15 +48,13 @@ module.exports.theme = [
     //Columns
     {   'id': 'columns',
         'attributes': {
-            stroke: 'rgb(243, 236, 228)',
-            'stroke-width': 1
+            'stroke-width': 0
         }
     },
     //bars
     {   'id': 'bars',
         'attributes': {
-            stroke: 'rgb(243, 236, 228)',
-            'stroke-width': 1
+            'stroke-width': 0
         }
     },
     {
