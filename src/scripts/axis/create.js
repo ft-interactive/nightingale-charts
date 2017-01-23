@@ -115,7 +115,10 @@ Create.prototype.configureDependentScale = function (model) {
         .reverse(model.y.reverse)
         .attrs(this.getAttr('dependent-ticks'), 'ticks')
         .attrs(this.getAttr('origin-ticks'), 'origin')
-        .attrs(this.getAttr('axis-text'), 'primary');
+        .attrs(this.getAttr('axis-text'), 'primary')
+        .attrs(this.getAttr('x-axis-text'), 'xAxisLabel')
+        .attrs(this.getAttr('y-axis-text'), 'yAxisLabel')
+        .attrs(this.getAttr('y-axis-line'), 'yAxisLine');
 
     if (isVertical(model.dependentAxisOrient)) {
         this.dependentAxis.tickSize(model.plotWidth)
@@ -141,7 +144,10 @@ Create.prototype.configureIndependentScale = function (model) {
         .attrs(this.getAttr('independent-ticks'), 'ticks')
         .attrs(this.getAttr('origin-ticks'), 'origin')
         .attrs(this.getAttr('axis-text'), 'primary')
-        .attrs(this.getAttr('axis-secondary-text'), 'secondary');
+        .attrs(this.getAttr('axis-secondary-text'), 'secondary')
+        .attrs(this.getAttr('x-axis-text'), 'xAxisLabel')
+        .attrs(this.getAttr('y-axis-text'), 'yAxisLabel')
+        .attrs(this.getAttr('y-axis-line'), 'yAxisLine');
     if (!isVertical(model.independentAxisOrient)) {
         this.independentAxis.yOffset(model.plotHeight);	//position the axis at the bottom of the chart
     }

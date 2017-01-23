@@ -145,6 +145,18 @@ module.exports.theme = [
             'font-size': 10,
             'fill': '#757470'
         }
+    },
+    {
+        'id': 'x-axis-text',
+        'attributes': {
+            'text-anchor': 'middle'
+        }
+    },
+    {
+        'id': 'y-axis-text',
+        'attributes': {
+            'text-anchor': 'end'
+        }
     }
 ];
 module.exports.theme.colours = colours;

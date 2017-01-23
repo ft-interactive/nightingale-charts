@@ -12,15 +12,16 @@ module.exports = {
         g.selectAll('line').attr(config.attr.ticks);
         g.selectAll('.origin line').attr(config.attr.origin);
         if (this.isVertical(config.axes)) {
-            g.selectAll('text').attr('transform', 'translate( ' + textWidth + ', ' + -(config.lineHeight / 2) + ' )');
+            var configYAxisTranslate = config.attr.yAxisLabel.transform || 'translate( ' + textWidth + ', ' + -(config.lineHeight / 2) + ' )';
+            g.selectAll('text').attr('transform', configYAxisTranslate);
         }
     },
     extendAxis: function (g, axes, tickExtension) {
         var rules = g.selectAll('line');
-        if (axes.orient() == 'right') {
+        if (axes.orient() === 'right') {
             rules.attr('x1', tickExtension);
         } else {
-            rules.attr('x1', -tickExtension);
+            rules.attr('x1', (tickExtension === 0 ? 0 : -tickExtension));
         }
     },
     textWidth: function (g, orient) {
@@ -62,7 +63,9 @@ module.exports = {
         this.removeDecimals(g);
         this.arrangeTicks(g, config);
         if (this.isVertical(config.axes)) {
-            this.extendAxis(g, config.axes, config.tickExtension);
+            var yAxisLine = config.attr.yAxisLine.x1;
+            var tickExtension = yAxisLine !== undefined ? yAxisLine : config.tickExtension;
+            this.extendAxis(g, config.axes, tickExtension);
         }
     }
 
