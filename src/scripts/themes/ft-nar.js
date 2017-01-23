@@ -93,7 +93,8 @@ module.exports.theme = [
             'font-family': 'AvenirLightOblique, sans-serif',
             'font-size': 10,
             'line-height': 12,
-            'fill': 'rgba(0, 0, 0, 1)'
+            'fill': 'rgba(0, 0, 0, 1)',
+            'padding-y': 5
         }
     },
     {   'id': 'key',
