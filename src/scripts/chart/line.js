@@ -7,6 +7,7 @@ var Dressing = require('../dressing');
 var themes = require('../themes');
 var extend = require('util')._extend;
 
+
 function drawLine(plotSVG, data, attrs){
     plotSVG.append('path').datum(data).attr(attrs);
 }
@@ -65,6 +66,7 @@ function lineChart(g) {
     var chartSVG = svg.append('g').attr('class', 'chart');
     chartSVG.attr('transform', model.translate(model.chartPosition));
 
+    // Add the axis to the SVG
     var creator = new axes.Create(chartSVG, model);
     creator.createAxes({
         dependent:'number',
@@ -73,7 +75,10 @@ function lineChart(g) {
 
     model.keyHover && dressing.addSeriesKey();
 
-    var plotSVG = chartSVG.append('g').attr('class', 'plot');
+    // Set up the SVG to plot the line
+    var axisLayer = themes.check(model.theme, 'axis-layer').attributes.position || 'back';
+    var plotSVG = axisLayer === 'front' ? chartSVG.insert('g', ':first-child').attr('class', 'plot') : chartSVG.append('g').attr('class', 'plot');
+
     var i = model.y.series.length;
     var lineAttr = extend(
         themes.check(model.theme, 'lines').attributes,
@@ -83,10 +88,16 @@ function lineChart(g) {
     borderAttrs['stroke-width'] =  lineAttr['stroke-width'] * 2;
     borderAttrs.stroke = lineAttr.border;
 
+    // Plot the line
     while (i--) {
         plotSeries(plotSVG, model, creator, model.y.series[i], lineAttr, borderAttrs);
     }
+
+    // Add transparency
     chartSVG.selectAll('path.domain').attr('fill', 'none');
+
+
+
 }
 
 module.exports = lineChart;

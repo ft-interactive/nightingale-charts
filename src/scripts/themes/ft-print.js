@@ -133,6 +133,12 @@ module.exports.theme = [
             'stroke-width': 1
         }
     },
+    // position plot lines, options: 'front', 'back'
+    {   'id': 'axis-layer',
+        'attributes': {
+            'position': 'back'
+        }
+    },
     {   'id': 'axis-text',
         'attributes': {
             'font-size': 12,
