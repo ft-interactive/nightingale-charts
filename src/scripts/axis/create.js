@@ -108,11 +108,15 @@ Create.prototype.hideTicks = function () {
 };
 
 Create.prototype.configureDependentScale = function (model) {
+
+  console.log(model);
+
     this.dependentAxis
         .tickFormat(model.numberAxisFormatter)
         .simple(model.simpleValue)
         .orient(model.dependentAxisOrient)
         .reverse(model.y.reverse)
+        .attrs(model.chartType, 'chart-type')
         .attrs(model.dependentAxisOrient, 'chart-alignment')
         .attrs(this.getAttr('dependent-ticks'), 'ticks')
         .attrs(this.getAttr('origin-ticks'), 'origin')
@@ -142,6 +146,7 @@ Create.prototype.configureIndependentScale = function (model) {
         .simple(model.simpleDate)
         .tickSize(model.tickSize)
         .orient(model.independentAxisOrient)
+        .attrs(model.chartType, 'chart-type')
         .attrs(model.dependentAxisOrient, 'chart-alignment')
         .attrs(this.getAttr('independent-ticks'), 'ticks')
         .attrs(this.getAttr('origin-ticks'), 'origin')

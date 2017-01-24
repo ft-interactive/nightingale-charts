@@ -64,7 +64,7 @@ module.exports = {
         this.arrangeTicks(g, config);
         if (this.isVertical(config.axes)) {
             var yAxisLine = config.attr.yAxisLine.x1;
-            var tickExtension = yAxisLine !== undefined ? yAxisLine : config.tickExtension;
+            var tickExtension = yAxisLine !== undefined && config.attr['chart-type'] ? yAxisLine : config.tickExtension;
             this.extendAxis(g, config.axes, tickExtension);
         }
     }
