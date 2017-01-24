@@ -38,6 +38,15 @@ module.exports = {
                 y: null,
                 dy: 15 + config.tickSize
             });
+
+        //if xAxisLabel is centre-aligned, and chart yAxis is right-aligned, make first xAxisLabel left-aligned
+        if(config.attr['chart-alignment'] === 'right' && config.attr.primary['text-anchor'] === 'middle') {
+          g.selectAll('.x.axis .primary .tick:first-child text')
+              .attr({
+                'text-anchor': 'start'
+              });
+        }
+
     },
 
     addRow: function(g, axis, options, config){
