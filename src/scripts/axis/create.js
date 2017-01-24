@@ -108,9 +108,6 @@ Create.prototype.hideTicks = function () {
 };
 
 Create.prototype.configureDependentScale = function (model) {
-
-  console.log(model);
-
     this.dependentAxis
         .tickFormat(model.numberAxisFormatter)
         .simple(model.simpleValue)
