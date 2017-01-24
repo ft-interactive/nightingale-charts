@@ -90,7 +90,7 @@ module.exports.theme = [
     {   'id': 'key',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
-            'font-size': 12,
+            'font-size': '9.6pt',
             'line-height': 16,
             'font-weight': '600',
             'padding': 3,
@@ -135,7 +135,7 @@ module.exports.theme = [
     },
     {   'id': 'axis-text',
         'attributes': {
-            'font-size': 12,
+            'font-size': '9.6pt',
             'font-family': 'MetricWeb, sans-serif',
             'stroke': 'none',
             'font-weight': '600',
