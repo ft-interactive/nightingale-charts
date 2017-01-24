@@ -158,19 +158,23 @@ module.exports = {
         dElements.each(remove);
     },
 
-    removeOverlapping: function (g, selector) {
+    removeOverlapping: function (g, selector, type, alignment) {
         var self = this;
         var dElements = g.selectAll(selector);
         var elementCount = dElements[0].length;
         var limit = 5;
 
+        //console.log(type, alignment);
         function remove(d, i) {
             var last = i === elementCount - 1;
             var previousLabel = dElements[0][elementCount - 2];
             var lastOverlapsPrevious = (last && self.intersection(previousLabel.getBoundingClientRect(), this.getBoundingClientRect()));
+
+            var labelSpaceBy = type === 'line' && alignment === 'right' ? 3 : 2;
+
             if (last && lastOverlapsPrevious) {
                 d3.select(previousLabel).remove();
-            } else if (i % 2 !== 0 && !last) {
+            } else if (i % labelSpaceBy !== 0 && !last) {
                 d3.select(this).remove();
             }
         }
