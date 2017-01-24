@@ -32,7 +32,7 @@ module.exports.theme = [
         'attributes': {
             'padding-x': 8,
             'padding-y': 10,
-            background: 'rgba(255,255,255,1)'
+            background: 'none'
         }
     },
     //lines
