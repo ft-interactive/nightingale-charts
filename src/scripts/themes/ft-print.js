@@ -1,15 +1,15 @@
 var PADDING = 0;
 var colours = {
     line: [
-        'rgb(0,75,108)', 'rgb(221,183,49)', 'rgb(197,214,203)', 'rgb(172,29,32)', 'rgb(79,163,199)', 'rgb(221,223,240)'
+        "#004b6c","#c99b2d","#bac9b8","#4988ad","#8d221f", "#dee3dd"
     ],
     bar: [
-        'rgb(0,75,108)', 'rgb(0,123,166)', 'rgb(99,163,193)', 'rgb(147,191,197)', 'rgb(197,214,203)', 'rgb(221,223,240)'
+        '#003149', '#006791', '#5288a5', '#80a9ac', '#bac9b8', '#d3e2eb'
     ],
     column: [
-        'rgb(0,75,108)', 'rgb(0,123,166)', 'rgb(99,163,193)', 'rgb(147,191,197)', 'rgb(197,214,203)', 'rgb(221,223,240)'
+        '#003149', '#006791', '#5288a5', '#80a9ac', '#bac9b8', '#d3e2eb'
     ],
-    accent: 'rgb(221,183,49)'
+    accent: 'rgb(221,183,49)',
 };
 
 // SPECIAL 'non-svg' ATTRIBUTES:
@@ -42,7 +42,8 @@ module.exports.theme = [
         'attributes': {
             'fill': 'none',
             'stroke-linejoin': 'round',
-            'stroke-linecap': 'round'
+            'stroke-linecap': 'round',
+            'stroke-width': '2pt'
         }
     },
     //Columns
@@ -71,26 +72,26 @@ module.exports.theme = [
         'attributes': {
             'font-family': 'MetricWebSemiBold, sans-serif',
             'font-size': 12,
-            'line-height': 14,
+            'line-height': 12,
             'font-weight': '600',
-            'fill': 'rgba(0, 0, 0, 0.8)'
+            'fill': 'rgba(0, 0, 0, 1)'
         }
     },
     {   'id': 'chart-subtitle',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
             'font-size': 10,
-            'line-height': 12,
-            'font-weight': '600',
-            'fill': 'rgba(0, 0, 0, 0.8)'
+            'line-height': 10,
+            'font-weight': 400,
+            'fill': 'rgba(0, 0, 0, 1)'
         }
     },
     {   'id': 'key',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
-            'font-size': '9.6pt',
+            'font-size': 10,
             'line-height': 16,
-            'font-weight': '600',
+            'font-weight': 300,
             'padding': 3,
             'background': 'white',
             'fill': 'rgba(0, 0, 0, 0.8)'
