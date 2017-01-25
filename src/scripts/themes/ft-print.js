@@ -1,7 +1,7 @@
 var PADDING = 0;
 var colours = {
     line: [
-        "#004b6c","#c99b2d","#bac9b8","#4988ad","#8d221f"
+        "#004b6c","#c99b2d","#bac9b8","#4988ad","#8d221f", "#dee3dd"
     ],
     bar: [
         '#003149', '#006791', '#5288a5', '#80a9ac', '#bac9b8', '#d3e2eb'
@@ -10,10 +10,6 @@ var colours = {
         '#003149', '#006791', '#5288a5', '#80a9ac', '#bac9b8', '#d3e2eb'
     ],
     accent: 'rgb(221,183,49)',
-
-
-    //'rgb(221,223,240)'
-
 };
 
 // SPECIAL 'non-svg' ATTRIBUTES:
