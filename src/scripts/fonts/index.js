@@ -3,7 +3,10 @@ var fs = require('fs');
 var dataURI = {
     BentonSans: fs.readFileSync(__dirname + '/BentonSans.txt', 'utf8').trim(),
     MetricWeb: fs.readFileSync(__dirname + '/MetricWeb.txt', 'utf8').trim(),
-    MetricWebSemiBold: fs.readFileSync(__dirname + '/MetricWebSemiBold.txt', 'utf8').trim()
+    MetricWebSemiBold: fs.readFileSync(__dirname + '/MetricWebSemiBold.txt', 'utf8').trim(),
+    AvenirLight: fs.readFileSync(__dirname + '/Avenir-Light.txt', 'utf8').trim(),
+    AvenirLightOblique: fs.readFileSync(__dirname + '/Avenir-LightOblique.txt', 'utf8').trim(),
+    AvenirHeavy: fs.readFileSync(__dirname + '/Avenir-Heavy.txt', 'utf8').trim()
 };
 
 function svgStyleElement(stylesheet) {

@@ -65,8 +65,7 @@
         dataType : 'time'
     }]);
 
-    oCharts
-        .addFont('MetricWebSemiBold')
+    oCharts.addFont('MetricWebSemiBold')
         .then(function() {
             chart.call(oCharts.chart.line);
         });
@@ -78,12 +77,13 @@
 <script>
     var oCharts = require('nightingale-charts');
     var d3 = require('d3');
-    var printChart = d3.select('#video').append('div').data([{
+
+    var printChart = d3.select('#print').append('div').data([{
         height: 245,
         width: 200,
         theme: 'ft-print',
-        comment: 'Bar chart',
-        title: 'Bars: ',
+        comment: 'Line chart',
+        title: 'Lines: ',
         lineThickness: 2,
         keyColumns: 1,
         keyHover: true,
@@ -108,5 +108,43 @@
         });
 </script>
 
+
+<div id="nar"></div>
+<script>
+    var oCharts = require('nightingale-charts');
+    var d3 = require('d3');
+
+    var narChart = d3.select('#nar').append('div').data([{
+        theme: 'ft-nar',
+        comment: 'Line chart',
+        title: 'Lines: ',
+        subtitle: 'Dates, with a vertical independent axis',
+        dependentAxisOrient: 'right',
+        independentAxisOrient: 'bottom',
+        footnote: "This is another way of doing things which i enjoy",
+        source: "This is a source, a very lengthy one at that, so that we can test the layout",
+        x: { series: 'date' },
+        y: { series: ['value', 'value2'], reverse: false },
+        data: [
+            { date: new Date('2001-01-01'), value:      0.583, value2:      1.583},
+            { date: new Date('2001-02-01'), value: 0.12, value2:  2},
+            { date: new Date('2001-03-01'), value: 1.03, value2:  1.4},
+            { date: new Date('2001-04-01'), value:     -1.348, value2:  1.9},
+            { date: new Date('2001-05-01'), value:     -1.348, value2:  1.9},
+            { date: new Date('2001-06-01'), value:     -1.348, value2:  1.9},
+            { date: new Date('2001-07-01'), value:     -1.348, value2:  1.9},
+            { date: new Date('2001-08-01'), value:     -1.348, value2:  1.9},
+            { date: new Date('2001-09-01'), value:     -1.348, value2:  1.9},
+            { date: new Date('2001-10-01'), value:     -1.348, value2:  1.9},
+            { date: new Date('2001-11-01'), value:     -1.348, value2:  1.9}
+        ],
+        dataType : 'time'
+    }]);
+
+    oCharts.addFont(['AvenirLight', 'AvenirLightOblique', 'AvenirHeavy'])
+        .then(function(){
+            narChart.call(oCharts.chart.line)
+        });
+</script>
 </body>
 </html>

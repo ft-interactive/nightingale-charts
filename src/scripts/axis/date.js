@@ -29,7 +29,14 @@ function dateAxis() {
                 'font-family': 'BentonSans, sans-serif',
                 'font-size': 12
             },
-            secondary:{}
+            secondary: {},
+            xAxisLabel: {
+              'text-anchor': 'start'
+            },
+            yAxisLabel: {
+              'text-anchor': 'end'
+            },
+            yAxisLine: {}
         }
     };
 
@@ -39,7 +46,14 @@ function dateAxis() {
     }
 
     function render(g) {
-        config.attr.primary['text-anchor'] = isVertical() ? 'end' : 'start';
+
+        var lineChartTextAnchor = isVertical() ? 'end' : 'start';
+
+        if(config.attr['chart-type'] === 'line') {
+          lineChartTextAnchor = isVertical() ? config.attr.yAxisLabel['text-anchor'] : config.attr.xAxisLabel['text-anchor'];
+        }
+
+        config.attr.primary['text-anchor'] = lineChartTextAnchor;
         config.attr.secondary['text-anchor'] = isVertical() ? 'end' : 'start';
 
         g = g.append('g').attr('transform', 'translate(' + config.xOffset + ',' + config.yOffset + ')');

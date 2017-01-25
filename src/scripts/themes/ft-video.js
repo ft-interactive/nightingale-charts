@@ -193,6 +193,12 @@ module.exports.theme = [
             'stroke-width': 2
         }
     },
+    // position plot lines, options: 'front', 'back'
+    {   'id': 'axis-layer',
+        'attributes': {
+            'position': 'back'
+        }
+    },
     {
         'id': 'axis-text',
         'attributes': {
@@ -209,6 +215,18 @@ module.exports.theme = [
             'font-size': 12,
             'font-weight': '600',
             'fill': '#43423e'
+        }
+    },
+    {
+        'id': 'x-axis-text',
+        'attributes': {
+            'text-anchor': 'start'
+        }
+    },
+    {
+        'id': 'y-axis-text',
+        'attributes': {
+            'text-anchor': 'end'
         }
     }
 ];

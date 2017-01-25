@@ -118,5 +118,38 @@
         });
 </script>
 
+<div id="nar" class="demo">
+</div>
+<script>
+    var oCharts = require('nightingale-charts');
+    var d3 = require('d3');
+    var data = [
+        { key: 'red', value:      0.583, value2:      1.583},
+        { key: 'blue', value: 0.12, value2:  2},
+        { key: 'green machine', value: 1.03, value2:  1.4},
+        { key: 'purple', value:     1.348, value2:  1.9}
+    ];
+    var chartBasic = d3.select('#nar').append('div').data([{
+        comment: 'Column chart',
+        title: 'Columns: ',
+        theme: 'ft-nar',
+        subtitle: 'Categories, with a horizontal independent axis',
+        dependentAxisOrient: 'right',
+        independentAxisOrient: 'bottom',
+        footnote: 'My footnote',
+        source: 'With a source',
+        x: { series: 'key' },
+        y: { series: ['value', 'value2'] },
+        data: data,
+        stack:false,
+        dataType : 'categorical'
+    }]).call(oCharts.chart.column);
+
+    oCharts.addFont(['AvenirLight', 'AvenirLightOblique', 'AvenirHeavy'])
+        .then(function(){
+            chartBasic.call(oCharts.chart.column)
+        });
+</script>
+
 </body>
 </html>

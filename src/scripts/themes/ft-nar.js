@@ -1,15 +1,14 @@
-var PADDING = 0;
 var colours = {
     line: [
-        "#004b6c","#c99b2d","#bac9b8","#4988ad","#8d221f", "#dee3dd"
-    ],
-    bar: [
-        '#003149', '#006791', '#5288a5', '#80a9ac', '#bac9b8', '#d3e2eb'
+        '#154577', '#58BDBB', '#009A8E', '#B0D480', '#F9A71A', '#EE5427', '#AC252A'
     ],
     column: [
-        '#003149', '#006791', '#5288a5', '#80a9ac', '#bac9b8', '#d3e2eb'
+        '#154577', '#58BDBB', '#009A8E', '#B0D480', '#F9A71A', '#EE5427', '#AC252A', '#b8b1a9'
     ],
-    accent: 'rgb(221,183,49)',
+    bar: [
+        '#154577', '#58BDBB', '#009A8E', '#B0D480', '#F9A71A', '#EE5427', '#AC252A', '#b8b1a9'
+    ],
+    accent: '#154577'
 };
 
 // SPECIAL 'non-svg' ATTRIBUTES:
@@ -29,10 +28,9 @@ module.exports.theme = [
     },
     {
         'id': 'svg',
+        'selector': 'svg',
         'attributes': {
-            'padding-x': 8,
-            'padding-y': 10,
-            background: 'none'
+            'background': 'transparent'
         }
     },
     //lines
@@ -42,22 +40,22 @@ module.exports.theme = [
         'attributes': {
             'fill': 'none',
             'stroke-linejoin': 'round',
-            'stroke-linecap': 'round',
-            'stroke-width': '2pt'
-        }
+            'stroke-linecap': 'round'
+        },
+
     },
-    //Columns
-    {   'id': 'columns',
-        'attributes': {
-            'stroke-width': 0
-        }
-    },
-    //bars
-    {   'id': 'bars',
-        'attributes': {
-            'stroke-width': 0
-        }
-    },
+    ////Columns
+    //{   'id': 'columns',
+    //    'attributes': {
+    //        'stroke': 'none'
+    //    }
+    //},
+    ////Bars
+    //{   'id': 'bars',
+    //    'attributes': {
+    //        'stroke': 'none'
+    //    }
+    //},
     {
         'id': 'null-label',
         'attributes': {
@@ -70,100 +68,103 @@ module.exports.theme = [
     //text
     {   'id': 'chart-title',
         'attributes': {
-            'font-family': 'MetricWebSemiBold, sans-serif',
-            'font-size': 12,
-            'line-height': 12,
-            'font-weight': '600',
-            'fill': 'rgba(0, 0, 0, 1)'
+            'font-family': 'AvenirHeavy, sans-serif',
+            'font-size': 18,
+            'fill': 'rgba(0, 0, 0, 0.8)'
         }
     },
     {   'id': 'chart-subtitle',
         'attributes': {
-            'font-family': 'MetricWeb, sans-serif',
-            'font-size': 10,
-            'line-height': 10,
-            'font-weight': 400,
-            'fill': 'rgba(0, 0, 0, 1)'
-        }
-    },
-    {   'id': 'key',
-        'attributes': {
-            'font-family': 'MetricWeb, sans-serif',
-            'font-size': 10,
-            'line-height': 16,
-            'font-weight': 300,
-            'padding': 3,
-            'background': 'white',
+            'font-family': 'AvenirLightOblique, sans-serif',
+            'font-size': 12,
             'fill': 'rgba(0, 0, 0, 0.8)'
         }
     },
     {   'id': 'chart-source',
         'attributes': {
-            'font-family': 'MetricWeb, sans-serif',
-            'font-size': 8,
-            'line-height': 10
-        }
-    }, {
-        'id': 'chart-footnote',
-        'attributes': {
-            'font-family': 'MetricWeb, sans-serif',
-            'font-size': 12,
-            'line-height': 16
+            'font-family': 'AvenirLightOblique, sans-serif',
+            'font-size': 10,
+            'line-height': 12,
+            'fill': 'rgba(0, 0, 0, 1)'
         }
     },
-    {   'id': 'dependent-ticks',
+    {   'id': 'chart-footnote',
         'attributes': {
-            'shape-rendering': 'crispEdges',
-            'stroke': 'rgba(54, 51, 52, 1)',
-            'stroke-width': 1
+            'font-family': 'AvenirLightOblique, sans-serif',
+            'font-size': 10,
+            'line-height': 12,
+            'fill': 'rgba(0, 0, 0, 1)',
+            'padding-y': 5
+        }
+    },
+    {   'id': 'key',
+        'attributes': {
+            'font-family': 'AvenirLight, sans-serif',
+            'font-size': 12,
+            'line-height': 16,
+            'fill': 'rgba(0, 0, 0, 0.8)',
+            'padding-y': 8
         }
     },
     {   'id': 'independent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': 'rgba(54, 51, 52, 1)',
+            'stroke': 'rgba(0, 0, 0, 0.3)',
+            'stroke-width': 1
+        }
+    },
+    {   'id': 'dependent-ticks',
+        'attributes': {
+            'shape-rendering': 'crispEdges',
+            'stroke': 'rgba(0, 0, 0, 0.1)',
             'stroke-width': 1
         }
     },
     {   'id': 'origin-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': 'rgba(54, 51, 52, 1)',
+            'stroke': 'rgba(0, 0, 0, 1)',
             'stroke-width': 1
         }
     },
     // position plot lines, options: 'front', 'back'
     {   'id': 'axis-layer',
         'attributes': {
-            'position': 'back'
+            'position': 'front'
         }
     },
     {   'id': 'axis-text',
         'attributes': {
-            'font-size': '9.6pt',
-            'font-family': 'MetricWeb, sans-serif',
+            'font-size': 12,
+            'font-family': 'AvenirLight, sans-serif',
             'stroke': 'none',
-            'font-weight': '600',
-            'fill': 'rgba(0, 0, 0, 0.8)'
+            'fill': 'rgba(0, 0, 0, 1)'
         }
     },
     {   'id': 'axis-secondary-text',
+        'selector': '.axis .secondary text',
         'attributes': {
             'font-size': 10,
-            'font-weight': '600',
-            'fill': 'rgba(0, 0, 0, 0.8)'
+            'fill': 'rgba(0, 0, 0, 1)'
         }
     },
     {
         'id': 'x-axis-text',
         'attributes': {
-            'text-anchor': 'start'
+            'text-anchor': 'middle'
         }
     },
     {
         'id': 'y-axis-text',
         'attributes': {
-            'text-anchor': 'end'
+            'text-anchor': 'end',
+            'transform': 'translate( 0, 0 )'
+        }
+    },
+    {
+        'id': 'y-axis-line',
+        'attributes': {
+            'x1': 0
         }
     },
     {   'id': 'chart-logo',
