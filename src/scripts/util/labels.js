@@ -86,7 +86,7 @@ module.exports = {
     },
 
     intersection: function (a, b, padding) {
-        var PADDING = padding || 2;
+        var PADDING = padding || 3;
         var overlap = (
         a.left <= b.right + PADDING &&
         b.left <= a.right + PADDING &&
