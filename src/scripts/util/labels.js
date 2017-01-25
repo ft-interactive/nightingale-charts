@@ -85,7 +85,7 @@ module.exports = {
 
     },
 
-    intersection: function (a, b, padding) { // specify padding!!
+    intersection: function (a, b, padding) {
         var PADDING = padding || 2;
         var overlap = (
         a.left <= b.right + PADDING &&
@@ -174,7 +174,7 @@ module.exports = {
             } else if (i % 2 !== 0 && !last) {
                 d3.select(this).remove();
             }
-            
+
             if (alignment === 'right' && type === 'line' && i === 0) {
                 var firstLabel = this;
                 var nextLabel = dElements[0][2];
