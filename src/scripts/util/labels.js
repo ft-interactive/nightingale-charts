@@ -38,6 +38,14 @@ module.exports = {
                 y: null,
                 dy: 15 + config.tickSize
             });
+
+        //if xAxisLabel is centre-aligned, and chart yAxis is right-aligned, make first xAxisLabel left-aligned
+        if(config.attr['chart-type'] === 'line' && config.attr['chart-alignment'] === 'right' && config.attr.primary['text-anchor'] === 'middle') {
+          g.selectAll('.x.axis .primary .tick:first-child text')
+              .attr({
+                'text-anchor': 'start'
+              });
+        }
     },
 
     addRow: function(g, axis, options, config){
@@ -73,12 +81,12 @@ module.exports = {
         if (config.units[0] == 'monthly'){
             this.removeMonths(g, axis, options, config);
         }
-        this.removeOverlapping(g, '.' + rowClass + ' text');
+        this.removeOverlapping(g, '.' + rowClass + ' text', config.attr['chart-alignment'], config.attr['chart-type']);
 
     },
 
-    intersection: function (a, b) {
-        var PADDING = 2;
+    intersection: function (a, b, padding) {
+        var PADDING = padding || 2;
         var overlap = (
         a.left <= b.right + PADDING &&
         b.left <= a.right + PADDING &&
@@ -150,7 +158,7 @@ module.exports = {
         dElements.each(remove);
     },
 
-    removeOverlapping: function (g, selector) {
+    removeOverlapping: function (g, selector, alignment, type) {
         var self = this;
         var dElements = g.selectAll(selector);
         var elementCount = dElements[0].length;
@@ -160,10 +168,19 @@ module.exports = {
             var last = i === elementCount - 1;
             var previousLabel = dElements[0][elementCount - 2];
             var lastOverlapsPrevious = (last && self.intersection(previousLabel.getBoundingClientRect(), this.getBoundingClientRect()));
+
             if (last && lastOverlapsPrevious) {
                 d3.select(previousLabel).remove();
             } else if (i % 2 !== 0 && !last) {
                 d3.select(this).remove();
+            }
+
+            if (alignment === 'right' && type === 'line' && i === 0) {
+                var firstLabel = this;
+                var nextLabel = dElements[0][2];
+                if(self.intersection(nextLabel.getBoundingClientRect(), firstLabel.getBoundingClientRect(), 20)) {
+                    d3.select(nextLabel).remove();
+                }
             }
         }
 

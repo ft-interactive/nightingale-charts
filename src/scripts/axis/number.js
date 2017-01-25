@@ -54,7 +54,9 @@ function numericAxis() {
     function axis(g) {
         var orientOffset = (config.axes.orient() === 'right') ? -config.axes.tickSize() : 0;
 
-        config.attr.primary['text-anchor'] = isVertical() ?  config.attr.yAxisLabel['text-anchor'] : config.attr.xAxisLabel['text-anchor'];
+        var yAxisRightAligned = config.attr['chart-alignment'] === 'right' && config.attr.yAxisLine.x1 === 0;
+        var yAxisLabelTextAnchor = yAxisRightAligned ? 'start' : config.attr.yAxisLabel['text-anchor'];
+        config.attr.primary['text-anchor'] = isVertical() ? yAxisLabelTextAnchor : config.attr.xAxisLabel['text-anchor'];
         config.attr.secondary['text-anchor'] = isVertical() ? 'end' : 'start';
 
         g = g.append('g').attr('transform', 'translate(' + (config.xOffset + orientOffset) + ',' + config.yOffset + ')');
