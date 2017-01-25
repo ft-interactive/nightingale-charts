@@ -175,9 +175,9 @@ module.exports = {
                 d3.select(this).remove();
             }
 
-            if (alignment === 'right' && type === 'line' && i === 0) {
-                var firstLabel = this;
-                var nextLabel = dElements[0][2];
+            if (alignment === 'right' && type === 'line' && i > 0 && i < 3) {
+                var firstLabel = dElements[0][0];
+                var nextLabel = dElements[0][i];
                 if(self.intersection(nextLabel.getBoundingClientRect(), firstLabel.getBoundingClientRect(), 20)) {
                     d3.select(nextLabel).remove();
                 }
