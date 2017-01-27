@@ -43,7 +43,7 @@ module.exports.theme = [
             'fill': 'none',
             'stroke-linejoin': 'round',
             'stroke-linecap': 'round',
-            'stroke-width': '2pt'
+            'stroke-width': 3
         }
     },
     //Columns
@@ -100,8 +100,9 @@ module.exports.theme = [
     {   'id': 'chart-source',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
-            'font-size': 8,
-            'line-height': 10
+            'font-size': 7,
+            'line-height': 10,
+            'font-weight': 400
         }
     }, {
         'id': 'chart-footnote',
@@ -114,21 +115,21 @@ module.exports.theme = [
     {   'id': 'dependent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': 'rgba(54, 51, 52, 1)',
+            'stroke': '#22190f',
             'stroke-width': 1
         }
     },
     {   'id': 'independent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': 'rgba(54, 51, 52, 1)',
+            'stroke': '#22190f',
             'stroke-width': 1
         }
     },
     {   'id': 'origin-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': 'rgba(54, 51, 52, 1)',
+            'stroke': '#22190f',
             'stroke-width': 1
         }
     },

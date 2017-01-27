@@ -2,6 +2,7 @@ $chart-line-stroke-width: 4;
 
 //used by nightingale!!
 //todo: pm: work out how to stop this
+
 // FT Web Colours
 $chart-series1-line-color: rgb(175, 81, 108);
 $chart-series2-line-color: rgb(236, 175, 175);
@@ -22,6 +23,27 @@ $chart-series7-bar-color: rgb(184, 177, 169);
 $chart-series-other-bar-color: rgb(184, 177, 169);
 
 $chart-font-family: 'BentonSans', sans-serif;
+
+// Print Colours
+$chart-print-series1-line-color: #004b6c;
+$chart-print-series2-line-color: #c99b2d;
+$chart-print-series3-line-color: #bac9b8;
+$chart-print-series4-line-color: #4988ad;
+$chart-print-series5-line-color: #8d221f;
+$chart-print-series6-line-color: #dee3dd;
+
+$chart-print-series7-line-color: #AC252A;
+$chart-print-series-other-line-color: #b8b1a9;
+
+$chart-print-series1-bar-color: #003149;
+$chart-print-series2-bar-color: #006791;
+$chart-print-series3-bar-color: #5288a5;
+$chart-print-series4-bar-color: #80a9ac;
+$chart-print-series5-bar-color: #bac9b8;
+$chart-print-series6-bar-color: #d3e2eb;
+
+$chart-print-series7-bar-color: #AC252A;
+$chart-print-series-other-bar-color: #b8b1a9;
 
 // NAR Colours
 $chart-nar-series1-line-color: #154577;
