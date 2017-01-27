@@ -42,7 +42,8 @@ module.exports.theme = [
         'attributes': {
             'fill': 'none',
             'stroke-linejoin': 'round',
-            'stroke-linecap': 'round'
+            'stroke-linecap': 'round',
+            'stroke-width': 3
         }
     },
     //Columns
