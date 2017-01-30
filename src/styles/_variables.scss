@@ -13,6 +13,9 @@ $chart-series6-line-color: rgb(78, 134, 182);
 $chart-series7-line-color: rgb(184, 177, 169);
 $chart-series-other-line-color: rgb(184, 177, 169);
 
+$web-line-colours: $chart-series1-line-color, $chart-series2-line-color, $chart-series3-line-color, $chart-series4-line-color,
+                   $chart-series5-line-color, $chart-series6-line-color, $chart-series7-line-color;
+
 $chart-series1-bar-color: rgb(187, 109, 130);
 $chart-series2-bar-color: rgb(236, 175, 175);
 $chart-series3-bar-color: rgb(215, 112, 108);
@@ -22,7 +25,11 @@ $chart-series6-bar-color: rgb(216, 166, 154);
 $chart-series7-bar-color: rgb(184, 177, 169);
 $chart-series-other-bar-color: rgb(184, 177, 169);
 
+$web-bar-colours: $chart-series1-bar-color, $chart-series2-bar-color, $chart-series3-bar-color, $chart-series4-bar-color,
+                  $chart-series5-bar-color, $chart-series6-bar-color, $chart-series7-bar-color;
+
 $chart-font-family: 'BentonSans', sans-serif;
+
 
 // FT Video Colours
 $chart-video-series1-line-color: rgb(180, 63, 51);
@@ -34,6 +41,9 @@ $chart-video-series6-line-color: rgb(157, 153, 151);
 $chart-video-series7-line-color: rgb(184, 177, 169);
 $chart-video-series-other-line-color: rgb(184, 177, 169);
 
+$video-line-colours: $chart-print-series1-line-color, $chart-print-series2-line-color, $chart-print-series3-line-color,
+                     $chart-print-series4-line-color, $chart-print-series5-line-color, $chart-print-series6-line-color;
+
 $chart-video-series1-bar-color: rgb(180, 63, 51);
 $chart-video-series2-bar-color: rgb(92, 141, 179);
 $chart-video-series3-bar-color: rgb(165, 174, 103);
@@ -43,6 +53,10 @@ $chart-video-series6-bar-color: rgb(157, 153, 151);
 $chart-video-series7-bar-color: rgb(184, 177, 169);
 $chart-video-series-other-bar-color: rgb(184, 177, 169);
 
+$video-bar-colours: $chart-print-series1-bar-color, $chart-print-series2-bar-color, $chart-print-series3-bar-color,
+                    $chart-print-series4-bar-color, $chart-print-series5-bar-color, $chart-print-series6-bar-color;
+
+
 // Print Colours
 $chart-print-series1-line-color: #004b6c;
 $chart-print-series2-line-color: #c99b2d;
@@ -50,9 +64,11 @@ $chart-print-series3-line-color: #bac9b8;
 $chart-print-series4-line-color: #4988ad;
 $chart-print-series5-line-color: #8d221f;
 $chart-print-series6-line-color: #dee3dd;
-
 $chart-print-series7-line-color: #AC252A;
 $chart-print-series-other-line-color: #b8b1a9;
+
+$print-line-colours: $chart-print-series1-line-color, $chart-print-series2-line-color, $chart-print-series3-line-color,
+                     $chart-print-series4-line-color, $chart-print-series5-line-color, $chart-print-series6-line-color;
 
 $chart-print-series1-bar-color: #003149;
 $chart-print-series2-bar-color: #006791;
@@ -60,9 +76,12 @@ $chart-print-series3-bar-color: #5288a5;
 $chart-print-series4-bar-color: #80a9ac;
 $chart-print-series5-bar-color: #bac9b8;
 $chart-print-series6-bar-color: #d3e2eb;
-
 $chart-print-series7-bar-color: #AC252A;
 $chart-print-series-other-bar-color: #b8b1a9;
+
+$print-bar-colours: $chart-print-series1-bar-color, $chart-print-series2-bar-color, $chart-print-series3-bar-color,
+                    $chart-print-series4-bar-color, $chart-print-series5-bar-color, $chart-print-series6-bar-color;
+
 
 // NAR Colours
 $chart-nar-series1-line-color: #154577;
@@ -74,6 +93,9 @@ $chart-nar-series6-line-color: #EE5427;
 $chart-nar-series7-line-color: #AC252A;
 $chart-nar-series-other-line-color: #b8b1a9;
 
+$nar-line-colours: $chart-nar-series1-line-color, $chart-nar-series2-line-color, $chart-nar-series3-line-color,
+                   $chart-nar-series4-line-color, $chart-nar-series5-line-color, $chart-nar-series6-line-color;
+
 $chart-nar-series1-bar-color: #154577;
 $chart-nar-series2-bar-color: #58BDBB;
 $chart-nar-series3-bar-color: #009A8E;
@@ -82,3 +104,6 @@ $chart-nar-series5-bar-color: #F9A71A;
 $chart-nar-series6-bar-color: #EE5427;
 $chart-nar-series7-bar-color: #AC252A;
 $chart-nar-series-other-bar-color: #b8b1a9;
+
+$nar-bar-colours: $chart-nar-series1-bar-color, $chart-nar-series2-bar-color, $chart-nar-series3-bar-color,
+                  $chart-nar-series4-bar-color, $chart-nar-series5-bar-color, $chart-nar-series6-bar-color;
