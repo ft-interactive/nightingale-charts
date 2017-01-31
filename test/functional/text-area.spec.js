@@ -27,7 +27,7 @@ describe('Text Area displays', function () {
             var textArea = alignText.querySelectorAll('text')[0];
             expect(textArea.querySelectorAll('tspan').length).toBe(2);
             expect(textArea.querySelectorAll('tspan')[0].getAttribute('x')).toBe('73.34375');
-            expect(textArea.querySelectorAll('tspan')[1].getAttribute('x')).toBe('120.3203125');
+            expect(textArea.querySelectorAll('tspan')[1].getAttribute('x')).toBe('120.3203125'); 
         });
 
     });
