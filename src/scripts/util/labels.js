@@ -83,6 +83,7 @@ module.exports = {
         }
         this.removeOverlapping(g, '.' + rowClass + ' text', config.attr['chart-alignment'], config.attr['chart-type']);
 
+        this.removePrimaryOverlappingSecondary(g);
     },
 
     intersection: function (a, b, padding) {
@@ -200,6 +201,24 @@ module.exports = {
         if (alignment === 'right' && type === 'line') {
           removeNonOverlappingLabels(1);
         }
+    },
+
+    removePrimaryOverlappingSecondary: function(g) {
+        var self = this;
+        var primaryLabels = g.selectAll('.primary text');
+        var secondaryLabels = g.selectAll('.secondary text');
+
+        secondaryLabels.each(function() {
+          var secondaryLabel = this;
+          primaryLabels.each(function() {
+            var primaryLabel = this;
+            console.log(primaryLabel.getBoundingClientRect(), secondaryLabel.getBoundingClientRect());
+            if(self.intersection(primaryLabel.getBoundingClientRect(), secondaryLabel.getBoundingClientRect(), 40)) {
+                console.log('conflict!', primaryLabel, secondaryLabel);
+                d3.select(primaryLabel).remove();
+            }
+          });
+        });
     },
 
     removeDuplicates: function (g, selector) {
