@@ -164,6 +164,16 @@ module.exports = {
         var elementCount = dElements[0].length;
         var limit = 5;
 
+        function removeNonOverlappingLabels(count) {
+            var firstLabel = dElements[0][0];
+            var nextLabel = dElements[0][count];
+            if(firstLabel !== undefined && nextLabel !== undefined) {
+              if(self.intersection(nextLabel.getBoundingClientRect(), firstLabel.getBoundingClientRect(), 20)) {
+                  d3.select(nextLabel).remove();
+              }
+            }
+        }
+
         function remove(d, i) {
             var last = i === elementCount - 1;
             var previousLabel = dElements[0][elementCount - 2];
@@ -176,11 +186,7 @@ module.exports = {
             }
 
             if (alignment === 'right' && type === 'line' && i > 0 && i < 3) {
-                var firstLabel = dElements[0][0];
-                var nextLabel = dElements[0][i];
-                if(self.intersection(nextLabel.getBoundingClientRect(), firstLabel.getBoundingClientRect(), 20)) {
-                    d3.select(nextLabel).remove();
-                }
+              removeNonOverlappingLabels(i);
             }
         }
 
@@ -189,6 +195,10 @@ module.exports = {
             g.selectAll(selector).each(remove);
             dElements = g.selectAll(selector);
             elementCount = dElements[0].length;
+        }
+
+        if (alignment === 'right' && type === 'line') {
+          removeNonOverlappingLabels(1);
         }
     },
 
