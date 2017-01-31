@@ -1,150 +1,151 @@
 <html>
 <head>
-    <meta charset="utf-8"/>
-    <link rel="stylesheet" href="styles/main.css"/>
-    <link rel="stylesheet" href="styles/demo.css"/>
-    <title>lines</title>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="styles/main.css"/>
+  <link rel="stylesheet" href="styles/demo.css"/>
+  <title>lines</title>
 </head>
 <body class="ft">
+  <script src=scripts/vendor.js></script>
+  <script src=scripts/nightingale-charts.js></script>
 
-<style>
-    svg {
-        margin:5px;
-    }
-</style>
-<script src=scripts/vendor.js></script>
-<script src=scripts/nightingale-charts.js></script>
-
-<div id="views"></div>
-<script>
+  <section>
+    <h2>Web Theme</h2>
+    <div id="views"></div>
+    <script>
     var oCharts = require('nightingale-charts');
     var d3 = require('d3');
 
     d3.select('#views').append('div').data([{
-        comment: 'Line chart',
-        title: 'Lines: ',
-        subtitle: 'Dates, with a vertical independent axis',
-        dependentAxisOrient: 'left',
-        independentAxisOrient: 'bottom',
-        footnote: "This is another way of doing things which i enjoy",
-        source: "This is a source, a very lengthy one at that, so that we can test the layout",
-        x: { series: 'date' },
-        y: { series: ['value', 'value2'], reverse: false },
-        data: [
-            { date: new Date('01/01/2001'), value:      0.583, value2:      1.583},
-            { date: new Date('01/01/2002'), value: 0.12, value2:  2},
-            { date: new Date('01/01/2003'), value: 1.03, value2:  1.4},
-            { date: new Date('01/01/2004'), value:     1.348, value2:  1.9}
-        ],
-        dataType : 'time'
+      comment: 'Line chart',
+      title: 'Lines: ',
+      subtitle: 'Dates, with a vertical independent axis',
+      dependentAxisOrient: 'left',
+      independentAxisOrient: 'bottom',
+      footnote: "This is another way of doing things which i enjoy",
+      source: "This is a source, a very lengthy one at that, so that we can test the layout",
+      x: { series: 'date' },
+      y: { series: ['value', 'value2'], reverse: false },
+      data: [
+        { date: new Date('01/01/2001'), value:      0.583, value2:      1.583},
+        { date: new Date('01/01/2002'), value: 0.12, value2:  2},
+        { date: new Date('01/01/2003'), value: 1.03, value2:  1.4},
+        { date: new Date('01/01/2004'), value:     1.348, value2:  1.9}
+      ],
+      dataType : 'time'
     }]).call(oCharts.chart.line);
-</script>
+    </script>
+  </section>
 
-<div id="video"></div>
-<script>
+  <section>
+    <h2>Video Theme</h2>
+    <div id="video"></div>
+    <script>
     var oCharts = require('nightingale-charts');
     var d3 = require('d3');
     var chart = d3.select('#video').append('div').data([{
-        theme: 'ft-video',
-        title: 'Video Style: ',
-        subtitle: 'Dates, with a vertical independent axis',
-        dependentAxisOrient: 'left',
-        independentAxisOrient: 'bottom',
-        lineThickness: 3,
-        width: 600,
-        height: 338,
-        x: { series: 'date' },
-        y: { series: ['Aluminium', 'Crude', 'Steel', 'Nickle', 'Zinc'], reverse: false },
-        data: [
-            {date: new Date('2000'),Aluminium: 11.9, Crude:	12.8, Steel:1.3, Nickle: 5.9, Zinc:14.9},
-            {date: new Date('2001'),Aluminium: 14.9, Crude:	14.7, Steel:9.8, Nickle: 17.9, Zinc:7.3},
-            {date: new Date('2002'),Aluminium: 27.0, Crude:	18.4, Steel:12.5, Nickle: 8.8, Zinc:18.8},
-            {date: new Date('2003'),Aluminium: 19.4, Crude:	18.6, Steel:26.6, Nickle: 10.9, Zinc:20.6},
-            {date: new Date('2004'),Aluminium: 20.9, Crude:	20.2, Steel:27.6, Nickle: 13.2, Zinc:4.9 }
-        ] ,
-        dataType : 'time'
+      theme: 'ft-video',
+      title: 'Video Style: ',
+      subtitle: 'Dates, with a vertical independent axis',
+      dependentAxisOrient: 'left',
+      independentAxisOrient: 'bottom',
+      lineThickness: 3,
+      width: 600,
+      height: 338,
+      x: { series: 'date' },
+      y: { series: ['Aluminium', 'Crude', 'Steel', 'Nickle', 'Zinc'], reverse: false },
+      data: [
+        {date: new Date('2000'),Aluminium: 11.9, Crude:	12.8, Steel:1.3, Nickle: 5.9, Zinc:14.9},
+        {date: new Date('2001'),Aluminium: 14.9, Crude:	14.7, Steel:9.8, Nickle: 17.9, Zinc:7.3},
+        {date: new Date('2002'),Aluminium: 27.0, Crude:	18.4, Steel:12.5, Nickle: 8.8, Zinc:18.8},
+        {date: new Date('2003'),Aluminium: 19.4, Crude:	18.6, Steel:26.6, Nickle: 10.9, Zinc:20.6},
+        {date: new Date('2004'),Aluminium: 20.9, Crude:	20.2, Steel:27.6, Nickle: 13.2, Zinc:4.9 }
+      ] ,
+      dataType : 'time'
     }]);
 
     oCharts.addFont('MetricWebSemiBold')
-        .then(function() {
-            chart.call(oCharts.chart.line);
-        });
-</script>
+    .then(function() {
+      chart.call(oCharts.chart.line);
+    });
+    </script>
+  </section>
 
-
-
-<div id="print"></div>
-<script>
+  <section>
+    <h2>Print Theme</h2>
+    <div id="print"></div>
+    <script>
     var oCharts = require('nightingale-charts');
     var d3 = require('d3');
 
     var printChart = d3.select('#print').append('div').data([{
-        height: 245,
-        width: 200,
-        theme: 'ft-print',
-        comment: 'Line chart',
-        title: 'Lines: ',
-        lineThickness: 2,
-        keyColumns: 1,
-        keyHover: true,
-        subtitle: 'Print themes categories, with a vertical independent axis, and a comment that goes on to two lines. woah!',
-        dependentAxisOrient: 'left',
-        independentAxisOrient: 'bottom',
-        x: { series: 'date' },
-        y: { series: ['Aluminium', 'Crude', 'Steel', 'Nickle'], reverse: false },
-        data: [
-            {date: new Date('2000-01-01'),Aluminium: 11.9, Crude:	12.8, Steel:1.3, Nickle: 5.9, Zinc:14.9},
-            {date: new Date('2000-02-01'),Aluminium: 14.9, Crude:	14.7, Steel:9.8, Nickle: 17.9, Zinc:7.3},
-            {date: new Date('2000-03-01'),Aluminium: 7.0, Crude:	18.4, Steel:12.5, Nickle: 8.8, Zinc:18.8},
-            {date: new Date('2000-04-01'),Aluminium: 19.4, Crude:	18.6, Steel:26.6, Nickle: 10.9, Zinc:20.6},
-            {date: new Date('2000-05-01'),Aluminium: 20.9, Crude:	20.2, Steel:27.6, Nickle: 13.2, Zinc:4.9 }
-        ] ,
-        dataType : 'time'
+      theme: 'ft-print',
+      comment: 'Line chart',
+      title: 'Lines: ',
+      lineThickness: 2,
+      keyColumns: 1,
+      keyHover: true,
+      subtitle: 'Print themes categories, with a vertical independent axis, and a comment that goes on to two lines. woah!',
+      dependentAxisOrient: 'left',
+      independentAxisOrient: 'bottom',
+      x: { series: 'date' },
+      y: { series: ['Aluminium', 'Crude', 'Steel', 'Nickle'], reverse: false },
+      data: [
+        {date: new Date('2000-01-01'),Aluminium: 11.9, Crude:	12.8, Steel:1.3, Nickle: 5.9, Zinc:14.9},
+        {date: new Date('2000-02-01'),Aluminium: 14.9, Crude:	14.7, Steel:9.8, Nickle: 17.9, Zinc:7.3},
+        {date: new Date('2000-03-01'),Aluminium: 7.0, Crude:	18.4, Steel:12.5, Nickle: 8.8, Zinc:18.8},
+        {date: new Date('2000-04-01'),Aluminium: 19.4, Crude:	18.6, Steel:26.6, Nickle: 10.9, Zinc:20.6},
+        {date: new Date('2000-05-01'),Aluminium: 20.9, Crude:	20.2, Steel:27.6, Nickle: 13.2, Zinc:4.9 }
+      ] ,
+      dataType : 'time'
     }]);
 
     oCharts.addFont(['MetricWeb','MetricWebSemiBold'])
-        .then(function(){
-            printChart.call(oCharts.chart.line)
-        });
-</script>
+    .then(function(){
+      printChart.call(oCharts.chart.line)
+    });
+    </script>
+  </section>
 
-
-<div id="nar"></div>
-<script>
+  <section>
+    <h2>Nar Theme</h2>
+    <div id="nar"></div>
+    <script>
     var oCharts = require('nightingale-charts');
     var d3 = require('d3');
 
     var narChart = d3.select('#nar').append('div').data([{
-        theme: 'ft-nar',
-        comment: 'Line chart',
-        title: 'Lines: ',
-        subtitle: 'Dates, with a vertical independent axis',
-        dependentAxisOrient: 'right',
-        independentAxisOrient: 'bottom',
-        footnote: "This is another way of doing things which i enjoy",
-        source: "This is a source, a very lengthy one at that, so that we can test the layout",
-        x: { series: 'date' },
-        y: { series: ['value', 'value2'], reverse: false },
-        data: [
-            { date: new Date('2001-01-01'), value:      0.583, value2:      1.583},
-            { date: new Date('2001-02-01'), value: 0.12, value2:  2},
-            { date: new Date('2001-03-01'), value: 1.03, value2:  1.4},
-            { date: new Date('2001-04-01'), value:     -1.348, value2:  1.9},
-            { date: new Date('2001-05-01'), value:     -1.348, value2:  1.9},
-            { date: new Date('2001-06-01'), value:     -1.348, value2:  1.9},
-            { date: new Date('2001-07-01'), value:     -1.348, value2:  1.9},
-            { date: new Date('2001-08-01'), value:     -1.348, value2:  1.9},
-            { date: new Date('2001-09-01'), value:     -1.348, value2:  1.9},
-            { date: new Date('2001-10-01'), value:     -1.348, value2:  1.9},
-            { date: new Date('2001-11-01'), value:     -1.348, value2:  1.9}
-        ],
-        dataType : 'time'
+      theme: 'ft-nar',
+      comment: 'Line chart',
+      title: 'Lines: ',
+      subtitle: 'Dates, with a vertical independent axis',
+      dependentAxisOrient: 'right',
+      independentAxisOrient: 'bottom',
+      footnote: "This is another way of doing things which i enjoy",
+      source: "This is a source, a very lengthy one at that, so that we can test the layout",
+      x: { series: 'date' },
+      y: { series: ['value', 'value2'], reverse: false },
+      data: [
+        { date: new Date('2001-01-01'), value:      0.583, value2:      1.583},
+        { date: new Date('2001-02-01'), value: 0.12, value2:  2},
+        { date: new Date('2001-03-01'), value: 1.03, value2:  1.4},
+        { date: new Date('2001-04-01'), value:     -1.348, value2:  1.9},
+        { date: new Date('2001-05-01'), value:     -1.348, value2:  1.9},
+        { date: new Date('2001-06-01'), value:     -1.348, value2:  1.9},
+        { date: new Date('2001-07-01'), value:     -1.348, value2:  1.9},
+        { date: new Date('2001-08-01'), value:     -1.348, value2:  1.9},
+        { date: new Date('2001-09-01'), value:     -1.348, value2:  1.9},
+        { date: new Date('2001-10-01'), value:     -1.348, value2:  1.9},
+        { date: new Date('2001-11-01'), value:     -1.348, value2:  1.9}
+      ],
+      dataType : 'time'
     }]);
 
     oCharts.addFont(['AvenirLight', 'AvenirLightOblique', 'AvenirHeavy'])
-        .then(function(){
-            narChart.call(oCharts.chart.line)
-        });
-</script>
+    .then(function(){
+      narChart.call(oCharts.chart.line)
+    });
+    </script>
+  </section>
 </body>
 </html>

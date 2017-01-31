@@ -2,9 +2,22 @@ html {
   -webkit-font-smoothing: antialiased; }
 
 body.ft {
+  margin: 0;
   font-family: MillerDisplay, serif; }
 
+section {
+  margin: 0 10px;
+  display: block;
+  width: 100%;
+  float: left;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #ccc; }
+
+body section:last-of-type {
+  border-bottom: none; }
+
 svg {
+  margin: 5px;
   box-shadow: 5px 5px 11px 0px rgba(0, 0, 0, 0.2); }
 
 #views {
@@ -13,3 +26,6 @@ svg {
 
 #viewsSmall {
   float: left; }
+
+.demo {
+  clear: both; }

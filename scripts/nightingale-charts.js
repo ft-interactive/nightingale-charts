@@ -2722,7 +2722,8 @@ function textArea() {
         });
         if (align === 'right' || float === 'right'){
             text.selectAll('tspan').each(function(d,i){
-                d3.select(this).attr('x', innerWidth - this.getComputedTextLength());
+                var xPosRounded = Math.round(innerWidth - this.getComputedTextLength());
+                d3.select(this).attr('x', xPosRounded);
             });
         }
         if (background){

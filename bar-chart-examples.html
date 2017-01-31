@@ -1,138 +1,140 @@
 <html>
 <head>
-    <meta charset="utf-8"/>
-    <link rel="stylesheet" href="styles/main.css"/>
-    <link rel="stylesheet" href="styles/demo.css"/>
-    <title>Bars</title>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="styles/main.css"/>
+  <link rel="stylesheet" href="styles/demo.css"/>
+  <title>Bars</title>
 </head>
 <body class="ft">
-	<style>
-		svg {
-			margin:5px;
-		}
-	</style>
-	<script src=scripts/vendor.js></script>
-	<script src=scripts/nightingale-charts.js></script>
+  <script src=scripts/vendor.js></script>
+  <script src=scripts/nightingale-charts.js></script>
 
+  <section>
+    <h2>Web Theme</h2>
     <div id="views"></div>
-	<script>
-        var oCharts = require('nightingale-charts');
-        var d3 = require('d3');
+    <script>
+    var oCharts = require('nightingale-charts');
+    var d3 = require('d3');
 
-        d3.select('#views').append('div').data([{
-            comment: 'Bar chart',
-            title: 'Bars: ',
-            subtitle: 'Categories, with a vertical independent axis',
-            dependentAxisOrient: 'bottom',
-            independentAxisOrient: 'left',
-            x: { series: 'key' },
-            y: { series: ['value', 'value2'] },
-            data: [
-                { key: 'red', value:      0.583, value2:      1.583},
-                { key: 'blue', value: 0.12, value2:  2},
-                { key: 'green machine', value: 1.03, value2:  1.4},
-                { key: 'purple', value:     1.348, value2:  1.9}
-            ],
-            stack:true,
-            dataType : 'categorical'
-        }]).call(oCharts.chart.bar);
+    d3.select('#views').append('div').data([{
+      comment: 'Bar chart',
+      title: 'Bars: ',
+      subtitle: 'Categories, with a vertical independent axis',
+      dependentAxisOrient: 'bottom',
+      independentAxisOrient: 'left',
+      x: { series: 'key' },
+      y: { series: ['value', 'value2'] },
+      data: [
+        { key: 'red', value:      0.583, value2:      1.583},
+        { key: 'blue', value: 0.12, value2:  2},
+        { key: 'green machine', value: 1.03, value2:  1.4},
+        { key: 'purple', value:     1.348, value2:  1.9}
+      ],
+      stack:true,
+      dataType : 'categorical'
+    }]).call(oCharts.chart.bar);
     </script>
+  </section>
 
-
+  <section>
+    <h2>Video Theme</h2>
     <div id="video"></div>
-	<script>
-        var oCharts = require('nightingale-charts');
-        var d3 = require('d3');
-        var videoChart = d3.select('#video').append('div').data([{
-            height: 338,
-            width: 600,
-            theme: 'ft-video',
-            comment: 'Bar chart',
-            title: 'Bars: ',
-            keyColumns: 2,
-            subtitle: 'Video themes categories, with a vertical independent axis, and a comment that goes on to two lines. woah!',
-            dependentAxisOrient: 'bottom',
-            independentAxisOrient: 'left',
-            x: { series: 'key' },
-            y: { series: ['value', 'value2'] },
-            data: [
-                { key: 'red', value:      0.583, value2:      1.583},
-                { key: 'blue', value: 0.12, value2:  2},
-                { key: 'green machine', value: 1.03, value2:  1.4},
-                { key: 'purple', value:     1.348, value2:  1.9}
-            ],
-            stack:true,
-            dataType : 'categorical'
-        }]);
+    <script>
+    var oCharts = require('nightingale-charts');
+    var d3 = require('d3');
+    var videoChart = d3.select('#video').append('div').data([{
+      height: 338,
+      width: 600,
+      theme: 'ft-video',
+      comment: 'Bar chart',
+      title: 'Bars: ',
+      keyColumns: 2,
+      subtitle: 'Video themes categories, with a vertical independent axis, and a comment that goes on to two lines. woah!',
+      dependentAxisOrient: 'bottom',
+      independentAxisOrient: 'left',
+      x: { series: 'key' },
+      y: { series: ['value', 'value2'] },
+      data: [
+        { key: 'red', value:      0.583, value2:      1.583},
+        { key: 'blue', value: 0.12, value2:  2},
+        { key: 'green machine', value: 1.03, value2:  1.4},
+        { key: 'purple', value:     1.348, value2:  1.9}
+      ],
+      stack:true,
+      dataType : 'categorical'
+    }]);
 
-        oCharts.addFont(['MetricWebSemiBold'])
-            .then(function(){
-                videoChart.call(oCharts.chart.bar)
-            });
+    oCharts.addFont(['MetricWebSemiBold'])
+    .then(function(){
+      videoChart.call(oCharts.chart.bar)
+    });
     </script>
+  </section>
 
+  <section>
+    <h2>Print Theme</h2>
     <div id="print"></div>
-	<script>
-        var oCharts = require('nightingale-charts');
-        var d3 = require('d3');
-        var printChart = d3.select('#video').append('div').data([{
-            height: 245,
-            width: 200,
-            theme: 'ft-print',
-            comment: 'Bar chart',
-            title: 'Bars: ',
-            keyColumns: 2,
-            subtitle: 'Print themes categories, with a vertical independent axis, and a comment that goes on to two lines. woah!',
-            dependentAxisOrient: 'bottom',
-            independentAxisOrient: 'left',
-            x: { series: 'key' },
-            y: { series: ['value', 'value2'] },
-            data: [
-                { key: 'red', value:      0.583, value2:      1.583},
-                { key: 'blue', value: 0.12, value2:  2},
-                { key: 'green machine', value: 1.03, value2:  1.4},
-                { key: 'purple', value:     1.348, value2:  1.9}
-            ],
-            stack:true,
-            dataType : 'categorical'
-        }]);
+    <script>
+    var oCharts = require('nightingale-charts');
+    var d3 = require('d3');
+    var printChart = d3.select('#print').append('div').data([{
+      theme: 'ft-print',
+      comment: 'Bar chart',
+      title: 'Bars: ',
+      keyColumns: 2,
+      subtitle: 'Print themes categories, with a vertical independent axis, and a comment that goes on to two lines. woah!',
+      dependentAxisOrient: 'bottom',
+      independentAxisOrient: 'left',
+      x: { series: 'key' },
+      y: { series: ['value', 'value2'] },
+      data: [
+        { key: 'red', value:      0.583, value2:      1.583},
+        { key: 'blue', value: 0.12, value2:  2},
+        { key: 'green machine', value: 1.03, value2:  1.4},
+        { key: 'purple', value:     1.348, value2:  1.9}
+      ],
+      stack:true,
+      dataType : 'categorical'
+    }]);
 
-        oCharts.addFont(['MetricWeb','MetricWebSemiBold'])
-            .then(function(){
-                printChart.call(oCharts.chart.bar)
-            });
+    oCharts.addFont(['MetricWeb','MetricWebSemiBold'])
+    .then(function(){
+      printChart.call(oCharts.chart.bar)
+    });
     </script>
+  </section>
 
-
+  <section>
+    <h2>Nar Theme</h2>
     <div id="nar"></div>
-  <script>
-        var oCharts = require('nightingale-charts');
-        var d3 = require('d3');
+    <script>
+    var oCharts = require('nightingale-charts');
+    var d3 = require('d3');
 
-        d3.select('#nar').append('div').data([{
-            comment: 'Bar chart',
-            title: 'Bars: ',
-            theme: 'ft-nar',
-            subtitle: 'Categories, with a vertical independent axis',
-            dependentAxisOrient: 'bottom',
-            independentAxisOrient: 'left',
-            x: { series: 'key' },
-            y: { series: ['value', 'value2'] },
-            data: [
-                { key: 'red', value:      0.583, value2:      1.583},
-                { key: 'blue', value: 0.12, value2:  2},
-                { key: 'green machine', value: 1.03, value2:  1.4},
-                { key: 'purple', value:     -1.348, value2:  1.9}
-            ],
-            stack:true,
-            dataType : 'categorical'
-        }]).call(oCharts.chart.bar);
+    var narChart = d3.select('#nar').append('div').data([{
+      comment: 'Bar chart',
+      title: 'Bars: ',
+      theme: 'ft-nar',
+      subtitle: 'Categories, with a vertical independent axis',
+      dependentAxisOrient: 'bottom',
+      independentAxisOrient: 'left',
+      x: { series: 'key' },
+      y: { series: ['value', 'value2'] },
+      data: [
+        { key: 'red', value:      0.583, value2:      1.583},
+        { key: 'blue', value: 0.12, value2:  2},
+        { key: 'green machine', value: 1.03, value2:  1.4},
+        { key: 'purple', value:     -1.348, value2:  1.9}
+      ],
+      stack:true,
+      dataType : 'categorical'
+    }])
 
-        oCharts.addFont(['AvenirLight', 'AvenirLightOblique', 'AvenirHeavy'])
-            .then(function(){
-                printChart.call(oCharts.chart.bar)
-            });
+    oCharts.addFont(['AvenirLight', 'AvenirLightOblique', 'AvenirHeavy'])
+    .then(function(){
+      narChart.call(oCharts.chart.bar)
+    });
     </script>
-
+  </section>
 </body>
 </html>
