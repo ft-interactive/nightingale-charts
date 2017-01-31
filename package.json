@@ -29,6 +29,10 @@
   },
   "author": "tom pearson",
   "license": "ISC",
+  "dependencies": {
+    "bower": "^1.7.9",
+    "phantomcss": "^0.10.2"
+  },
   "devDependencies": {
     "brfs": "^1.4.0",
     "browserify-istanbul": "^0.2.1",
@@ -41,7 +45,6 @@
     "karma-jasmine": "^0.3.3",
     "karma-mocha-reporter": "^1.0.2",
     "karma-phantomjs-launcher": "^0.2.0",
-    "phantomcss": "^0.10.2",
     "slug": "^0.9.1",
     "web-caddy": "^2.1.1"
   },
