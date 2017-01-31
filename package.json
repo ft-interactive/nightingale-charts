@@ -29,6 +29,9 @@
   },
   "author": "tom pearson",
   "license": "ISC",
+  "dependencies": {
+    "bower": "^1.7.9"
+  },
   "devDependencies": {
     "brfs": "^1.4.0",
     "browserify-istanbul": "^0.2.1",
