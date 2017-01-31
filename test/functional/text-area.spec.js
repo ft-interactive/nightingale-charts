@@ -26,8 +26,8 @@ describe('Text Area displays', function () {
         it('aligns text right', function(){
             var textArea = alignText.querySelectorAll('text')[0];
             expect(textArea.querySelectorAll('tspan').length).toBe(2);
-            expect(textArea.querySelectorAll('tspan')[0].getAttribute('x')).toBe('73.34375');
-            expect(textArea.querySelectorAll('tspan')[1].getAttribute('x')).toBe('120.0390625');
+            expect(textArea.querySelectorAll('tspan')[0].getAttribute('x')).toBe('73');
+            expect(textArea.querySelectorAll('tspan')[1].getAttribute('x')).toBe('120');
         });
 
     });
