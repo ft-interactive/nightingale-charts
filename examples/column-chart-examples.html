@@ -1,155 +1,154 @@
 <html>
 <head>
-    <meta charset="utf-8"/>
-    <link rel="stylesheet" href="styles/main.css"/>
-    <link rel="stylesheet" href="styles/demo.css"/>
-    <title>Columns</title>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="styles/main.css"/>
+  <link rel="stylesheet" href="styles/demo.css"/>
+  <title>Columns</title>
 </head>
 <body class="ft">
-<style>
-    svg {
-        margin:5px;
-    }
-    .demo{
-        clear: both;
-    }
-</style>
-<script src=scripts/vendor.js></script>
-<script src=scripts/nightingale-charts.js></script>
+  <script src=scripts/vendor.js></script>
+  <script src=scripts/nightingale-charts.js></script>
 
-<div id="basic" class="demo">
-</div>
-<script>
+  <section>
+    <h2>Web Theme</h2>
+    <div id="web" class="demo">
+    </div>
+    <script>
     var oCharts = require('nightingale-charts');
     var d3 = require('d3');
     var data = [
-        { key: 'red', value:      0.583, value2:      1.583},
-        { key: 'blue', value: 0.12, value2:  2},
-        { key: 'green machine', value: 1.03, value2:  1.4},
-        { key: 'purple', value:     1.348, value2:  1.9}
+      { key: 'red', value:      0.583, value2:      1.583},
+      { key: 'blue', value: 0.12, value2:  2},
+      { key: 'green machine', value: 1.03, value2:  1.4},
+      { key: 'purple', value:     1.348, value2:  1.9}
     ];
-    var chartBasic = d3.select('#basic').append('div').data([{
-        comment: 'Column chart',
-        title: 'Columns: ',
-        subtitle: 'Categories, with a horizontal independent axis',
-        dependentAxisOrient: 'left',
-        independentAxisOrient: 'bottom',
-        footnote: 'my footnote',
-        x: { series: 'key' },
-        y: { series: ['value', 'value2'] },
-        data: data,
-        stack:true,
-        dataType : 'categorical'
+    var chartBasic = d3.select('#web').append('div').data([{
+      comment: 'Column chart',
+      title: 'Columns: ',
+      subtitle: 'Categories, with a horizontal independent axis',
+      dependentAxisOrient: 'left',
+      independentAxisOrient: 'bottom',
+      footnote: 'my footnote',
+      x: { series: 'key' },
+      y: { series: ['value', 'value2'] },
+      data: data,
+      stack:true,
+      dataType : 'categorical'
     }]);
 
     oCharts.addFont('BentonSans')
-        .then(function(){
-            chartBasic.call(oCharts.chart.column)
-        });
-</script>
+    .then(function(){
+      chartBasic.call(oCharts.chart.column)
+    });
+    </script>
+  </section>
 
-
-<div id="set-dimensions" class="demo">
-</div>
-<script>
+  <section>
+    <h2>Video Theme</h2>
+    <div id="video" class="demo">
+    </div>
+    <script>
     var oCharts = require('nightingale-charts');
     var d3 = require('d3');
     var data = [
-        { key: 'red', value:      0.583, value2:      1.583},
-        { key: 'blue', value: 0.12, value2:  2},
-        { key: 'green machine', value: 1.03, value2:  1.4},
-        { key: 'purple', value:     1.348, value2:  1.9}
+      { key: 'red', value:      0.583, value2:      1.583},
+      { key: 'blue', value: 0.12, value2:  2},
+      { key: 'green machine', value: 1.03, value2:  1.4},
+      { key: 'purple', value:     1.348, value2:  1.9}
     ];
-    var chartVideo = d3.select('#set-dimensions').append('div').data([{
-        height: 338,
-        width: 600,
-        theme: 'ft-video',
-        comment: 'Column chart',
-        title: 'Video Ratio: ',
-        subtitle: '16:9',
-        source: 'with a source',
-        footnote: 'my footnote',
-        dependentAxisOrient: 'right',
-        independentAxisOrient: 'bottom',
-        x: { series: 'key' },
-        y: { series: ['value', 'value2'] },
-        data: data,
-        dataType : 'categorical'
+    var chartVideo = d3.select('#video').append('div').data([{
+      height: 338,
+      width: 600,
+      theme: 'ft-video',
+      comment: 'Column chart',
+      title: 'Video Ratio: ',
+      subtitle: '16:9',
+      source: 'with a source',
+      footnote: 'my footnote',
+      dependentAxisOrient: 'right',
+      independentAxisOrient: 'bottom',
+      x: { series: 'key' },
+      y: { series: ['value', 'value2'] },
+      data: data,
+      dataType : 'categorical'
     }]);
 
     oCharts.addFont('MetricWebSemiBold')
-        .then(function(){
-            chartVideo.call(oCharts.chart.column)
-        });
-</script>
+    .then(function(){
+      chartVideo.call(oCharts.chart.column)
+    });
+    </script>
+  </section>
 
-
-<div id="print" class="demo">
-</div>
-<script>
+  <section>
+    <h2>Print Theme</h2>
+    <div id="print" class="demo">
+    </div>
+    <script>
     var oCharts = require('nightingale-charts');
     var d3 = require('d3');
     var data = [
-        { key: 'red', value:      0.583, value2:      1.583},
-        { key: 'blue', value: 0.12, value2:  2},
-        { key: 'green machine', value: 1.03, value2:  1.4},
-        { key: 'purple', value:     1.348, value2:  1.9}
+      { key: 'red', value:      0.583, value2:      1.583},
+      { key: 'blue', value: 0.12, value2:  2},
+      { key: 'green machine', value: 1.03, value2:  1.4},
+      { key: 'purple', value:     1.348, value2:  1.9}
     ];
     var chartPrint = d3.select('#print').append('div').data([{
-        height: 245,
-        width: 200,
-        theme: 'ft-print',
-        comment: 'Column chart',
-        title: 'Video Ratio: ',
-        subtitle: '16:9',
-        source: 'with a source',
-        footnote: 'my footnote',
-        dependentAxisOrient: 'right',
-        independentAxisOrient: 'bottom',
-        x: { series: 'key' },
-        y: { series: ['value', 'value2'] },
-        data: data,
-        dataType : 'categorical'
+      theme: 'ft-print',
+      comment: 'Column chart',
+      title: 'Video Ratio: ',
+      subtitle: '16:9',
+      source: 'with a source',
+      footnote: 'my footnote',
+      dependentAxisOrient: 'right',
+      independentAxisOrient: 'bottom',
+      x: { series: 'key' },
+      y: { series: ['value', 'value2'] },
+      data: data,
+      dataType : 'categorical'
     }]);
 
     oCharts.addFont(['MetricWeb','MetricWebSemiBold'])
-        .then(function(){
-            chartPrint.call(oCharts.chart.column)
-        });
-</script>
+    .then(function(){
+      chartPrint.call(oCharts.chart.column)
+    });
+    </script>
+  </section>
 
-<div id="nar" class="demo">
-</div>
-<script>
+  <section>
+    <h2>Nar Theme</h2>
+    <div id="nar" class="demo">
+    </div>
+    <script>
     var oCharts = require('nightingale-charts');
     var d3 = require('d3');
     var data = [
-        { key: 'red', value:      0.583, value2:      1.583},
-        { key: 'blue', value: 0.12, value2:  2},
-        { key: 'green machine', value: 1.03, value2:  1.4},
-        { key: 'purple', value:     1.348, value2:  1.9}
+      { key: 'red', value:      0.583, value2:      1.583},
+      { key: 'blue', value: 0.12, value2:  2},
+      { key: 'green machine', value: 1.03, value2:  1.4},
+      { key: 'purple', value:     1.348, value2:  1.9}
     ];
-    var chartBasic = d3.select('#nar').append('div').data([{
-        comment: 'Column chart',
-        title: 'Columns: ',
-        theme: 'ft-nar',
-        subtitle: 'Categories, with a horizontal independent axis',
-        dependentAxisOrient: 'right',
-        independentAxisOrient: 'bottom',
-        footnote: 'My footnote',
-        source: 'With a source',
-        x: { series: 'key' },
-        y: { series: ['value', 'value2'] },
-        data: data,
-        stack:false,
-        dataType : 'categorical'
-    }]).call(oCharts.chart.column);
+    var narChart = d3.select('#nar').append('div').data([{
+      comment: 'Column chart',
+      title: 'Columns: ',
+      theme: 'ft-nar',
+      subtitle: 'Categories, with a horizontal independent axis',
+      dependentAxisOrient: 'right',
+      independentAxisOrient: 'bottom',
+      footnote: 'My footnote',
+      source: 'With a source',
+      x: { series: 'key' },
+      y: { series: ['value', 'value2'] },
+      data: data,
+      stack:false,
+      dataType : 'categorical'
+    }]);
 
     oCharts.addFont(['AvenirLight', 'AvenirLightOblique', 'AvenirHeavy'])
-        .then(function(){
-            chartBasic.call(oCharts.chart.column)
-        });
-</script>
-
+    .then(function(){
+      narChart.call(oCharts.chart.column)
+    });
+    </script>
+  </section>
 </body>
 </html>
