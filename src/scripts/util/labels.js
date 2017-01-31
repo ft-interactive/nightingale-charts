@@ -212,9 +212,7 @@ module.exports = {
           var secondaryLabel = this;
           primaryLabels.each(function() {
             var primaryLabel = this;
-            console.log(primaryLabel.getBoundingClientRect(), secondaryLabel.getBoundingClientRect());
             if(self.intersection(primaryLabel.getBoundingClientRect(), secondaryLabel.getBoundingClientRect(), 40)) {
-                console.log('conflict!', primaryLabel, secondaryLabel);
                 d3.select(primaryLabel).remove();
             }
           });
