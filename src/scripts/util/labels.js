@@ -208,15 +208,17 @@ module.exports = {
         var primaryLabels = g.selectAll('.primary text');
         var secondaryLabels = g.selectAll('.secondary text');
 
-        secondaryLabels.each(function() {
-          var secondaryLabel = this;
-          primaryLabels.each(function() {
-            var primaryLabel = this;
-            if(self.intersection(primaryLabel.getBoundingClientRect(), secondaryLabel.getBoundingClientRect(), 40)) {
-                d3.select(primaryLabel).remove();
-            }
+        if(secondaryLabels[0].length > 0) {
+          secondaryLabels.each(function() {
+            var secondaryLabel = this;
+            primaryLabels.each(function() {
+              var primaryLabel = this;
+              if(self.intersection(primaryLabel.getBoundingClientRect(), secondaryLabel.getBoundingClientRect(), 40)) {
+                  d3.select(primaryLabel).remove();
+              }
+            });
           });
-        });
+        }
     },
 
     removeDuplicates: function (g, selector) {
