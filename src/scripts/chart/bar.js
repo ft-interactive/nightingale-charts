@@ -17,10 +17,20 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
         .append('rect')
         .attr('class', function (d){return 'bar '  + series.className + (d.value < 0 ? ' negative' : ' positive');})
         .attr('data-value', function (d){return d.value;})
-        .attr('x',      function (d, i){ return plot.x(d.value, i); })
-        .attr('y',      function (d, i){ return plot.y(d.key, seriesNumber); })
+        .attr('x', function (d, i){
+					if (model.stack) {
+						return plot.x(d.value, i, getStackedWidth(model.data, model.stacks, d.key, d.value));
+					}
+					return plot.x(d.value, i);
+				})
+        .attr('y', function (d, i){ return plot.y(d.key, seriesNumber); })
         .attr('height', function (d, i){ return plot.barHeight(d, i); })
-        .attr('width',  function (d, i){ return plot.barWidth(d.value, i); })
+        .attr('width', function (d, i){
+					if (model.stack) {
+						return plot.barWidth(getStackedWidth(model.data, model.stacks, d.key, d.value));
+					}
+					return plot.barWidth(d.value);
+				})
         .attr(attr);
 
     if (!model.stack) {
@@ -78,6 +88,42 @@ function formatData(model, series) {
     data._nulls = nulls;
 
     return data;
+}
+
+function getStackedWidth(data, stacks, key, value) {
+	let width;
+	let seriesKey;
+	data.map((d, i) => {
+		if (d.key === key) {
+			seriesKey = i;
+		}
+	});
+	stacks[seriesKey].sort((a, b) => b-a).map((data, i) => {
+		var isValuePositive = data < 0 ? false : true;
+		var previousVal = stacks[seriesKey][i-1];
+		if (data === value) {
+			const calculateWidth = (val, nextVal) => {
+				if (val < 0 && previousVal >= 0) {
+					return val;
+				} else if (val >= 0 && nextVal < 0) {
+					return val;
+				} else if (val < 0 && nextVal < 0) {
+					return val - nextVal;
+				}
+				return val - nextVal;
+			}
+			if (isValuePositive && stacks[seriesKey][i+1] !== undefined) {
+				width = calculateWidth(value, stacks[seriesKey][i+1]);
+			} else if (isValuePositive && stacks[seriesKey][i+1] === undefined) {
+				width = calculateWidth(value, 0);
+			} else if (!isValuePositive && stacks[seriesKey][i-1] !== undefined) {
+				width = calculateWidth(value, stacks[seriesKey][i-1]);
+			} else if (!isValuePositive && stacks[seriesKey][i-1] === undefined) {
+				width = calculateWidth(value, 0);
+			}
+		}
+	});
+	return width;
 }
 
 function barChart(g){

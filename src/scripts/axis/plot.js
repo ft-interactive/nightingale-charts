@@ -4,7 +4,7 @@ function stackSeries(model, value, stack){
     if(!model.stacks )        model.stacks = [];
     if (!model.stacks[stack]) model.stacks[stack] = [];
     model.stacks[stack].push(value);
-    return d3.sum(model.stacks[stack]);
+    return model.stacks[stack];
 }
 
 function Plot(model, axes) {
@@ -58,24 +58,20 @@ Plot.prototype.y = function(){
     }
 };
 
-Plot.prototype.xDependent = function(value, stack) {
+Plot.prototype.xDependent = function(value, stack, width) {
     if (this.model.chartType == 'line') return this.axes.dependentAxisScale(value);
     var maxValue = Math.min(0, value);
-    if (this.model.stack) {
-        var xValue = stackSeries(this.model, value, stack);
-        var width = this.model.stacks[stack][this.model.stacks[stack].length-1];
-        maxValue = (xValue<0) ? xValue : xValue - width ;
+    if (this.model.stack && width !== undefined) {
+      maxValue = value < 0 ? Math.min(0, value) : Math.max(0, value - width)
     }
     return this.axes.dependentAxisScale(maxValue);
 };
 
-Plot.prototype.yDependent = function(value, stack) {
+Plot.prototype.yDependent = function(value, stack, height) {
     if (this.model.chartType == 'line') return this.axes.dependentAxisScale(value);
     var maxValue = Math.max(0, value);
-    if (this.model.stack) {
-        var yValue = stackSeries(this.model, value, stack);
-        var height = this.model.stacks[stack][this.model.stacks[stack].length-1];
-        maxValue = (yValue<0) ? yValue - height : Math.max(0, yValue);
+    if (this.model.stack && height !== undefined) {
+      maxValue = value < 0 && value !== height ? Math.min(0, value - height) : Math.max(0, value);
     }
     return this.axes.dependentAxisScale(maxValue);
 };

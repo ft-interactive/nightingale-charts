@@ -23,12 +23,9 @@
       dependentAxisOrient: 'bottom',
       independentAxisOrient: 'left',
       x: { series: 'key' },
-      y: { series: ['value', 'value2'] },
+      y: { series: ['value', 'value2', 'value3', 'value4', 'value5'] },
       data: [
-        { key: 'red', value:      0.583, value2:      1.583},
-        { key: 'blue', value: 0.12, value2:  2},
-        { key: 'green machine', value: 1.03, value2:  1.4},
-        { key: 'purple', value:     1.348, value2:  1.9}
+        { key: 'orange ', value: 3, value2:  -4, value3:  11, value4: 16, value5: -10  }
       ],
       stack:true,
       dataType : 'categorical'
@@ -66,7 +63,7 @@
 
     oCharts.addFont(['MetricWebSemiBold'])
     .then(function(){
-      videoChart.call(oCharts.chart.bar)
+      //videoChart.call(oCharts.chart.bar)
     });
     </script>
   </section>
@@ -99,7 +96,7 @@
 
     oCharts.addFont(['MetricWeb','MetricWebSemiBold'])
     .then(function(){
-      printChart.call(oCharts.chart.bar)
+      //printChart.call(oCharts.chart.bar)
     });
     </script>
   </section>
@@ -132,7 +129,7 @@
 
     oCharts.addFont(['AvenirLight', 'AvenirLightOblique', 'AvenirHeavy'])
     .then(function(){
-      narChart.call(oCharts.chart.bar)
+      //narChart.call(oCharts.chart.bar)
     });
     </script>
   </section>
