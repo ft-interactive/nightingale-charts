@@ -5,6 +5,7 @@ var Dressing = require('../dressing');
 var themes = require('../themes');
 
 function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
+
 	var data = formatData(model, series);
     var plot = new axes.Plot(model, createdAxes);
     var s = plotSVG.append('g').attr('class', 'series');
@@ -19,7 +20,7 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
         .attr('data-value', function (d){return d.value;})
         .attr('x', function (d, i){
 					if (model.stack) {
-						return plot.x(d.value, i, getStackedWidth(model.data, model.stacks, d.key, d.value));
+						return plot.x(d.value, i, getStackedWidth(model.data, model.stacks, d.key, d.value, model.x.series.key));
 					}
 					return plot.x(d.value, i);
 				})
@@ -27,7 +28,7 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
         .attr('height', function (d, i){ return plot.barHeight(d, i); })
         .attr('width', function (d, i){
 					if (model.stack) {
-						return plot.barWidth(getStackedWidth(model.data, model.stacks, d.key, d.value));
+						return plot.barWidth(getStackedWidth(model.data, model.stacks, d.key, d.value, model.x.series.key));
 					}
 					return plot.barWidth(d.value);
 				})
@@ -90,7 +91,7 @@ function formatData(model, series) {
     return data;
 }
 
-function getStackedWidth(data, stacks, key, value) {
+function getStackedWidth(data, stacks, key, value, xKey) {
 	var width;
 	var seriesKey;
 	function calculateWidth(val, nextVal, previousVal) {
@@ -104,7 +105,7 @@ function getStackedWidth(data, stacks, key, value) {
 		return val - nextVal;
 	}
 	data.map(function(d, i) {
-		if (d.key === key) {
+		if (d[xKey] === key) {
 			seriesKey = i;
 		}
 	});

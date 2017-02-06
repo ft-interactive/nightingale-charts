@@ -21,13 +21,13 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
         .attr('x', function (d, i){ return plot.x(d.key, seriesNumber); })
         .attr('y', function (d, i){
 					if (model.stack) {
-						return plot.y(d.value, i, getStackedHeight(model.data, model.stacks, d.key, d.value));
+						return plot.y(d.value, i, getStackedHeight(model.data, model.stacks, d.key, d.value, model.x.series.key));
 					}
 					return plot.y(d.value, i);
 				})
         .attr('height', function (d, i){
 					if (model.stack) {
-						return plot.columnHeight(getStackedHeight(model.data, model.stacks, d.key, d.value));
+						return plot.columnHeight(getStackedHeight(model.data, model.stacks, d.key, d.value, model.x.series.key));
 					}
 					return plot.columnHeight(d.value);
 				})
@@ -90,7 +90,7 @@ function formatData(model, series) {
     return data;
 }
 
-function getStackedHeight(data, stacks, key, value) {
+function getStackedHeight(data, stacks, key, value, xKey) {
 	var height;
 	var seriesKey;
 	function calculateHeight(val, nextVal, previousVal) {
@@ -104,7 +104,7 @@ function getStackedHeight(data, stacks, key, value) {
 		return val - nextVal;
 	}
 	data.map(function(d, i) {
-		if (d.key === key) {
+		if (d[xKey] === key) {
 			seriesKey = i;
 		}
 	});

@@ -157,7 +157,7 @@ function chartHeight(model) {
 function stackSeries(model) {
     var data = JSON.parse(JSON.stringify(model.data));
     return !Array.isArray(data) ? [] : data.map(function (dataItem, i) {
-      delete dataItem.key;
+      delete dataItem[model.x.series.key];
       var chartValues = [];
       for (var item in dataItem) {
         chartValues.push(dataItem[item]);

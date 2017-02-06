@@ -17,7 +17,7 @@
     var oCharts = require('nightingale-charts');
     var d3 = require('d3');
     var data = [
-      { key: 'orange ', value: 3, value2:  -4, value3:  11, value4: 16, value5: -10 }
+      { date: 'orange', value: 3, value2:  -4, value3:  11, value4: 16, value5: -10 }
       //{ key: 'orange ', value: -3, value2:  -2, value3:  -1, value4:  -0.8, value5:  -0.6, value6:  -0.3, value7:  -0.1},
       //{ key: 'green ', value: 3, value2:  2, value3:  0, value4:  0.8, value5:  0.6, value6:  0.3, value7:  -0.3},
       //{ key: 'blue ', value: 3.2, value2:  -5, value3:  5.4, value4:  -4, value5:  -6, value6:  -7, value7:  -8},
@@ -30,7 +30,7 @@
       dependentAxisOrient: 'left',
       independentAxisOrient: 'bottom',
       footnote: 'my footnote',
-      x: { series: 'key' },
+      x: { series: 'date' },
       y: { series: ['value', 'value2', 'value3', 'value4', 'value5'] }, //, 'value6', 'value7'
       data: data,
       stack:true,
