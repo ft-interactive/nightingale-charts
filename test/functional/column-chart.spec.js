@@ -178,7 +178,7 @@ describe('column-chart.js', function(){
             var lastTick = ticks[ticks.length - 1];
 
             for(var i = 0; i < cols.length; i++){
-                expect(cols[i].__data__.value).toBeLessThan(Number(lastTick.textContent));
+                expect(cols[i].__data__.value).not.toBeGreaterThan(Number(lastTick.textContent));
             }
         });
     });
@@ -212,7 +212,7 @@ describe('column-chart.js', function(){
             var chart = document.querySelectorAll('.width600 svg')[11];
             var rect = chart.querySelectorAll('.plot rect');
             expect(parseInt(rect[0].getAttribute('y'),10)).toBeLessThan(parseInt(rect[4].getAttribute('y'),10));
-            expect(parseInt(rect[4].getAttribute('y'),10)).toBeLessThan(parseInt(rect[8].getAttribute('y'),10));
+            expect(parseInt(rect[4].getAttribute('y'),10)).toBeGreaterThan(parseInt(rect[8].getAttribute('y'),10));
             expect(parseInt(rect[8].getAttribute('y'),10)).toBeLessThan(parseInt(rect[12].getAttribute('y'),10));
         });
 
