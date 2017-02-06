@@ -91,35 +91,37 @@ function formatData(model, series) {
 }
 
 function getStackedHeight(data, stacks, key, value) {
-	let height;
-	let seriesKey;
-	data.map((d, i) => {
+	var height;
+	var seriesKey;
+	function calculateHeight(val, nextVal, previousVal) {
+		if (val < 0 && previousVal >= 0) {
+			return val;
+		} else if (val >= 0 && nextVal < 0) {
+			return val;
+		} else if (val < 0 && nextVal < 0) {
+			return val - nextVal;
+		}
+		return val - nextVal;
+	}
+	data.map(function(d, i) {
 		if (d.key === key) {
 			seriesKey = i;
 		}
 	});
-	stacks[seriesKey].sort((a, b) => b-a).map((data, i) => {
+	stacks[seriesKey].sort(function(a, b) {
+		return b-a;
+	}).map(function(data, i) {
 		var isValuePositive = data < 0 ? false : true;
 		var previousVal = stacks[seriesKey][i-1];
 		if (data === value) {
-			const calculateHeight = (val, nextVal) => {
-				if (val < 0 && previousVal >= 0) {
-					return val;
-				} else if (val >= 0 && nextVal < 0) {
-					return val;
-				} else if (val < 0 && nextVal < 0) {
-					return val - nextVal;
-				}
-				return val - nextVal;
-			}
 			if (isValuePositive && stacks[seriesKey][i+1] !== undefined) {
-				height = calculateHeight(value, stacks[seriesKey][i+1]);
+				height = calculateHeight(value, stacks[seriesKey][i+1], previousVal);
 			} else if (isValuePositive && stacks[seriesKey][i+1] === undefined) {
-				height = calculateHeight(value, 0);
+				height = calculateHeight(value, 0, previousVal);
 			} else if (!isValuePositive && stacks[seriesKey][i-1] !== undefined) {
-				height = calculateHeight(value, stacks[seriesKey][i-1]);
+				height = calculateHeight(value, stacks[seriesKey][i-1], previousVal);
 			} else if (!isValuePositive && stacks[seriesKey][i-1] === undefined) {
-				height = calculateHeight(value, 0);
+				height = calculateHeight(value, 0, previousVal);
 			}
 		}
 	});

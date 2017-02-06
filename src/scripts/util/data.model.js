@@ -155,12 +155,12 @@ function chartHeight(model) {
 }
 
 function stackSeries(model) {
-    let data = JSON.parse(JSON.stringify(model.data));
+    var data = JSON.parse(JSON.stringify(model.data));
     return !Array.isArray(data) ? [] : data.map(function (dataItem, i) {
       delete dataItem.key;
-      let chartValues = [];
+      var chartValues = [];
       for (var item in dataItem) {
-        chartValues.push(dataItem[item])
+        chartValues.push(dataItem[item]);
       }
       return chartValues;
     });
