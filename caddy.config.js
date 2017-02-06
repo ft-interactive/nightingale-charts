@@ -20,7 +20,8 @@ module.exports = {
             './bower_components/d3/d3.js'
         ],
         vendorBundle: [
-            {file: './bower_components/d3/d3.js', expose: 'd3'}
+            {file: './bower_components/d3/d3.js', expose: 'd3'},
+            {file: './src/scripts/nightingale-charts.js', expose: 'oCharts'}
         ],
         vendorTarget: 'scripts/vendor.js'
     }
