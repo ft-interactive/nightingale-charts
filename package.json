@@ -53,5 +53,8 @@
       "brfs"
     ]
   },
-  "browserify-shim": {}
+  "browserify-shim": {},
+  "dependencies": {
+    "object-assign": "^4.1.1"
+  }
 }

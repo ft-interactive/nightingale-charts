@@ -20,6 +20,7 @@ module.exports = function(config) {
         ],
         exclude: [
             '**/*.png',
+            '**/*-examples.js',
             '**/*.min.js',
             'src/**/*.txt',
             'src/**/*.csv',

@@ -2,7 +2,7 @@ module.exports = {
   config : {
     barChart : {
       comment: 'Bar chart',
-      title: 'Bars: ',
+      title: 'Bar Chart',
       subtitle: 'Categories, with a vertical independent axis',
       dependentAxisOrient: 'bottom',
       independentAxisOrient: 'left',
@@ -12,7 +12,7 @@ module.exports = {
     columnChart : {
       theme: 'ft-web',
       comment: 'Column chart',
-      title: 'Video Ratio: ',
+      title: 'Column Chart',
       subtitle: 'Cheeky subtitle',
       source: 'with a source',
       footnote: 'my footnote',
@@ -22,7 +22,7 @@ module.exports = {
     },
     lineChart : {
       comment: 'Line chart',
-      title: 'Lines: ',
+      title: 'Line Chart',
       subtitle: 'Dates, with a vertical independent axis',
       dependentAxisOrient: 'left',
       independentAxisOrient: 'bottom',

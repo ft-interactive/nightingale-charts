@@ -1,19 +1,22 @@
-const oCharts = require('oCharts');
-const d3 = require('d3');
-const fixtures = require('./fixtures').barChart
-const config = require('./config').config.columnChart
-const sizes = require('./config').config.sizes
-const utils = require('./utils');
+var oCharts = require('../../src/scripts/nightingale-charts');
+var d3 = require('d3');
+var fixtures = require('./fixtures').barChart
+var config = require('./config').config
+var utils = require('./utils');
+var objectAssign = require('object-assign');
+
+var sizes = config.sizes
+var chartConfig = config.columnChart
 
 // Fixture index
-const index = Math.floor((Math.random() * fixtures.length));
+var index = Math.floor((Math.random() * fixtures.length));
 
 // Size
-let urlVar = utils.getQueryVariable('size');
-let size = !urlVar ? sizes['medium'] : sizes[urlVar]
+var urlVar = utils.getQueryVariable('size');
+var size = !urlVar ? sizes['medium'] : sizes[urlVar]
 
 // Base Config
-const baseConfig = Object.assign({}, config, {
+var baseConfig = objectAssign({}, chartConfig, {
   data:fixtures[index].data,
   x : fixtures[index].x,
   y : fixtures[index].y,
@@ -21,44 +24,44 @@ const baseConfig = Object.assign({}, config, {
 })
 
 // Web Theme
-let chartBasic = d3.select('#web').append('div').data([baseConfig]);
+var chartBasic = d3.select('#web').append('div').data([baseConfig]);
 
 oCharts.addFont('BentonSans')
-.then(() => {
+.then(function () {
   chartBasic.call(oCharts.chart.column)
 });
 
 // Video Theme
-let videoConfig = Object.assign({}, baseConfig, {
+var videoConfig = objectAssign({}, baseConfig, {
   height: 338,
   width: 600,
   theme: 'ft-video'
 })
-let chartVideo = d3.select('#video').append('div').data([videoConfig]);
+var chartVideo = d3.select('#video').append('div').data([videoConfig]);
 
 oCharts.addFont('MetricWebSemiBold')
-.then(() => {
+.then(function () {
   chartVideo.call(oCharts.chart.column)
 });
 
 // Print Theme
-let printConfig = Object.assign({}, baseConfig, {
+var printConfig = objectAssign({}, baseConfig, {
   theme: 'ft-print'
 })
-let chartPrint = d3.select('#print').append('div').data([printConfig]);
+var chartPrint = d3.select('#print').append('div').data([printConfig]);
 
 oCharts.addFont(['MetricWeb','MetricWebSemiBold'])
-.then(() => {
+.then(function () {
   chartPrint.call(oCharts.chart.column)
 });
 
 // NAR chart
-let narConfig = Object.assign({}, baseConfig, {
+var narConfig = objectAssign({}, baseConfig, {
   theme: 'ft-nar'
 })
-let narChart = d3.select('#nar').append('div').data([narConfig]);
+var narChart = d3.select('#nar').append('div').data([narConfig]);
 
 oCharts.addFont(['AvenirLight', 'AvenirLightOblique', 'AvenirHeavy'])
-.then(() => {
+.then(function () {
   narChart.call(oCharts.chart.column)
 });
