@@ -90,7 +90,8 @@ function formatData(model, series) {
     return data;
 }
 
-function getStackedHeight(data, stacks, key, value, xKey) {
+function getStackedHeight(data, stacks, key, val, xKey) {
+	var value = isNaN(val) ? 0 : val;
 	var height;
 	var seriesKey;
 	function calculateHeight(val, nextVal, previousVal) {
@@ -125,7 +126,7 @@ function getStackedHeight(data, stacks, key, value, xKey) {
 			}
 		}
 	});
-	return height;
+	return isNaN(height) ? 0 : height;
 }
 
 function columnChart(g){

@@ -17,11 +17,18 @@
     var oCharts = require('nightingale-charts');
     var d3 = require('d3');
     var data = [
-      { date: 'orange', value: 3, value2:  -4, value3:  11, value4: 16, value5: -10 }
-      //{ key: 'orange ', value: -3, value2:  -2, value3:  -1, value4:  -0.8, value5:  -0.6, value6:  -0.3, value7:  -0.1},
-      //{ key: 'green ', value: 3, value2:  2, value3:  0, value4:  0.8, value5:  0.6, value6:  0.3, value7:  -0.3},
-      //{ key: 'blue ', value: 3.2, value2:  -5, value3:  5.4, value4:  -4, value5:  -6, value6:  -7, value7:  -8},
-      //{ key: 'red ', value: 4, value2:  2, value3:  3, value4:  -7, value4:  -4, value5:  -6.4, value6:  -8, value7:  -2}
+      { date: '2016-01-31', value: 13.4, value2: 5.1, value3: 20.4 },
+      { date: '2016-02-29', value: 13.4, value2: 5.1, value3: 20.4 },
+      { date: '2016-03-31', value: 13.2, value2: 5.1, value3: 20.4, value4: 7.17 },
+      { date: '2016-04-30', value: 13.2, value2: 5, value3: 20.7 },
+      { date: '2016-05-31', value: 13.4, value2: 4.9, value3: 20.7 },
+      { date: '2016-06-30', value: -13.4, value2: 4.9, value3: 20.7, value4: 6.93 },
+      { date: '2016-07-31', value: 13.2, value2: 4.9, value3: 20.7 },
+      { date: '2016-08-31', value: 12.8, value2: 4.9, value3: 20.7 },
+      { date: '2016-09-30', value: 12.8, value2: 4.8, value3: 20.7, value4: 7 },
+      { date: '2016-10-31', value: 12.6, value2: 4.8, value3: 20.4 },
+      { date: '2016-11-30', value2: -4.8, value4: 20.4 },
+      { date: '2016-12-31', value3: -20.4, value4: 6.9 }
     ];
     var chartBasic = d3.select('#web').append('div').data([{
       comment: 'Column chart',
@@ -31,7 +38,7 @@
       independentAxisOrient: 'bottom',
       footnote: 'my footnote',
       x: { series: 'date' },
-      y: { series: ['value', 'value2', 'value3', 'value4', 'value5'] }, //, 'value6', 'value7'
+      y: { series: ['value', 'value2', 'value3', 'value4'] }, //, 'value6', 'value7'
       data: data,
       stack:true,
       dataType : 'categorical'
@@ -43,6 +50,10 @@
     });
     </script>
   </section>
+
+
+
+
 
   <section>
     <h2>Video Theme</h2>

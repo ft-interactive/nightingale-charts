@@ -91,7 +91,8 @@ function formatData(model, series) {
     return data;
 }
 
-function getStackedWidth(data, stacks, key, value, xKey) {
+function getStackedWidth(data, stacks, key, val, xKey) {
+	var value = isNaN(val) ? 0 : val;
 	var width;
 	var seriesKey;
 	function calculateWidth(val, nextVal, previousVal) {
@@ -126,7 +127,7 @@ function getStackedWidth(data, stacks, key, value, xKey) {
 			}
 		}
 	});
-	return width;
+	return isNaN(width) ? 0 : width;
 }
 
 function barChart(g){
