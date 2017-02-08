@@ -17,18 +17,10 @@
     var oCharts = require('nightingale-charts');
     var d3 = require('d3');
     var data = [
-      { date: '2016-01-31', value: 13.4, value2: 5.1, value3: 20.4 },
-      { date: '2016-02-29', value: 13.4, value2: 5.1, value3: 20.4 },
-      { date: '2016-03-31', value: 13.2, value2: 5.1, value3: 20.4, value4: 7.17 },
-      { date: '2016-04-30', value: 13.2, value2: 5, value3: 20.7 },
-      { date: '2016-05-31', value: 13.4, value2: 4.9, value3: 20.7 },
-      { date: '2016-06-30', value: -13.4, value2: 4.9, value3: 20.7, value4: 6.93 },
-      { date: '2016-07-31', value: 13.2, value2: 4.9, value3: 20.7 },
-      { date: '2016-08-31', value: 12.8, value2: 4.9, value3: 20.7 },
-      { date: '2016-09-30', value: 12.8, value2: 4.8, value3: 20.7, value4: 7 },
-      { date: '2016-10-31', value: 12.6, value2: 4.8, value3: 20.4 },
-      { date: '2016-11-30', value2: -4.8, value4: 20.4 },
-      { date: '2016-12-31', value3: -20.4, value4: 6.9 }
+      { key: 'red', value:      0.583, value2:      1.583},
+      { key: 'blue', value: 0.12, value2:  2},
+      { key: 'green machine', value: 1.03, value2:  1.4},
+      { key: 'purple', value:     1.348, value2:  1.9}
     ];
     var chartBasic = d3.select('#web').append('div').data([{
       comment: 'Column chart',
@@ -37,8 +29,8 @@
       dependentAxisOrient: 'left',
       independentAxisOrient: 'bottom',
       footnote: 'my footnote',
-      x: { series: 'date' },
-      y: { series: ['value', 'value2', 'value3', 'value4'] }, //, 'value6', 'value7'
+      x: { series: 'key' },
+      y: { series: ['value', 'value2'] },
       data: data,
       stack:true,
       dataType : 'categorical'
@@ -50,10 +42,6 @@
     });
     </script>
   </section>
-
-
-
-
 
   <section>
     <h2>Video Theme</h2>
@@ -87,7 +75,7 @@
 
     oCharts.addFont('MetricWebSemiBold')
     .then(function(){
-      //chartVideo.call(oCharts.chart.column)
+      chartVideo.call(oCharts.chart.column)
     });
     </script>
   </section>
@@ -122,7 +110,7 @@
 
     oCharts.addFont(['MetricWeb','MetricWebSemiBold'])
     .then(function(){
-      //chartPrint.call(oCharts.chart.column)
+      chartPrint.call(oCharts.chart.column)
     });
     </script>
   </section>
@@ -158,7 +146,7 @@
 
     oCharts.addFont(['AvenirLight', 'AvenirLightOblique', 'AvenirHeavy'])
     .then(function(){
-      //narChart.call(oCharts.chart.column)
+      narChart.call(oCharts.chart.column)
     });
     </script>
   </section>
