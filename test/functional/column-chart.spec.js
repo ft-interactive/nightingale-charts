@@ -225,6 +225,15 @@ describe('column-chart.js', function(){
             expect(parseInt(rect[0].getAttribute('y'),10)).toBeGreaterThan(parseInt(rect[5].getAttribute('y'),10));
         });
 
+        it('correctly converts NaN values to 0', function(){
+            var chart = document.querySelectorAll('.width600 svg')[23];
+            var rect = chart.querySelectorAll('.plot g.series rect');
+            var i = rect.length;
+            while(i--){
+                expect(parseInt(rect[i].getAttribute('width'), 10)).not.toBeLessThan(0);
+            }
+        });
+
     });
 
     describe('attaches style attributes to', function () {

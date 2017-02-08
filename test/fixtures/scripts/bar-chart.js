@@ -154,6 +154,20 @@ var fixtures = {
         {date: new Date('9/30/05'), value: 50, value2: 70, value3: -13},
         {date: new Date('12/30/05'), value: 32, value2: 10, value3: 99}
     ],
+    stackWithNegatives:[
+        {myDateColumn: new Date('3/31/05'), value: 50, value2: 99, value3: 26, value4: 40, value5: 15},
+        {myDateColumn: new Date('6/30/05'), value: 25, value2: 10, value3: 21, value4: 36, value5: 22},
+        {myDateColumn: new Date('9/30/05'), value: -75, value2: -70, value3: -13, value4: -12, value5: -110},
+        {myDateColumn: new Date('12/30/05'), value: 75, value2: 70, value3: 13, value4: 12, value5: 110},
+        {myDateColumn: new Date('5/30/06'), value: 133, value2: 25, value3: 72, value4: 105, value5: 200}
+    ],
+    stackWithValuesMissing:[
+        {myDateColumn: new Date('3/31/05'), value: 50, value2: 99, value3: 26, value5: 15},
+        {myDateColumn: new Date('6/30/05'), value: 25, value3: 21, value4: 36, value5: 22},
+        {myDateColumn: new Date('9/30/05'), value: -75, value2: -70, value3: -13, value4: -12, value5: -110},
+        {myDateColumn: new Date('12/30/05'), value: 75, value2: 70, value3: 13, value5: 110},
+        {myDateColumn: new Date('5/30/06'), value: 133, value3: 72, value4: 105, value5: 200}
+    ],
     stackWithAllNegatives:[
         {myDateColumn: new Date('3/31/05'), value: -50, value2: -99, value3: -26, value4: -40, value5: -15},
         {myDateColumn: new Date('6/30/05'), value: 50, value2: 99, value3: 26, value4: 40, value5: 15},
@@ -213,6 +227,7 @@ var ySeriesData = {
     multipleWithNegatives: ['value', 'value2', 'value3'],
     stack: ['value', 'value2', 'value3', 'value4', 'value5'],
     stackWithNegatives: ['value', 'value2', 'value3', 'value4', 'value5'],
+    stackWithValuesMissing: ['value', 'value2', 'value3', 'value4', 'value5'],
     stackWithAllNegatives: ['value', 'value2', 'value3', 'value4', 'value5'],
     stackMonthly: ['value', 'value2', 'value3', 'value4', 'value5']
 };
@@ -240,8 +255,8 @@ function getChartData(timeFrame){
         y: { series: ySeries },
         units: units[timeFrame],
         data: fixtures[timeFrame],
-        stack: ['stack','stackMonthly', 'stackWithAllNegatives', 'categoriesStack'].indexOf(timeFrame)>-1,
-        dataType: ['categories','categoriesStack','dateCategories', 'quarterCategories'].indexOf(timeFrame)>-1 ? 'categorical' : 'time'
+        stack: ['stack','stackMonthly', 'stackWithAllNegatives', 'categoriesStack', 'stackWithNegatives', 'stackWithValuesMissing'].indexOf(timeFrame)>-1,
+        dataType: ['categories','categoriesStack','dateCategories', 'quarterCategories', 'stack', 'stackWithNegatives', 'stackWithValuesMissing'].indexOf(timeFrame)>-1 ? 'categorical' : 'time'
     };
 }
 
@@ -250,7 +265,7 @@ var widths = [600, 300];
 module.exports = {
     getChartData: getChartData,
     init: function(){
-        var demos = ['categories', 'multipleWithNegatives', 'categoriesStack'];
+        var demos = ['categories', 'multipleWithNegatives', 'categoriesStack', 'stack', 'stackWithNegatives', 'stackWithValuesMissing'];
         demos.forEach(function(timeFrame, i){
             var textContent = '';
             if (i===7){
