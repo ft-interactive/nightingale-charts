@@ -1591,7 +1591,7 @@ function stackSeries(model, value, stack){
     if(!model.stacks )        model.stacks = [];
     if (!model.stacks[stack]) model.stacks[stack] = [];
     model.stacks[stack].push(value);
-    return d3.sum(model.stacks[stack]);
+    return model.stacks[stack];
 }
 
 function Plot(model, axes) {
@@ -1645,24 +1645,20 @@ Plot.prototype.y = function(){
     }
 };
 
-Plot.prototype.xDependent = function(value, stack) {
+Plot.prototype.xDependent = function(value, stack, width) {
     if (this.model.chartType == 'line') return this.axes.dependentAxisScale(value);
     var maxValue = Math.min(0, value);
-    if (this.model.stack) {
-        var xValue = stackSeries(this.model, value, stack);
-        var width = this.model.stacks[stack][this.model.stacks[stack].length-1];
-        maxValue = (xValue<0) ? xValue : xValue - width ;
+    if (this.model.stack && width !== undefined) {
+      maxValue = value < 0 ? Math.min(0, value) : Math.max(0, value - width);
     }
     return this.axes.dependentAxisScale(maxValue);
 };
 
-Plot.prototype.yDependent = function(value, stack) {
+Plot.prototype.yDependent = function(value, stack, height) {
     if (this.model.chartType == 'line') return this.axes.dependentAxisScale(value);
     var maxValue = Math.max(0, value);
-    if (this.model.stack) {
-        var yValue = stackSeries(this.model, value, stack);
-        var height = this.model.stacks[stack][this.model.stacks[stack].length-1];
-        maxValue = (yValue<0) ? yValue - height : Math.max(0, yValue);
+    if (this.model.stack && height !== undefined) {
+      maxValue = value < 0 && value !== height ? Math.min(0, value - height) : Math.max(0, value);
     }
     return this.axes.dependentAxisScale(maxValue);
 };
@@ -1695,6 +1691,7 @@ var Dressing = require('../dressing');
 var themes = require('../themes');
 
 function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
+
 	var data = formatData(model, series);
     var plot = new axes.Plot(model, createdAxes);
     var s = plotSVG.append('g').attr('class', 'series');
@@ -1707,10 +1704,20 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
         .append('rect')
         .attr('class', function (d){return 'bar '  + series.className + (d.value < 0 ? ' negative' : ' positive');})
         .attr('data-value', function (d){return d.value;})
-        .attr('x',      function (d, i){ return plot.x(d.value, i); })
-        .attr('y',      function (d, i){ return plot.y(d.key, seriesNumber); })
+        .attr('x', function (d, i){
+					if (model.stack) {
+						return plot.x(d.value, i, getStackedWidth(model.data, model.stacks, d.key, d.value, model.x.series.key));
+					}
+					return plot.x(d.value, i);
+				})
+        .attr('y', function (d, i){ return plot.y(d.key, seriesNumber); })
         .attr('height', function (d, i){ return plot.barHeight(d, i); })
-        .attr('width',  function (d, i){ return plot.barWidth(d.value, i); })
+        .attr('width', function (d, i){
+					if (model.stack) {
+						return plot.barWidth(getStackedWidth(model.data, model.stacks, d.key, d.value, model.x.series.key));
+					}
+					return plot.barWidth(d.value);
+				})
         .attr(attr);
 
     if (!model.stack) {
@@ -1768,6 +1775,45 @@ function formatData(model, series) {
     data._nulls = nulls;
 
     return data;
+}
+
+function getStackedWidth(data, stacks, key, val, xKey) {
+	var value = isNaN(val) ? 0 : val;
+	var width;
+	var seriesKey;
+	function calculateWidth(val, nextVal, previousVal) {
+		if (val < 0 && previousVal >= 0) {
+			return val;
+		} else if (val >= 0 && nextVal < 0) {
+			return val;
+		} else if (val < 0 && nextVal < 0) {
+			return val - nextVal;
+		}
+		return val - nextVal;
+	}
+	data.map(function(d, i) {
+		if (d[xKey] === key) {
+			seriesKey = i;
+		}
+	});
+	stacks[seriesKey].sort(function(a, b) {
+		return b-a;
+	}).map(function(data, i) {
+		var isValuePositive = data < 0 ? false : true;
+		var previousVal = stacks[seriesKey][i-1];
+		if (data === value) {
+			if (isValuePositive && stacks[seriesKey][i+1] !== undefined) {
+				width = calculateWidth(value, stacks[seriesKey][i+1], previousVal);
+			} else if (isValuePositive && stacks[seriesKey][i+1] === undefined) {
+				width = calculateWidth(value, 0, previousVal);
+			} else if (!isValuePositive && stacks[seriesKey][i-1] !== undefined) {
+				width = calculateWidth(value, stacks[seriesKey][i-1], previousVal);
+			} else if (!isValuePositive && stacks[seriesKey][i-1] === undefined) {
+				width = calculateWidth(value, 0, previousVal);
+			}
+		}
+	});
+	return isNaN(width) ? 0 : width;
 }
 
 function barChart(g){
@@ -1892,6 +1938,7 @@ var Dressing = require('../dressing');
 var themes = require('../themes');
 
 function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
+
 	var data = formatData(model, series);
     var plot = new axes.Plot(model, createdAxes);
     var s = plotSVG.append('g').attr('class', 'series');
@@ -1904,10 +1951,20 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
         .append('rect')
         .attr('class', function (d){return 'column '  + series.className + (d.value < 0 ? ' negative' : ' positive');})
         .attr('data-value', function (d){return d.value;})
-        .attr('x',      function (d, i){ return plot.x(d.key, seriesNumber); })
-        .attr('y',      function (d, i){ return plot.y(d.value, i); })
-        .attr('height', function (d, i){ return plot.columnHeight(d.value); })
-        .attr('width',  function (d, i){ return plot.columnWidth(d, i); })
+        .attr('x', function (d, i){ return plot.x(d.key, seriesNumber); })
+        .attr('y', function (d, i){
+					if (model.stack) {
+						return plot.y(d.value, i, getStackedHeight(model.data, model.stacks, d.key, d.value, model.x.series.key));
+					}
+					return plot.y(d.value, i);
+				})
+        .attr('height', function (d, i){
+					if (model.stack) {
+						return plot.columnHeight(getStackedHeight(model.data, model.stacks, d.key, d.value, model.x.series.key));
+					}
+					return plot.columnHeight(d.value);
+				})
+        .attr('width', function (d, i){ return plot.columnWidth(d, i); })
         .attr(attr);
 
     if (!model.stack) {
@@ -1964,6 +2021,45 @@ function formatData(model, series) {
     data._nulls = nulls;
 
     return data;
+}
+
+function getStackedHeight(data, stacks, key, val, xKey) {
+	var value = isNaN(val) ? 0 : val;
+	var height;
+	var seriesKey;
+	function calculateHeight(val, nextVal, previousVal) {
+		if (val < 0 && previousVal >= 0) {
+			return val;
+		} else if (val >= 0 && nextVal < 0) {
+			return val;
+		} else if (val < 0 && nextVal < 0) {
+			return val - nextVal;
+		}
+		return val - nextVal;
+	}
+	data.map(function(d, i) {
+		if (d[xKey] === key) {
+			seriesKey = i;
+		}
+	});
+	stacks[seriesKey].sort(function(a, b) {
+		return b-a;
+	}).map(function(data, i) {
+		var isValuePositive = data < 0 ? false : true;
+		var previousVal = stacks[seriesKey][i-1];
+		if (data === value) {
+			if (isValuePositive && stacks[seriesKey][i+1] !== undefined) {
+				height = calculateHeight(value, stacks[seriesKey][i+1], previousVal);
+			} else if (isValuePositive && stacks[seriesKey][i+1] === undefined) {
+				height = calculateHeight(value, 0, previousVal);
+			} else if (!isValuePositive && stacks[seriesKey][i-1] !== undefined) {
+				height = calculateHeight(value, stacks[seriesKey][i-1], previousVal);
+			} else if (!isValuePositive && stacks[seriesKey][i-1] === undefined) {
+				height = calculateHeight(value, 0, previousVal);
+			}
+		}
+	});
+	return isNaN(height) ? 0 : height;
 }
 
 function columnChart(g){
@@ -4433,7 +4529,7 @@ function sumStackedValues(model){
 function dependentDomain(model, chartType){
     if(model.dependentDomain){ return model.dependentDomain; }
 
-    var extents = (model.stack) ? sumStackedValues(model) : setExtents(model);
+    var extents = setExtents(model);
     var domain = d3.extent(extents);
     if(!model.falseOrigin && domain[0] > 0){
         domain[0] = 0;
@@ -4455,6 +4551,18 @@ function chartHeight(model) {
     var isWide = model.chartWidth > 400;
     var ratio = isNarrow ? 1.1 : (isWide ? ratios.commonRatios.widescreen : ratios.commonRatios.standard);
     return ratios.heightFromWidth(model.chartWidth, ratio) - model.paddingY*2;
+}
+
+function stackSeries(model) {
+    var data = JSON.parse(JSON.stringify(model.data));
+    return !Array.isArray(data) ? [] : data.map(function (dataItem, i) {
+      delete dataItem[model.x.series.key];
+      var chartValues = [];
+      for (var item in dataItem) {
+        chartValues.push(dataItem[item]);
+      }
+      return chartValues;
+    });
 }
 
 function verifyData(model) {
@@ -4590,6 +4698,9 @@ function Model(chartType, opts) {
 	m.chartHeight = chartHeight(m);
 	m.translate = translate(0);
 	m.data = verifyData(m);
+  if (m.stack){
+    m.stacks = stackSeries(m);
+  }
     m.groupData = needsGrouping(m.units);
     m.independentDomain = independentDomain(m, chartType);
 	m.dependentDomain = dependentDomain(m, chartType);
