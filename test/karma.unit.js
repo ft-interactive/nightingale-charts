@@ -45,6 +45,7 @@ module.exports = function(config) {
         ],
         exclude: [
             '**/*.png',
+            '**/*-examples.js',
             'src/**/*.requirejs.js',
             '**/*.min.js',
             'src/**/*.txt',
