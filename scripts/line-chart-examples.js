@@ -5254,6 +5254,7 @@ module.exports = {
         }
         this.removeOverlapping(g, '.' + rowClass + ' text', config.attr['chart-alignment'], config.attr['chart-type']);
 
+        this.removePrimaryOverlappingSecondary(g);
     },
 
     intersection: function (a, b, padding) {
@@ -5335,6 +5336,16 @@ module.exports = {
         var elementCount = dElements[0].length;
         var limit = 5;
 
+        function removeNonOverlappingLabels(count) {
+            var firstLabel = dElements[0][0];
+            var nextLabel = dElements[0][count];
+            if(firstLabel !== undefined && nextLabel !== undefined) {
+              if(self.intersection(nextLabel.getBoundingClientRect(), firstLabel.getBoundingClientRect(), 20)) {
+                  d3.select(nextLabel).remove();
+              }
+            }
+        }
+
         function remove(d, i) {
             var last = i === elementCount - 1;
             var previousLabel = dElements[0][elementCount - 2];
@@ -5347,11 +5358,7 @@ module.exports = {
             }
 
             if (alignment === 'right' && type === 'line' && i > 0 && i < 3) {
-                var firstLabel = dElements[0][0];
-                var nextLabel = dElements[0][i];
-                if(self.intersection(nextLabel.getBoundingClientRect(), firstLabel.getBoundingClientRect(), 20)) {
-                    d3.select(nextLabel).remove();
-                }
+              removeNonOverlappingLabels(i);
             }
         }
 
@@ -5360,6 +5367,28 @@ module.exports = {
             g.selectAll(selector).each(remove);
             dElements = g.selectAll(selector);
             elementCount = dElements[0].length;
+        }
+
+        if (alignment === 'right' && type === 'line') {
+          removeNonOverlappingLabels(1);
+        }
+    },
+
+    removePrimaryOverlappingSecondary: function(g) {
+        var self = this;
+        var primaryLabels = g.selectAll('.primary text');
+        var secondaryLabels = g.selectAll('.secondary text');
+
+        if(secondaryLabels[0].length > 0) {
+          secondaryLabels.each(function() {
+            var secondaryLabel = this;
+            primaryLabels.each(function() {
+              var primaryLabel = this;
+              if(self.intersection(primaryLabel.getBoundingClientRect(), secondaryLabel.getBoundingClientRect(), 40)) {
+                  d3.select(primaryLabel).remove();
+              }
+            });
+          });
         }
     },
 
