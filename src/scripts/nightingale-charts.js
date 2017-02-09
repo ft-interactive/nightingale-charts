@@ -1,4 +1,6 @@
 module.exports = {
+
+
     chart: require('./chart/index.js'),
 
     axis: require('./axis/index.js'),
@@ -19,5 +21,4 @@ module.exports = {
     addFont: require('./fonts'),
 
     version: require('./util/version')
-
 };

@@ -19,6 +19,7 @@ module.exports = function(config) {
             'test/functional/**/*.spec.js'
         ],
         exclude: [
+            '**/*webpack*.js',
             '**/*.png',
             '**/*-examples.js',
             '**/*.min.js',

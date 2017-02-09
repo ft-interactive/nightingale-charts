@@ -44,6 +44,7 @@ module.exports = function(config) {
             'test/unit/**/*.spec.js'
         ],
         exclude: [
+            '**/*webpack*.js',
             '**/*.png',
             '**/*-examples.js',
             'src/**/*.requirejs.js',
