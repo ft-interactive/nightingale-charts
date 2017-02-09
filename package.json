@@ -13,10 +13,8 @@
     "release": "npm test && caddy release",
     "report": "caddy serve test/coverage/chrome/",
     "start": "caddy build -dev && caddy serve",
-
     "start-build-dev": "webpack --config webpack.config.js",
-    "start-serve-dev":"webpack-dev-server --content-base _site/",
-
+    "start-serve-dev": "webpack-dev-server --content-base _site/",
     "start-test": "caddy serve ./_test",
     "unit": "karma start test/karma.unit.js",
     "functional": "karma start test/karma.functional.js",
@@ -38,33 +36,8 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
-    "brfs": "^1.4.0",
-    "browserify-istanbul": "^0.2.1",
-    "jshint": "^2.6.3",
-    "karma": "^0.13.1",
-    "karma-browserify": "^4.2.1",
-    "karma-chrome-launcher": "^0.2.0",
-    "karma-coverage": "^0.4.2",
-    "karma-html2js-preprocessor": "^0.1.0",
-    "karma-jasmine": "^0.3.3",
-    "karma-mocha-reporter": "^1.0.2",
-    "karma-phantomjs-launcher": "^0.2.0",
-    "phantomcss": "^0.10.2",
-    "slug": "^0.9.1",
-    "web-caddy": "^2.1.1",
-    "object-assign": "^4.1.1",
-    "autoprefixer": "^6.3.6",
-    "autoprefixer-loader": "^3.2.0",
-    "copy-webpack-plugin": "^4.0.1",
-    "css-loader": "^0.23.1",
-    "json-loader": "^0.5.4",
-    "node-sass": "^4.2.0",
-    "path": "^0.12.7",
-    "postcss-loader": "^0.8.2",
-    "sass-loader": "^4.1.1",
-    "style-loader": "^0.13.1",
-    "webpack": "^1.12.14",
-    "webpack-dev-server": "^1.10.1"
+    "brfs": "^1.4.3",
+    "transform-loader": "^0.2.3"
   },
   "browser": {
     "d3": "./bower_components/d3/d3.js"
@@ -74,8 +47,5 @@
       "brfs"
     ]
   },
-  "browserify-shim": {},
-  "dependencies": {
-
-  }
+  "browserify-shim": {}
 }

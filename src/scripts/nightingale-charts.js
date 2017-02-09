@@ -1,5 +1,5 @@
 module.exports = {
-
+    styles: require('../styles/main.scss'),
 
     chart: require('./chart/index.js'),
 

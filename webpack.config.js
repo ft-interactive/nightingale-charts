@@ -18,8 +18,12 @@ module.exports = {
       "./src/scripts/nightingale-charts.js"
     ],
     'examples': [
-      "./examples/scripts/test1.js",
-      "./examples/scripts/test2.js"
+      "./examples/scripts/bar-chart-examples.js",
+      "./examples/scripts/column-chart-examples.js",
+      "./examples/scripts/line-chart-examples.js",
+      "./examples/scripts/utils.js",
+      "./examples/scripts/config.js",
+      "./examples/scripts/fixtures.js"
     ]
   },
   output: {
@@ -38,6 +42,10 @@ module.exports = {
       },
       {
         test: /\.json$/, loader: 'json-loader'
+      },
+      {
+          test: /\.js$/,
+          loader: "transform-loader?brfs"
       }
     ]
   },

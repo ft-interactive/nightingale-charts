@@ -24,7 +24,7 @@ var baseConfig = objectAssign({}, chartConfig, {
 })
 
 // Web Theme
-var chartBasic = d3.select('#web').append('div').data([baseConfig]);
+var chartBasic = d3.select('#web-column').append('div').data([baseConfig]);
 
 oCharts.addFont('BentonSans')
 .then(function () {
@@ -37,7 +37,7 @@ var videoConfig = objectAssign({}, baseConfig, {
   width: 600,
   theme: 'ft-video'
 })
-var chartVideo = d3.select('#video').append('div').data([videoConfig]);
+var chartVideo = d3.select('#video-column').append('div').data([videoConfig]);
 
 oCharts.addFont('MetricWebSemiBold')
 .then(function () {
@@ -48,7 +48,7 @@ oCharts.addFont('MetricWebSemiBold')
 var printConfig = objectAssign({}, baseConfig, {
   theme: 'ft-print'
 })
-var chartPrint = d3.select('#print').append('div').data([printConfig]);
+var chartPrint = d3.select('#print-column').append('div').data([printConfig]);
 
 oCharts.addFont(['MetricWeb','MetricWebSemiBold'])
 .then(function () {
@@ -59,7 +59,7 @@ oCharts.addFont(['MetricWeb','MetricWebSemiBold'])
 var narConfig = objectAssign({}, baseConfig, {
   theme: 'ft-nar'
 })
-var narChart = d3.select('#nar').append('div').data([narConfig]);
+var narChart = d3.select('#nar-column').append('div').data([narConfig]);
 
 oCharts.addFont(['AvenirLight', 'AvenirLightOblique', 'AvenirHeavy'])
 .then(function () {
