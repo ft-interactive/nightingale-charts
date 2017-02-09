@@ -130,7 +130,7 @@ function sumStackedValues(model){
 function dependentDomain(model, chartType){
     if(model.dependentDomain){ return model.dependentDomain; }
 
-    var extents = (model.stack) ? sumStackedValues(model) : setExtents(model);
+    var extents = setExtents(model);
     var domain = d3.extent(extents);
     if(!model.falseOrigin && domain[0] > 0){
         domain[0] = 0;
@@ -152,6 +152,18 @@ function chartHeight(model) {
     var isWide = model.chartWidth > 400;
     var ratio = isNarrow ? 1.1 : (isWide ? ratios.commonRatios.widescreen : ratios.commonRatios.standard);
     return ratios.heightFromWidth(model.chartWidth, ratio) - model.paddingY*2;
+}
+
+function stackSeries(model) {
+    var data = JSON.parse(JSON.stringify(model.data));
+    return !Array.isArray(data) ? [] : data.map(function (dataItem, i) {
+      delete dataItem[model.x.series.key];
+      var chartValues = [];
+      for (var item in dataItem) {
+        chartValues.push(dataItem[item]);
+      }
+      return chartValues;
+    });
 }
 
 function verifyData(model) {
@@ -287,6 +299,9 @@ function Model(chartType, opts) {
 	m.chartHeight = chartHeight(m);
 	m.translate = translate(0);
 	m.data = verifyData(m);
+  if (m.stack){
+    m.stacks = stackSeries(m);
+  }
     m.groupData = needsGrouping(m.units);
     m.independentDomain = independentDomain(m, chartType);
 	m.dependentDomain = dependentDomain(m, chartType);

@@ -68,4 +68,35 @@ describe('bar-chart.js', function(){
 
     });
 
+    describe('stacked bar charts ', function() {
+
+        it('has the same number of stacks in each grouping', function(){
+            var chart = document.querySelector('#bar-chart__stack .width600 svg').querySelectorAll('.plot g.series');
+            var i = chart.length;
+            expect(chart.length).toBe(5);
+            while(i--){
+                var thisGroup = chart[i].querySelectorAll('rect');
+                expect(thisGroup.length).toBe(5);
+            }
+        });
+
+        it('correctly stacks negative numbers', function(){
+            var chart = document.querySelector('#bar-chart__stackWithNegatives .width600 svg');
+            var rect = chart.querySelectorAll('.plot g.series rect');
+            expect(parseInt(rect[0].getAttribute('x'),10)).toBeLessThan(parseInt(rect[5].getAttribute('x'),10));
+            expect(parseInt(rect[4].getAttribute('x'),10)).toBeGreaterThan(parseInt(rect[9].getAttribute('x'),10));
+            expect(parseInt(rect[10].getAttribute('x'),10)).toBeGreaterThan(parseInt(rect[20].getAttribute('x'),10));
+        });
+
+        it('correctly converts NaN values to 0', function(){
+            var chart = document.querySelector('#bar-chart__stackWithValuesMissing .width600 svg');
+            var rect = chart.querySelectorAll('.plot g.series rect');
+            var i = rect.length;
+            while(i--){
+                expect(parseInt(rect[i].getAttribute('width'), 10)).not.toBeLessThan(0);
+            }
+        });
+
+    });
+
 });

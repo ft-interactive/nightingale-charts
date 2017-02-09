@@ -5,6 +5,7 @@ var Dressing = require('../dressing');
 var themes = require('../themes');
 
 function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
+
 	var data = formatData(model, series);
     var plot = new axes.Plot(model, createdAxes);
     var s = plotSVG.append('g').attr('class', 'series');
@@ -17,10 +18,20 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
         .append('rect')
         .attr('class', function (d){return 'column '  + series.className + (d.value < 0 ? ' negative' : ' positive');})
         .attr('data-value', function (d){return d.value;})
-        .attr('x',      function (d, i){ return plot.x(d.key, seriesNumber); })
-        .attr('y',      function (d, i){ return plot.y(d.value, i); })
-        .attr('height', function (d, i){ return plot.columnHeight(d.value); })
-        .attr('width',  function (d, i){ return plot.columnWidth(d, i); })
+        .attr('x', function (d, i){ return plot.x(d.key, seriesNumber); })
+        .attr('y', function (d, i){
+					if (model.stack) {
+						return plot.y(d.value, i, getStackedHeight(model.data, model.stacks, d.key, d.value, model.x.series.key));
+					}
+					return plot.y(d.value, i);
+				})
+        .attr('height', function (d, i){
+					if (model.stack) {
+						return plot.columnHeight(getStackedHeight(model.data, model.stacks, d.key, d.value, model.x.series.key));
+					}
+					return plot.columnHeight(d.value);
+				})
+        .attr('width', function (d, i){ return plot.columnWidth(d, i); })
         .attr(attr);
 
     if (!model.stack) {
@@ -77,6 +88,45 @@ function formatData(model, series) {
     data._nulls = nulls;
 
     return data;
+}
+
+function getStackedHeight(data, stacks, key, val, xKey) {
+	var value = isNaN(val) ? 0 : val;
+	var height;
+	var seriesKey;
+	function calculateHeight(val, nextVal, previousVal) {
+		if (val < 0 && previousVal >= 0) {
+			return val;
+		} else if (val >= 0 && nextVal < 0) {
+			return val;
+		} else if (val < 0 && nextVal < 0) {
+			return val - nextVal;
+		}
+		return val - nextVal;
+	}
+	data.map(function(d, i) {
+		if (d[xKey] === key) {
+			seriesKey = i;
+		}
+	});
+	stacks[seriesKey].sort(function(a, b) {
+		return b-a;
+	}).map(function(data, i) {
+		var isValuePositive = data < 0 ? false : true;
+		var previousVal = stacks[seriesKey][i-1];
+		if (data === value) {
+			if (isValuePositive && stacks[seriesKey][i+1] !== undefined) {
+				height = calculateHeight(value, stacks[seriesKey][i+1], previousVal);
+			} else if (isValuePositive && stacks[seriesKey][i+1] === undefined) {
+				height = calculateHeight(value, 0, previousVal);
+			} else if (!isValuePositive && stacks[seriesKey][i-1] !== undefined) {
+				height = calculateHeight(value, stacks[seriesKey][i-1], previousVal);
+			} else if (!isValuePositive && stacks[seriesKey][i-1] === undefined) {
+				height = calculateHeight(value, 0, previousVal);
+			}
+		}
+	});
+	return isNaN(height) ? 0 : height;
 }
 
 function columnChart(g){

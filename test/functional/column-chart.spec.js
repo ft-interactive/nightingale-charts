@@ -178,7 +178,7 @@ describe('column-chart.js', function(){
             var lastTick = ticks[ticks.length - 1];
 
             for(var i = 0; i < cols.length; i++){
-                expect(cols[i].__data__.value).toBeLessThan(Number(lastTick.textContent));
+                expect(cols[i].__data__.value).not.toBeGreaterThan(Number(lastTick.textContent));
             }
         });
     });
@@ -212,7 +212,7 @@ describe('column-chart.js', function(){
             var chart = document.querySelectorAll('.width600 svg')[11];
             var rect = chart.querySelectorAll('.plot rect');
             expect(parseInt(rect[0].getAttribute('y'),10)).toBeLessThan(parseInt(rect[4].getAttribute('y'),10));
-            expect(parseInt(rect[4].getAttribute('y'),10)).toBeLessThan(parseInt(rect[8].getAttribute('y'),10));
+            expect(parseInt(rect[4].getAttribute('y'),10)).toBeGreaterThan(parseInt(rect[8].getAttribute('y'),10));
             expect(parseInt(rect[8].getAttribute('y'),10)).toBeLessThan(parseInt(rect[12].getAttribute('y'),10));
         });
 
@@ -223,6 +223,15 @@ describe('column-chart.js', function(){
             expect(parseInt(rect[0].getAttribute('y'),10)).toBeGreaterThan(0);
             expect(parseInt(rect[0].getAttribute('x'),10)).toBe(parseInt(rect[5].getAttribute('x'),10));
             expect(parseInt(rect[0].getAttribute('y'),10)).toBeGreaterThan(parseInt(rect[5].getAttribute('y'),10));
+        });
+
+        it('correctly converts NaN values to 0', function(){
+            var chart = document.querySelectorAll('.width600 svg')[23];
+            var rect = chart.querySelectorAll('.plot g.series rect');
+            var i = rect.length;
+            while(i--){
+                expect(parseInt(rect[i].getAttribute('width'), 10)).not.toBeLessThan(0);
+            }
         });
 
     });

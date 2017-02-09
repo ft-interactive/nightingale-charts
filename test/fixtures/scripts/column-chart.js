@@ -160,6 +160,13 @@ var fixtures = {
         {myDateColumn: new Date('9/30/05'), value: -75, value2: -70, value3: -13, value4: -12, value5: -110},
         {myDateColumn: new Date('12/30/05'), value: 75, value2: 70, value3: 13, value4: 12, value5: 110}
     ],
+    stackWithValuesMissing:[
+        {myDateColumn: new Date('3/31/05'), value: 50, value2: 99, value3: 26, value5: 15},
+        {myDateColumn: new Date('6/30/05'), value: 25, value3: 21, value4: 36, value5: 22},
+        {myDateColumn: new Date('9/30/05'), value: -75, value2: -70, value3: -13, value4: -12, value5: -110},
+        {myDateColumn: new Date('12/30/05'), value: 75, value2: 70, value3: 13, value5: 110},
+        {myDateColumn: new Date('5/30/06'), value: 133, value3: 72, value4: 105, value5: 200}
+    ],
     baselineTest: [
         {date: new Date('2015'), value:    5.0},
         {date: new Date('2016'), value:    4.0},
@@ -388,8 +395,8 @@ function getChartData(timeFrame){
         y: { series: ySeries },
         units: units[timeFrame],
         data: fixtures[timeFrame],
-        stack: ['stack', 'nullStack','stackMonthly', 'stackWithAllNegatives', 'categoriesStack'].indexOf(timeFrame)>-1,
-        dataType: ['categories','categoriesStack','dateCategories', 'quarterCategories'].indexOf(timeFrame)>-1 ? 'categorical' : 'time'
+        stack: ['stack', 'nullStack','stackMonthly', 'stackWithAllNegatives', 'categoriesStack', 'stackWithValuesMissing'].indexOf(timeFrame)>-1,
+        dataType: ['categories','categoriesStack','dateCategories', 'quarterCategories', 'stackWithValuesMissing'].indexOf(timeFrame)>-1 ? 'categorical' : 'time'
     };
 }
 
@@ -406,7 +413,7 @@ module.exports = {
             'categories', 'categoriesStack', 'dateCategories', 'quarterCategories',
             'nullMultiple', 'nullValues', 'nullStack',
             'weekly', 'daily', 'allNegative',
-            'baselineTest'];
+            'baselineTest', 'stackWithValuesMissing'];
         demos.forEach(function(timeFrame, i){
             var textContent = '';
             if (i===7){
