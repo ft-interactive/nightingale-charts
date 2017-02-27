@@ -4,10 +4,10 @@ var colours = {
         "#004b6c","#c99b2d","#bac9b8","#4988ad","#8d221f", "#dee3dd"
     ],
     bar: [
-        '#003149', '#006791', '#5288a5', '#80a9ac', '#bac9b8', '#d3e2eb'
+        '#006791', '#003149', '#5288a5', '#80a9ac', '#bac9b8', '#d3e2eb'
     ],
     column: [
-        '#003149', '#006791', '#5288a5', '#80a9ac', '#bac9b8', '#d3e2eb'
+        '#006791', '#003149', '#5288a5', '#80a9ac', '#bac9b8', '#d3e2eb'
     ],
     accent: 'rgb(221,183,49)',
 };
@@ -69,17 +69,17 @@ module.exports.theme = [
     {   'id': 'chart-title',
         'attributes': {
             'font-family': 'MetricWebSemiBold, sans-serif',
-            'font-size': 12,
+            'font-size': '9.2',
             'line-height': 12,
-            'font-weight': '600',
+            'font-weight': 400,
             'fill': 'rgba(0, 0, 0, 1)'
         }
     },
     {   'id': 'chart-subtitle',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
-            'font-size': 10,
-            'line-height': 10,
+            'font-size': '9.2',
+            'line-height': 12,
             'font-weight': 400,
             'fill': 'rgba(0, 0, 0, 1)'
         }
@@ -87,9 +87,9 @@ module.exports.theme = [
     {   'id': 'key',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
-            'font-size': 10,
+            'font-size': '9.2',
             'line-height': 16,
-            'font-weight': 300,
+            'font-weight': 400,
             'padding': 3,
             'background': 'white',
             'fill': 'rgba(0, 0, 0, 0.8)'
@@ -98,7 +98,7 @@ module.exports.theme = [
     {   'id': 'chart-source',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
-            'font-size': 7,
+            'font-size': '7.2',
             'line-height': 10,
             'font-weight': 400
         }
@@ -106,29 +106,30 @@ module.exports.theme = [
         'id': 'chart-footnote',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
-            'font-size': 12,
-            'line-height': 16
+            'font-size': '9.6',
+            'line-height': 16,
+            'font-weight': 400
         }
     },
     {   'id': 'dependent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
             'stroke': '#22190f',
-            'stroke-width': 1
+            'stroke-width': '0.3'
         }
     },
     {   'id': 'independent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
             'stroke': '#22190f',
-            'stroke-width': 1
+            'stroke-width': '0.3'
         }
     },
     {   'id': 'origin-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
             'stroke': '#22190f',
-            'stroke-width': 1
+            'stroke-width': '0.3'
         }
     },
     // position plot lines, options: 'front', 'back'
@@ -139,17 +140,17 @@ module.exports.theme = [
     },
     {   'id': 'axis-text',
         'attributes': {
-            'font-size': '9.6pt',
+            'font-size': '9.6',
             'font-family': 'MetricWeb, sans-serif',
             'stroke': 'none',
-            'font-weight': '600',
+            'font-weight': 400,
             'fill': 'rgba(0, 0, 0, 0.8)'
         }
     },
     {   'id': 'axis-secondary-text',
         'attributes': {
-            'font-size': 10,
-            'font-weight': '600',
+            'font-size': '9.6',
+            'font-weight': 400,
             'fill': 'rgba(0, 0, 0, 0.8)'
         }
     },
