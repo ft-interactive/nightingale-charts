@@ -6,7 +6,7 @@ var utils = require('./utils');
 var objectAssign = require('object-assign');
 
 var sizes = config.sizes
-var chartConfig = config.linechart
+var chartConfig = config.lineChart
 
 // Fixture index
 var index = Math.floor((Math.random() * fixtures.length));

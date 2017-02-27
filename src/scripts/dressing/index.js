@@ -81,8 +81,10 @@ Dressing.prototype.addItem = function(item, widthRestrict, prefix){
 Dressing.prototype.addHeaderItem = function(item){
     if (!this.model[item]) return;
     var gText = this.addItem(item, 0);
+    var fontSize = Math.round(this.getAttr('chart-' + item)['font-size'])
+  
     var currentPosition = {
-        top: this.headerHeight + this.getAttr('chart-' + item)['font-size'] + this.model.paddingY,
+        top: this.headerHeight + fontSize + this.model.paddingY,
         left: this.model.paddingX
     };
     if (this.getAttr('chart-' + item).position!=='absolute' &&
