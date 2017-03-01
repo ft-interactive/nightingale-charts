@@ -3,7 +3,7 @@ test:
     - bower i
   post:
     - git config --global user.name "circleci"
-    - git config --global user.email "peter.mouland@ft.com"
+    - git config --global user.email "anon.user@ft.com"
 general:
   artifacts:
     - test/coverage
