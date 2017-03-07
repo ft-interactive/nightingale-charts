@@ -3774,7 +3774,7 @@ module.exports.theme = [
     {   'id': 'chart-title',
         'attributes': {
             'font-family': 'MetricWebSemiBold, sans-serif',
-            'font-size': '9.2',
+            'font-size': '12',
             'line-height': 12,
             'font-weight': 400,
             'fill': 'rgba(0, 0, 0, 1)'
@@ -3819,21 +3819,21 @@ module.exports.theme = [
     {   'id': 'dependent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': '#22190f',
+            'stroke': '#111111',
             'stroke-width': '0.3'
         }
     },
     {   'id': 'independent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': '#22190f',
+            'stroke': '#111111',
             'stroke-width': '0.3'
         }
     },
     {   'id': 'origin-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': '#22190f',
+            'stroke': '#111111',
             'stroke-width': '0.3'
         }
     },
@@ -3855,6 +3855,7 @@ module.exports.theme = [
     {   'id': 'axis-secondary-text',
         'attributes': {
             'font-size': '9.6',
+            'font-family': 'MetricWeb, sans-serif',
             'font-weight': 400,
             'fill': 'rgba(0, 0, 0, 0.8)'
         }
