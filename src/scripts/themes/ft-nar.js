@@ -97,6 +97,11 @@ module.exports.theme = [
             'padding-y': 5
         }
     },
+    {   'id': 'chart-plot',
+        'attributes': {
+            'padding-x': 0.05
+        }
+    },
     {   'id': 'key',
         'attributes': {
             'font-family': 'AvenirLight, sans-serif',
