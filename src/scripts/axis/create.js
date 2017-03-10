@@ -184,13 +184,13 @@ Create.prototype.independentScale = function (scale) {
     var model = this.model;
     if(scale == 'ordinal'){
         this.independentAxisScale = ordinalScale(model, this, model.independentAxisOrient);
-        this.independentAxis = axis.category().dataType(model.dataType);
+        this.independentAxis = axis.category(model).dataType(model.dataType);
     } else if (model.intraDay) {
         this.independentAxisScale = intraDayScale(model, this, model.independentAxisOrient);
-        this.independentAxis = axis.date();
+        this.independentAxis = axis.date(model);
     } else {
         this.independentAxisScale = timeScale(model, this, model.independentAxisOrient);
-        this.independentAxis = axis.date();
+        this.independentAxis = axis.date(model);
     }
     this.configureIndependentScale(this.model);
 };

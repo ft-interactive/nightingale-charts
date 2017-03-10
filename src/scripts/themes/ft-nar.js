@@ -111,6 +111,13 @@ module.exports.theme = [
             'padding-y': 8
         }
     },
+    // Controls whether the tick is a line or circle
+    {
+      'id': 'ticks',
+      'attributes': {
+          'customTickShape': true
+      }
+    },
     {   'id': 'independent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',

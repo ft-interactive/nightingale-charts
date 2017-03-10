@@ -2,9 +2,10 @@ var d3 = require('d3');
 var labels = require('../util/labels.js');
 var dates = require('../util/dates.js');
 var dateScale = require('./date.scale.js');
+var themes = require('../themes');
 var timeDiff = dates.timeDiff;
 
-function dateAxis() {
+function dateAxis(model) {
     var config = {
         axes: [d3.svg.axis().orient('bottom')],
         scale: false,
@@ -45,6 +46,12 @@ function dateAxis() {
         return ['right','left'].indexOf(config.axes[0].orient())>-1;
     }
 
+    function customTickShape(g) {
+      var ticks = g.selectAll(".primary .tick");
+      ticks.each(function() { d3.select(this).append("circle").attr("r", 2); });
+      ticks.selectAll("line").remove();
+    }
+
     function render(g) {
 
         var lineChartTextAnchor = isVertical() ? 'end' : 'start';
@@ -56,14 +63,18 @@ function dateAxis() {
         config.attr.primary['text-anchor'] = lineChartTextAnchor;
         config.attr.secondary['text-anchor'] = isVertical() ? 'end' : 'start';
 
-        g = g.append('g').attr('transform', 'translate(' + config.xOffset + ',' + config.yOffset + ')');
-        g.append('g').attr('class', 'x axis axis--independent axis--date').each(function () {
+        g = g.append('g')
+         .attr('transform', 'translate(' + config.xOffset + ',' + config.yOffset + ')')
+         .attr('class', 'x axis axis--independent axis--date').each(function () {
             labels.add(d3.select(this), config);
-        });
+          });
 
         if (!config.showDomain) {
             g.select('path.domain').remove();
         }
+
+        var customTick = themes.check(model.theme, 'ticks').attributes.customTickShape || false;
+        customTick ? customTickShape(g) : null;
     }
 
     render.simple = function (bool) {
