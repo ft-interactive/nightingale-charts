@@ -1066,10 +1066,14 @@ function getWidth(selection)  { return getDimension('width', selection);  }
 function getHeight(selection) { return getDimension('height', selection); }
 function isVertical(orient)   { return orient == 'right' || orient == 'left'; }
 
-function getRange(model, orientation)     {
+function getRange(model, orientation) {
+    var chartType = model.chartType;
     var plotWidth = model.plotWidth = model.chartWidth - model.yLabelWidth;
     var plotHeight = model.plotHeight =  model.chartHeight - model.xLabelHeight;
-    return (isVertical(orientation)) ? [0, plotHeight] : [0, plotWidth];
+    var plotPaddingX = themes.check(model.theme, 'chart-plot').attributes['padding-x'] || 0;
+    var plotWidthInPixels = (chartType !== 'bar' && plotPaddingX > 0) ? (plotWidth * plotPaddingX) : 0;    
+    var rangePlotWidth = (plotWidthInPixels > 0) ? [0 + plotWidthInPixels, plotWidth - plotWidthInPixels] : [0, plotWidth];
+    return (isVertical(orientation)) ? [0, plotHeight] : rangePlotWidth;
 }
 
 function ordinalScale(model, options, orientation) {
@@ -3911,6 +3915,11 @@ module.exports.theme = [
             'line-height': 12,
             'fill': 'rgba(0, 0, 0, 1)',
             'padding-y': 5
+        }
+    },
+    {   'id': 'chart-plot',
+        'attributes': {
+            'padding-x': 0.05
         }
     },
     {   'id': 'key',
