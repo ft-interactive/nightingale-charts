@@ -53,7 +53,10 @@ module.exports = {
     render: function (g, config) {
         var xOrY = (this.isVertical(config.axes)) ? 'y' : 'x';
         var orient = config.axes.orient();
+        var orientOffset = (config.axes.orient() === 'right') ? -config.axes.tickSize() : 0;
+
         g.append('g')
+            .attr('transform', 'translate(' + (config.xOffset + orientOffset) + ',' + config.yOffset + ')')
             .attr('class', 'axis axis--dependent axis--number ' + xOrY + ' ' + orient)
             .append('g')
             .attr('class', 'primary')

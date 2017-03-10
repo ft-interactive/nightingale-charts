@@ -52,16 +52,13 @@ function numericAxis() {
     }
 
     function axis(g) {
-        var orientOffset = (config.axes.orient() === 'right') ? -config.axes.tickSize() : 0;
-
         var yAxisRightAligned = config.attr['chart-alignment'] === 'right' && config.attr['chart-type'] === 'line' && config.attr.yAxisLine.x1 === 0;
         var yAxisLabelTextAnchor = yAxisRightAligned ? 'start' : config.attr.yAxisLabel['text-anchor'];
         config.attr.primary['text-anchor'] = isVertical() ? yAxisLabelTextAnchor : config.attr.xAxisLabel['text-anchor'];
         config.attr.secondary['text-anchor'] = isVertical() ? 'end' : 'start';
 
-        g = g.insert('g',':first-child').class('axis y').attr('transform', 'translate(' + (config.xOffset + orientOffset) + ',' + config.yOffset + ')');
-
         numberLabels.render(g, config);
+        
         if (config.noLabels) {
             g.selectAll('text').remove();
         }
