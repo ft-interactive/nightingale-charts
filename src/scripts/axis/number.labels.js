@@ -24,6 +24,8 @@ module.exports = {
         } else {
             rules.attr('x1', (tickExtension === 0 ? 0 : -tickExtension));
         }
+
+        console.log('extend axis ', g, axes, tickExtension)
     },
     textWidth: function (g, orient) {
         var textWidth = 0;

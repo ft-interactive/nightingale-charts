@@ -158,7 +158,9 @@ function columnChart(g){
 
     model.keyHover && dressing.addSeriesKey();
 
-    var plotSVG = chartSVG.append('g').attr('class', 'plot');
+		var axisLayer = themes.check(model.theme, 'axis-layer').attributes.position || 'back';
+    var plotSVG = axisLayer === 'front' ? chartSVG.insert('g', '.x.axis').attr('class', 'plot') : chartSVG.append('g').attr('class', 'plot');
+
     var i = 0;
 
     for(i; i < model.y.series.length; i++){

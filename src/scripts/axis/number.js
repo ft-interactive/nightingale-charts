@@ -59,7 +59,8 @@ function numericAxis() {
         config.attr.primary['text-anchor'] = isVertical() ? yAxisLabelTextAnchor : config.attr.xAxisLabel['text-anchor'];
         config.attr.secondary['text-anchor'] = isVertical() ? 'end' : 'start';
 
-        g = g.append('g').attr('transform', 'translate(' + (config.xOffset + orientOffset) + ',' + config.yOffset + ')');
+        g = g.insert('g',':first-child').attr('transform', 'translate(' + (config.xOffset + orientOffset) + ',' + config.yOffset + ')');
+
         numberLabels.render(g, config);
         if (config.noLabels) {
             g.selectAll('text').remove();

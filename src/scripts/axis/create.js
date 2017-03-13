@@ -23,7 +23,7 @@ function getRange(model, orientation) {
     var plotWidth = model.plotWidth = model.chartWidth - model.yLabelWidth;
     var plotHeight = model.plotHeight =  model.chartHeight - model.xLabelHeight;
     var plotPaddingX = themes.check(model.theme, 'chart-plot').attributes['padding-x'] || 0;
-    var plotWidthInPixels = (chartType !== 'bar' && plotPaddingX > 0) ? (plotWidth * plotPaddingX) : 0;    
+    var plotWidthInPixels = (chartType !== 'bar' && plotPaddingX > 0) ? (plotWidth * plotPaddingX) : 0;
     var rangePlotWidth = (plotWidthInPixels > 0) ? [0 + plotWidthInPixels, plotWidth - plotWidthInPixels] : [0, plotWidth];
     return (isVertical(orientation)) ? [0, plotHeight] : rangePlotWidth;
 }
@@ -138,7 +138,7 @@ Create.prototype.configureDependentScale = function (model) {
     // DOMAIN IS COMING BACK DIFFERENT ON THESE SCALES
     // ;_;
     this.dependentAxis.scale(this.dependentAxisScale);
-    this.dependentAxis.scale().domain(this.dependentAxisScale.domain());
+    // this.dependentAxis.scale().domain(this.dependentAxisScale.domain());
     this.chart.call(this.dependentAxis);
 };
 
@@ -184,13 +184,13 @@ Create.prototype.independentScale = function (scale) {
     var model = this.model;
     if(scale == 'ordinal'){
         this.independentAxisScale = ordinalScale(model, this, model.independentAxisOrient);
-        this.independentAxis = axis.category().dataType(model.dataType);
+        this.independentAxis = axis.category(model).dataType(model.dataType);
     } else if (model.intraDay) {
         this.independentAxisScale = intraDayScale(model, this, model.independentAxisOrient);
-        this.independentAxis = axis.date();
+        this.independentAxis = axis.date(model);
     } else {
         this.independentAxisScale = timeScale(model, this, model.independentAxisOrient);
-        this.independentAxis = axis.date();
+        this.independentAxis = axis.date(model);
     }
     this.configureIndependentScale(this.model);
 };
