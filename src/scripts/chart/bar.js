@@ -162,7 +162,7 @@ function barChart(g){
     model.keyHover && dressing.addSeriesKey();
 
 		var axisLayer = themes.check(model.theme, 'axis-layer').attributes.position || 'back';
-    var plotSVG = axisLayer === 'front' ? chartSVG.insert('g', '.axis').attr('class', 'plot') : chartSVG.append('g').attr('class', 'plot');
+    var plotSVG = axisLayer === 'front' ? chartSVG.insert('g', '.axis--independent.axis').attr('class', 'plot') : chartSVG.append('g').attr('class', 'plot');
 
     var i = 0;
 
