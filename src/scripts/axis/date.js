@@ -63,10 +63,11 @@ function dateAxis(model) {
         config.attr.primary['text-anchor'] = lineChartTextAnchor;
         config.attr.secondary['text-anchor'] = isVertical() ? 'end' : 'start';
 
-        g = g.append('g').attr('transform', 'translate(' + config.xOffset + ',' + config.yOffset + ')');
-        g.append('g').attr('class', 'x axis axis--independent axis--date').each(function () {
-            labels.add(d3.select(this), config);
-        });
+        g = g.append('g')
+          .attr('transform', 'translate(' + config.xOffset + ',' + config.yOffset + ')')
+          .attr('class', 'x axis axis--independent axis--date').each(function () {
+             labels.add(d3.select(this), config);
+         });
 
         if (!config.showDomain) {
             g.select('path.domain').remove();
