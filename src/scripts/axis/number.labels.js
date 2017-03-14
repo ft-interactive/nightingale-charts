@@ -12,7 +12,7 @@ module.exports = {
         g.selectAll('line').attr(config.attr.ticks);
         g.selectAll('.origin line').attr(config.attr.origin);
         if (this.isVertical(config.axes)) {
-            var checkIfYAxisLine = config.attr['chart-type'] === 'line' ? config.attr.yAxisLabel.transform : undefined;
+            var checkIfYAxisLine = config.attr.yAxisLabel.transform;
             var configYAxisTranslate = checkIfYAxisLine || 'translate( ' + textWidth + ', ' + -(config.lineHeight / 2) + ' )';
             g.selectAll('text').attr('transform', configYAxisTranslate);
         }
@@ -65,7 +65,7 @@ module.exports = {
         this.arrangeTicks(g, config);
         if (this.isVertical(config.axes)) {
             var yAxisLine = config.attr.yAxisLine.x1;
-            var tickExtension = yAxisLine !== undefined && config.attr['chart-type'] === 'line' ? yAxisLine : config.tickExtension;
+            var tickExtension = yAxisLine !== undefined ? yAxisLine : config.tickExtension;
             this.extendAxis(g, config.axes, tickExtension);
         }
     }
