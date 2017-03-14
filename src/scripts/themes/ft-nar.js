@@ -180,7 +180,7 @@ module.exports.theme = [
     {
       'id' : 'datesFormatter',
       'attributes' : {
-        'abbrYear' : "%y'"
+        'abbr-year' : "%y'"
       }
     }
 ];
