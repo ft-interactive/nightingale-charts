@@ -176,6 +176,12 @@ module.exports.theme = [
         'attributes': {
             'display': 'none'
         }
+    },
+    {
+      'id' : 'datesFormatter',
+      'attributes' : {
+        'abbrYear' : "%y'"
+      }
     }
 ];
 module.exports.theme.colours = colours;

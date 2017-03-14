@@ -4,7 +4,7 @@ var dates = require('../util/dates.js');
 var dateScale = require('./date.scale.js');
 var timeDiff = dates.timeDiff;
 
-function dateAxis() {
+function dateAxis(model) {
     var config = {
         axes: [d3.svg.axis().orient('bottom')],
         scale: false,
@@ -139,7 +139,7 @@ function dateAxis() {
         }
         config.units = units;
         config.scale = scale;
-        config.axes = dateScale.render(scale, units, config);
+        config.axes = dateScale.render(scale, units, config, model);
         return render;
     };
 

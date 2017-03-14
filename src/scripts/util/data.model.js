@@ -210,9 +210,9 @@ function groupDates(m, units){
     var firstDate = m.data[0][m.x.series.key];
     var data = [];
     m.data.forEach(function(d,i){
-        var dateStr = [dateUtil.formatter[units[0]](d[m.x.series.key], i, firstDate)];
-        units[1] && dateStr.push(dateUtil.formatter[units[1]](d[m.x.series.key], i, firstDate));
-        units[2] && dateStr.push(dateUtil.formatter[units[2]](d[m.x.series.key], i, firstDate));
+        var dateStr = [dateUtil.formatter[units[0]](d[m.x.series.key], i, firstDate, m)];
+        units[1] && dateStr.push(dateUtil.formatter[units[1]](d[m.x.series.key], i, firstDate, m));
+        units[2] && dateStr.push(dateUtil.formatter[units[2]](d[m.x.series.key], i, firstDate, m));
         data.push({key:dateStr.join(' '),values:[d]});
     });
     m.data = data;

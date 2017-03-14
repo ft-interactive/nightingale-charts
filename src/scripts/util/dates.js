@@ -1,36 +1,41 @@
 var d3 = require('d3');
+var themes = require('../themes');
 
 var formatter = {
-    centuries: function (d, i) {
+    // date, index, firstDate, model
+    centuries: function (d, i, firstDate, model) {
         if (i === 0 || d.getYear() % 100 === 0) {
             return d3.time.format('%Y')(d);
         }
-        return d3.time.format('%y')(d);
+        var formatter =  model ? themes.check(model.theme, 'datesFormatter').attributes['abbrYear'] || '%y' : '%y';
+        return d3.time.format(formatter)(d);
+    },
+    // date, index, firstDate, model
+    decades: function (d, i, firstDate, model) {
+        if (i === 0 || d.getYear() % 100 === 0) {
+            return d3.time.format('%Y')(d);
+        }
+        var formatterString =  model ? themes.check(model.theme, 'datesFormatter').attributes['abbrYear'] || '%y' : '%y';
+        return d3.time.format(formatterString)(d);
     },
 
-    decades: function (d, i) {
+    years: function (d, i, firstDate, model) {
         if (i === 0 || d.getYear() % 100 === 0) {
             return d3.time.format('%Y')(d);
         }
-        return d3.time.format('%y')(d);
-    },
-
-    years: function (d, i) {
-        if (i === 0 || d.getYear() % 100 === 0) {
-            return d3.time.format('%Y')(d);
-        }
-        return d3.time.format('%y')(d);
+        var formatter =  model ? themes.check(model.theme, 'datesFormatter').attributes['abbrYear'] || '%y' : '%y';
+        return d3.time.format(formatter)(d);
     },
 
     fullYears: function (d, i) {
         return d3.time.format('%Y')(d);
     },
-    yearly: function (d, i, firstDate) {
+    yearly: function (d, i, firstDate, model) {
         var years = (firstDate && !Array.isArray(firstDate) &&
-        (formatter.years(firstDate, i) == formatter.years(d, i))) ?
+        (formatter.years(firstDate, i, firstDate, model) == formatter.years(d, i, firstDate, model))) ?
             'fullYears' : 'years';
 
-        return formatter[years](d, i);
+        return formatter[years](d, i, firstDate, model);
     },
     quarterly: function (d, i) {
         return 'Q' + Math.floor((d.getMonth() + 3) / 3);
