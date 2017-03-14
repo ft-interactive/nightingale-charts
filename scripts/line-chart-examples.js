@@ -90,11 +90,21 @@ module.exports = {
      x: { series: 'date' },
      y: { series: ['Aluminium', 'Crude', 'Steel', 'Nickle', 'Zinc'], reverse: false },
      data: [
+       {date: new Date('1998'),Aluminium: 11.9, Crude: 12.8, Steel:1.3, Nickle: 5.9, Zinc:14.9},
+       {date: new Date('1999'),Aluminium: 11.9, Crude: 12.8, Steel:1.3, Nickle: 5.9, Zinc:14.9},
        {date: new Date('2000'),Aluminium: 11.9, Crude: 12.8, Steel:1.3, Nickle: 5.9, Zinc:14.9},
        {date: new Date('2001'),Aluminium: 14.9, Crude: 14.7, Steel:9.8, Nickle: 17.9, Zinc:7.3},
        {date: new Date('2002'),Aluminium: 27.0, Crude: 18.4, Steel:12.5, Nickle: 8.8, Zinc:18.8},
        {date: new Date('2003'),Aluminium: 19.4, Crude: 18.6, Steel:26.6, Nickle: 10.9, Zinc:20.6},
-       {date: new Date('2004'),Aluminium: 20.9, Crude: 20.2, Steel:27.6, Nickle: 13.2, Zinc:4.9 }
+       {date: new Date('2004'),Aluminium: 20.9, Crude: 20.2, Steel:27.6, Nickle: 13.2, Zinc:4.9 },
+       {date: new Date('2005'),Aluminium: 14.9, Crude: 14.7, Steel:9.8, Nickle: 17.9, Zinc:7.3},
+       {date: new Date('2006'),Aluminium: 27.0, Crude: 18.4, Steel:12.5, Nickle: 8.8, Zinc:18.8},
+       {date: new Date('2007'),Aluminium: 19.4, Crude: 18.6, Steel:26.6, Nickle: 10.9, Zinc:20.6},
+       {date: new Date('2008'),Aluminium: 20.9, Crude: 20.2, Steel:27.6, Nickle: 13.2, Zinc:4.9 },
+       {date: new Date('2009'),Aluminium: 14.9, Crude: 14.7, Steel:9.8, Nickle: 17.9, Zinc:7.3},
+       {date: new Date('2010'),Aluminium: 27.0, Crude: 18.4, Steel:12.5, Nickle: 8.8, Zinc:18.8},
+       {date: new Date('2011'),Aluminium: 19.4, Crude: 18.6, Steel:26.6, Nickle: 10.9, Zinc:20.6},
+       {date: new Date('2012'),Aluminium: 20.9, Crude: 20.2, Steel:27.6, Nickle: 13.2, Zinc:4.9 }
      ]
    },
    {
@@ -1071,7 +1081,7 @@ function getRange(model, orientation) {
     var plotWidth = model.plotWidth = model.chartWidth - model.yLabelWidth;
     var plotHeight = model.plotHeight =  model.chartHeight - model.xLabelHeight;
     var plotPaddingX = themes.check(model.theme, 'chart-plot').attributes['padding-x'] || 0;
-    var plotWidthInPixels = (chartType !== 'bar' && plotPaddingX > 0) ? (plotWidth * plotPaddingX) : 0;    
+    var plotWidthInPixels = (chartType !== 'bar' && plotPaddingX > 0) ? (plotWidth * plotPaddingX) : 0;
     var rangePlotWidth = (plotWidthInPixels > 0) ? [0 + plotWidthInPixels, plotWidth - plotWidthInPixels] : [0, plotWidth];
     return (isVertical(orientation)) ? [0, plotHeight] : rangePlotWidth;
 }
@@ -1235,10 +1245,10 @@ Create.prototype.independentScale = function (scale) {
         this.independentAxis = axis.category().dataType(model.dataType);
     } else if (model.intraDay) {
         this.independentAxisScale = intraDayScale(model, this, model.independentAxisOrient);
-        this.independentAxis = axis.date();
+        this.independentAxis = axis.date(model);
     } else {
         this.independentAxisScale = timeScale(model, this, model.independentAxisOrient);
-        this.independentAxis = axis.date();
+        this.independentAxis = axis.date(model);
     }
     this.configureIndependentScale(this.model);
 };
@@ -1291,7 +1301,7 @@ var dates = require('../util/dates.js');
 var dateScale = require('./date.scale.js');
 var timeDiff = dates.timeDiff;
 
-function dateAxis() {
+function dateAxis(model) {
     var config = {
         axes: [d3.svg.axis().orient('bottom')],
         scale: false,
@@ -1426,7 +1436,7 @@ function dateAxis() {
         }
         config.units = units;
         config.scale = scale;
-        config.axes = dateScale.render(scale, units, config);
+        config.axes = dateScale.render(scale, units, config, model);
         return render;
     };
 
@@ -1489,7 +1499,7 @@ module.exports = {
     dateSort: function (a, b) {
         return (a.getTime() - b.getTime());
     },
-    createAxes: function(scale, unit, config, primaryUnit){
+    createAxes: function(scale, unit, config, primaryUnit, model){
         var firstDate ;
         var customTicks = (config.simple) ? scale.domain() : this.customTicks(scale, unit, primaryUnit);
         var axis = d3.svg.axis()
@@ -1497,17 +1507,17 @@ module.exports = {
             .tickValues(customTicks)
             .tickFormat(function(d,i){
                 firstDate = firstDate || d;
-                return utils.formatter[unit](d,i, firstDate);
+                return utils.formatter[unit](d,i, firstDate, model);
             })
             .tickSize(config.tickSize, 0);
         return axis;
     },
-    render: function (scale, units, config) {
+    render: function (scale, units, config, model) {
         var axes = [];
         for (var i = 0; i < units.length; i++) {
             var unit = units[i];
             if (utils.formatter[unit]) {
-                axes.push(this.createAxes(scale, unit, config, units[0]));
+                axes.push(this.createAxes(scale, unit, config, units[0], model));
             }
         }
         return axes;
@@ -3896,14 +3906,14 @@ module.exports.theme = [
     {   'id': 'chart-subtitle',
         'attributes': {
             'font-family': 'AvenirLightOblique, sans-serif',
-            'font-size': 12,
+            'font-size': 13,
             'fill': 'rgba(0, 0, 0, 0.8)'
         }
     },
     {   'id': 'chart-source',
         'attributes': {
             'font-family': 'AvenirLightOblique, sans-serif',
-            'font-size': 10,
+            'font-size': 11,
             'line-height': 12,
             'fill': 'rgba(0, 0, 0, 1)'
         }
@@ -3911,7 +3921,7 @@ module.exports.theme = [
     {   'id': 'chart-footnote',
         'attributes': {
             'font-family': 'AvenirLightOblique, sans-serif',
-            'font-size': 10,
+            'font-size': 11,
             'line-height': 12,
             'fill': 'rgba(0, 0, 0, 1)',
             'padding-y': 5
@@ -3925,7 +3935,7 @@ module.exports.theme = [
     {   'id': 'key',
         'attributes': {
             'font-family': 'AvenirLight, sans-serif',
-            'font-size': 12,
+            'font-size': 13,
             'line-height': 16,
             'fill': 'rgba(0, 0, 0, 0.8)',
             'padding-y': 8
@@ -3960,7 +3970,7 @@ module.exports.theme = [
     },
     {   'id': 'axis-text',
         'attributes': {
-            'font-size': 12,
+            'font-size': 13,
             'font-family': 'AvenirLight, sans-serif',
             'stroke': 'none',
             'fill': 'rgba(0, 0, 0, 1)'
@@ -3969,7 +3979,7 @@ module.exports.theme = [
     {   'id': 'axis-secondary-text',
         'selector': '.axis .secondary text',
         'attributes': {
-            'font-size': 10,
+            'font-size': 11,
             'fill': 'rgba(0, 0, 0, 1)'
         }
     },
@@ -3996,6 +4006,12 @@ module.exports.theme = [
         'attributes': {
             'display': 'none'
         }
+    },
+    {
+      'id' : 'datesFormatter',
+      'attributes' : {
+        'abbr-year' : "%y'"
+      }
     }
 ];
 module.exports.theme.colours = colours;
@@ -4911,9 +4927,9 @@ function groupDates(m, units){
     var firstDate = m.data[0][m.x.series.key];
     var data = [];
     m.data.forEach(function(d,i){
-        var dateStr = [dateUtil.formatter[units[0]](d[m.x.series.key], i, firstDate)];
-        units[1] && dateStr.push(dateUtil.formatter[units[1]](d[m.x.series.key], i, firstDate));
-        units[2] && dateStr.push(dateUtil.formatter[units[2]](d[m.x.series.key], i, firstDate));
+        var dateStr = [dateUtil.formatter[units[0]](d[m.x.series.key], i, firstDate, m)];
+        units[1] && dateStr.push(dateUtil.formatter[units[1]](d[m.x.series.key], i, firstDate, m));
+        units[2] && dateStr.push(dateUtil.formatter[units[2]](d[m.x.series.key], i, firstDate, m));
         data.push({key:dateStr.join(' '),values:[d]});
     });
     m.data = data;
@@ -5024,38 +5040,43 @@ module.exports = Model;
 
 },{"../themes":40,"../util/aspect-ratios.js":41,"../util/dates.js":43,"../util/line-thickness.js":46,"../util/series-options.js":48,"d3":"d3"}],43:[function(require,module,exports){
 var d3 = require('d3');
+var themes = require('../themes');
 
 var formatter = {
-    centuries: function (d, i) {
+    // date, index, firstDate, model
+    centuries: function (d, i, firstDate, model) {
         if (i === 0 || d.getYear() % 100 === 0) {
             return d3.time.format('%Y')(d);
         }
-        return d3.time.format('%y')(d);
+        var formatter =  model ? themes.check(model.theme, 'datesFormatter').attributes['abbr-year'] || '%y' : '%y';
+        return d3.time.format(formatter)(d);
+    },
+    // date, index, firstDate, model
+    decades: function (d, i, firstDate, model) {
+        if (i === 0 || d.getYear() % 100 === 0) {
+            return d3.time.format('%Y')(d);
+        }
+        var formatterString =  model ? themes.check(model.theme, 'datesFormatter').attributes['abbr-year'] || '%y' : '%y';
+        return d3.time.format(formatterString)(d);
     },
 
-    decades: function (d, i) {
+    years: function (d, i, firstDate, model) {
         if (i === 0 || d.getYear() % 100 === 0) {
             return d3.time.format('%Y')(d);
         }
-        return d3.time.format('%y')(d);
-    },
-
-    years: function (d, i) {
-        if (i === 0 || d.getYear() % 100 === 0) {
-            return d3.time.format('%Y')(d);
-        }
-        return d3.time.format('%y')(d);
+        var formatter =  model ? themes.check(model.theme, 'datesFormatter').attributes['abbr-year'] || '%y' : '%y';
+        return d3.time.format(formatter)(d);
     },
 
     fullYears: function (d, i) {
         return d3.time.format('%Y')(d);
     },
-    yearly: function (d, i, firstDate) {
+    yearly: function (d, i, firstDate, model) {
         var years = (firstDate && !Array.isArray(firstDate) &&
-        (formatter.years(firstDate, i) == formatter.years(d, i))) ?
+        (formatter.years(firstDate, i, firstDate, model) == formatter.years(d, i, firstDate, model))) ?
             'fullYears' : 'years';
 
-        return formatter[years](d, i);
+        return formatter[years](d, i, firstDate, model);
     },
     quarterly: function (d, i) {
         return 'Q' + Math.floor((d.getMonth() + 3) / 3);
@@ -5181,7 +5202,7 @@ module.exports = {
     unitGenerator: unitGenerator
 };
 
-},{"d3":"d3"}],44:[function(require,module,exports){
+},{"../themes":40,"d3":"d3"}],44:[function(require,module,exports){
 var d3 = require('d3');
 var dates = require('../util/dates');
 var dateFormatter = dates.formatter;

@@ -82,11 +82,21 @@ module.exports = {
      x: { series: 'date' },
      y: { series: ['Aluminium', 'Crude', 'Steel', 'Nickle', 'Zinc'], reverse: false },
      data: [
+       {date: new Date('1998'),Aluminium: 11.9, Crude: 12.8, Steel:1.3, Nickle: 5.9, Zinc:14.9},
+       {date: new Date('1999'),Aluminium: 11.9, Crude: 12.8, Steel:1.3, Nickle: 5.9, Zinc:14.9},
        {date: new Date('2000'),Aluminium: 11.9, Crude: 12.8, Steel:1.3, Nickle: 5.9, Zinc:14.9},
        {date: new Date('2001'),Aluminium: 14.9, Crude: 14.7, Steel:9.8, Nickle: 17.9, Zinc:7.3},
        {date: new Date('2002'),Aluminium: 27.0, Crude: 18.4, Steel:12.5, Nickle: 8.8, Zinc:18.8},
        {date: new Date('2003'),Aluminium: 19.4, Crude: 18.6, Steel:26.6, Nickle: 10.9, Zinc:20.6},
-       {date: new Date('2004'),Aluminium: 20.9, Crude: 20.2, Steel:27.6, Nickle: 13.2, Zinc:4.9 }
+       {date: new Date('2004'),Aluminium: 20.9, Crude: 20.2, Steel:27.6, Nickle: 13.2, Zinc:4.9 },
+       {date: new Date('2005'),Aluminium: 14.9, Crude: 14.7, Steel:9.8, Nickle: 17.9, Zinc:7.3},
+       {date: new Date('2006'),Aluminium: 27.0, Crude: 18.4, Steel:12.5, Nickle: 8.8, Zinc:18.8},
+       {date: new Date('2007'),Aluminium: 19.4, Crude: 18.6, Steel:26.6, Nickle: 10.9, Zinc:20.6},
+       {date: new Date('2008'),Aluminium: 20.9, Crude: 20.2, Steel:27.6, Nickle: 13.2, Zinc:4.9 },
+       {date: new Date('2009'),Aluminium: 14.9, Crude: 14.7, Steel:9.8, Nickle: 17.9, Zinc:7.3},
+       {date: new Date('2010'),Aluminium: 27.0, Crude: 18.4, Steel:12.5, Nickle: 8.8, Zinc:18.8},
+       {date: new Date('2011'),Aluminium: 19.4, Crude: 18.6, Steel:26.6, Nickle: 10.9, Zinc:20.6},
+       {date: new Date('2012'),Aluminium: 20.9, Crude: 20.2, Steel:27.6, Nickle: 13.2, Zinc:4.9 }
      ]
    },
    {
