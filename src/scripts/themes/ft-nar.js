@@ -76,14 +76,14 @@ module.exports.theme = [
     {   'id': 'chart-subtitle',
         'attributes': {
             'font-family': 'AvenirLightOblique, sans-serif',
-            'font-size': 12,
+            'font-size': 13,
             'fill': 'rgba(0, 0, 0, 0.8)'
         }
     },
     {   'id': 'chart-source',
         'attributes': {
             'font-family': 'AvenirLightOblique, sans-serif',
-            'font-size': 10,
+            'font-size': 11,
             'line-height': 12,
             'fill': 'rgba(0, 0, 0, 1)'
         }
@@ -91,7 +91,7 @@ module.exports.theme = [
     {   'id': 'chart-footnote',
         'attributes': {
             'font-family': 'AvenirLightOblique, sans-serif',
-            'font-size': 10,
+            'font-size': 11,
             'line-height': 12,
             'fill': 'rgba(0, 0, 0, 1)',
             'padding-y': 5
@@ -105,7 +105,7 @@ module.exports.theme = [
     {   'id': 'key',
         'attributes': {
             'font-family': 'AvenirLight, sans-serif',
-            'font-size': 12,
+            'font-size': 13,
             'line-height': 16,
             'fill': 'rgba(0, 0, 0, 0.8)',
             'padding-y': 8
@@ -140,7 +140,7 @@ module.exports.theme = [
     },
     {   'id': 'axis-text',
         'attributes': {
-            'font-size': 12,
+            'font-size': 13,
             'font-family': 'AvenirLight, sans-serif',
             'stroke': 'none',
             'fill': 'rgba(0, 0, 0, 1)'
@@ -149,7 +149,7 @@ module.exports.theme = [
     {   'id': 'axis-secondary-text',
         'selector': '.axis .secondary text',
         'attributes': {
-            'font-size': 10,
+            'font-size': 11,
             'fill': 'rgba(0, 0, 0, 1)'
         }
     },
