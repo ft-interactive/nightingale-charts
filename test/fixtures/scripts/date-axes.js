@@ -120,7 +120,9 @@ function renderAxesArrayIntoDiv(div, axesDefinitionArray) {
         .each(function (d, i) {
 
             //create the axis, giving it a scale
-            var axis = oCharts.axis.date()
+            var axis = oCharts.axis.date({
+              theme: 'ft-web'
+            })
                 .simple(d.simple)
                 .scale(d.scale);
 

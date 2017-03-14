@@ -391,7 +391,9 @@ function drawDemo(timeFrame){
         })
 
         .each(function (d, i) {
-            var axis = oCharts.axis.category()
+            var axis = oCharts.axis.category({
+              theme: 'ft-web'
+            })
                 .dataType(d.dataType)
                 .orient(d.orient)
                 .scale(d.scale, d.units);
