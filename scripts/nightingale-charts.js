@@ -1316,7 +1316,7 @@ function numericAxis() {
     function axis(g) {
         var orientOffset = (config.axes.orient() === 'right') ? -config.axes.tickSize() : 0;
 
-        var yAxisRightAligned = config.attr['chart-alignment'] === 'right' && config.attr['chart-type'] === 'line' && config.attr.yAxisLine.x1 === 0;
+        var yAxisRightAligned = config.attr['chart-alignment'] === 'right' && config.attr.yAxisLine.x1 === 0;
         var yAxisLabelTextAnchor = yAxisRightAligned ? 'start' : config.attr.yAxisLabel['text-anchor'];
         config.attr.primary['text-anchor'] = isVertical() ? yAxisLabelTextAnchor : config.attr.xAxisLabel['text-anchor'];
         config.attr.secondary['text-anchor'] = isVertical() ? 'end' : 'start';
@@ -1450,7 +1450,7 @@ module.exports = {
         g.selectAll('line').attr(config.attr.ticks);
         g.selectAll('.origin line').attr(config.attr.origin);
         if (this.isVertical(config.axes)) {
-            var checkIfYAxisLine = config.attr['chart-type'] === 'line' ? config.attr.yAxisLabel.transform : undefined;
+            var checkIfYAxisLine = config.attr.yAxisLabel.transform;
             var configYAxisTranslate = checkIfYAxisLine || 'translate( ' + textWidth + ', ' + -(config.lineHeight / 2) + ' )';
             g.selectAll('text').attr('transform', configYAxisTranslate);
         }
@@ -1503,7 +1503,7 @@ module.exports = {
         this.arrangeTicks(g, config);
         if (this.isVertical(config.axes)) {
             var yAxisLine = config.attr.yAxisLine.x1;
-            var tickExtension = yAxisLine !== undefined && config.attr['chart-type'] === 'line' ? yAxisLine : config.tickExtension;
+            var tickExtension = yAxisLine !== undefined ? yAxisLine : config.tickExtension;
             this.extendAxis(g, config.axes, tickExtension);
         }
     }
