@@ -1,9 +1,10 @@
 var d3 = require('d3');
+var themes = require('../themes');
 var labels = require('../util/labels.js');
 var dates = require('../util/dates.js');
 var timeDiff = dates.timeDiff;
 
-function categoryAxis() {
+function categoryAxis(model) {
 
     var config = {
         axes: [d3.svg.axis().orient('bottom')],
@@ -46,6 +47,15 @@ function categoryAxis() {
         return ['right','left'].indexOf(config.axes[0].orient())>-1;
     }
 
+    function customTickShape(g) {
+       var ticks = g.selectAll(".primary .tick");
+       ticks.each(function() {
+         isVertical() ? d3.select(this).select('text').attr("x", -6) : null;
+         d3.select(this).append("circle").attr("r", 2);
+       });
+       ticks.selectAll("line").remove();
+     }
+
     function render(g) {
         var orientOffset = (isVertical()) ? -config.axes[0].tickSize() : 0;
         var className = isVertical() ? 'y' : 'x';
@@ -57,6 +67,9 @@ function categoryAxis() {
             .attr('class', className + ' axis axis--independent axis--category').each(function () {
                 labels.add(d3.select(this), config);
             });
+
+        var customTick = themes.check(model.theme, 'ticks').attributes.customTickShape || false;
+        customTick ? customTickShape(g) : null;
 
         if (!config.showDomain) {
             g.select('path.domain').remove();

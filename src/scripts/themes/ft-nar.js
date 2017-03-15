@@ -132,6 +132,13 @@ module.exports.theme = [
             'stroke-width': 1
         }
     },
+    // Controls whether the tick is a line or circle
+     {
+       'id': 'ticks',
+       'attributes': {
+           'customTickShape': true
+       }
+     },
     // position plot lines, options: 'front', 'back'
     {   'id': 'axis-layer',
         'attributes': {
