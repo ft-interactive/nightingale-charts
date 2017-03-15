@@ -7,15 +7,17 @@ var formatter = {
         if (i === 0 || d.getYear() % 100 === 0) {
             return d3.time.format('%Y')(d);
         }
-        var formatter =  model ? themes.check(model.theme, 'datesFormatter').attributes['abbr-year'] || '%y' : '%y';
+        var formatter =  model ? themes.check(model.theme, 'datesFormatter').attributes['centuries-short-year'] || '%y' : '%y';
         return d3.time.format(formatter)(d);
     },
     // date, index, firstDate, model
     decades: function (d, i, firstDate, model) {
+        var formatterString;
         if (i === 0 || d.getYear() % 100 === 0) {
-            return d3.time.format('%Y')(d);
+            formatterString =  model ? themes.check(model.theme, 'datesFormatter').attributes['decade-long-year'] || '%Y' : '%Y';
+            return d3.time.format(formatterString)(d);
         }
-        var formatterString =  model ? themes.check(model.theme, 'datesFormatter').attributes['abbr-year'] || '%y' : '%y';
+        formatterString =  model ? themes.check(model.theme, 'datesFormatter').attributes['decade-short-year'] || '%y' : '%y';
         return d3.time.format(formatterString)(d);
     },
 
@@ -23,7 +25,7 @@ var formatter = {
         if (i === 0 || d.getYear() % 100 === 0) {
             return d3.time.format('%Y')(d);
         }
-        var formatter =  model ? themes.check(model.theme, 'datesFormatter').attributes['abbr-year'] || '%y' : '%y';
+        var formatter =  model ? themes.check(model.theme, 'datesFormatter').attributes['years-short-year'] || '%y' : '%y';
         return d3.time.format(formatter)(d);
     },
 
