@@ -12,11 +12,12 @@ var formatter = {
     },
     // date, index, firstDate, model
     decades: function (d, i, firstDate, model) {
+        var formatterString;
         if (i === 0 || d.getYear() % 100 === 0) {
-            var formatterString =  model ? themes.check(model.theme, 'datesFormatter').attributes['decade-long-year'] || '%Y' : '%Y';
+            formatterString =  model ? themes.check(model.theme, 'datesFormatter').attributes['decade-long-year'] || '%Y' : '%Y';
             return d3.time.format(formatterString)(d);
         }
-        var formatterString =  model ? themes.check(model.theme, 'datesFormatter').attributes['decade-short-year'] || '%y' : '%y';
+        formatterString =  model ? themes.check(model.theme, 'datesFormatter').attributes['decade-short-year'] || '%y' : '%y';
         return d3.time.format(formatterString)(d);
     },
 
