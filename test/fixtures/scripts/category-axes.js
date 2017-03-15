@@ -371,7 +371,7 @@ var nesting = {
     "many-years": function(d)   { return d3.time.format('%Y')(d.date);  }
 };
 
-function drawDemo(timeFrame){
+function drawDemo(timeFrame, model){
     d3.select('#column-chart__'  + timeFrame).append('svg')
         .attr('width', function (d) {
             var width = margin.left + margin.right;
@@ -391,9 +391,7 @@ function drawDemo(timeFrame){
         })
 
         .each(function (d, i) {
-            var axis = oCharts.axis.category({
-              theme: 'ft-web'
-            })
+            var axis = oCharts.axis.category(model)
                 .dataType(d.dataType)
                 .orient(d.orient)
                 .scale(d.scale, d.units);
@@ -410,43 +408,52 @@ module.exports = {
     init: function(){
 
         var demos = ['days', 'many-days', 'weeks', 'many-weeks', 'months', 'many-months', 'quarters', 'many-quarters','years','many-years', 'categories', 'manyCategories'];
+        var demoThemes = [
+          'ft-web',
+          'ft-nar'
+        ];
         demos.forEach(function(timeFrame){
 
-            var nestedFixture = (nesting[timeFrame]) ?
-                d3.nest()
-                    .key(nesting[timeFrame])
-                    .entries(fixtures[timeFrame]) :
-                fixtures[timeFrame];
+          demoThemes.forEach(function(theme) {
+              var model = {
+                theme: theme
+              };
 
-            var data = {
-                title: 'Grouped Date Series: ' + timeFrame,
-                x:{
-                    series: xSeriesData[timeFrame] || {key:'date', label:'year'}
-                },
-                y: { series: ['value']},
-                data: nestedFixture,
-                dataType: ['categories','manyCategories'].indexOf(timeFrame)>-1 ? 'categorical' : 'time',
-                scale: d3.scale
-                    .ordinal()
-                    .rangeRoundBands([0, 400], 0, 0)
-                    .domain(nestedFixture.map(function (d){return d.key;})),
-                units: units[timeFrame]
-            };
+              var nestedFixture = (nesting[timeFrame]) ?
+                  d3.nest()
+                      .key(nesting[timeFrame])
+                      .entries(fixtures[timeFrame]) :
+                  fixtures[timeFrame];
 
-            d3.select('#views')
-                .append('div').attr('id','column-chart__' + timeFrame)
-                .data([data])
-                .append('h2')
-                .text(function (d) {
-                    return d.title
-                });
+              var data = {
+                  title: 'Grouped Date Series: ' + timeFrame,
+                  x:{
+                      series: xSeriesData[timeFrame] || {key:'date', label:'year'}
+                  },
+                  y: { series: ['value']},
+                  data: nestedFixture,
+                  dataType: ['categories','manyCategories'].indexOf(timeFrame)>-1 ? 'categorical' : 'time',
+                  scale: d3.scale
+                      .ordinal()
+                      .rangeRoundBands([0, 400], 0, 0)
+                      .domain(nestedFixture.map(function (d){return d.key;})),
+                  units: units[timeFrame]
+              };
 
-            data.orient = 'bottom';
-            drawDemo(timeFrame);
+              d3.select('#views')
+                  .append('div').attr('id','column-chart__' + timeFrame)
+                  .data([data])
+                  .append('h2')
+                  .text(function (d) {
+                      return d.title
+                  });
 
-            //data.orient = 'left';
-            //drawDemo(timeFrame);
+              data.orient = 'bottom';
+              drawDemo(timeFrame, model);
+          });
+
         });
+
 
     }
 };

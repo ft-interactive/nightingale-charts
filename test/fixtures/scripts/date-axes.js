@@ -95,7 +95,7 @@ function createAxesDefArrayOfWidth(axisWidth) {
     return sizedAxesDefinitions;
 }
 
-function renderAxesArrayIntoDiv(div, axesDefinitionArray) {
+function renderAxesArrayIntoDiv(div, axesDefinitionArray, theme) {
     var divs = d3.select(div)
         .selectAll('div')
         .data(axesDefinitionArray)
@@ -121,7 +121,7 @@ function renderAxesArrayIntoDiv(div, axesDefinitionArray) {
 
             //create the axis, giving it a scale
             var axis = oCharts.axis.date({
-              theme: 'ft-web'
+              theme: theme
             })
                 .simple(d.simple)
                 .scale(d.scale);
@@ -139,7 +139,8 @@ module.exports = {
     init: function(){
         var viewData = createAxesDefArrayOfWidth(400);
         var viewSmallData = createAxesDefArrayOfWidth(200);
-        renderAxesArrayIntoDiv('#views', viewData);
-        renderAxesArrayIntoDiv('#viewsSmall', viewSmallData);
+        renderAxesArrayIntoDiv('#views', viewData, 'ft-web');
+        renderAxesArrayIntoDiv('#viewsSmall', viewSmallData, 'ft-web');
+        renderAxesArrayIntoDiv('#viewsCircle', viewData, 'ft-nar');
     }
 };

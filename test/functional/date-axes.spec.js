@@ -115,6 +115,62 @@ describe('When the date axis is', function () {
 
     });
 
+    describe('a day or less (small) with circle ticks displayed,', function () {
+        var dayOrLessSmall, x, labels, circleTicks;
+
+        beforeEach(function() {
+            dayOrLessSmall = document.querySelector('#viewsCircle .axis-test:nth-child(1) svg');
+            x = dayOrLessSmall.querySelector('.x.axis');
+            labels = x.querySelectorAll('.primary .tick text');
+            circleTicks = x.querySelectorAll('.primary .tick circle');
+        });
+
+        afterEach(function() {
+            document.body.innerHTML = '';
+        });
+
+        it('one tick for each hour is shown', function () {
+            expect(circleTicks.length).toBe(12);
+        });
+
+        it('one label for each hour is shown alongside circle tick', function () {
+            expect(labels.length).toBe(7);
+            expect(labels[0].textContent).toBe('11:00');
+            expect(labels[1].textContent).toBe('13:00');
+            expect(labels[2].textContent).toBe('15:00');
+            expect(labels[3].textContent).toBe('17:00');
+            expect(labels[4].textContent).toBe('19:00');
+            expect(labels[5].textContent).toBe('21:00');
+            expect(labels[6].textContent).toBe('22:00');
+        });
+    });
+
+    describe('a few weeks with circle ticks displayed,', function () {
+        var aFewWeeks, x, labels, circleTicks;
+
+        beforeEach(function() {
+            aFewWeeks = document.querySelector('#viewsCircle .axis-test:nth-child(2) svg');
+            x = aFewWeeks.querySelector('.x.axis');
+            labels = x.querySelectorAll('.primary .tick text');
+            circleTicks = x.querySelectorAll('.primary .tick circle');
+        });
+
+        afterEach(function() {
+            document.body.innerHTML = '';
+        });
+
+        it('one circle tick for each day is shown', function () {
+            expect(circleTicks.length).toBe(26);
+        });
+
+        it('each circle tick has a radius attribute which equals 2', function () {
+          for (var i = 0; i < circleTicks.length; i++) {
+              expect(circleTicks[i].getAttribute('r')).toBe('2');
+          }
+        });
+
+    });
+
     describe('between 3 - 15 years,', function () {
         var threeToFifteenYears, x, ticks, labels, firstTick, firstTickLine;
 
