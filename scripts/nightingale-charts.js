@@ -681,8 +681,10 @@ function categoryAxis(model) {
      }
 
     function render(g) {
+        var chartType = config.attr['chart-type'];
         var orientOffset = (isVertical()) ? -config.axes[0].tickSize() : 0;
         var className = isVertical() ? 'y' : 'x';
+        
         config.attr.primary['text-anchor'] = isVertical() ? 'end' : 'middle';
         config.attr.secondary['text-anchor'] = isVertical() ? 'end' : 'middle';
 
@@ -693,7 +695,7 @@ function categoryAxis(model) {
             });
 
         var customTick = themes.check(model.theme, 'ticks').attributes.customTickShape || false;
-        customTick ? customTickShape(g) : null;
+        customTick && chartType !== 'bar' ? customTickShape(g) : null;
 
         if (!config.showDomain) {
             g.select('path.domain').remove();
@@ -1078,12 +1080,12 @@ function dateAxis(model) {
 
     function customTickShape(g) {
        var ticks = g.selectAll(".primary .tick");
-      ticks.each(function() { d3.select(this).append("circle").attr("r", 2); });
+       ticks.each(function() { d3.select(this).append("circle").attr("r", 2); });
        ticks.selectAll("line").remove();
      }
 
     function render(g) {
-
+        var chartType = config.attr['chart-type'];
         var lineChartTextAnchor = isVertical() ? 'end' : 'start';
         var lineChartSecondaryTextAnchor = isVertical() ? 'end' : 'start';
         var secondTextAnchor = themes.check(model.theme, 'axis-secondary-text').attributes['text-anchor'];
@@ -1107,7 +1109,7 @@ function dateAxis(model) {
         }
 
         var customTick = themes.check(model.theme, 'ticks').attributes.customTickShape || false;
-        customTick ? customTickShape(g) : null;
+        customTick && chartType !== 'bar' ? customTickShape(g) : null;
     }
 
     render.simple = function (bool) {
@@ -3745,10 +3747,10 @@ module.exports.theme = [
     {
       'id' : 'datesFormatter',
       'attributes' : {
-        'decade-long-year' : "%y'",
-        'decade-short-year' : "%y'",
-        'centuries-short-year' : "%y'",
-        'years-short-year' : "%y'"
+        'decade-long-year' : "'%y",
+        'decade-short-year' : "'%y",
+        'centuries-short-year' : "'%y",
+        'years-short-year' : "'%y"
       }
     }
 ];
