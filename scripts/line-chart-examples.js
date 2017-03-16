@@ -1359,13 +1359,16 @@ function dateAxis(model) {
     function render(g) {
 
         var lineChartTextAnchor = isVertical() ? 'end' : 'start';
+        var lineChartSecondaryTextAnchor = isVertical() ? 'end' : 'start';
+        var secondTextAnchor = themes.check(model.theme, 'axis-secondary-text').attributes['text-anchor'];
 
         if(config.attr['chart-type'] === 'line') {
           lineChartTextAnchor = isVertical() ? config.attr.yAxisLabel['text-anchor'] : config.attr.xAxisLabel['text-anchor'];
+          lineChartSecondaryTextAnchor = secondTextAnchor ? secondTextAnchor : lineChartSecondaryTextAnchor;
         }
 
         config.attr.primary['text-anchor'] = lineChartTextAnchor;
-        config.attr.secondary['text-anchor'] = isVertical() ? 'end' : 'start';
+        config.attr.secondary['text-anchor'] = lineChartSecondaryTextAnchor;
 
         g = g.append('g')
           .attr('transform', 'translate(' + config.xOffset + ',' + config.yOffset + ')')
@@ -4010,7 +4013,8 @@ module.exports.theme = [
         'selector': '.axis .secondary text',
         'attributes': {
             'font-size': 11,
-            'fill': 'rgba(0, 0, 0, 1)'
+            'fill': 'rgba(0, 0, 0, 1)',
+            'text-anchor': 'middle'
         }
     },
     {
