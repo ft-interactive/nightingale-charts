@@ -22,12 +22,12 @@ function chartWidth(model) {
         return model.chartWidth;
     }
 
+    var rightGutter = model.contentWidth < 260 ? 16 : 26;
     var fullWidthChart = themes.check(model.theme, 'chart-plot').attributes['full-width'] || false;
     if (fullWidthChart) {
       return model.contentWidth - rightGutter;
     }
 
-    var rightGutter = model.contentWidth < 260 ? 16 : 26;
     if (model.paddingX) rightGutter = 0;
     return model.contentWidth - rightGutter - model.chartPadding * 2;
 }
