@@ -108,6 +108,7 @@ module.exports.theme = [
     },
     {   'id': 'chart-plot',
         'attributes': {
+            'full-width': true,
             'padding-x': 0.05
         }
     },
