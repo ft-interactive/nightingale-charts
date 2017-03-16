@@ -57,8 +57,10 @@ function categoryAxis(model) {
      }
 
     function render(g) {
+        var chartType = config.attr['chart-type'];
         var orientOffset = (isVertical()) ? -config.axes[0].tickSize() : 0;
         var className = isVertical() ? 'y' : 'x';
+        
         config.attr.primary['text-anchor'] = isVertical() ? 'end' : 'middle';
         config.attr.secondary['text-anchor'] = isVertical() ? 'end' : 'middle';
 
@@ -69,7 +71,7 @@ function categoryAxis(model) {
             });
 
         var customTick = themes.check(model.theme, 'ticks').attributes.customTickShape || false;
-        customTick ? customTickShape(g) : null;
+        customTick && chartType !== 'bar' ? customTickShape(g) : null;
 
         if (!config.showDomain) {
             g.select('path.domain').remove();

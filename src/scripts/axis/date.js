@@ -48,12 +48,12 @@ function dateAxis(model) {
 
     function customTickShape(g) {
        var ticks = g.selectAll(".primary .tick");
-      ticks.each(function() { d3.select(this).append("circle").attr("r", 2); });
+       ticks.each(function() { d3.select(this).append("circle").attr("r", 2); });
        ticks.selectAll("line").remove();
      }
 
     function render(g) {
-
+        var chartType = config.attr['chart-type'];
         var lineChartTextAnchor = isVertical() ? 'end' : 'start';
 
         if(config.attr['chart-type'] === 'line') {
@@ -74,7 +74,7 @@ function dateAxis(model) {
         }
 
         var customTick = themes.check(model.theme, 'ticks').attributes.customTickShape || false;
-        customTick ? customTickShape(g) : null;
+        customTick && chartType !== 'bar' ? customTickShape(g) : null;
     }
 
     render.simple = function (bool) {
