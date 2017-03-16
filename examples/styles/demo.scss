@@ -23,7 +23,9 @@ body section:last-of-type {
   border-bottom: none;
 }
 
-svg {
+#web svg,
+#video svg,
+#print svg {
   margin:5px;
   -webkit-box-shadow: 5px 5px 11px 0px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 5px 5px 11px 0px rgba(0, 0, 0, 0.2);

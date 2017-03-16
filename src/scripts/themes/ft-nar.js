@@ -30,7 +30,15 @@ module.exports.theme = [
         'id': 'svg',
         'selector': 'svg',
         'attributes': {
-            'background': 'transparent'
+          'background': 'transparent',
+          'padding-y': 10,
+        }
+    },
+    {
+        'id': 'svg-borders',
+        'attributes': {
+            'top': true,
+            'bottom': true
         }
     },
     //lines
@@ -70,6 +78,7 @@ module.exports.theme = [
         'attributes': {
             'font-family': 'AvenirHeavy, sans-serif',
             'font-size': 18,
+
             'fill': 'rgba(0, 0, 0, 0.8)'
         }
     },
@@ -99,6 +108,7 @@ module.exports.theme = [
     },
     {   'id': 'chart-plot',
         'attributes': {
+            'full-width': true,
             'padding-x': 0.05
         }
     },

@@ -41,6 +41,27 @@ Dressing.prototype.addBackground = function (g, viewBox){
         });
 };
 
+Dressing.prototype.addHorizontalLine = function (g, id, viewBox){
+    return g.append('line')
+        .attr({
+            'id': id,
+            'style': "stroke: black; stroke-width: 1",
+            'x1': viewBox[2],
+            'y1': 0,
+            'fill': g.attr('background'),
+            'transform': this.model.translate({
+                top: viewBox[3],
+                left: 0
+            })
+        });
+};
+
+Dressing.prototype.addBorders = function () {
+  var borderConfig = this.getAttr('svg-borders');
+  borderConfig.top ? this.addHorizontalLine(this.svg, 'line-horizontal-header', [0,0, this.model.width, 1]) : null;
+  borderConfig.bottom ? this.addHorizontalLine(this.svg, 'line-horizontal-footer', [0,0, this.model.width, this.model.height - 1]) : null;
+};
+
 Dressing.prototype.addHeader = function () {
     this.addHeaderItem('title');
     this.addHeaderItem('subtitle');
@@ -165,6 +186,9 @@ Dressing.prototype.positionFooterItem = function(gText) {
         top: yTrans,
         left: +model.paddingX
     }));
+
+    model.footerHeight = this.footerHeight;
+    model.footerItemPosition = model.footerItemPosition || { top: yTrans, left: +model.paddingX };
 };
 
 Dressing.prototype.setHeight = function () {
@@ -176,7 +200,7 @@ Dressing.prototype.setHeight = function () {
             model.error({ message: 'calculated plot height is less than zero' });
         }
     } else {
-        model.height = this.headerHeight + model.chartHeight + footerHeight;
+        model.height = this.headerHeight + model.chartHeight + footerHeight + model.paddingY*2;
     }
     this.svg.attr('height', Math.ceil(model.height));
 };

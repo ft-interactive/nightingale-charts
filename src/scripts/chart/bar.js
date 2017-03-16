@@ -150,7 +150,8 @@ function barChart(g){
     dressing.addHeaderItem('subtitle');
     !model.keyHover && dressing.addSeriesKey();
     dressing.addFooter();
-
+		dressing.addBorders();
+		
 	var chartSVG = svg.append('g').attr('class', 'chart');
     chartSVG.attr('transform', model.translate(model.chartPosition));
 
