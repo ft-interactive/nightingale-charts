@@ -60,7 +60,7 @@ Dressing.prototype.addBorders = function () {
   var borderConfig = this.getAttr('svg-borders');
   borderConfig.top ? this.addHorizontalLine(this.svg, 'line-horizontal-header', [0,0, this.model.width, 1]) : null;
   borderConfig.bottom ? this.addHorizontalLine(this.svg, 'line-horizontal-footer', [0,0, this.model.width, this.model.height - 1]) : null;
-}
+};
 
 Dressing.prototype.addHeader = function () {
     this.addHeaderItem('title');
@@ -187,7 +187,7 @@ Dressing.prototype.positionFooterItem = function(gText) {
         left: +model.paddingX
     }));
 
-    model.footerHeight = this.footerHeight
+    model.footerHeight = this.footerHeight;
     model.footerItemPosition = model.footerItemPosition || { top: yTrans, left: +model.paddingX };
 };
 
