@@ -2138,7 +2138,8 @@ function barChart(g){
     dressing.addHeaderItem('subtitle');
     !model.keyHover && dressing.addSeriesKey();
     dressing.addFooter();
-
+		dressing.addBorders();
+		
 	var chartSVG = svg.append('g').attr('class', 'chart');
     chartSVG.attr('transform', model.translate(model.chartPosition));
 
@@ -2385,6 +2386,7 @@ function columnChart(g){
     dressing.addHeaderItem('subtitle');
     !model.keyHover && dressing.addSeriesKey();
     dressing.addFooter();
+		dressing.addBorders();
 
     var chartSVG = svg.append('g').attr('class', 'chart');
     chartSVG.attr('transform', model.translate(model.chartPosition));
@@ -2482,7 +2484,7 @@ function lineChart(g) {
     dressing.addHeaderItem('subtitle');
     !model.keyHover && dressing.addSeriesKey();
     dressing.addFooter();
-
+    dressing.addBorders();
     var chartSVG = svg.append('g').attr('class', 'chart');
     chartSVG.attr('transform', model.translate(model.chartPosition));
 
@@ -2515,8 +2517,6 @@ function lineChart(g) {
 
     // Add transparency
     chartSVG.selectAll('path.domain').attr('fill', 'none');
-
-
 
 }
 
@@ -2650,6 +2650,27 @@ Dressing.prototype.addBackground = function (g, viewBox){
         });
 };
 
+Dressing.prototype.addHorizontalLine = function (g, id, viewBox){
+    return g.append('line')
+        .attr({
+            'id': id,
+            'style': "stroke: black; stroke-width: 1",
+            'x1': viewBox[2],
+            'y1': 0,
+            'fill': g.attr('background'),
+            'transform': this.model.translate({
+                top: viewBox[3],
+                left: 0
+            })
+        });
+};
+
+Dressing.prototype.addBorders = function () {
+  var borderConfig = this.getAttr('svg-borders');
+  borderConfig.top ? this.addHorizontalLine(this.svg, 'line-horizontal-header', [0,0, this.model.width, 1]) : null;
+  borderConfig.bottom ? this.addHorizontalLine(this.svg, 'line-horizontal-footer', [0,0, this.model.width, this.model.height - 1]) : null;
+};
+
 Dressing.prototype.addHeader = function () {
     this.addHeaderItem('title');
     this.addHeaderItem('subtitle');
@@ -2774,6 +2795,9 @@ Dressing.prototype.positionFooterItem = function(gText) {
         top: yTrans,
         left: +model.paddingX
     }));
+
+    model.footerHeight = this.footerHeight;
+    model.footerItemPosition = model.footerItemPosition || { top: yTrans, left: +model.paddingX };
 };
 
 Dressing.prototype.setHeight = function () {
@@ -2785,7 +2809,7 @@ Dressing.prototype.setHeight = function () {
             model.error({ message: 'calculated plot height is less than zero' });
         }
     } else {
-        model.height = this.headerHeight + model.chartHeight + footerHeight;
+        model.height = this.headerHeight + model.chartHeight + footerHeight + model.paddingY*2;
     }
     this.svg.attr('height', Math.ceil(model.height));
 };
@@ -3888,7 +3912,15 @@ module.exports.theme = [
         'id': 'svg',
         'selector': 'svg',
         'attributes': {
-            'background': 'transparent'
+          'background': 'transparent',
+          'padding-y': 10,
+        }
+    },
+    {
+        'id': 'svg-borders',
+        'attributes': {
+            'top': true,
+            'bottom': true
         }
     },
     //lines
@@ -3928,6 +3960,7 @@ module.exports.theme = [
         'attributes': {
             'font-family': 'AvenirHeavy, sans-serif',
             'font-size': 18,
+
             'fill': 'rgba(0, 0, 0, 0.8)'
         }
     },
@@ -3957,6 +3990,7 @@ module.exports.theme = [
     },
     {   'id': 'chart-plot',
         'attributes': {
+            'full-width': true,
             'padding-x': 0.05
         }
     },
@@ -4777,6 +4811,12 @@ function chartWidth(model) {
     if (model.chartWidth) {
         return model.chartWidth;
     }
+
+    var fullWidthChart = themes.check(model.theme, 'chart-plot').attributes['full-width'] || false;
+    if (fullWidthChart) {
+      return model.contentWidth;
+    }
+
     var rightGutter = model.contentWidth < 260 ? 16 : 26;
     if (model.paddingX) rightGutter = 0;
     return model.contentWidth - rightGutter - model.chartPadding * 2;
