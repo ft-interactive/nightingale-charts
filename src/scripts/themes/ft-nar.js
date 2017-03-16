@@ -188,10 +188,10 @@ module.exports.theme = [
     {
       'id' : 'datesFormatter',
       'attributes' : {
-        'decade-long-year' : "%y'",
-        'decade-short-year' : "%y'",
-        'centuries-short-year' : "%y'",
-        'years-short-year' : "%y'"
+        'decade-long-year' : "'%y",
+        'decade-short-year' : "'%y",
+        'centuries-short-year' : "'%y",
+        'years-short-year' : "'%y"
       }
     }
 ];
