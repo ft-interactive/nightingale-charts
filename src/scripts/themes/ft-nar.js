@@ -157,7 +157,8 @@ module.exports.theme = [
         'selector': '.axis .secondary text',
         'attributes': {
             'font-size': 11,
-            'fill': 'rgba(0, 0, 0, 1)'
+            'fill': 'rgba(0, 0, 0, 1)',
+            'text-anchor': 'middle'
         }
     },
     {
