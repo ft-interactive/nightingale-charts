@@ -56,10 +56,29 @@ Dressing.prototype.addHorizontalLine = function (g, id, viewBox){
         });
 };
 
+Dressing.prototype.addVerticalLine = function (g, id, viewBox){
+    return g.append('line')
+        .attr({
+            'id': id,
+            'style': "stroke: black; stroke-width: 1",
+            'x1': 0,
+            'y1': viewBox[3],
+            'fill': g.attr('background'),
+            'transform': this.model.translate({
+                top: 0,
+                left: viewBox[2]
+            })
+        });
+};
+
 Dressing.prototype.addBorders = function () {
   var borderConfig = this.getAttr('svg-borders');
   borderConfig.top ? this.addHorizontalLine(this.svg, 'line-horizontal-header', [0,0, this.model.width, 1]) : null;
   borderConfig.bottom ? this.addHorizontalLine(this.svg, 'line-horizontal-footer', [0,0, this.model.width, this.model.height - 1]) : null;
+
+  // TODO make the borders configurable through the variations
+  borderConfig.left && this.model.width <= 318 ? this.addVerticalLine(this.svg, 'line-vertical-left', [0,0, 0, 20]) : null;
+  borderConfig.right && this.model.width <= 318 ? this.addVerticalLine(this.svg, 'line-vertical-right', [0,0, this.model.width, 20]) : null;
 };
 
 Dressing.prototype.addHeader = function () {
