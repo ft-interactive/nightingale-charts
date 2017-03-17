@@ -31,8 +31,8 @@ module.exports.theme = [
         'id': 'svg',
         'attributes': {
             background: 'none',
-            'padding-y': 10,
-            'padding-x': 10
+            'padding-y': 10
+
         }
     },
     {

@@ -23,7 +23,6 @@ function chartWidth(model) {
     }
 
     var rightGutter = model.contentWidth < 260 ? 16 : 26;
-    var padding = model.chartPadding;
 
     var fullWidthChart = themes.check(model.theme, 'chart-plot').attributes['full-width'] || false;
     if (fullWidthChart) {
@@ -31,9 +30,8 @@ function chartWidth(model) {
     }
 
     if (model.paddingX) rightGutter = 0;
-    if (model.paddingX > 0) padding = model.paddingX;
 
-    return model.contentWidth - rightGutter - padding * 2;
+    return model.contentWidth - rightGutter - model.chartPadding * 2;
 }
 
 function setExtents(model){
