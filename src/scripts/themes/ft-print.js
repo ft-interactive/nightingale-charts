@@ -31,13 +31,23 @@ module.exports.theme = [
         'id': 'svg',
         'attributes': {
             background: 'none',
-            'padding-y': 10
+            'padding-y': 10,
+            'padding-x': 10,
+            'padding': 10
 
+        }
+    },
+    {
+        'id': 'chart',
+        'attributes': {
+            'padding': 10
         }
     },
     {
         'id': 'svg-borders',
         'attributes': {
+            'max-width': 318,
+            'stroke-width': '0.3',
             'top': true,
             'bottom': true,
             'left': true,

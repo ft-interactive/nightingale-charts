@@ -42,10 +42,11 @@ Dressing.prototype.addBackground = function (g, viewBox){
 };
 
 Dressing.prototype.addHorizontalLine = function (g, id, viewBox){
+    var strokeWidth = this.getAttr('svg-borders')['stroke-width'] || 1;
     return g.append('line')
         .attr({
             'id': id,
-            'style': "stroke: black; stroke-width: 1",
+            'style': "stroke: black; stroke-width: " + strokeWidth,
             'x1': viewBox[2],
             'y1': 0,
             'fill': g.attr('background'),
@@ -57,10 +58,11 @@ Dressing.prototype.addHorizontalLine = function (g, id, viewBox){
 };
 
 Dressing.prototype.addVerticalLine = function (g, id, viewBox){
+    var strokeWidth = this.getAttr('svg-borders')['stroke-width'] || 1;
     return g.append('line')
         .attr({
             'id': id,
-            'style': "stroke: black; stroke-width: 1",
+            'style': "stroke: black; stroke-width: " + strokeWidth,
             'x1': 0,
             'y1': viewBox[3],
             'fill': g.attr('background'),
@@ -73,12 +75,12 @@ Dressing.prototype.addVerticalLine = function (g, id, viewBox){
 
 Dressing.prototype.addBorders = function () {
   var borderConfig = this.getAttr('svg-borders');
-  borderConfig.top ? this.addHorizontalLine(this.svg, 'line-horizontal-header', [0,0, this.model.width, 1]) : null;
-  borderConfig.bottom ? this.addHorizontalLine(this.svg, 'line-horizontal-footer', [0,0, this.model.width, this.model.height - 1]) : null;
+  var maxWidth =  borderConfig['max-width'] || 1000;
 
-  // TODO make the borders configurable through the variations
-  borderConfig.left && this.model.width <= 318 ? this.addVerticalLine(this.svg, 'line-vertical-left', [0,0, 0, 20]) : null;
-  borderConfig.right && this.model.width <= 318 ? this.addVerticalLine(this.svg, 'line-vertical-right', [0,0, this.model.width, 20]) : null;
+  borderConfig.top && this.model.width <= maxWidth ? this.addHorizontalLine(this.svg, 'line-horizontal-header', [0,0, this.model.width, 0]) : null;
+  borderConfig.bottom && this.model.width <= maxWidth ? this.addHorizontalLine(this.svg, 'line-horizontal-footer', [0,0, this.model.width, this.model.height - 0]) : null;
+  borderConfig.left && this.model.width <= maxWidth ? this.addVerticalLine(this.svg, 'line-vertical-left', [0,0, 0, 20]) : null;
+  borderConfig.right && this.model.width <= maxWidth ? this.addVerticalLine(this.svg, 'line-vertical-right', [0,0, this.model.width, 20]) : null;
 };
 
 Dressing.prototype.addHeader = function () {
