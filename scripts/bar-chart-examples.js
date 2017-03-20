@@ -3882,13 +3882,13 @@ module.exports = function(open, close) {
 },{"./discontinuableDateTime":30,"./discontinuityProviders/intra-day":32,"./discontinuityProviders/skipWeekends":33}],36:[function(require,module,exports){
 var colours = {
     line: [
-        '#154577', '#58BDBB', '#009A8E', '#B0D480', '#F9A71A', '#EE5427', '#AC252A'
+        '#154577', '#58bdbb', '#cabd92', '#ac252a', '#ee5427', '#f9a71a'
     ],
     column: [
-        '#154577', '#58BDBB', '#009A8E', '#B0D480', '#F9A71A', '#EE5427', '#AC252A', '#b8b1a9'
+        '#154577', '#58bdbb', '#cabd92', '#ac252a', '#ee5427', '#f9a71a'
     ],
     bar: [
-        '#154577', '#58BDBB', '#009A8E', '#B0D480', '#F9A71A', '#EE5427', '#AC252A', '#b8b1a9'
+        '#154577', '#58bdbb', '#cabd92', '#ac252a', '#ee5427', '#f9a71a'
     ],
     accent: '#154577'
 };
