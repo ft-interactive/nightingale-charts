@@ -30,7 +30,28 @@ module.exports.theme = [
     {
         'id': 'svg',
         'attributes': {
-            background: 'none'
+            background: 'none',
+            'padding-y': 10,
+            'padding-x': 10,
+            'padding': 10
+
+        }
+    },
+    {
+        'id': 'chart',
+        'attributes': {
+            'padding': 10
+        }
+    },
+    {
+        'id': 'svg-borders',
+        'attributes': {
+            'max-width': 318,
+            'stroke-width': '0.3',
+            'top': true,
+            'bottom': true,
+            'left': true,
+            'right': true
         }
     },
     //lines
@@ -70,16 +91,16 @@ module.exports.theme = [
         'attributes': {
             'font-family': 'MetricWebSemiBold, sans-serif',
             'font-size': '12',
-            'line-height': 12,
-            'font-weight': 400,
+            'line-height': '12',
+            'font-weight': 600,
             'fill': 'rgba(0, 0, 0, 1)'
         }
     },
     {   'id': 'chart-subtitle',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
-            'font-size': '9.2',
-            'line-height': 12,
+            'font-size': '9.6',
+            'line-height': 11,
             'font-weight': 400,
             'fill': 'rgba(0, 0, 0, 1)'
         }
@@ -87,8 +108,8 @@ module.exports.theme = [
     {   'id': 'key',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
-            'font-size': '9.2',
-            'line-height': 16,
+            'font-size': '9.6',
+            'line-height': 11,
             'font-weight': 400,
             'padding': 3,
             'background': 'white',
@@ -106,8 +127,8 @@ module.exports.theme = [
         'id': 'chart-footnote',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
-            'font-size': '9.6',
-            'line-height': 16,
+            'font-size': '7.2',
+            'line-height': 11,
             'font-weight': 400
         }
     },
@@ -141,6 +162,7 @@ module.exports.theme = [
     {   'id': 'axis-text',
         'attributes': {
             'font-size': '9.6',
+            'line-height': 11,
             'font-family': 'MetricWeb, sans-serif',
             'stroke': 'none',
             'font-weight': 400,
@@ -150,6 +172,7 @@ module.exports.theme = [
     {   'id': 'axis-secondary-text',
         'attributes': {
             'font-size': '9.6',
+            'line-height': 11,
             'font-family': 'MetricWeb, sans-serif',
             'font-weight': 400,
             'fill': 'rgba(0, 0, 0, 0.8)'
