@@ -2651,10 +2651,11 @@ Dressing.prototype.addBackground = function (g, viewBox){
 };
 
 Dressing.prototype.addHorizontalLine = function (g, id, viewBox){
+    var strokeWidth = this.getAttr('svg-borders')['stroke-width'] || 1;
     return g.append('line')
         .attr({
             'id': id,
-            'style': "stroke: black; stroke-width: 1",
+            'style': "stroke: black; stroke-width: " + strokeWidth,
             'x1': viewBox[2],
             'y1': 0,
             'fill': g.attr('background'),
@@ -2665,10 +2666,30 @@ Dressing.prototype.addHorizontalLine = function (g, id, viewBox){
         });
 };
 
+Dressing.prototype.addVerticalLine = function (g, id, viewBox){
+    var strokeWidth = this.getAttr('svg-borders')['stroke-width'] || 1;
+    return g.append('line')
+        .attr({
+            'id': id,
+            'style': "stroke: black; stroke-width: " + strokeWidth,
+            'x1': 0,
+            'y1': viewBox[3],
+            'fill': g.attr('background'),
+            'transform': this.model.translate({
+                top: 0,
+                left: viewBox[2]
+            })
+        });
+};
+
 Dressing.prototype.addBorders = function () {
   var borderConfig = this.getAttr('svg-borders');
-  borderConfig.top ? this.addHorizontalLine(this.svg, 'line-horizontal-header', [0,0, this.model.width, 1]) : null;
-  borderConfig.bottom ? this.addHorizontalLine(this.svg, 'line-horizontal-footer', [0,0, this.model.width, this.model.height - 1]) : null;
+  var maxWidth =  borderConfig['max-width'] || 1000;
+
+  borderConfig.top && this.model.width <= maxWidth ? this.addHorizontalLine(this.svg, 'line-horizontal-header', [0,0, this.model.width, 0]) : null;
+  borderConfig.bottom && this.model.width <= maxWidth ? this.addHorizontalLine(this.svg, 'line-horizontal-footer', [0,0, this.model.width, this.model.height - 0]) : null;
+  borderConfig.left && this.model.width <= maxWidth ? this.addVerticalLine(this.svg, 'line-vertical-left', [0,0, 0, 20]) : null;
+  borderConfig.right && this.model.width <= maxWidth ? this.addVerticalLine(this.svg, 'line-vertical-right', [0,0, this.model.width, 20]) : null;
 };
 
 Dressing.prototype.addHeader = function () {
@@ -4122,7 +4143,28 @@ module.exports.theme = [
     {
         'id': 'svg',
         'attributes': {
-            background: 'none'
+            background: 'none',
+            'padding-y': 10,
+            'padding-x': 10,
+            'padding': 10
+
+        }
+    },
+    {
+        'id': 'chart',
+        'attributes': {
+            'padding': 10
+        }
+    },
+    {
+        'id': 'svg-borders',
+        'attributes': {
+            'max-width': 318,
+            'stroke-width': '0.3',
+            'top': true,
+            'bottom': true,
+            'left': true,
+            'right': true
         }
     },
     //lines
@@ -4162,16 +4204,16 @@ module.exports.theme = [
         'attributes': {
             'font-family': 'MetricWebSemiBold, sans-serif',
             'font-size': '12',
-            'line-height': 12,
-            'font-weight': 400,
+            'line-height': '12',
+            'font-weight': 600,
             'fill': 'rgba(0, 0, 0, 1)'
         }
     },
     {   'id': 'chart-subtitle',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
-            'font-size': '9.2',
-            'line-height': 12,
+            'font-size': '9.6',
+            'line-height': 11,
             'font-weight': 400,
             'fill': 'rgba(0, 0, 0, 1)'
         }
@@ -4179,8 +4221,8 @@ module.exports.theme = [
     {   'id': 'key',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
-            'font-size': '9.2',
-            'line-height': 16,
+            'font-size': '9.6',
+            'line-height': 11,
             'font-weight': 400,
             'padding': 3,
             'background': 'white',
@@ -4198,8 +4240,8 @@ module.exports.theme = [
         'id': 'chart-footnote',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
-            'font-size': '9.6',
-            'line-height': 16,
+            'font-size': '7.2',
+            'line-height': 11,
             'font-weight': 400
         }
     },
@@ -4233,6 +4275,7 @@ module.exports.theme = [
     {   'id': 'axis-text',
         'attributes': {
             'font-size': '9.6',
+            'line-height': 11,
             'font-family': 'MetricWeb, sans-serif',
             'stroke': 'none',
             'font-weight': 400,
@@ -4242,6 +4285,7 @@ module.exports.theme = [
     {   'id': 'axis-secondary-text',
         'attributes': {
             'font-size': '9.6',
+            'line-height': 11,
             'font-family': 'MetricWeb, sans-serif',
             'font-weight': 400,
             'fill': 'rgba(0, 0, 0, 0.8)'
@@ -4813,12 +4857,14 @@ function chartWidth(model) {
     }
 
     var rightGutter = model.contentWidth < 260 ? 16 : 26;
+
     var fullWidthChart = themes.check(model.theme, 'chart-plot').attributes['full-width'] || false;
     if (fullWidthChart) {
       return model.chartType === 'bar' ? model.contentWidth - rightGutter : model.contentWidth;
     }
 
     if (model.paddingX) rightGutter = 0;
+
     return model.contentWidth - rightGutter - model.chartPadding * 2;
 }
 
