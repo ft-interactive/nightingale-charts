@@ -30,7 +30,7 @@ module.exports.theme = [
         'id': 'svg',
         'selector': 'svg',
         'attributes': {
-          'background': 'transparent',
+          'background': 'none',
           'padding-y': 10,
         }
     },
@@ -78,7 +78,7 @@ module.exports.theme = [
         'attributes': {
             'font-family': 'AvenirHeavy, sans-serif',
             'font-size': 18,
-
+            'font-weight': 600,
             'fill': 'rgba(0, 0, 0, 0.8)'
         }
     },
@@ -86,6 +86,7 @@ module.exports.theme = [
         'attributes': {
             'font-family': 'AvenirLightOblique, sans-serif',
             'font-size': 13,
+            'font-style':'italic',
             'fill': 'rgba(0, 0, 0, 0.8)'
         }
     },
@@ -93,16 +94,18 @@ module.exports.theme = [
         'attributes': {
             'font-family': 'AvenirLightOblique, sans-serif',
             'font-size': 11,
+            'font-style':'italic',
             'line-height': 12,
-            'fill': 'rgba(0, 0, 0, 1)'
+            'fill': '#000000'
         }
     },
     {   'id': 'chart-footnote',
         'attributes': {
             'font-family': 'AvenirLightOblique, sans-serif',
             'font-size': 11,
+            'font-style':'italic',
             'line-height': 12,
-            'fill': 'rgba(0, 0, 0, 1)',
+            'fill': '#000000',
             'padding-y': 5
         }
     },
@@ -117,28 +120,31 @@ module.exports.theme = [
             'font-family': 'AvenirLight, sans-serif',
             'font-size': 13,
             'line-height': 16,
-            'fill': 'rgba(0, 0, 0, 0.8)',
+            'fill': '#000000',
+            'stroke-opacity':'0.8',
             'padding-y': 8
         }
     },
     {   'id': 'independent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': 'rgba(0, 0, 0, 0.3)',
+            'stroke': '#000000',
+            'stroke-opacity':'0.3',
             'stroke-width': 1
         }
     },
     {   'id': 'dependent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': 'rgba(0, 0, 0, 0.1)',
+            'stroke': '#000000',
+            'stroke-opacity':'0.1',
             'stroke-width': 1
         }
     },
     {   'id': 'origin-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': 'rgba(0, 0, 0, 1)',
+            'stroke': '#000000',
             'stroke-width': 1
         }
     },
@@ -160,14 +166,15 @@ module.exports.theme = [
             'font-size': 13,
             'font-family': 'AvenirLight, sans-serif',
             'stroke': 'none',
-            'fill': 'rgba(0, 0, 0, 1)'
+            'fill': '#000000'
         }
     },
     {   'id': 'axis-secondary-text',
         'selector': '.axis .secondary text',
         'attributes': {
-            'font-size': 11,
-            'fill': 'rgba(0, 0, 0, 1)',
+            'font-family': 'AvenirLight, sans-serif',
+            'font-size': 13,
+            'fill': '#000000',
             'text-anchor': 'middle'
         }
     },
