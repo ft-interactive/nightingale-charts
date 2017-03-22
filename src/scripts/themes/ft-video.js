@@ -129,7 +129,7 @@ module.exports.theme = [
             'font-size': 20,
             'padding': PADDING,
             'font-weight': '600',
-            'fill': 'rgba(255, 255, 255, 1)',
+            'fill': '#ffffff',
             'background': 'rgb(124,120,119)'
         }
     },
@@ -175,21 +175,21 @@ module.exports.theme = [
     {   'id': 'dependent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': 'rgba(255, 255, 255, 1)',
+            'stroke': '#ffffff',
             'stroke-width': 2
         }
     },
     {   'id': 'independent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': 'rgba(255, 255, 255, 1)',
+            'stroke': '#ffffff',
             'stroke-width': 2
         }
     },
     {   'id': 'origin-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': 'rgba(255, 255, 255, 1)',
+            'stroke': '#ffffff',
             'stroke-width': 2
         }
     },

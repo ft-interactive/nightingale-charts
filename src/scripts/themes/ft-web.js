@@ -107,21 +107,24 @@ module.exports.theme = [
     {   'id': 'independent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': 'rgba(0, 0, 0, 0.3)',
+            'stroke': '#000000',
+            'stroke-opacity':'0.3',
             'stroke-dasharray': 'none'
         }
     },
     {   'id': 'dependent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': 'rgba(0, 0, 0, 0.1)',
+            'stroke': '#000000',
+            'stroke-opacity':'0.1',
             'stroke-dasharray': '2 2'
         }
     },
     {   'id': 'origin-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': 'rgba(0, 0, 0, 0.3)',
+            'stroke': '#000000',
+            'stroke-opacity':'0.3',
             'stroke-dasharray': 'none'
         }
     },
