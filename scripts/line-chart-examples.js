@@ -3981,7 +3981,7 @@ module.exports.theme = [
         'attributes': {
             'font-family': 'AvenirHeavy, sans-serif',
             'font-size': 18,
-            'font-weight': 600,
+            'font-weight': 900,
             'fill': 'rgba(0, 0, 0, 0.8)'
         }
     },
