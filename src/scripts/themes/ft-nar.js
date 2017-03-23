@@ -145,7 +145,8 @@ module.exports.theme = [
         'attributes': {
             'shape-rendering': 'crispEdges',
             'stroke': '#000000',
-            'stroke-width': 1
+            'stroke-width': 1,
+            'stroke-opacity': 1
         }
     },
     // Controls whether the tick is a line or circle
