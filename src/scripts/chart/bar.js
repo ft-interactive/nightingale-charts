@@ -151,8 +151,8 @@ function barChart(g){
     !model.keyHover && dressing.addSeriesKey();
     dressing.addFooter();
 		dressing.addBorders();
-		
-	var chartSVG = svg.append('g').attr('class', 'chart');
+
+		var chartSVG = svg.append('g').attr('class', 'chart');
     chartSVG.attr('transform', model.translate(model.chartPosition));
 
     model.tickSize = 0;
