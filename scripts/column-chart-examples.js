@@ -2139,8 +2139,8 @@ function barChart(g){
     !model.keyHover && dressing.addSeriesKey();
     dressing.addFooter();
 		dressing.addBorders();
-		
-	var chartSVG = svg.append('g').attr('class', 'chart');
+
+		var chartSVG = svg.append('g').attr('class', 'chart');
     chartSVG.attr('transform', model.translate(model.chartPosition));
 
     model.tickSize = 0;
@@ -2499,7 +2499,8 @@ function lineChart(g) {
 
     // Set up the SVG to plot the line
     var axisLayer = themes.check(model.theme, 'axis-layer').attributes.position || 'back';
-    var plotSVG = axisLayer === 'front' ? chartSVG.insert('g', ':first-child').attr('class', 'plot') : chartSVG.append('g').attr('class', 'plot');
+    var plotSVG = axisLayer === 'front' ? chartSVG.insert('g', '.axis--independent.axis').attr('class', 'plot') : chartSVG.append('g').attr('class', 'plot');
+
 
     var i = model.y.series.length;
     var lineAttr = extend(
