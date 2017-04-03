@@ -23,6 +23,8 @@ var baseConfig = objectAssign({}, chartConfig, {
   width : size.width
 })
 
+console.log('data', fixtures[index].data)
+
 // Web Theme
 var chartBasic = d3.select('#web').append('div').data([baseConfig]);
 

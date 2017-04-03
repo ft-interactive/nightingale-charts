@@ -20,16 +20,13 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
         .attr('data-value', function (d){return d.value;})
         .attr('x', function (d, i){
 					if (model.stack) {
-						return plot.x(d.value, i, getStackedWidth(model.data, model.stacks, d.key, d.value, model.x.series.key));
+						return plot.x(d.value, i, getXPosition(model.data, model.stacks, d.key, d.value, model.x.series.key));
 					}
 					return plot.x(d.value, i);
 				})
         .attr('y', function (d, i){ return plot.y(d.key, seriesNumber); })
         .attr('height', function (d, i){ return plot.barHeight(d, i); })
         .attr('width', function (d, i){
-					if (model.stack) {
-						return plot.barWidth(getStackedWidth(model.data, model.stacks, d.key, d.value, model.x.series.key));
-					}
 					return plot.barWidth(d.value);
 				})
         .attr(attr);
@@ -91,43 +88,40 @@ function formatData(model, series) {
     return data;
 }
 
-function getStackedWidth(data, stacks, key, val, xKey) {
+function getXPosition(data, stacks, key, val, xKey) {
 	var value = isNaN(val) ? 0 : val;
-	var width;
+	var height;
 	var seriesKey;
-	function calculateWidth(val, nextVal, previousVal) {
-		if (val < 0 && previousVal >= 0) {
-			return val;
-		} else if (val >= 0 && nextVal < 0) {
-			return val;
-		} else if (val < 0 && nextVal < 0) {
-			return val - nextVal;
-		}
-		return val - nextVal;
+	var positiveStack = [];
+	var negativeStack = [];
+
+	function mapStacks (dataArray) {
+			var valueIndex = dataArray.indexOf(value)
+			var sumPrev;
+
+			if (valueIndex === 0) {
+				// Do and return nothing we want this to be undefined in
+				// plot.js - Plot.prototype.yDependent()
+			} else {
+				var slicedArray = dataArray.slice(0, valueIndex);
+				sumPrev = slicedArray.reduce(function (a, b) {
+				    return a + b;
+				});
+				return value < 0 ? sumPrev : value - sumPrev;
+			}
 	}
+
 	data.map(function(d, i) {
 		if (d[xKey] === key) {
 			seriesKey = i;
 		}
 	});
-	stacks[seriesKey].sort(function(a, b) {
-		return b-a;
-	}).map(function(data, i) {
-		var isValuePositive = data < 0 ? false : true;
-		var previousVal = stacks[seriesKey][i-1];
-		if (data === value) {
-			if (isValuePositive && stacks[seriesKey][i+1] !== undefined) {
-				width = calculateWidth(value, stacks[seriesKey][i+1], previousVal);
-			} else if (isValuePositive && stacks[seriesKey][i+1] === undefined) {
-				width = calculateWidth(value, 0, previousVal);
-			} else if (!isValuePositive && stacks[seriesKey][i-1] !== undefined) {
-				width = calculateWidth(value, stacks[seriesKey][i-1], previousVal);
-			} else if (!isValuePositive && stacks[seriesKey][i-1] === undefined) {
-				width = calculateWidth(value, 0, previousVal);
-			}
-		}
+
+	stacks[seriesKey].map(function(data, i) {
+		data < 0 ? negativeStack.push(data) : positiveStack.push(data)
 	});
-	return isNaN(width) ? 0 : width;
+
+	return value < 0 ? mapStacks(negativeStack) : mapStacks(positiveStack);
 }
 
 function barChart(g){
