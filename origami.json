@@ -4,7 +4,8 @@
     "browserFeatures": {
         "required": [
             "svg",
-            "Object.assign"
+            "Object.assign",
+            "Function.prototype.bind"
         ]
     },
     "description": "FT style charts, axes, scales etc",

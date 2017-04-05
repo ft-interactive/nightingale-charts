@@ -1,7 +1,7 @@
 // /* globals: casper */
-var phantomcss = require('../phantomcss.conf.js')(casper);
+const phantomcss = require('../phantomcss.conf.js')(casper);
 
-casper.test.begin('Number Axes', function (test) {
+casper.test.begin('Number Axes', function () {
     casper
         .start('http://localhost:3000//number-axes.html')
         .viewport(1024, 768)
@@ -22,17 +22,3 @@ casper.test.begin('Number Axes', function (test) {
             casper.test.done();
         });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-

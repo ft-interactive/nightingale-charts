@@ -1,7 +1,7 @@
-var d3 = require('d3');
 
-function stackSeries(model, value, stack){
-    if(!model.stacks )        model.stacks = [];
+// What does this function do? It's not exported or called by anything!
+function stackSeries(model, value, stack){ // eslint-disable-line no-unused-vars
+    if(!model.stacks ) model.stacks = [];
     if (!model.stacks[stack]) model.stacks[stack] = [];
     model.stacks[stack].push(value);
     return model.stacks[stack];
@@ -21,7 +21,7 @@ Plot.prototype.barWidth = function(value) {
 };
 
 Plot.prototype.columnWidth = function (){
-    var size = 20;
+    let size = 20;
     if (this.axes.independentAxisScale.rangeBand) {
         size = this.axes.independentAxisScale.rangeBand();
     }
@@ -32,7 +32,7 @@ Plot.prototype.columnWidth = function (){
 };
 
 Plot.prototype.barHeight = function() {
-    var size = 20;
+    let size = 20;
     if (this.axes.independentAxisScale.rangeBand) {
         size = this.axes.independentAxisScale.rangeBand();
     }
@@ -59,8 +59,8 @@ Plot.prototype.y = function(){
 };
 
 Plot.prototype.xDependent = function(value, stack, width) {
-    if (this.model.chartType == 'line') return this.axes.dependentAxisScale(value);
-    var maxValue = Math.min(0, value);
+    if (this.model.chartType === 'line') return this.axes.dependentAxisScale(value);
+    let maxValue = Math.min(0, value);
     if (this.model.stack && width !== undefined) {
       maxValue = value < 0 ? Math.min(0, value) : Math.max(0, value - width);
     }
@@ -68,8 +68,8 @@ Plot.prototype.xDependent = function(value, stack, width) {
 };
 
 Plot.prototype.yDependent = function(value, stack, height) {
-    if (this.model.chartType == 'line') return this.axes.dependentAxisScale(value);
-    var maxValue = Math.max(0, value);
+    if (this.model.chartType === 'line') return this.axes.dependentAxisScale(value);
+    let maxValue = Math.max(0, value);
     if (this.model.stack && height !== undefined) {
       maxValue = value < 0 && value !== height ? Math.min(0, value - height) : Math.max(0, value);
     }
@@ -77,8 +77,8 @@ Plot.prototype.yDependent = function(value, stack, height) {
 };
 
 Plot.prototype.xIndependent = function(key, seriesNumber) {
-    var position = this.axes.independentAxisScale(key);
-    var adjust = 0;
+    const position = this.axes.independentAxisScale(key);
+    let adjust = 0;
     if (this.axes.independentAxisScale.rangeBand && !this.model.stack) {
         adjust = (this.axes.independentAxisScale.rangeBand() / this.model.y.series.length) ;
     }
@@ -86,8 +86,8 @@ Plot.prototype.xIndependent = function(key, seriesNumber) {
 };
 
 Plot.prototype.yIndependent = function(key, seriesNumber) {
-    var position = this.axes.independentAxisScale(key);
-    var adjust = 0;
+    const position = this.axes.independentAxisScale(key);
+    let adjust = 0;
     if (this.axes.independentAxisScale.rangeBand && !this.model.stack) {
         adjust = (this.axes.independentAxisScale.rangeBand() / this.model.y.series.length) ;
     }

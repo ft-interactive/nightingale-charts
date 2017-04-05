@@ -1,5 +1,5 @@
 module.exports = function(config) {
-    var karmaConfig = {
+    const karmaConfig = {
         basePath: '..',
         browsers: ['Chrome'],
         frameworks: ['jasmine', 'browserify'],
@@ -28,7 +28,7 @@ module.exports = function(config) {
         ],
         browserNoActivityTimeout: 30000
     };
-    var pkg = require('../package.json');
+    const pkg = require('../package.json');
     karmaConfig.browser = pkg.browser || {};
     karmaConfig["browserify-shim"] = pkg["browserify-shim"] || {};
     karmaConfig.browserify = pkg.browserify || {};

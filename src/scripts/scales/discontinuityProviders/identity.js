@@ -1,6 +1,3 @@
-var d3 = require('d3');
-
-
 /**
     # Discontinuity Providers
 
@@ -19,10 +16,12 @@ var d3 = require('d3');
      + `offset` - When given a date and a number of milliseconds, the date should be advanced by the number of milliseconds, skipping
      any discontinuities, to return the final date.
      + `copy` - When the `dateTime` scale is copied, the discontinuity provider is also copied.
+
+    @returns {object} Identity
  */
 module.exports = function() {
 
-    var identity = {};
+    const identity = {};
 
     identity.distance = function(startDate, endDate) {
         return endDate.getTime() - startDate.getTime();

@@ -1,5 +1,5 @@
-var fs = require( 'fs' );
-var phantomcss = require(fs.workingDirectory + '/node_modules/phantomcss');
+const fs = require( 'fs' );
+const phantomcss = require(fs.workingDirectory + '/node_modules/phantomcss');
 
 module.exports = function phantom(casper){
 

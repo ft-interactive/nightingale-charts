@@ -1,12 +1,11 @@
-var oCharts = require('../../../src/scripts/nightingale-charts');
-var dateUtils = oCharts.util.dates;
-var d3 = require('d3');
+const oCharts = require('../../../src/scripts/nightingale-charts');
+const d3 = require('d3');
 
-var margin = {
+const margin = {
     top:20, left:50, bottom:40, right:75
 };
 
-var fixtures = {
+const fixtures = {
     days: [
         { date: new Date('5/07/2014'), value:      0.368069},
         { date: new Date('5/08/2014'), value: 0.472146},
@@ -329,7 +328,7 @@ var fixtures = {
     ]
 };
 
-var units = {
+const units = {
     days: ['daily', 'monthly', 'yearly'],
     "many-weeks": ['daily', 'monthly', 'yearly'],
     weeks: ['weekly', 'monthly', 'yearly'],
@@ -344,54 +343,54 @@ var units = {
 };
 
 
-var xSeriesData = {
+const xSeriesData = {
     categories: {key:'key', label:'Colours'},
     manyCategories: {key:'key', label:'Colours'}
 };
 
-var nesting = {
+const nesting = {
     days: function(d) {
-        var str = d3.time.format('%e %b %Y')(d.date);
+        let str = d3.time.format('%e %b %Y')(d.date);
         if (str[0] === ' ') str = str.substring(1);
         return str;
     },
     "many-days": function(d) {
-        var str = d3.time.format('%e %b %Y')(d.date);
+        let str = d3.time.format('%e %b %Y')(d.date);
         if (str[0] === ' ') str = str.substring(1);
         return str;
     },
     weeks: function(d) { return d3.time.format('%W %b %Y')(d.date); },
     "many-weeks": function(d) { return d3.time.format('%W %b %Y')(d.date); },
-    quarters: function(d)       { return 'Q' + Math.floor((d.date.getMonth()+3)/3) + ' ' + (d.date.getYear() + 1900);  },
-    "many-quarters": function(d){ return 'Q' + Math.floor((d.date.getMonth()+3)/3) + ' ' + (d.date.getYear() + 1900);  },
-    months: function(d)          { return d3.time.format('%b %Y')(d.date);  },
-    "many-months": function(d)  { return d3.time.format('%b %Y')(d.date);  },
-    "many-many-months": function(d)  { return d3.time.format('%b %Y')(d.date);  },
-    years: function(d)          { return d3.time.format('%Y')(d.date);  },
-    "many-years": function(d)   { return d3.time.format('%Y')(d.date);  }
+    quarters: function(d) { return 'Q' + Math.floor((d.date.getMonth()+3)/3) + ' ' + (d.date.getYear() + 1900); },
+    "many-quarters": function(d){ return 'Q' + Math.floor((d.date.getMonth()+3)/3) + ' ' + (d.date.getYear() + 1900); },
+    months: function(d) { return d3.time.format('%b %Y')(d.date); },
+    "many-months": function(d) { return d3.time.format('%b %Y')(d.date); },
+    "many-many-months": function(d) { return d3.time.format('%b %Y')(d.date); },
+    years: function(d) { return d3.time.format('%Y')(d.date); },
+    "many-years": function(d) { return d3.time.format('%Y')(d.date); }
 };
 
 function drawDemo(timeFrame, model){
-    d3.select('#column-chart__'  + timeFrame).append('svg')
+    d3.select('#column-chart__' + timeFrame).append('svg')
         .attr('width', function (d) {
-            var width = margin.left + margin.right;
-            if (d.orient =='bottom') {
-                var r = d.scale.range();
+            let width = margin.left + margin.right;
+            if (d.orient ==='bottom') {
+                const r = d.scale.range();
                 width += (r[r.length-1] - r[0]);
             }
             return width;
         })
         .attr('height', function (d) {
-            var height = margin.top + margin.bottom;
-            if (d.orient == 'left') {
-                var r = d.scale.range();
+            let height = margin.top + margin.bottom;
+            if (d.orient === 'left') {
+                const r = d.scale.range();
                 height += r[0] + r[r.length-1];
             }
-            return height
+            return height;
         })
 
-        .each(function (d, i) {
-            var axis = oCharts.axis.category(model)
+        .each(function (d) {
+            const axis = oCharts.axis.category(model)
                 .dataType(d.dataType)
                 .orient(d.orient)
                 .scale(d.scale, d.units);
@@ -407,25 +406,25 @@ module.exports = {
     fixtures: fixtures,
     init: function(){
 
-        var demos = ['days', 'many-days', 'weeks', 'many-weeks', 'months', 'many-months', 'quarters', 'many-quarters','years','many-years', 'categories', 'manyCategories'];
-        var demoThemes = [
+        const demos = ['days', 'many-days', 'weeks', 'many-weeks', 'months', 'many-months', 'quarters', 'many-quarters','years','many-years', 'categories', 'manyCategories'];
+        const demoThemes = [
           'ft-web',
           'ft-nar'
         ];
         demos.forEach(function(timeFrame){
 
           demoThemes.forEach(function(theme) {
-              var model = {
+              const model = {
                 theme: theme
               };
 
-              var nestedFixture = (nesting[timeFrame]) ?
+              const nestedFixture = (nesting[timeFrame]) ?
                   d3.nest()
                       .key(nesting[timeFrame])
                       .entries(fixtures[timeFrame]) :
                   fixtures[timeFrame];
 
-              var data = {
+              const data = {
                   title: 'Grouped Date Series: ' + timeFrame,
                   x:{
                       series: xSeriesData[timeFrame] || {key:'date', label:'year'}
@@ -445,7 +444,7 @@ module.exports = {
                   .data([data])
                   .append('h2')
                   .text(function (d) {
-                      return d.title
+                      return d.title;
                   });
 
               data.orient = 'bottom';

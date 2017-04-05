@@ -7,8 +7,16 @@ describe('When the date axis is', function () {
     });
 
     describe('a day or less,', function () {
-        var dayOrLess, x, ticks, labels, firstTick, finalTick, firstTickLine,
-            firstTickLabel, finalTickLine, finalTickLabel;
+        let dayOrLess;
+        let x;
+        let ticks;
+        let labels;
+        let firstTick;
+        let finalTick;
+        let firstTickLine;
+        let firstTickLabel; // eslint-disable-line no-unused-vars
+        let finalTickLine;
+        let finalTickLabel;
 
         beforeEach(function() {
             dayOrLess = document.querySelector('#views .axis-test:nth-child(1) svg');
@@ -52,7 +60,12 @@ describe('When the date axis is', function () {
     });
 
     describe('a day or less (small),', function () {
-        var dayOrLessSmall, x, ticks, labels, firstTick, firstTickLine;
+        let dayOrLessSmall;
+        let x;
+        let ticks;
+        let labels;
+        let firstTick;
+        let firstTickLine;
 
         beforeEach(function() {
 
@@ -86,7 +99,12 @@ describe('When the date axis is', function () {
     });
 
     describe('a few weeks,', function () {
-        var aFewWeeks, x, ticks, labels, firstTick, firstTickLine;
+        let aFewWeeks;
+        let x;
+        let ticks;
+        let labels;
+        let firstTick;
+        let firstTickLine;
 
         beforeEach(function() {
             aFewWeeks = document.querySelector('#views .axis-test:nth-child(2) svg');
@@ -116,7 +134,10 @@ describe('When the date axis is', function () {
     });
 
     describe('a day or less (small) with circle ticks displayed,', function () {
-        var dayOrLessSmall, x, labels, circleTicks;
+        let dayOrLessSmall;
+        let x;
+        let labels;
+        let circleTicks;
 
         beforeEach(function() {
             dayOrLessSmall = document.querySelector('#viewsCircle .axis-test:nth-child(1) svg');
@@ -146,7 +167,10 @@ describe('When the date axis is', function () {
     });
 
     describe('a few weeks with circle ticks displayed,', function () {
-        var aFewWeeks, x, labels, circleTicks;
+        let aFewWeeks;
+        let x;
+        let labels; // eslint-disable-line no-unused-vars
+        let circleTicks;
 
         beforeEach(function() {
             aFewWeeks = document.querySelector('#viewsCircle .axis-test:nth-child(2) svg');
@@ -164,7 +188,7 @@ describe('When the date axis is', function () {
         });
 
         it('each circle tick has a radius attribute which equals 2', function () {
-          for (var i = 0; i < circleTicks.length; i++) {
+          for (let i = 0; i < circleTicks.length; i++) {
               expect(circleTicks[i].getAttribute('r')).toBe('2');
           }
         });
@@ -172,7 +196,12 @@ describe('When the date axis is', function () {
     });
 
     describe('between 3 - 15 years,', function () {
-        var threeToFifteenYears, x, ticks, labels, firstTick, firstTickLine;
+        let threeToFifteenYears;
+        let x;
+        let ticks;
+        let labels;
+        let firstTick;
+        let firstTickLine;
 
         beforeEach(function() {
             threeToFifteenYears = document.querySelector('#views .axis-test:nth-child(5) svg');
@@ -217,7 +246,10 @@ describe('When the date axis is', function () {
     });
 
     describe('has 2 ticks very close to each other, ', function () {
-        var overlapping, overlappingX, ticks, overlappingLabels;
+        let overlapping;
+        let overlappingX;
+        let ticks;
+        let overlappingLabels;
 
         beforeEach(function() {
             overlapping = document.querySelector('#viewsSmall .axis-test:nth-child(9) svg');
@@ -238,9 +270,9 @@ describe('When the date axis is', function () {
         });
 
         xit('they should show full label if significant change', function () {
-            var hundreds = document.querySelector('#viewsSmall .axis-test:nth-child(8) svg');
-            var hundredsX = hundreds.querySelector('.x.axis');
-            var hundredsLabels = hundredsX.querySelectorAll('.primary .tick text');
+            const hundreds = document.querySelector('#viewsSmall .axis-test:nth-child(8) svg');
+            const hundredsX = hundreds.querySelector('.x.axis');
+            const hundredsLabels = hundredsX.querySelectorAll('.primary .tick text');
             expect(hundredsLabels[0].textContent).toBe('1500');
             expect(hundredsLabels[3].textContent).toBe('2015');
 
@@ -251,8 +283,8 @@ describe('When the date axis is', function () {
     });
 
     describe('X axis labels', function() {
-        var intersection = require('../../src/scripts/util/labels').intersection;
-        var axes;
+        const intersection = require('../../src/scripts/util/labels').intersection;
+        let axes;
 
         beforeEach(function() {
             axes = document.querySelectorAll('g.x.axis g.primary,g.secondary');
@@ -263,29 +295,33 @@ describe('When the date axis is', function () {
         });
 
         it('should never overlap', function() {
-            var ax, i, j, textLabels, parent;
+            let ax;
+            let i;
+            let j;
+            let textLabels;
+            let parent; // eslint-disable-line no-unused-vars
             for (i = 0; i < axes.length; i ++) {
                 ax = axes[i];
                 textLabels = ax.querySelectorAll('text');
                 for (j = 1; j < textLabels.length; j++) {
-                    var previous = textLabels[j-1].getBoundingClientRect();
-                    var current = textLabels[j].getBoundingClientRect();
+                    const previous = textLabels[j-1].getBoundingClientRect();
+                    const current = textLabels[j].getBoundingClientRect();
                     expect(intersection(previous, current)).toBe(false);
                 }
             }
         });
 
         it('should have no textAnchor', function() {
-            var primaryTicks = document.querySelectorAll('.x.axis .primary .tick text');
-            var secondaryTicks = document.querySelectorAll('.x.axis .secondary .tick text');
+            let primaryTicks = document.querySelectorAll('.x.axis .primary .tick text');
+            let secondaryTicks = document.querySelectorAll('.x.axis .secondary .tick text');
 
             // turn NodeList into Arrays;
             primaryTicks = Array.prototype.slice.call(primaryTicks);
             secondaryTicks = Array.prototype.slice.call(secondaryTicks);
 
-            var ticks = primaryTicks.concat(secondaryTicks);
+            const ticks = primaryTicks.concat(secondaryTicks);
 
-            for (var i = 0; i < ticks.length; i++) {
+            for (let i = 0; i < ticks.length; i++) {
                 expect(ticks[i].style.textAnchor).toEqual("");
             }
         });

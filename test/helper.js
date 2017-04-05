@@ -1,17 +1,22 @@
-function appendCSS(fileObj){
-    var  link = document.createElement('link');
+/**
+ * General helper functions
+ */
+
+// What does this do? It's not used
+function appendCSS(fileObj){ // eslint-disable-line no-unused-vars
+    const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href='base/' + fileObj.path;
-    document.body.appendChild(link)
+    document.body.appendChild(link);
 }
 function appendScript(fileObj){
-    var  link = document.createElement('script');
+    const link = document.createElement('script');
     link.type = 'javascript';
     link.src='base/' + fileObj.path;
-    document.body.appendChild(link)
+    document.body.appendChild(link);
 }
 function loadAssets(page){
-    document.body.innerHTML = __html__['_test/' + (page || 'index') + '.html'];
+    document.body.innerHTML = window.__html__['_test/' + (page || 'index') + '.html'];
     //appendCSS({path: '_test/styles/demo.css'});
     //appendCSS({path: '_test/styles/main.css'});
     appendScript({path: '_site/scripts/vendor.js'});

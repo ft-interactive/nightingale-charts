@@ -1,38 +1,38 @@
-var oCharts = require('../../../main');
-var d3 = require('d3');
-var fixtures = require('./fixtures').lineChart
-var config = require('./config').config
-var utils = require('./utils');
+const oCharts = require('../../../main');
+const d3 = require('d3');
+const fixtures = require('./fixtures').lineChart;
+const config = require('./config').config;
+const utils = require('./utils');
 
 
-var sizes = config.sizes
-var chartConfig = config.lineChart
+const sizes = config.sizes;
+const chartConfig = config.lineChart;
 
 // Fixture index
-var index = Math.floor((Math.random() * fixtures.length));
+const index = Math.floor((Math.random() * fixtures.length));
 
 // Size
-var urlVar = utils.getQueryVariable('size');
-var size = !urlVar ? sizes['medium'] : sizes[urlVar]
+const urlVar = utils.getQueryVariable('size');
+const size = !urlVar ? sizes['medium'] : sizes[urlVar];
 
 // Base config
-var baseConfig = Object.assign({}, chartConfig, {
+const baseConfig = Object.assign({}, chartConfig, {
   data:fixtures[index].data,
   x : fixtures[index].x,
   y : fixtures[index].y,
   width : size.width
-})
+});
 
 // Web Theme
 d3.select('#views').append('div').data([baseConfig]).call(oCharts.chart.line);
 
 // Video Theme
-var videoConfig = Object.assign({}, baseConfig, {
+const videoConfig = Object.assign({}, baseConfig, {
   theme: 'ft-video',
   width: 600,
   height: 338
-})
-var chart = d3.select('#video').append('div').data([videoConfig]);
+});
+const chart = d3.select('#video').append('div').data([videoConfig]);
 
 oCharts.addFont('MetricWebSemiBold')
 .then(function () {
@@ -40,23 +40,23 @@ oCharts.addFont('MetricWebSemiBold')
 });
 
 // Print Theme
-var printConfig = Object.assign({}, baseConfig, {
+const printConfig = Object.assign({}, baseConfig, {
   theme: 'ft-print'
-})
-var printChart = d3.select('#print').append('div').data([printConfig]);
+});
+const printChart = d3.select('#print').append('div').data([printConfig]);
 
 oCharts.addFont(['MetricWeb','MetricWebSemiBold'])
 .then(function () {
-  printChart.call(oCharts.chart.line)
+  printChart.call(oCharts.chart.line);
 });
 
 // NAR Theme
-var narConfig = Object.assign({}, baseConfig, {
+const narConfig = Object.assign({}, baseConfig, {
   theme: 'ft-nar'
-})
-var narChart = d3.select('#nar').append('div').data([narConfig]);
+});
+const narChart = d3.select('#nar').append('div').data([narConfig]);
 
 oCharts.addFont(['AvenirLight', 'AvenirLightOblique', 'AvenirHeavy'])
 .then(function () {
-  narChart.call(oCharts.chart.line)
+  narChart.call(oCharts.chart.line);
 });

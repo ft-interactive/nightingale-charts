@@ -1,11 +1,10 @@
 /* global it, describe, fdescribe, expect */
 
-var intradayScale = require('../../../src/scripts/scales/intra-day');
-var d3 = require('d3');
+const intradayScale = require('../../../src/scripts/scales/intra-day');
 
 describe('intra-day scale', function() {
 
-    var scale = intradayScale("9:00", "18:00");
+    const scale = intradayScale("9:00", "18:00");
     scale.domain([
         new Date("2015-07-13T08:00:00"),
         new Date("2015-07-17T17:00:00")
@@ -13,7 +12,7 @@ describe('intra-day scale', function() {
     .range([0, 1000]);
 
     it('should map to a range correctly', function() {
-        var scaled = scale(new Date("2015-07-13T08:00:00"));
+        let scaled = scale(new Date("2015-07-13T08:00:00"));
         expect(scaled).toEqual(0);
         scaled = scale(new Date("2015-07-17T17:00:00"));
         expect(scaled).toEqual(1000);

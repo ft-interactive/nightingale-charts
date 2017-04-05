@@ -1,5 +1,4 @@
-var numberScale = require('../../../src/scripts/axis/number.scale');
-var d3 = require('d3');
+const numberScale = require('../../../src/scripts/axis/number.scale');
 
 describe('number scale', function () {
 
@@ -11,11 +10,11 @@ describe('number scale', function () {
 
         spyOn(numberScale, 'tickCount').and.callFake(function(){return 10;});
         spyOn(numberScale, 'tickIntervalBoundaries').and.callFake(function(){return 1;});
-        var scale = {
+        const scale = {
             ticks: function(){ return [-3, -2, -1, 0, 1, 2, 3]; },
             domain: function() { return [-3.5,3.5]; }
         };
-        var result = numberScale.detailedTicks(scale, 100);
+        const result = numberScale.detailedTicks(scale, 100);
         expect(result.length).toBe(9);
         expect(result[0]).toBe(-4);
         expect(result[6]).toBe(2);
@@ -27,11 +26,11 @@ describe('number scale', function () {
 
         spyOn(numberScale, 'tickCount').and.callFake(function(){return 5;});
         spyOn(numberScale, 'tickIntervalBoundaries').and.callFake(function(){return 20;});
-        var scale = {
+        const scale = {
             ticks: function(){ return [0, 20, 40, 60]; },
             domain: function() { return [70, 0]; }
         };
-        var result = numberScale.detailedTicks(scale, 100);
+        const result = numberScale.detailedTicks(scale, 100);
         expect(result.length).toBe(6);
         expect(result[0]).toBe(0);
         expect(result[1]).toBe(0);
@@ -44,13 +43,13 @@ describe('number scale', function () {
 
         spyOn(numberScale, 'detailedTicks').and.callFake(function(){return [0, 20, 40, 60,80,0];});
         spyOn(numberScale, 'removeDuplicateTicks').and.callFake(function(){return [0, 20, 40, 60,80,0];});
-        var scale = function () {
+        const scale = function () {
             return {
                 ticks: function(){ return [0, 20, 40, 60]; },
                 domain: function() { return [70, 0]; }
-            }
+            };
         };
-        var config = {axes:{scale:scale}, pixelsPerTick: 100, hardRules: [0], simple:false};
+        const config = {axes:{scale:scale}, pixelsPerTick: 100, hardRules: [0], simple:false};
         numberScale.customTicks(config);
         expect(config.hardRules[0]).toBe(0);
         expect(config.hardRules[1]).toBe(0);
@@ -60,13 +59,13 @@ describe('number scale', function () {
 
         spyOn(numberScale, 'detailedTicks').and.callFake(function(){return [-3, -2, -1, 0, 1, 2, 3, 4, -4];});
         spyOn(numberScale, 'removeDuplicateTicks').and.callFake(function(){return [-3.5,3.5, 4, -4];});
-        var scale = function () {
+        const scale = function () {
             return {
             ticks: function(){ return [-3, -2, -1, 0, 1, 2, 3]; },
             domain: function() { return [-3.5,3.5]; }
-            }
+            };
         };
-        var config = {axes:{scale:scale}, pixelsPerTick: 100, hardRules: [0], simple:false};
+        const config = {axes:{scale:scale}, pixelsPerTick: 100, hardRules: [0], simple:false};
         numberScale.customTicks(config);
         expect(config.hardRules[0]).toBe(0);
         expect(config.hardRules[1]).toBe(-3.5);

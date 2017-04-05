@@ -1,11 +1,11 @@
-var oCharts = require('../../../src/scripts/nightingale-charts');
-var d3 = require('d3');
-var slug = require('slug');
+const oCharts = require('../../../src/scripts/nightingale-charts');
+const d3 = require('d3');
+const slug = require('slug');
 
-var margin = {
+const margin = {
     top: 20, left: 50, bottom: 70, right: 50
 };
-var axesDefinitions = [
+const axesDefinitions = [
     {
         title: 'six or less',
         simple: false,
@@ -60,9 +60,9 @@ var axesDefinitions = [
 
 function createAxesDefArrayOfWidth(axisWidth, axesDefinitionArray) {
 
-    var sizedAxesDefinitions = [];
+    const sizedAxesDefinitions = [];
     axesDefinitionArray.forEach(function (axis) {
-        var sizedAxis = {
+        const sizedAxis = {
             title: axis.title,
             orient: axis.orient,
             simple: axis.simple,
@@ -77,7 +77,7 @@ function createAxesDefArrayOfWidth(axisWidth, axesDefinitionArray) {
 }
 
 function renderAxesArrayIntoDiv(div, axesDefinitionArray) {
-    var divs = d3.select('#views')
+    const divs = d3.select('#views')
         .selectAll('div')
         .data(axesDefinitionArray)
         .enter().append('div')
@@ -85,7 +85,7 @@ function renderAxesArrayIntoDiv(div, axesDefinitionArray) {
 
     divs.append('h2')
         .text(function (d) {
-            return d.title
+            return d.title;
         });
 
     divs.append('svg')
@@ -94,21 +94,21 @@ function renderAxesArrayIntoDiv(div, axesDefinitionArray) {
         })
         .attr('width', function (d) {
             if (d.orient) {
-                var r = d.scale.range();
-                return r[0] + r[1] + margin.bottom
+                const r = d.scale.range();
+                return r[0] + r[1] + margin.bottom;
             }
-            return margin.left + margin.right
+            return margin.left + margin.right;
         })
         .attr('class', 'ft-chart')
         .attr('height', function (d) {
             if (d.orient) {
-                return margin.bottom
+                return margin.bottom;
             }
-            var r = d.scale.range();
-            return r[0] + r[1] + margin.bottom
+            const r = d.scale.range();
+            return r[0] + r[1] + margin.bottom;
         })
-        .each(function (d, i) {
-            var axis = oCharts.axis.number()
+        .each(function (d) {
+            const axis = oCharts.axis.number()
                 .simple(d.simple)
                 .orient(d.orient)
                 .reverse(d.reverse)

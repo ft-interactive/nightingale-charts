@@ -1,15 +1,15 @@
-var d3 = require('d3');
-var colours = require('../../../src/scripts/themes/ft-web').theme.colours;
+const d3 = require('d3');
+const colours = require('../../../src/scripts/themes/ft-web').theme.colours;
 
 
 module.exports = {
 
   init: function() {
 
-    var views = d3.select('#views');
+    const views = d3.select('#views');
 
-    var areaSwatches = views.selectAll('div.area-colour-swatch')
-      .data(colours.bar)
+    const areaSwatches = views.selectAll('div.area-colour-swatch')
+      .data(colours.bar);
 
     areaSwatches.enter()
       .append('div')
@@ -26,4 +26,4 @@ module.exports = {
         return 'Series ' + (i+1) + ': ' + d;
       });
   }
-}
+};

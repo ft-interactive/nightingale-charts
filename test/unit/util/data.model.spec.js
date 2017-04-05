@@ -1,9 +1,9 @@
-var DataModel = require('../../../src/scripts/util/data.model');
+const DataModel = require('../../../src/scripts/util/data.model');
 
 describe('data model', function () {
 
     it('returns a set of defaults when nothing is defined', function(){
-        var model = new DataModel('line');
+        const model = new DataModel('line');
 
         expect(model.chartType).toBe('line');
         expect(model.height).toBe(undefined);
@@ -22,7 +22,7 @@ describe('data model', function () {
     });
 
     it('doesnt reorder grouped dates (chrome test)', function(){
-        var model = new DataModel('column', {
+        const model = new DataModel('column', {
             units: ['yearly'],
             data: [
                 {date: new Date('2008'), value: 10, value2: 1},
@@ -41,7 +41,7 @@ describe('data model', function () {
     });
 
     it('returns values as set in options', function(){
-        var model = new DataModel('line', {
+        const model = new DataModel('line', {
             height: 100,
             width: 100,
             key: true,
@@ -74,7 +74,7 @@ describe('data model', function () {
     });
 
     it('groups dates with the correct key', function(){
-        var model = new DataModel('column', {
+        const model = new DataModel('column', {
             height: 100,
             width: 100,
             key: true,
@@ -103,7 +103,7 @@ describe('data model', function () {
         spyOn(DataModel.prototype,'error').and.callFake(function(msg){
             return msg;
         });
-        var model = new DataModel('line', {
+        const model = new DataModel('line', {
             chartHeight: 100,
             chartWidth: 100,
             key: false,
@@ -166,7 +166,7 @@ describe('data model', function () {
         spyOn(DataModel.prototype,'error').and.callFake(function(msg){
             return msg;
         });
-        var model = new DataModel('column', {
+        const model = new DataModel('column', {
             chartHeight: 100,
             chartWidth: 100,
             key: false,
@@ -220,7 +220,7 @@ describe('data model', function () {
     });
 
     it('sets the max value of the dependentDomain to zero when all values are neg on column and bar charts', function() {
-        var columnModel = new DataModel('column', {
+        const columnModel = new DataModel('column', {
             height: 100,
             width: 100,
             key: true,
@@ -237,7 +237,7 @@ describe('data model', function () {
             y: { series: [{key:'qValue', label:'String Value'},
                 {key:'value2', label:'Another String Value'}]}
         });
-        var barModel = new DataModel('bar', {
+        const barModel = new DataModel('bar', {
             height: 100,
             width: 100,
             key: true,

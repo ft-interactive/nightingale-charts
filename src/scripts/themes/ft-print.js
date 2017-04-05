@@ -1,5 +1,5 @@
-var PADDING = 0;
-var colours = {
+const PADDING = 0; // eslint-disable-line no-unused-vars
+const colours = {
     line: [
         "#004b6c","#c99b2d","#bac9b8","#4988ad","#8d221f", "#dee3dd"
     ],
@@ -66,13 +66,13 @@ module.exports.theme = [
         }
     },
     //Columns
-    {   'id': 'columns',
+    { 'id': 'columns',
         'attributes': {
             'stroke-width': 0
         }
     },
     //bars
-    {   'id': 'bars',
+    { 'id': 'bars',
         'attributes': {
             'stroke-width': 0
         }
@@ -87,7 +87,7 @@ module.exports.theme = [
     },
 
     //text
-    {   'id': 'chart-title',
+    { 'id': 'chart-title',
         'attributes': {
             'font-family': 'MetricWebSemiBold, sans-serif',
             'font-size': '12',
@@ -96,7 +96,7 @@ module.exports.theme = [
             'fill': 'rgba(0, 0, 0, 1)'
         }
     },
-    {   'id': 'chart-subtitle',
+    { 'id': 'chart-subtitle',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
             'font-size': '9.6',
@@ -105,7 +105,7 @@ module.exports.theme = [
             'fill': 'rgba(0, 0, 0, 1)'
         }
     },
-    {   'id': 'key',
+    { 'id': 'key',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
             'font-size': '9.6',
@@ -116,7 +116,7 @@ module.exports.theme = [
             'fill': 'rgba(0, 0, 0, 0.8)'
         }
     },
-    {   'id': 'chart-source',
+    { 'id': 'chart-source',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
             'font-size': '7.2',
@@ -132,21 +132,21 @@ module.exports.theme = [
             'font-weight': 400
         }
     },
-    {   'id': 'dependent-ticks',
+    { 'id': 'dependent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
             'stroke': '#111111',
             'stroke-width': '0.3'
         }
     },
-    {   'id': 'independent-ticks',
+    { 'id': 'independent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
             'stroke': '#111111',
             'stroke-width': '0.3'
         }
     },
-    {   'id': 'origin-ticks',
+    { 'id': 'origin-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
             'stroke': '#111111',
@@ -154,12 +154,12 @@ module.exports.theme = [
         }
     },
     // position plot lines, options: 'front', 'back'
-    {   'id': 'axis-layer',
+    { 'id': 'axis-layer',
         'attributes': {
             'position': 'back'
         }
     },
-    {   'id': 'axis-text',
+    { 'id': 'axis-text',
         'attributes': {
             'font-size': '9.6',
             'line-height': 11,
@@ -169,7 +169,7 @@ module.exports.theme = [
             'fill': 'rgba(0, 0, 0, 0.8)'
         }
     },
-    {   'id': 'axis-secondary-text',
+    { 'id': 'axis-secondary-text',
         'attributes': {
             'font-size': '9.6',
             'line-height': 11,
@@ -190,7 +190,7 @@ module.exports.theme = [
             'text-anchor': 'end'
         }
     },
-    {   'id': 'chart-logo',
+    { 'id': 'chart-logo',
         'attributes': {
             'display': 'none'
         }

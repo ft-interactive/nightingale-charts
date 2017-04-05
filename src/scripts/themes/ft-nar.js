@@ -1,4 +1,4 @@
-var colours = {
+const colours = {
     line: [
         '#154577', '#58bdbb', '#cabd92', '#ac252a', '#ee5427', '#f9a71a'
     ],
@@ -74,7 +74,7 @@ module.exports.theme = [
     },
 
     //text
-    {   'id': 'chart-title',
+    { 'id': 'chart-title',
         'attributes': {
             'font-family': 'AvenirHeavy, sans-serif',
             'font-size': 18,
@@ -82,7 +82,7 @@ module.exports.theme = [
             'fill': 'rgba(0, 0, 0, 0.8)'
         }
     },
-    {   'id': 'chart-subtitle',
+    { 'id': 'chart-subtitle',
         'attributes': {
             'font-family': 'AvenirLightOblique, sans-serif',
             'font-size': 13,
@@ -90,7 +90,7 @@ module.exports.theme = [
             'fill': 'rgba(0, 0, 0, 0.8)'
         }
     },
-    {   'id': 'chart-source',
+    { 'id': 'chart-source',
         'attributes': {
             'font-family': 'AvenirLightOblique, sans-serif',
             'font-size': 11,
@@ -99,7 +99,7 @@ module.exports.theme = [
             'fill': '#000000'
         }
     },
-    {   'id': 'chart-footnote',
+    { 'id': 'chart-footnote',
         'attributes': {
             'font-family': 'AvenirLightOblique, sans-serif',
             'font-size': 11,
@@ -109,13 +109,13 @@ module.exports.theme = [
             'padding-y': 5
         }
     },
-    {   'id': 'chart-plot',
+    { 'id': 'chart-plot',
         'attributes': {
             'full-width': true,
             'padding-x': 0.05
         }
     },
-    {   'id': 'key',
+    { 'id': 'key',
         'attributes': {
             'font-family': 'AvenirLight, sans-serif',
             'font-size': 13,
@@ -125,7 +125,7 @@ module.exports.theme = [
             'padding-y': 8
         }
     },
-    {   'id': 'independent-ticks',
+    { 'id': 'independent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
             'stroke': '#000000',
@@ -133,7 +133,7 @@ module.exports.theme = [
             'stroke-width': 1
         }
     },
-    {   'id': 'dependent-ticks',
+    { 'id': 'dependent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
             'stroke': '#000000',
@@ -141,7 +141,7 @@ module.exports.theme = [
             'stroke-width': 1
         }
     },
-    {   'id': 'origin-ticks',
+    { 'id': 'origin-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
             'stroke': '#000000',
@@ -157,12 +157,12 @@ module.exports.theme = [
        }
      },
     // position plot lines, options: 'front', 'back'
-    {   'id': 'axis-layer',
+    { 'id': 'axis-layer',
         'attributes': {
             'position': 'front'
         }
     },
-    {   'id': 'axis-text',
+    { 'id': 'axis-text',
         'attributes': {
             'font-size': 13,
             'font-family': 'AvenirLight, sans-serif',
@@ -170,7 +170,7 @@ module.exports.theme = [
             'fill': '#000000'
         }
     },
-    {   'id': 'axis-secondary-text',
+    { 'id': 'axis-secondary-text',
         'selector': '.axis .secondary text',
         'attributes': {
             'font-family': 'AvenirLight, sans-serif',
@@ -198,7 +198,7 @@ module.exports.theme = [
             'x1': 0
         }
     },
-    {   'id': 'chart-logo',
+    { 'id': 'chart-logo',
         'attributes': {
             'display': 'none'
         }

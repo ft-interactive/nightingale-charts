@@ -1,12 +1,12 @@
-var d3 = require('d3');
-var themes = require('../themes');
-var labels = require('../util/labels.js');
-var dates = require('../util/dates.js');
-var dateScale = require('./date.scale.js');
-var timeDiff = dates.timeDiff;
+const d3 = require('d3');
+const themes = require('../themes');
+const labels = require('../util/labels.js');
+const dates = require('../util/dates.js');
+const dateScale = require('./date.scale.js');
+const timeDiff = dates.timeDiff;
 
 function dateAxis(model) {
-    var config = {
+    const config = {
         axes: [d3.svg.axis().orient('bottom')],
         scale: false,
         lineHeight: 20,
@@ -47,16 +47,16 @@ function dateAxis(model) {
     }
 
     function customTickShape(g) {
-       var ticks = g.selectAll(".primary .tick");
+       const ticks = g.selectAll(".primary .tick");
        ticks.each(function() { d3.select(this).append("circle").attr("r", 2); });
        ticks.selectAll("line").remove();
      }
 
     function render(g) {
-        var chartType = config.attr['chart-type'];
-        var lineChartTextAnchor = isVertical() ? 'end' : 'start';
-        var lineChartSecondaryTextAnchor = isVertical() ? 'end' : 'start';
-        var secondTextAnchor = themes.check(model.theme, 'axis-secondary-text').attributes['text-anchor'];
+        const chartType = config.attr['chart-type'];
+        let lineChartTextAnchor = isVertical() ? 'end' : 'start';
+        let lineChartSecondaryTextAnchor = isVertical() ? 'end' : 'start';
+        const secondTextAnchor = themes.check(model.theme, 'axis-secondary-text').attributes['text-anchor'];
 
         if(config.attr['chart-type'] === 'line') {
           lineChartTextAnchor = isVertical() ? config.attr.yAxisLabel['text-anchor'] : config.attr.xAxisLabel['text-anchor'];
@@ -76,7 +76,7 @@ function dateAxis(model) {
             g.select('path.domain').remove();
         }
 
-        var customTick = themes.check(model.theme, 'ticks').attributes.customTickShape || false;
+        const customTick = themes.check(model.theme, 'ticks').attributes.customTickShape || false;
         customTick && chartType !== 'bar' ? customTickShape(g) : null;
     }
 

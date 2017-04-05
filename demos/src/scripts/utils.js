@@ -1,10 +1,10 @@
 module.exports = {
   getQueryVariable : function (variable) {
-     var query = window ? window.location.search.substring(1) : "";
-     var vars = query.split("&");
-     for (var i=0;i<vars.length;i++) {
-             var pair = vars[i].split("=");
-             if(pair[0] == variable){return pair[1];}
+     const query = window ? window.location.search.substring(1) : "";
+     const vars = query.split("&");
+     for (let i=0;i<vars.length;i++) {
+             const pair = vars[i].split("=");
+             if(pair[0] === variable){return pair[1];}
      }
      return(false);
   },
@@ -13,18 +13,18 @@ module.exports = {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min;
   },
-  assign : function (target, varArgs) {
-    if (target == null) { // TypeError if undefined or null
+  assign : function (target) {
+    if (target === null) { // TypeError if undefined or null
       throw new TypeError('Cannot convert undefined or null to object');
     }
 
-    var to = Object(target);
+    const to = Object(target);
 
-    for (var index = 1; index < arguments.length; index++) {
-      var nextSource = arguments[index];
+    for (let index = 1; index < arguments.length; index++) {
+      const nextSource = arguments[index];
 
-      if (nextSource != null) { // Skip over if undefined or null
-        for (var nextKey in nextSource) {
+      if (nextSource !== null) { // Skip over if undefined or null
+        for (const nextKey in nextSource) {
           // Avoid bugs when hasOwnProperty is shadowed
           if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
             to[nextKey] = nextSource[nextKey];
@@ -35,4 +35,4 @@ module.exports = {
 
     return to;
   }
-}
+};

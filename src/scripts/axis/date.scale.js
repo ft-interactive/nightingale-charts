@@ -1,7 +1,7 @@
-var d3 = require('d3');
-var utils = require('../util/dates.js');
+const d3 = require('d3');
+const utils = require('../util/dates.js');
 
-var interval = {
+const interval = {
     centuries: d3.time.year,
     decades: d3.time.year,
     yearly: d3.time.year,
@@ -17,7 +17,7 @@ var interval = {
     hours: d3.time.hours
 };
 
-var increment = {
+const increment = {
     centuries: 100,
     decades: 10,
     yearly: 1,
@@ -35,15 +35,15 @@ var increment = {
 
 module.exports = {
     customTicks: function (scale, unit, primaryUnit) {
-        if (primaryUnit == 'quarterly' && unit == 'yearly') unit = 'quarterly';
-        var customTicks = scale.ticks(interval[unit], increment[unit]);
+        if (primaryUnit === 'quarterly' && unit === 'yearly') unit = 'quarterly';
+        const customTicks = scale.ticks(interval[unit], increment[unit]);
         customTicks.push(scale.domain()[0]); //always include the first and last values
         customTicks.push(scale.domain()[1]);
         customTicks.sort(this.dateSort);
 
         //if the last 2 values labels are the same, remove them
-        var labels = customTicks.map(utils.formatter[unit]);
-        if (labels[labels.length - 1] == labels[labels.length - 2]) {
+        const labels = customTicks.map(utils.formatter[unit]);
+        if (labels[labels.length - 1] === labels[labels.length - 2]) {
             customTicks.pop();
         }
         return customTicks;
@@ -52,9 +52,9 @@ module.exports = {
         return (a.getTime() - b.getTime());
     },
     createAxes: function(scale, unit, config, primaryUnit, model){
-        var firstDate ;
-        var customTicks = (config.simple) ? scale.domain() : this.customTicks(scale, unit, primaryUnit);
-        var axis = d3.svg.axis()
+        let firstDate ;
+        const customTicks = (config.simple) ? scale.domain() : this.customTicks(scale, unit, primaryUnit);
+        const axis = d3.svg.axis()
             .scale(scale)
             .tickValues(customTicks)
             .tickFormat(function(d,i){
@@ -65,9 +65,9 @@ module.exports = {
         return axis;
     },
     render: function (scale, units, config, model) {
-        var axes = [];
-        for (var i = 0; i < units.length; i++) {
-            var unit = units[i];
+        const axes = [];
+        for (let i = 0; i < units.length; i++) {
+            const unit = units[i];
             if (utils.formatter[unit]) {
                 axes.push(this.createAxes(scale, unit, config, units[0], model));
             }

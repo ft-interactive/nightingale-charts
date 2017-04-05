@@ -1,10 +1,10 @@
-var thicknesses = {
+const thicknesses = {
     small: 2,
     medium: 4,
     large: 6
 };
 
-var defaultThickness = thicknesses.medium;
+const defaultThickness = thicknesses.medium;
 
 module.exports = function (value) {
 
@@ -13,7 +13,7 @@ module.exports = function (value) {
         return defaultThickness;
     }
 
-    var lineThicknessIsNumber = value &&
+    const lineThicknessIsNumber = value &&
         typeof value === 'number' && !isNaN(value);
 
     if (lineThicknessIsNumber) {

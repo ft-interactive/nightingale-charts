@@ -1,10 +1,10 @@
 //var d3 = require('d3');
 
 function blankChart() {
-    'use strict';
+
 
     function buildModel(opts) {
-        var m = {
+        const m = {
             //layout stuff
             title: 'chart title',
             subtitle: 'chart subtitle (letters)',
@@ -19,8 +19,10 @@ function blankChart() {
             }
         };
 
-        for (var key in opts) {
-            m[key] = opts[key];
+        for (const key in opts) {
+            if (opts.hasOwnProperty(key)) {
+                m[key] = opts[key];
+            }
         }
 
         return m;
@@ -30,7 +32,8 @@ function blankChart() {
         return Math.ceil(selection.node().getBoundingClientRect().height);
     }
 
-    function getWidth(selection) {
+    // What does this do? It's not exported or called anywhere.
+    function getWidth(selection) { // eslint-disable-line no-unused-vars
         return Math.ceil(selection.node().getBoundingClientRect().width);
     }
 
@@ -40,22 +43,22 @@ function blankChart() {
 
     function chart(g) {
 
-        var model = buildModel(g.data()[0]);
+        const model = buildModel(g.data()[0]);
 
         if (!model.height) {
             model.height = model.width;
         }
 
-        var svg = g.append('svg')
+        const svg = g.append('svg')
             .attr({
                 'class': 'null-chart',
                 height: model.height,
                 width: model.width
             });
 
-        var title = svg.append('text').text(model.title + " - PLACE HOLDER CHART");
+        const title = svg.append('text').text(model.title + " - PLACE HOLDER CHART");
         title.attr('transform', translate({top: getHeight(title), left: 0}));
-        var subtitle = svg.append('text').text(model.subtitle);
+        const subtitle = svg.append('text').text(model.subtitle);
         subtitle.attr('transform', translate({top: getHeight(title) + getHeight(subtitle), left: 0}));
 
         svg.selectAll('text').attr({

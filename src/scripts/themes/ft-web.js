@@ -1,4 +1,4 @@
-var colours = {
+const colours = {
     line: [
         '#af516c', '#ecafaf', '#d7706c', '#76acb8', '#7fd8f5', '#3d7ab3', '#b8b1a9'
     ],
@@ -65,21 +65,21 @@ module.exports.theme = [
     },
 
     //text
-    {   'id': 'chart-title',
+    { 'id': 'chart-title',
         'attributes': {
             'font-family': 'BentonSans, sans-serif',
             'font-size': 18,
             'fill': 'rgba(0, 0, 0, 0.8)'
         }
     },
-    {   'id': 'chart-subtitle',
+    { 'id': 'chart-subtitle',
         'attributes': {
             'font-family': 'BentonSans, sans-serif',
             'font-size': 12,
             'fill': 'rgba(0, 0, 0, 0.5)'
         }
     },
-    {   'id': 'chart-source',
+    { 'id': 'chart-source',
         'attributes': {
             'font-family': 'BentonSans, sans-serif',
             'font-size': 10,
@@ -87,7 +87,7 @@ module.exports.theme = [
             'fill': 'rgba(0, 0, 0, 0.5)'
         }
     },
-    {   'id': 'chart-footnote',
+    { 'id': 'chart-footnote',
         'attributes': {
             'font-family': 'BentonSans, sans-serif',
             'font-size': 12,
@@ -95,7 +95,7 @@ module.exports.theme = [
             'fill': 'rgba(0, 0, 0, 0.5)'
         }
     },
-    {   'id': 'key',
+    { 'id': 'key',
         'attributes': {
             'font-family': 'BentonSans, sans-serif',
             'font-size': 12,
@@ -104,7 +104,7 @@ module.exports.theme = [
             'padding-y': 8
         }
     },
-    {   'id': 'independent-ticks',
+    { 'id': 'independent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
             'stroke': '#000000',
@@ -112,7 +112,7 @@ module.exports.theme = [
             'stroke-dasharray': 'none'
         }
     },
-    {   'id': 'dependent-ticks',
+    { 'id': 'dependent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
             'stroke': '#000000',
@@ -120,7 +120,7 @@ module.exports.theme = [
             'stroke-dasharray': '2 2'
         }
     },
-    {   'id': 'origin-ticks',
+    { 'id': 'origin-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
             'stroke': '#000000',
@@ -129,12 +129,12 @@ module.exports.theme = [
         }
     },
     // position plot lines, options: 'front', 'back'
-    {   'id': 'axis-layer',
+    { 'id': 'axis-layer',
         'attributes': {
             'position': 'back'
         }
     },
-    {   'id': 'axis-text',
+    { 'id': 'axis-text',
         'attributes': {
             'font-size': 12,
             'font-family': 'BentonSans, sans-serif',
@@ -142,7 +142,7 @@ module.exports.theme = [
             'fill': '#757470'
         }
     },
-    {   'id': 'axis-secondary-text',
+    { 'id': 'axis-secondary-text',
         'selector': '.axis .secondary text',
         'attributes': {
             'font-size': 10,

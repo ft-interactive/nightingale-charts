@@ -1,7 +1,7 @@
 /* globals: casper */
-var phantomcss = require('../phantomcss.conf.js')(casper);
+const phantomcss = require('../phantomcss.conf.js')(casper);
 
-casper.test.begin( 'Column Charts', function ( test ) {
+casper.test.begin( 'Column Charts', function () {
     casper.start( 'http://localhost:3000/column-chart.html' )
         .viewport( 1024, 768 )
         .then( function () {
@@ -54,7 +54,7 @@ casper.test.begin( 'Column Charts', function ( test ) {
             phantomcss.compareSession();
         })
         .run( function () {
-            phantomcss.getExitStatus() // pass or fail?
+            phantomcss.getExitStatus(); // pass or fail?
             casper.test.done();
         });
 });
