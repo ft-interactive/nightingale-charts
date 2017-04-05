@@ -1,4 +1,4 @@
-const oCharts = require('../../../src/scripts/nightingale-charts');
+const oCharts = require('../../../main');
 const d3 = require('d3');
 
 const y = [ { series: ['value', 'value2', 'value3'] },

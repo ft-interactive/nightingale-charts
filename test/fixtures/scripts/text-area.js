@@ -1,5 +1,4 @@
-
-const oCharts = require('../../../src/scripts/nightingale-charts');
+const oCharts = require('../../../main');
 const d3 = require('d3');
 
 

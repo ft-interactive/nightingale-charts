@@ -1,7 +1,6 @@
 const d3 = require('d3');
 const colours = require('../../../src/scripts/themes/ft-web').theme.colours;
 
-
 module.exports = {
 
   init: function() {
