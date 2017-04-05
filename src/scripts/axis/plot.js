@@ -71,8 +71,11 @@ Plot.prototype.yDependent = function(value, stack, height) {
     if (this.model.chartType == 'line') return this.axes.dependentAxisScale(value);
     var maxValue = Math.max(0, value);
     if (this.model.stack && height !== undefined) {
-      maxValue = value < 0 && value !== height ? Math.min(0, value - height) : Math.max(0, value + height);
+      maxValue = value < 0 ? Math.min(0, height) : Math.max(0, value + height);
     }
+    console.log('value: ',value, ' height: ',height)
+    console.log('maxValue: ',maxValue)
+    console.log('----------')
     return this.axes.dependentAxisScale(maxValue);
 };
 

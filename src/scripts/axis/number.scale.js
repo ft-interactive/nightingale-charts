@@ -61,6 +61,31 @@ module.exports = {
         }
         return count;
     },
+    stackedDomain: function (model) {
+      // Find the stacks highest and lowest points and update the domain range
+      var maximum = 0;
+      var minimum = 0;
+      model.stacks.map(function (stack, i) {
+        var negativeStack = [];
+        var positiveStack = [];
+        stack.map(function(data, i) {
+          data < 0 ? negativeStack.push(data) : positiveStack.push(data)
+        });
+        var tempMaximum = positiveStack.length > 0 ? positiveStack.reduce(function (a, b) {
+            return a + b;
+        }) : 0;
+        var tempMinimum = negativeStack.length > 0 ? negativeStack.reduce(function (a, b) {
+            return a + b;
+        }) : 0;
+        if (tempMaximum > maximum) {
+          maximum = tempMaximum
+        }
+        if (tempMinimum < minimum) {
+          minimum = tempMinimum
+        }
+      })
+      return {maximum, minimum};
+    },
     customTicks: function (config, model){
         var customTicks = [];
         var scale = config.axes.scale();
@@ -68,29 +93,9 @@ module.exports = {
             customTicks = this.simpleTicks(scale);
         } else {
           if(model.stack) {
-            var d1a = 0;
-            var d2b = 0;
-            model.stacks.map(function (stack, i) {
-              var negativeStack = [];
-              var positiveStack = [];
-              stack.map(function(data, i) {
-                data < 0 ? negativeStack.push(data) : positiveStack.push(data)
-              });
-              var neg = negativeStack.length > 0 ? negativeStack.reduce(function (a, b) {
-                  return a + b;
-              }) : 0;
-              var pos = positiveStack.length > 0 ? positiveStack.reduce(function (a, b) {
-                  return a + b;
-              }) : 0;
-              if (pos > d1a) {
-                d1a = pos
-              }
-              if (neg < d2b) {
-                d2b = neg
-              }
-            })
-            scale.domain()[0] = d1a
-            scale.domain()[1] = d2b
+            var stackedDomain = this.stackedDomain(model)
+            scale.domain()[0] = stackedDomain.maximum;
+            scale.domain()[1] = stackedDomain.minimum;
           }
             customTicks = this.detailedTicks(scale, config.pixelsPerTick, model);
             var pos = scale.domain()[0] > scale.domain()[1] ? 1 : 0;

@@ -119,7 +119,7 @@ function getXPosition(data, stacks, key, val, xKey, series) {
 			}) : {value: slicedArray[0][Object.keys(slicedArray[0])[0]]};
 
 			// This is the hight of all previous plots from the same stack
-			return value < 0 ? sumPrev.value : sumPrev.value;
+			return sumPrev.value;
 		}
 	}
 
