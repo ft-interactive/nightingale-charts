@@ -1,6 +1,6 @@
 {
-  "version": "0.0.0",
-  "name": "@Financial-Times/nightingale-charts",
+  "version": "1.0.1",
+  "name": "nightingale-charts",
   "description": "FT style charts, axes, scales etc",
   "main": "main.js",
   "scripts": {
@@ -33,7 +33,6 @@
     "karma-jasmine": "^0.3.3",
     "karma-mocha-reporter": "^1.0.2",
     "karma-phantomjs-launcher": "^0.2.0",
-    "npm-prepublish": "^1.2.2",
     "origami-build-tools": "^6.2.1",
     "phantomcss": "^0.10.2",
     "slug": "^0.9.1"

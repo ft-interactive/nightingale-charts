@@ -1,6 +1,3 @@
-dependencies:
-  pre:
-    - echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > ${HOME}/.npmrc
 test:
   post:
     - git config --global user.name "circleci"
@@ -8,15 +5,8 @@ test:
 general:
   artifacts:
     - test/coverage
-deployment:
-  release:
-    tag: /v.*/
-    owner: ft-interactive
-    commands:
-      - npm-prepublish --verbose
-      - npm publish --access public
 machine:
   timezone:
     Europe/London
   node:
-    version: v6.10.2
+    version: v0.10.33
