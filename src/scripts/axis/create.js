@@ -19,7 +19,6 @@ function getHeight(selection) { return getDimension('height', selection); }
 function isVertical(orient)   { return orient == 'right' || orient == 'left'; }
 
 function getRange(model, orientation) {
-  console.log('model',model)
     var chartType = model.chartType;
     var plotWidth = model.plotWidth = model.chartWidth - model.yLabelWidth;
     var plotHeight = model.plotHeight =  model.chartHeight - model.xLabelHeight;
@@ -31,7 +30,6 @@ function getRange(model, orientation) {
 
 function ordinalScale(model, options, orientation) {
     var range = getRange(model, orientation);
-    console.log('ordinalScale range ', range)
     return d3.scale.ordinal()
         .domain(model.independentDomain)
         .rangeRoundBands(range, 0, options.margin);
@@ -39,7 +37,6 @@ function ordinalScale(model, options, orientation) {
 
 function timeScale(model, options, orientation) {
     var range = getRange(model, orientation);
-    console.log('timeScale range ', range)
     return d3.time.scale()
         .domain(model.independentDomain)
         .range(range);
@@ -47,7 +44,6 @@ function timeScale(model, options, orientation) {
 
 function intraDayScale(model, options, orientation) {
     var range = getRange(model, orientation);
-    console.log('intraDayScale range ', range)
     return intraDay(model.open, model.close)
         .domain(model.independentDomain)
         .range(range);
@@ -55,7 +51,6 @@ function intraDayScale(model, options, orientation) {
 
 function linearScale(model, options, orientation) {
     var range = getRange(model, orientation);
-    console.log('linearScale range ', range)
     var domain = (isVertical(orientation)) ? model.dependentDomain.reverse() : model.dependentDomain;
     return d3.scale.linear()
         .range(range)
@@ -197,7 +192,7 @@ Create.prototype.independentScale = function (scale) {
 Create.prototype.dependentScale = function (scale) {
     var model = this.model;
     this.dependentAxisScale = linearScale(model, this, model.dependentAxisOrient);
-    this.dependentAxis = axis.number();
+    this.dependentAxis = axis.number(model);
     if (model.niceValue) {
         this.dependentAxisScale.nice();
     }

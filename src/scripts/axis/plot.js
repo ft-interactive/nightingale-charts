@@ -60,9 +60,9 @@ Plot.prototype.y = function(){
 
 Plot.prototype.xDependent = function(value, stack, width) {
     if (this.model.chartType == 'line') return this.axes.dependentAxisScale(value);
-    var maxValue = Math.min(0, value);
+    var maxValue = this.model.stack ? Math.max(0, value) : Math.min(0, value);
     if (this.model.stack && width !== undefined) {
-      maxValue = value < 0 && value !== width ? Math.min(0, value + width) : Math.max(0, value - width);
+      maxValue = value < 0 ? Math.min(0, width) : Math.max(0, value + width);
     }
     return this.axes.dependentAxisScale(maxValue);
 };
@@ -73,7 +73,6 @@ Plot.prototype.yDependent = function(value, stack, height) {
     if (this.model.stack && height !== undefined) {
       maxValue = value < 0 && value !== height ? Math.min(0, value - height) : Math.max(0, value + height);
     }
-
     return this.axes.dependentAxisScale(maxValue);
 };
 

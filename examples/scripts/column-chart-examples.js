@@ -23,8 +23,6 @@ var baseConfig = objectAssign({}, chartConfig, {
   width : size.width
 })
 
-console.log('data', fixtures[index].data)
-
 // Web Theme
 var chartBasic = d3.select('#web').append('div').data([baseConfig]);
 
@@ -32,7 +30,7 @@ oCharts.addFont('BentonSans')
 .then(function () {
   chartBasic.call(oCharts.chart.column)
 });
-
+/*
 // Video Theme
 var videoConfig = objectAssign({}, baseConfig, {
   height: 338,
@@ -66,4 +64,4 @@ var narChart = d3.select('#nar').append('div').data([narConfig]);
 oCharts.addFont(['AvenirLight', 'AvenirLightOblique', 'AvenirHeavy'])
 .then(function () {
   narChart.call(oCharts.chart.column)
-});
+});*/

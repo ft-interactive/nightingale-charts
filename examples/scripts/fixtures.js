@@ -5,12 +5,9 @@ module.exports = {
     {
       data : [
        { key: 'red', value: 0.583, value2: 1.583},
-       { key: 'blue', value: 0.12, value2: 2},
-       { key: 'green', value: 1.03, value2: 1.4},
-       { key: 'purple', value: 1.348, value2: 1.9},
-       { key: 'orange', value: 1.0, value2: 0.21},
-       { key: 'yellow', value: 2.2, value2: 0.98},
-       { key: 'pink', value: 1.41, value2: 1.12}
+       { key: 'blue', value: -0.12, value2: 2},
+       { key: 'green', value: -1.03, value2: 1.4},
+       { key: 'purple', value: 1.348, value2: -1.9}
      ],
      x : { series: 'key' },
      y : { series: ['value', 'value2'] }
@@ -27,7 +24,7 @@ module.exports = {
   },
   {
     data : [
-     { key: 'Bruce Banner', value: utils.getRandomInt(-10,10), value2: utils.getRandomInt(-10,10), value3: utils.getRandomInt(-10,10), value4: utils.getRandomInt(-10,10)},
+     { key: 'Bruce Banner', value: -10, value2: -10, value3: utils.getRandomInt(-10,10), value4: utils.getRandomInt(-10,10)},
      { key: 'Clark Kent', value: utils.getRandomInt(-10,10), value2: utils.getRandomInt(-10,10), value3: utils.getRandomInt(-10,10), value4: utils.getRandomInt(-10,10)},
      { key: 'Tony Stark', value: utils.getRandomInt(-10,10), value2: utils.getRandomInt(-10,10), value3: utils.getRandomInt(-10,10), value4: utils.getRandomInt(-10,10)},
      { key: 'Peter Parker', value: utils.getRandomInt(-10,10), value2: utils.getRandomInt(-10,10), value3: utils.getRandomInt(-10,10), value4: utils.getRandomInt(-10,10)}

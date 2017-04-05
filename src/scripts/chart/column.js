@@ -21,7 +21,7 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
         .attr('x', function (d, i){ return plot.x(d.key, seriesNumber); })
         .attr('y', function (d, i){
 					if (model.stack) {
-						return plot.y(d.value, i, getYPosition(model.data, model.stacks, d.key, d.value, model.x.series.key));
+						return plot.y(d.value, i, getYPosition(model.data, model.stacks, d.key, d.value, model.x.series.key, series.key));
 					}
 					return plot.y(d.value, i);
 				})
@@ -87,38 +87,54 @@ function formatData(model, series) {
     return data;
 }
 
-function getYPosition(data, stacks, key, val, xKey) {
+function getYPosition(data, stacks, key, val, xKey, series) {
 	var value = isNaN(val) ? 0 : val;
-	var height;
 	var seriesKey;
 	var positiveStack = [];
 	var negativeStack = [];
 
 	function mapStacks (dataArray) {
-			var valueIndex = dataArray.indexOf(value)
-			var sumPrev;
 
-			if (valueIndex === 0) {
-				// Do and return nothing we want this to be undefined in
-				// plot.js - Plot.prototype.yDependent()
-			} else {
-				var slicedArray = dataArray.slice(0, valueIndex);
-				sumPrev = slicedArray.reduce(function (a, b) {
-				    return a + b;
-				});
-				return value < 0 ? value - sumPrev : sumPrev;
+		var valueIndex;
+		// Use the key not the value to identify the index of the plot item
+		dataArray.map(function (item, i) {
+			if ( Object.keys(item)[0] == series ) {
+				valueIndex = i
 			}
+		})
+
+		var sumPrev;
+		if (valueIndex === 0) {
+			// Do and return nothing we want this to be undefined in
+			// plot.js - Plot.prototype.yDependent()
+		} else {
+			// Using the index of the current item remove all the next values, leaving only those already plot
+			var slicedArray = dataArray.slice(0, valueIndex);
+
+			// If theres one item in the array take the first value, else reduce the array to one single value
+			sumPrev = slicedArray.length > 1 ? slicedArray.reduce(function (a, b) {
+				var a1 = a[Object.keys(a)[0]] ? a[Object.keys(a)[0]] : 0;
+				var b1 = b[Object.keys(b)[0]] ? b[Object.keys(b)[0]] : 0;
+				return {value: a1 + b1};
+			}) : {value: slicedArray[0][Object.keys(slicedArray[0])[0]]};
+
+			// This is the hight of all previous plots from the same stack
+			return value < 0 ? value : sumPrev.value;
+		}
 	}
 
+	// Find the current series
 	data.map(function(d, i) {
 		if (d[xKey] === key) {
 			seriesKey = i;
 		}
 	});
 
-	stacks[seriesKey].map(function(data, i) {
-		data < 0 ? negativeStack.push(data) : positiveStack.push(data)
-	});
+	for (var prop in data[seriesKey]) {
+		if (prop === 'key') continue; // Skip the key value from the data series
+		// Seperate each value in the stack into positive and negative arrays to allow the height of the previous values to be calculated
+		data[seriesKey][prop] < 0 ? negativeStack.push({[prop]: data[seriesKey][prop]}) : positiveStack.push({[prop]: data[seriesKey][prop]})
+	}
 
 	return value < 0 ? mapStacks(negativeStack) : mapStacks(positiveStack);
 }
