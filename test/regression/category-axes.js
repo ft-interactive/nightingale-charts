@@ -1,7 +1,7 @@
 // /* globals: casper */
-var phantomcss = require('../phantomcss.conf.js')(casper);
+const phantomcss = require('../phantomcss.conf.js')(casper);
 
-casper.test.begin('Category Axes', function (test) {
+casper.test.begin('Category Axes', function () {
     casper
         .start('http://localhost:3000/category-axes.html')
         .viewport(1024, 768)

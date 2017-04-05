@@ -3,7 +3,7 @@ function isTruthy(value) {
 }
 
 function normalise(value) {
-    var d = {key: null, label: null};
+    let d = {key: null, label: null};
 
     if (!value) {
         return d;

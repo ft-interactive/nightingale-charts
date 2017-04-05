@@ -1,31 +1,31 @@
-var d3 = require('d3');
-var dates = require('../util/dates');
-var dateFormatter = dates.formatter;
+const d3 = require('d3');
+const dates = require('../util/dates');
+const dateFormatter = dates.formatter;
 
 module.exports = {
     extendedTicks : function (g, config) {
-        var tickExtender = 1.5;
-        var extendedTicks_selector = ".tick line[y2=\"" + (config.tickSize * tickExtender) + "\"]";
-        var ticks_selector = ".tick line";
+        const tickExtender = 1.5;
+        const extendedTicks_selector = ".tick line[y2=\"" + (config.tickSize * tickExtender) + "\"]";
+        const ticks_selector = ".tick line";
 
         g.selectAll(ticks_selector)
             .attr("y2", function (d) {
-                var formatted = d.getMonth ? dateFormatter[config.units[0]](d) : d.toString();
-                var isFirstInPeriod = formatted.indexOf('Q1') === 0 || formatted.indexOf('Jan') === 0;
+                const formatted = d.getMonth ? dateFormatter[config.units[0]](d) : d.toString();
+                const isFirstInPeriod = formatted.indexOf('Q1') === 0 || formatted.indexOf('Jan') === 0;
                 return (isFirstInPeriod) ? (config.tickSize * tickExtender) : config.tickSize ;
             });
-        var tickCount = g.selectAll(ticks_selector)[0].length;
-        var extendedCount = g.selectAll(extendedTicks_selector)[0].length;
+        const tickCount = g.selectAll(ticks_selector)[0].length;
+        const extendedCount = g.selectAll(extendedTicks_selector)[0].length;
         if (extendedCount+2 >= tickCount){
             //take into account of first + last starting on something not q1
             g.selectAll(extendedTicks_selector).attr("y2", config.tickSize);
         }
     },
     add: function(g, config){
-        var self = this;
-        var options = { row: 0 };
+        const self = this;
+        const options = { row: 0 };
 
-        config.axes.forEach(function (axis, i) {
+        config.axes.forEach(function (axis) {
             self.addRow(g, axis, options, config);
             options.row ++;
         });
@@ -49,8 +49,8 @@ module.exports = {
     },
 
     addRow: function(g, axis, options, config){
-        var rowClass = (options.row) ? 'secondary': 'primary';
-        var attr = config.attr[rowClass] || config.attr.primary;
+        const rowClass = (options.row) ? 'secondary': 'primary';
+        const attr = config.attr[rowClass] || config.attr.primary;
         g.append('g')
             .attr('class', rowClass)
             .attr('transform', 'translate(0,' + (options.row * config.lineHeight) + ')')
@@ -66,19 +66,19 @@ module.exports = {
         if (options.extendTicks) {
             this.extendedTicks(g, config, options.extendTicks);
         }
-        if (dates.unitGenerator(config.scale.domain())[0] == 'days') {
+        if (dates.unitGenerator(config.scale.domain())[0] === 'days') {
             this.removeDays(g, '.primary text');
         }
-        if (config.units[0] == 'quarterly'){
+        if (config.units[0] === 'quarterly'){
             this.removeQuarters(g, axis, options);
         }
-        if (config.units[0] == 'weekly'){
+        if (config.units[0] === 'weekly'){
             this.removeWeekly(g, axis, options);
         }
-        if (config.units[0] == 'daily'){
+        if (config.units[0] === 'daily'){
             // in this case we don't remove daily ticks
         }
-        if (config.units[0] == 'monthly'){
+        if (config.units[0] === 'monthly'){
             this.removeMonths(g, axis, options, config);
         }
         this.removeOverlapping(g, '.' + rowClass + ' text', config.attr['chart-alignment'], config.attr['chart-type']);
@@ -87,8 +87,8 @@ module.exports = {
     },
 
     intersection: function (a, b, padding) {
-        var PADDING = padding || 3;
-        var overlap = (
+        const PADDING = padding || 3;
+        const overlap = (
         a.left <= b.right + PADDING &&
         b.left <= a.right + PADDING &&
         a.top <= b.bottom &&
@@ -98,13 +98,13 @@ module.exports = {
     },
 
     overlapping: function (dElements) {
-        var self = this;
-        var bounds = [];
-        var overlap = false;
-        dElements.each(function (d, i) {
-            var rect = this.getBoundingClientRect();
-            var include = true;
-            bounds.forEach(function (b, i) {
+        const self = this;
+        const bounds = [];
+        let overlap = false;
+        dElements.each(function () {
+            const rect = this.getBoundingClientRect();
+            let include = true;
+            bounds.forEach(function (b) {
                 if (self.intersection(b, rect)) {
                     include = false;
                     overlap = true;
@@ -135,23 +135,23 @@ module.exports = {
         options.extendTicks = true;
         g.select(".primary").remove();
     },
-    removeMonths: function(g, axis, options, config){
+    removeMonths: function(g, axis, options, config){ // eslint-disable-line no-unused-vars
         if (g.selectAll(".primary text")[0].length < 13) return;
         options.extendTicks = true;
-        var text = g.selectAll('.primary .tick text');
+        const text = g.selectAll('.primary .tick text');
         text.each(function(d,i){
-            if (i === 0 || i === text[0].length-1 || d3.select(this).text() == 'Jan') return;
+            if (i === 0 || i === text[0].length-1 || d3.select(this).text() === 'Jan') return;
             d3.select(this).remove();
         });
     },
 
     removeDays: function (g, selector) {
-        var dElements = g.selectAll(selector);
-        var elementCount = dElements[0].length;
+        const dElements = g.selectAll(selector);
+        const elementCount = dElements[0].length;
 
         function remove(d, i) {
-            var d3This = d3.select(this);
-            if (i !== 0 && i !== elementCount - 1 && d3This.text() != 1) {
+            const d3This = d3.select(this);
+            if (i !== 0 && i !== elementCount - 1 && d3This.text() !== 1) {
                 d3This.remove();
             }
         }
@@ -160,14 +160,14 @@ module.exports = {
     },
 
     removeOverlapping: function (g, selector, alignment, type) {
-        var self = this;
-        var dElements = g.selectAll(selector);
-        var elementCount = dElements[0].length;
-        var limit = 5;
+        const self = this;
+        let dElements = g.selectAll(selector);
+        let elementCount = dElements[0].length;
+        let limit = 5;
 
         function removeNonOverlappingLabels(count) {
-            var firstLabel = dElements[0][0];
-            var nextLabel = dElements[0][count];
+            const firstLabel = dElements[0][0];
+            const nextLabel = dElements[0][count];
             if(firstLabel !== undefined && nextLabel !== undefined) {
               if(self.intersection(nextLabel.getBoundingClientRect(), firstLabel.getBoundingClientRect(), 20)) {
                   d3.select(nextLabel).remove();
@@ -176,9 +176,9 @@ module.exports = {
         }
 
         function remove(d, i) {
-            var last = i === elementCount - 1;
-            var previousLabel = dElements[0][elementCount - 2];
-            var lastOverlapsPrevious = (last && self.intersection(previousLabel.getBoundingClientRect(), this.getBoundingClientRect()));
+            const last = i === elementCount - 1;
+            const previousLabel = dElements[0][elementCount - 2];
+            const lastOverlapsPrevious = (last && self.intersection(previousLabel.getBoundingClientRect(), this.getBoundingClientRect()));
 
             if (last && lastOverlapsPrevious) {
                 d3.select(previousLabel).remove();
@@ -204,15 +204,15 @@ module.exports = {
     },
 
     removePrimaryOverlappingSecondary: function(g) {
-        var self = this;
-        var primaryLabels = g.selectAll('.primary text');
-        var secondaryLabels = g.selectAll('.secondary text');
+        const self = this;
+        const primaryLabels = g.selectAll('.primary text');
+        const secondaryLabels = g.selectAll('.secondary text');
 
         if(secondaryLabels[0].length > 0) {
           secondaryLabels.each(function() {
-            var secondaryLabel = this;
+            const secondaryLabel = this;
             primaryLabels.each(function() {
-              var primaryLabel = this;
+              const primaryLabel = this;
               if(self.intersection(primaryLabel.getBoundingClientRect(), secondaryLabel.getBoundingClientRect(), 40)) {
                   d3.select(primaryLabel).remove();
               }
@@ -222,12 +222,12 @@ module.exports = {
     },
 
     removeDuplicates: function (g, selector) {
-        var dElements = g.selectAll(selector);
+        const dElements = g.selectAll(selector);
 
         function remove(label, i) {
             if (i === 0) return;
-            var d3This = d3.select(this);
-            var previousLabel = dElements[0][i - 1];
+            const d3This = d3.select(this);
+            const previousLabel = dElements[0][i - 1];
             if (d3This.text() === d3.select(previousLabel).text()) {
                 d3This.remove();
             }

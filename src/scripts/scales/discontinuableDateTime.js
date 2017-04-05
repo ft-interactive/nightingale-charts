@@ -1,5 +1,5 @@
-var d3 = require('d3');
-var identity = require('./discontinuityProviders/identity');
+const d3 = require('d3');
+const identity = require('./discontinuityProviders/identity');
 
 
 module.exports = function() {
@@ -9,16 +9,16 @@ module.exports = function() {
 // obtains the ticks from the given scale, transforming the result to ensure
 // it does not include any discontinuities
 module.exports.tickTransformer = function(ticks, discontinuityProvider, domain) {
-    var clampedTicks = ticks.map(function(tick, index) {
+    const clampedTicks = ticks.map(function(tick, index) {
         if (index < ticks.length - 1) {
             return discontinuityProvider.clampUp(tick);
         } else {
-            var clampedTick = discontinuityProvider.clampUp(tick);
+            const clampedTick = discontinuityProvider.clampUp(tick);
             return clampedTick < domain[1] ?
                 clampedTick : discontinuityProvider.clampDown(tick);
         }
     });
-    var uniqueTicks = clampedTicks.reduce(function(arr, tick) {
+    const uniqueTicks = clampedTicks.reduce(function(arr, tick) {
         if (arr.filter(function(f) { return f.getTime() === tick.getTime(); }).length === 0) {
             arr.push(tick);
         }
@@ -30,6 +30,9 @@ module.exports.tickTransformer = function(ticks, discontinuityProvider, domain) 
 /**
 * The `discontinuableDateTime` scale renders a discontinuous date time scale, i.e. a time scale that incorporates gaps.
 * As an example, you can use this scale to render a chart where the weekends are skipped.
+* @param {scale} adaptedScale Adapted scale
+* @param {scale} discontinuityProvider discontinuity provider
+* @returns {scale} rebindedScale
 */
 function discontinuableDateTime(adaptedScale, discontinuityProvider) {
 
@@ -39,27 +42,27 @@ function discontinuableDateTime(adaptedScale, discontinuityProvider) {
     }
 
     function scale(date) {
-        var domain = adaptedScale.domain();
-        var range = adaptedScale.range();
+        const domain = adaptedScale.domain();
+        const range = adaptedScale.range();
 
         // The discontinuityProvider is responsible for determine the distance between two points
         // along a scale that has discontinuities (i.e. sections that have been removed).
         // the scale for the given point 'x' is calculated as the ratio of the discontinuous distance
         // over the domain of this axis, versus the discontinuous distance to 'x'
-        var totalDomainDistance = discontinuityProvider.distance(domain[0], domain[1]);
-        var distanceToX = discontinuityProvider.distance(domain[0], date);
-        var ratioToX = distanceToX / totalDomainDistance;
-        var scaledByRange = ratioToX * (range[1] - range[0]) + range[0];
+        const totalDomainDistance = discontinuityProvider.distance(domain[0], domain[1]);
+        const distanceToX = discontinuityProvider.distance(domain[0], date);
+        const ratioToX = distanceToX / totalDomainDistance;
+        const scaledByRange = ratioToX * (range[1] - range[0]) + range[0];
         return scaledByRange;
     }
 
     scale.invert = function(x) {
-        var domain = adaptedScale.domain();
-        var range = adaptedScale.range();
+        const domain = adaptedScale.domain();
+        const range = adaptedScale.range();
 
-        var ratioToX = (x - range[0]) / (range[1] - range[0]);
-        var totalDomainDistance = discontinuityProvider.distance(domain[0], domain[1]);
-        var distanceToX = ratioToX * totalDomainDistance;
+        const ratioToX = (x - range[0]) / (range[1] - range[0]);
+        const totalDomainDistance = discontinuityProvider.distance(domain[0], domain[1]);
+        const distanceToX = ratioToX * totalDomainDistance;
         return discontinuityProvider.offset(domain[0], distanceToX);
     };
 
@@ -69,23 +72,23 @@ function discontinuableDateTime(adaptedScale, discontinuityProvider) {
         }
         // clamp the upper and lower domain values to ensure they
         // do not fall within a discontinuity
-        var domainLower = discontinuityProvider.clampUp(x[0]);
-        var domainUpper = discontinuityProvider.clampDown(x[1]);
+        const domainLower = discontinuityProvider.clampUp(x[0]);
+        const domainUpper = discontinuityProvider.clampDown(x[1]);
         adaptedScale.domain([domainLower, domainUpper]);
         return scale;
     };
 
     scale.nice = function() {
         adaptedScale.nice();
-        var domain = adaptedScale.domain();
-        var domainLower = discontinuityProvider.clampUp(domain[0]);
-        var domainUpper = discontinuityProvider.clampDown(domain[1]);
+        const domain = adaptedScale.domain();
+        const domainLower = discontinuityProvider.clampUp(domain[0]);
+        const domainUpper = discontinuityProvider.clampDown(domain[1]);
         adaptedScale.domain([domainLower, domainUpper]);
         return scale;
     };
 
     scale.ticks = function() {
-        var ticks = adaptedScale.ticks.apply(this, arguments);
+        const ticks = adaptedScale.ticks.apply(this, arguments);
         return module.exports.tickTransformer(ticks, discontinuityProvider, scale.domain());
     };
 

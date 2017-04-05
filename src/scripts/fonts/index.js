@@ -1,5 +1,4 @@
-/* globals __dirname, Promise */
-var dataURI = {
+const dataURI = {
     BentonSans: require('text!./BentonSans.txt').trim(),
     MetricWeb: require('text!./MetricWeb.txt').trim(),
     MetricWebSemiBold: require('text!./MetricWebSemiBold.txt').trim(),
@@ -17,8 +16,8 @@ function fontFace(name) {
 }
 
 function addOne(fontName) {
-    var id = 'nightingale-charts__webfonts';
-    var svg = document.querySelector('#' + id);
+    const id = 'nightingale-charts__webfonts';
+    let svg = document.querySelector('#' + id);
     if (!svg){
         svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         svg.setAttribute('version', '1.1');
@@ -29,14 +28,14 @@ function addOne(fontName) {
         svg.style.top = '-20px';
     }
 
-    var style = svgStyleElement(fontFace(fontName));
+    const style = svgStyleElement(fontFace(fontName));
     svg.insertAdjacentHTML('afterbegin', '<defs>' + style + '</defs>');
 
     document.body.appendChild(svg);
-    var dF = document.fonts;
+    const dF = document.fonts;
 
     if(document.fonts === undefined) {
-        var ffTrigger = document.createElement('div');
+        const ffTrigger = document.createElement('div');
 
         ffTrigger.setAttribute("style", "font-family: 1em " + fontName + ";");
 

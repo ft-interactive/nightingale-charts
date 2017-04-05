@@ -1,5 +1,5 @@
 // /* globals: casper */
-var phantomcss = require('../phantomcss.conf.js')(casper);
+const phantomcss = require('../phantomcss.conf.js')(casper);
 
 casper.test.begin('Series Key', function (test) {
     casper
@@ -18,7 +18,7 @@ casper.test.begin('Series Key', function (test) {
         });
 });
 
-casper.test.begin('Text Areas', function (test) {
+casper.test.begin('Text Areas', function () {
     casper
         .start('./_site/text-area.html')
         .viewport(1024, 768)
@@ -33,9 +33,3 @@ casper.test.begin('Text Areas', function (test) {
             casper.test.done();
         });
 });
-
-
-
-
-
-

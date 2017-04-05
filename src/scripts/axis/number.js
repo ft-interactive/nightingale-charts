@@ -2,14 +2,14 @@
 //for a standard FT styled numeric axis
 //usually these are vertical
 
-var d3 = require('d3');
-var numberLabels = require('./number.labels');
-var numberScales = require('./number.scale');
+const d3 = require('d3');
+const numberLabels = require('./number.labels');
+const numberScales = require('./number.scale');
 
 function numericAxis() {
-    'use strict';
+    
 
-    var config = {
+    const config = {
         axes: d3.svg.axis().orient('left').tickSize(5, 0),
         tickSize: 5,
         lineHeight: 16,
@@ -52,10 +52,10 @@ function numericAxis() {
     }
 
     function axis(g) {
-        var orientOffset = (config.axes.orient() === 'right') ? -config.axes.tickSize() : 0;
+        const orientOffset = (config.axes.orient() === 'right') ? -config.axes.tickSize() : 0;
 
-        var yAxisRightAligned = config.attr['chart-alignment'] === 'right' && config.attr.yAxisLine.x1 === 0;
-        var yAxisLabelTextAnchor = yAxisRightAligned ? 'start' : config.attr.yAxisLabel['text-anchor'];
+        const yAxisRightAligned = config.attr['chart-alignment'] === 'right' && config.attr.yAxisLine.x1 === 0;
+        const yAxisLabelTextAnchor = yAxisRightAligned ? 'start' : config.attr.yAxisLabel['text-anchor'];
         config.attr.primary['text-anchor'] = isVertical() ? yAxisLabelTextAnchor : config.attr.xAxisLabel['text-anchor'];
         config.attr.secondary['text-anchor'] = isVertical() ? 'end' : 'start';
 
@@ -123,7 +123,7 @@ function numericAxis() {
         if (config.userTicks.length > 0) {
             config.axes.tickValues(config.userTicks);
         } else {
-            var customTicks = numberScales.customTicks(config);
+            const customTicks = numberScales.customTicks(config);
             config.axes.tickValues(customTicks);
         }
         config.reverse = false; //only reverse once, even if scale is called twice i.e. in redraw

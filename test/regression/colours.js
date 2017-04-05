@@ -1,5 +1,5 @@
 // /* globals: casper */
-var phantomcss = require('../phantomcss.conf.js')(casper);
+const phantomcss = require('../phantomcss.conf.js')(casper);
 
 casper.test.begin('Line Colours', function (test) {
     casper
@@ -17,7 +17,7 @@ casper.test.begin('Line Colours', function (test) {
         });
 });
 
-casper.test.begin('Area Colours', function (test) {
+casper.test.begin('Area Colours', function () {
     casper
         .start('./_site/area-colours.html')
         .viewport(1024, 768)
@@ -32,9 +32,3 @@ casper.test.begin('Area Colours', function (test) {
             casper.test.done();
         });
 });
-
-
-
-
-
-

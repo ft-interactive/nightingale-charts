@@ -1,9 +1,9 @@
-var oCharts = require('../../../src/scripts/nightingale-charts');
-var d3 = require('d3');
+const oCharts = require('../../../main');
+const d3 = require('d3');
 
-var dependentAxisOrient = ['left', 'right', 'left'];
+const dependentAxisOrient = ['left', 'right', 'left'];  // eslint-disable-line no-unused-vars
 
-var fixtures = {
+const fixtures = {
     quarters : [
         { date: new Date('3/31/05'), value:      0.583},
         { date: new Date('6/30/05'), value: 1.027},
@@ -114,15 +114,15 @@ var fixtures = {
         { date: new Date('12/30/05'), value:     1.348}
     ],
     multiple:[
-        {date: new Date('3/31/05'),  value: 45, value2: 99, value3: 26},
-        {date: new Date('6/30/05'),  value: 58, value2: 10, value3: 21},
-        {date: new Date('9/30/05'),  value: 43, value2: 70, value3: 13},
+        {date: new Date('3/31/05'), value: 45, value2: 99, value3: 26},
+        {date: new Date('6/30/05'), value: 58, value2: 10, value3: 21},
+        {date: new Date('9/30/05'), value: 43, value2: 70, value3: 13},
         {date: new Date('12/30/05'), value: 34, value2: 10, value3: 99}
     ],
     time: [
-        {date: new Date('3/31/05'),  value: 45, value2: 33, value3:66},
-        {date: new Date('6/30/05'),  value: 58, value2: 28, value3:66},
-        {date: new Date('9/30/05'),  value: 43, value2: 57, value3:66},
+        {date: new Date('3/31/05'), value: 45, value2: 33, value3:66},
+        {date: new Date('6/30/05'), value: 58, value2: 28, value3:66},
+        {date: new Date('9/30/05'), value: 43, value2: 57, value3:66},
         {date: new Date('12/30/05'), value: 34, value2: 12, value3:66}
     ],
     stack:[
@@ -139,7 +139,7 @@ var fixtures = {
         {myDateColumn: new Date('4/28/05'), value: 125, value2: 10, value3: 29, value4: 31, value5: 40},
         {myDateColumn: new Date('5/28/05'), value: 133, value2: 25, value3: 72, value4: 105, value5: 200},
         {myDateColumn: new Date('6/28/05'), value: 133, value2: 25, value3: 72, value4: 105, value5: 200},
-        {myDateColumn: new Date('7/28/05'), value: 133, value2: 25, value3: 2, value4: 105, value5: 00},
+        {myDateColumn: new Date('7/28/05'), value: 133, value2: 25, value3: 2, value4: 105, value5: 0},  // Changed from `00`, which borks the linter
         {myDateColumn: new Date('8/28/05'), value: 133, value2: 2, value3: 72, value4: 105, value5: 20},
         {myDateColumn: new Date('9/28/05'), value: 133, value2: 25, value3: 72, value4: 105, value5: 20},
         {myDateColumn: new Date('10/28/05'), value: 13, value2: 5, value3: 7, value4: 15, value5: 20},
@@ -149,9 +149,9 @@ var fixtures = {
         {myDateColumn: new Date('2/28/06'), value: 10, value2: 5, value3: 35, value4: 43, value5: 78}
     ],
     multipleWithNegatives:[
-        {date: new Date('3/31/05'),  value: 45, value2: -99, value3: 26},
-        {date: new Date('6/30/05'),  value: 58, value2: 10, value3: 21},
-        {date: new Date('9/30/05'),  value: 43, value2: 70, value3: -13},
+        {date: new Date('3/31/05'), value: 45, value2: -99, value3: 26},
+        {date: new Date('6/30/05'), value: 58, value2: 10, value3: 21},
+        {date: new Date('9/30/05'), value: 43, value2: 70, value3: -13},
         {date: new Date('12/30/05'), value: 34, value2: 10, value3: 99}
     ],
     stackWithAllNegatives:[
@@ -263,9 +263,9 @@ var fixtures = {
         { date: new Date('3/31/08'), value:      0.313}
     ],
     nullMultiple:[
-        {date: new Date('3/31/05'),  value: 45, value2: 99, value3: 26},
-        {date: new Date('6/30/05'),  value: 58, value2: null, value3: 21},
-        {date: new Date('9/30/05'),  value: 43, value2: 70, value3: 13},
+        {date: new Date('3/31/05'), value: 45, value2: 99, value3: 26},
+        {date: new Date('6/30/05'), value: 58, value2: null, value3: 21},
+        {date: new Date('9/30/05'), value: 43, value2: 70, value3: 13},
         {date: new Date('12/30/05'), value: 34, value2: 10, value3: null}
     ],
     nullStack:[
@@ -332,7 +332,7 @@ var fixtures = {
     ]
 };
 
-var units = {
+const units = {
     quarters: ['quarterly', 'yearly'],
     quartersWithNegative: ['quarterly', 'yearly'],
     years: ['quarterly', 'yearly'],
@@ -353,7 +353,7 @@ var units = {
     allNegative: ['monthly', 'yearly'],
     baselineTest: ['yearly']
 };
-var ySeriesData = {
+const ySeriesData = {
     weekly: ['value'],
     daily: ['value'],
     allNegative: ['value'],
@@ -370,7 +370,7 @@ var ySeriesData = {
     stackWithAllNegatives: ['value', 'value2', 'value3', 'value4', 'value5'],
     stackMonthly: ['value', 'value2', 'value3', 'value4', 'value5']
 };
-var xSeriesData = {
+const xSeriesData = {
     categories: {key:'key', label:'Colours'},
     categoriesStack: {key:'key', label:'Colours'},
     dateCategories: {key:'key', label:'Colours'},
@@ -381,8 +381,8 @@ var xSeriesData = {
     stackWithAllNegatives: {key:'myDateColumn', label:'yearly'}
 };
 function getChartData(timeFrame){
-    var ySeries = ySeriesData[timeFrame] || ['value'];
-    var xSeries = xSeriesData[timeFrame] ||  {key:'date', label:'yearly'};
+    const ySeries = ySeriesData[timeFrame] || ['value'];
+    const xSeries = xSeriesData[timeFrame] || {key:'date', label:'yearly'};
     return {
         'id':'nightingale-column-chart__' + timeFrame,
         comment: 'Column chart',
@@ -400,14 +400,14 @@ function getChartData(timeFrame){
     };
 }
 
-var widths = [600, 300];
+const widths = [600, 300];
 
 
 
 module.exports = {
     getChartData: getChartData,
     init: function(){
-        var demos = [
+        const demos = [
             'quarters','quartersWithNegative','years','yearsWithNegative','decade', 'month',
             'multiple', 'time', 'stack', 'stackMonthly', 'multipleWithNegatives', 'stackWithAllNegatives',
             'categories', 'categoriesStack', 'dateCategories', 'quarterCategories',
@@ -415,15 +415,15 @@ module.exports = {
             'weekly', 'daily', 'allNegative',
             'baselineTest', 'stackWithValuesMissing'];
         demos.forEach(function(timeFrame, i){
-            var textContent = '';
+            let textContent = '';
             if (i===7){
-                textContent = 'NOTE: This chart highlights how columns should rarely be used for time-data. This example should check that charts of this form render but not that they should look good.'
+                textContent = 'NOTE: This chart highlights how columns should rarely be used for time-data. This example should check that charts of this form render but not that they should look good.';
             }
             d3.select('#views').append('p').text(textContent).append('div').attr({
                 'id':'column-chart__' + timeFrame
             });
             widths.forEach(function (width){
-                var data = getChartData(timeFrame);
+                const data = getChartData(timeFrame);
                 data.width = width;
                 d3.select('#column-chart__' + timeFrame).append('span')
                     .attr('class', 'width' + width)

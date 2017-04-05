@@ -1,11 +1,9 @@
-var d3 = require('d3');
-
 describe('Series Key displays', function () {
 
-    var lineText;
-    var lineVideoText;
-    var columnText;
-    var columnVideoText;
+    let lineText;
+    let lineVideoText;
+    let columnText;
+    let columnVideoText;
 
     beforeEach(function(){
         require('../helper').loadAssets('series-key');

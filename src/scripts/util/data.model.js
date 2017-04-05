@@ -1,9 +1,9 @@
-var d3 = require('d3');
-var lineThickness = require('../util/line-thickness.js');
-var ratios = require('../util/aspect-ratios.js');
-var seriesOptions = require('../util/series-options.js');
-var dateUtil = require('../util/dates.js');
-var themes = require('../themes');
+const d3 = require('d3');
+const lineThickness = require('../util/line-thickness.js');
+const ratios = require('../util/aspect-ratios.js');
+const seriesOptions = require('../util/series-options.js');
+const dateUtil = require('../util/dates.js');
+const themes = require('../themes');
 
 function isDate(d) {
     return d && d instanceof Date && !isNaN(+d);
@@ -11,8 +11,8 @@ function isDate(d) {
 
 function translate(margin) {
     return function (position) {
-        var left = position.left || 0;
-        var top = position.top || 0;
+        const left = position.left || 0;
+        const top = position.top || 0;
         return 'translate(' + (margin + left) + ',' + top + ')';
     };
 }
@@ -22,9 +22,9 @@ function chartWidth(model) {
         return model.chartWidth;
     }
 
-    var rightGutter = model.contentWidth < 260 ? 16 : 26;
+    let rightGutter = model.contentWidth < 260 ? 16 : 26;
 
-    var fullWidthChart = themes.check(model.theme, 'chart-plot').attributes['full-width'] || false;
+    const fullWidthChart = themes.check(model.theme, 'chart-plot').attributes['full-width'] || false;
     if (fullWidthChart) {
       return model.chartType === 'bar' ? model.contentWidth - rightGutter : model.contentWidth;
     }
@@ -35,12 +35,12 @@ function chartWidth(model) {
 }
 
 function setExtents(model){
-	var extents = [];
+	let extents = [];
 	model.y.series.forEach(function (l) {
-		var key = l.key;
+		const key = l.key;
 		model.data = model.data.map(function (d, j) {
-			var value = (Array.isArray(d.values)) ? d.values[0][key] : d[key];
-			var isValidNumber = value === null || typeof value === 'number';
+			const value = (Array.isArray(d.values)) ? d.values[0][key] : d[key];
+			const isValidNumber = value === null || typeof value === 'number';
 			if (!isValidNumber) {
 				model.error({
 					node: null,
@@ -52,7 +52,7 @@ function setExtents(model){
 			}
 			return d;
 		});
-		var ext = d3.extent(model.data, function(d){
+		const ext = d3.extent(model.data, function(d){
 			return (Array.isArray(d.values)) ? d.values[0][key] : d[key];
 		});
 		extents = extents.concat (ext);
@@ -61,18 +61,18 @@ function setExtents(model){
 }
 
 function findOpenCloseTimes(model) {
-    var maxGap = Number.MIN_VALUE;
-    var gapIndex;
+    let maxGap = Number.MIN_VALUE;
+    let gapIndex;
 
-    var gaps = [];
+    const gaps = [];
     // brute force search for maximum gap.
     // this will also work for weekend skips
     // since intra-day skips weekends automatically
     model.data.forEach(function(d, i) {
         if (!i) return;
-        var prevdt = model.data[i-1][model.x.series.key];
-        var dt = d[model.x.series.key];
-        var gap = dt - prevdt;
+        const prevdt = model.data[i-1][model.x.series.key];
+        const dt = d[model.x.series.key];
+        const gap = dt - prevdt;
 
         // weekend gaps
         if (gap > 1000 * 60 * 60 * 24 * 2) {
@@ -85,13 +85,13 @@ function findOpenCloseTimes(model) {
         }
     });
 
-    var openTime = model.data[gapIndex][model.x.series.key];
-    var closeTime = model.data[gapIndex-1][model.x.series.key];
+    const openTime = model.data[gapIndex][model.x.series.key];
+    const closeTime = model.data[gapIndex-1][model.x.series.key];
 
-    var fmt = d3.time.format("%H:%M");
+    const fmt = d3.time.format("%H:%M");
 
-    var open = fmt(new Date(openTime.getTime()));
-    var close = fmt(new Date(closeTime.getTime()));
+    const open = fmt(new Date(openTime.getTime()));
+    const close = fmt(new Date(closeTime.getTime()));
 
     // ;_; side effects ewww
     model.open = open;
@@ -103,10 +103,10 @@ function findOpenCloseTimes(model) {
 
 
 function independentDomain(model, chartType) {
-    if (model.independentDomain) { return model.independentDomain;  }
+    if (model.independentDomain) { return model.independentDomain; }
 
-    var isCategorical = model.dataType === 'categorical';
-    var isBarOrColumn = ['column', 'bar'].indexOf(chartType) >= 0;
+    const isCategorical = model.dataType === 'categorical';
+    const isBarOrColumn = ['column', 'bar'].indexOf(chartType) >= 0;
 
     if ((model.groupData || isCategorical) && isBarOrColumn){
         model.data = (model.groupData && !isCategorical) ? groupDates(model, model.units) : model.data;
@@ -120,11 +120,13 @@ function independentDomain(model, chartType) {
     }
 }
 
-function sumStackedValues(model){
-    var extents = [];
-    model.data.map(function (d, j) {
-        var key, sum = 0;
-        var values = Array.isArray(d.values) ? d.values[0] : d;
+// Is this used? It's not exported and not called in this file. @TODO possibly remove
+function sumStackedValues(model){  // eslint-disable-line no-unused-vars
+    const extents = [];
+    model.data.map(function (d) {
+        let key;
+        let sum = 0;
+        const values = Array.isArray(d.values) ? d.values[0] : d;
         for (key in values) {
             if (key !== model.x.series.originalKey) {
                 sum += values[key];
@@ -138,13 +140,13 @@ function sumStackedValues(model){
 function dependentDomain(model, chartType){
     if(model.dependentDomain){ return model.dependentDomain; }
 
-    var extents = setExtents(model);
-    var domain = d3.extent(extents);
+    const extents = setExtents(model);
+    const domain = d3.extent(extents);
     if(!model.falseOrigin && domain[0] > 0){
         domain[0] = 0;
     }
 
-    var isBarOrColumn = ['column', 'bar'].indexOf(chartType) >= 0;
+    const isBarOrColumn = ['column', 'bar'].indexOf(chartType) >= 0;
     if (isBarOrColumn && domain[1] < 0) {
         domain[1] = 0;
     }
@@ -156,19 +158,19 @@ function chartHeight(model) {
     if (model.chartHeight) {
         return model.chartHeight - model.paddingY*2;
     }
-    var isNarrow = model.chartWidth < 220;
-    var isWide = model.chartWidth > 400;
-    var ratio = isNarrow ? 1.1 : (isWide ? ratios.commonRatios.widescreen : ratios.commonRatios.standard);
+    const isNarrow = model.chartWidth < 220;
+    const isWide = model.chartWidth > 400;
+    const ratio = isNarrow ? 1.1 : (isWide ? ratios.commonRatios.widescreen : ratios.commonRatios.standard);
     return ratios.heightFromWidth(model.chartWidth, ratio) - model.paddingY*2;
 }
 
 function stackSeries(model) {
-    var data = JSON.parse(JSON.stringify(model.data));
-    return !Array.isArray(data) ? [] : data.map(function (dataItem, i) {
+    const data = JSON.parse(JSON.stringify(model.data));
+    return !Array.isArray(data) ? [] : data.map(function (dataItem) {
       delete dataItem[model.x.series.key];
-      var chartValues = [];
-      for (var item in dataItem) {
-        chartValues.push(dataItem[item]);
+      const chartValues = [];
+      for (const item in dataItem) {
+        if (dataItem.hasOwnProperty(item)) chartValues.push(dataItem[item]);
       }
       return chartValues;
     });
@@ -177,8 +179,8 @@ function stackSeries(model) {
 function verifyData(model) {
     return !Array.isArray(model.data) ? [] : model.data.map(function (dataItem, i) {
 
-        var s = dataItem[model.x.series.key];
-        var error = {
+        const s = dataItem[model.x.series.key];
+        const error = {
             node: null,
             message: '',
             row: i,
@@ -190,7 +192,7 @@ function verifyData(model) {
             error.message = 'Empty row';
         } else if (!s) {
             error.message = 'X axis value is empty or null';
-        } else if (!isDate(s) && model.chartType == 'line') {
+        } else if (!isDate(s) && model.chartType === 'line') {
             error.message = 'Value is not a valid date';
         }
 
@@ -205,7 +207,7 @@ function verifyData(model) {
 }
 
 function setKey(model) {
-    var key = model.key;
+    let key = model.key;
     if (typeof model.key !== 'boolean') {
         key = model.y.series.length > 1;
     } else if (model.key && !model.y.series.length) {
@@ -215,10 +217,10 @@ function setKey(model) {
 }
 
 function groupDates(m, units){
-    var firstDate = m.data[0][m.x.series.key];
-    var data = [];
+    const firstDate = m.data[0][m.x.series.key];
+    const data = [];
     m.data.forEach(function(d,i){
-        var dateStr = [dateUtil.formatter[units[0]](d[m.x.series.key], i, firstDate, m)];
+        const dateStr = [dateUtil.formatter[units[0]](d[m.x.series.key], i, firstDate, m)];
         units[1] && dateStr.push(dateUtil.formatter[units[1]](d[m.x.series.key], i, firstDate, m));
         units[2] && dateStr.push(dateUtil.formatter[units[2]](d[m.x.series.key], i, firstDate, m));
         data.push({key:dateStr.join(' '),values:[d]});
@@ -230,25 +232,25 @@ function groupDates(m, units){
 
 function needsGrouping(units){
     if (!units) return false;
-    var isGroupingUnit = false;
+    let isGroupingUnit = false;
     units.forEach(function(unit){
-        var groupThis = ['weekly', 'quarterly', 'monthly', 'yearly'].indexOf(unit);
+        const groupThis = ['weekly', 'quarterly', 'monthly', 'yearly'].indexOf(unit);
         isGroupingUnit = isGroupingUnit || (groupThis>-1);
     });
     return isGroupingUnit;
 }
 
 function Model(chartType, opts) {
-    var classes = {
+    const classes = {
         line: ['line--series1', 'line--series2', 'line--series3', 'line--series4', 'line--series5', 'line--series6', 'line--series7', 'accent'],
         column: ['column--series1', 'column--series2', 'column--series3', 'column--series4', 'column--series5', 'column--series6', 'column--series7', 'accent'],
         bar: ['bar--series1', 'bar--series2', 'bar--series3', 'bar--series4', 'bar--series5', 'bar--series6', 'bar--series7', 'accent']
     };
-    var m = {
+    const m = {
         //layout stuff
         theme: 'ft-web',
         chartType: chartType,
-        keyColumns: (chartType == 'column' ? 5 : 1),
+        keyColumns: (chartType === 'column' ? 5 : 1),
         keyHover: false,
         height: undefined,
         paddingX: 0,
@@ -284,8 +286,8 @@ function Model(chartType, opts) {
         sourcePrefix: 'Source: '
     };
 
-    for (var key in opts) {
-        m[key] = opts[key];
+    for (const key in opts) {
+        if (opts.hasOwnProperty(key)) m[key] = opts[key];
     }
 
     m.paddingX = themes.check(m.theme, 'svg').attributes['padding-x'] || 0;

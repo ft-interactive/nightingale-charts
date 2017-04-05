@@ -1,22 +1,22 @@
 /*jshint -W084 */
 //text area provides a wrapping text block of a given type
-var d3 = require('d3');
+const d3 = require('d3');
 
 function textArea() {
 
-    var xOffset = 0,
-        yOffset = 0,
-        paddingX = 0,
-        paddingY = 0,
-        align = 'left',
-        float = 'left',
-        attr = {},
-        width = 1000,
-        lineHeight = 20,
-        units = 'px', //pixels by default
-        bounds,
-        fill = false,
-        background = false;
+    let xOffset = 0;
+    let yOffset = 0;
+    let paddingX = 0;
+    let paddingY = 0;
+    let align = 'left';
+    let float = 'left';
+    let attr = {};
+    let width = 1000;
+    let lineHeight = 20;
+    let units = 'px'; //pixels by default;
+    let bounds;
+    let fill = false;
+    let background = false;
 
     function createBackgroundColor (g, viewBox, translate){
         return g.insert('rect', ':first-child')
@@ -32,22 +32,22 @@ function textArea() {
     }
 
     function wrap(text, width) {
-        var innerWidth = width - (paddingX * 2);
-        var lines = 1;
+        const innerWidth = width - (paddingX * 2);
+        let lines = 1;
         text.each(function () {
-            var text = d3.select(this),
-                words = text.text().trim().split(/\s+/).reverse(),
-                word,
-                line = [],
-                lineNumber = 0,
-                y = text.attr('y'),
-                dy = parseFloat(text.attr('dy'));
+            const text = d3.select(this);
+            const words = text.text().trim().split(/\s+/).reverse();
+            const y = text.attr('y');
+            let word;
+            let line = [];
+            let lineNumber = 0;
+            let dy = parseFloat(text.attr('dy'));
 
             if (isNaN(dy)) {
                 dy = 0;
             }
 
-            var tspan = text.text(null).append('tspan')
+            let tspan = text.text(null).append('tspan')
                 .attr('x', paddingX)
                 .attr('y', y + paddingY )
                 .attr('dy', dy + units);
@@ -59,7 +59,7 @@ function textArea() {
                     tspan.text(line.join(' '));
                     line = [word];
                     lineNumber++;
-                    var newY = (lineNumber * lineHeight) + paddingY;
+                    const newY = (lineNumber * lineHeight) + paddingY;
                     tspan = text.append('tspan')
                         .attr('x', paddingX)
                         .attr('y', + newY + units)
@@ -69,17 +69,17 @@ function textArea() {
             lines = lineNumber+1;
         });
         if (align === 'right' || float === 'right'){
-            text.selectAll('tspan').each(function(d,i){
-                var xPosRounded = Math.round(innerWidth - this.getComputedTextLength());
+            text.selectAll('tspan').each(function(){
+                const xPosRounded = Math.round(innerWidth - this.getComputedTextLength());
                 d3.select(this).attr('x', xPosRounded);
             });
         }
         if (background){
-            var d3El = d3.select(text.node().parentNode);
-            var fillHeight = text.node().getBoundingClientRect().height + (paddingY * 2);
-            fillHeight = Math.max(fillHeight, (lineHeight * lines)  + (paddingY * 2));
-            var viewBox = [0, 0 - lineHeight, width, fillHeight];
-            var translate = [xOffset, yOffset];
+            const d3El = d3.select(text.node().parentNode);
+            let fillHeight = text.node().getBoundingClientRect().height + (paddingY * 2);
+            fillHeight = Math.max(fillHeight, (lineHeight * lines) + (paddingY * 2));
+            const viewBox = [0, 0 - lineHeight, width, fillHeight];
+            const translate = [xOffset, yOffset];
             createBackgroundColor(d3El, viewBox, translate);
         }
     }
@@ -173,7 +173,7 @@ function textArea() {
     area.attrs = function (obj) {
         if (!arguments.length) return attr;
         if (typeof obj !== "undefined") attr = obj;
-        for (var prop in attr){
+        for (const prop in attr){
             if (area[prop]) area[prop](obj[prop]);
         }
         return area;

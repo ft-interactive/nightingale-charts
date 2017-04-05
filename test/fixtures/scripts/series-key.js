@@ -1,8 +1,7 @@
+const oCharts = require('../../../main');
+const d3 = require('d3');
 
-var oCharts = require('../../../src/scripts/nightingale-charts');
-var d3 = require('d3');
-
-var lineData = [
+const lineData = [
     {style:"line--series1", label:"Family in feud with Zuckerbergs"},
     {style:"line--series2", label:"Committed 671 birthdays to memory"},
     {style:"line--series3", label:"Ex is doing too well"},
@@ -10,7 +9,7 @@ var lineData = [
     {style:"line--series5", label:"Discovered how to “like” things mentally"},
     {style:"line--series6", label:"Not enough politics"}
 ];
-var columnData = [
+const columnData = [
     {style:"column--series1", label:"Family in feud with Zuckerbergs"},
     {style:"column--series2", label:"Committed 671 birthdays to memory"},
     {style:"column--series3", label:"Ex is doing too well"},
@@ -23,7 +22,7 @@ var columnData = [
 module.exports = {
     init: function(){
 
-        var lineKey = oCharts.dressing.seriesKey({chartType: 'line'})
+        const lineKey = oCharts.dressing.seriesKey({chartType: 'line'})
             .width(100)
             .lineHeight(19);
         d3.select('svg#line')
@@ -32,7 +31,7 @@ module.exports = {
             .datum(lineData)
             .call(lineKey);
 
-        var lineVideoKey = oCharts.dressing.seriesKey({chartType: 'line', theme:'ft-video'})
+        const lineVideoKey = oCharts.dressing.seriesKey({chartType: 'line', theme:'ft-video'})
             .width(100)
             .lineHeight(19);
         d3.select('svg#lineVideo')
@@ -42,7 +41,7 @@ module.exports = {
             .call(lineVideoKey);
 
 
-        var columnKey = oCharts.dressing.seriesKey({chartType: 'column'})
+        const columnKey = oCharts.dressing.seriesKey({chartType: 'column'})
             .width(100)
             .lineHeight(19);
         d3.select('svg#column')
@@ -51,7 +50,7 @@ module.exports = {
             .datum(columnData)
             .call(columnKey);
 
-        var columnVideoKey = oCharts.dressing.seriesKey({chartType: 'column', theme:'ft-video'})
+        const columnVideoKey = oCharts.dressing.seriesKey({chartType: 'column', theme:'ft-video'})
             .width(100)
             .lineHeight(19);
         d3.select('svg#columnVideo')

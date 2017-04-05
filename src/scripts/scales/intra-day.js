@@ -1,6 +1,6 @@
-var discontScale = require('./discontinuableDateTime');
-var intraDayDiscontinuity = require('./discontinuityProviders/intra-day');
-var skipWeekends = require('./discontinuityProviders/skipWeekends');
+const discontScale = require('./discontinuableDateTime');
+const intraDayDiscontinuity = require('./discontinuityProviders/intra-day');
+const skipWeekends = require('./discontinuityProviders/skipWeekends');  // eslint-disable-line no-unused-vars
 
 /*
 this is just a wrapper for the discontinuity scale, so that we get

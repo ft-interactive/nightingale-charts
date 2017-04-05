@@ -1,12 +1,11 @@
-var d3 = require('d3');
-var themes = require('../themes');
-var labels = require('../util/labels.js');
-var dates = require('../util/dates.js');
-var timeDiff = dates.timeDiff;
+const d3 = require('d3');
+const themes = require('../themes');
+const labels = require('../util/labels.js');
+const dates = require('../util/dates.js');
 
 function categoryAxis(model) {
 
-    var config = {
+    const config = {
         axes: [d3.svg.axis().orient('bottom')],
         scale: false,
         lineHeight: 20,
@@ -48,7 +47,7 @@ function categoryAxis(model) {
     }
 
     function customTickShape(g) {
-       var ticks = g.selectAll(".primary .tick");
+       const ticks = g.selectAll(".primary .tick");
        ticks.each(function() {
          isVertical() ? d3.select(this).select('text').attr("x", -6) : null;
          d3.select(this).append("circle").attr("r", 2);
@@ -57,10 +56,10 @@ function categoryAxis(model) {
      }
 
     function render(g) {
-        var chartType = config.attr['chart-type'];
-        var orientOffset = (isVertical()) ? -config.axes[0].tickSize() : 0;
-        var className = isVertical() ? 'y' : 'x';
-        
+        const chartType = config.attr['chart-type'];
+        const orientOffset = (isVertical()) ? -config.axes[0].tickSize() : 0;
+        const className = isVertical() ? 'y' : 'x';
+
         config.attr.primary['text-anchor'] = isVertical() ? 'end' : 'middle';
         config.attr.secondary['text-anchor'] = isVertical() ? 'end' : 'middle';
 
@@ -70,7 +69,7 @@ function categoryAxis(model) {
                 labels.add(d3.select(this), config);
             });
 
-        var customTick = themes.check(model.theme, 'ticks').attributes.customTickShape || false;
+        const customTick = themes.check(model.theme, 'ticks').attributes.customTickShape || false;
         customTick && chartType !== 'bar' ? customTickShape(g) : null;
 
         if (!config.showDomain) {
@@ -150,11 +149,11 @@ function categoryAxis(model) {
         config.scale = scale;
         config.units = units;
 
-        var axes = [];
-        for (var i = 0; i < units.length; i++) {
-            var unit = units[i];
+        const axes = [];
+        for (let i = 0; i < units.length; i++) {
+            const unit = units[i];
             if (dates.formatGroups[unit]) {
-                var axis = d3.svg.axis()
+                const axis = d3.svg.axis()
                     .orient(config.axes[0].orient())
                     .scale(scale)
                     .tickFormat(dates.formatGroups[unit])

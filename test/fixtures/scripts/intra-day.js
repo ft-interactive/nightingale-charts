@@ -1,13 +1,13 @@
-var oCharts = require('../../../src/scripts/nightingale-charts');
-var d3 = require('d3');
+const oCharts = require('../../../main');
+const d3 = require('d3');
 
-var data = [
+const data = [
     require('./data/intra-day'),
     require('./data/intra-day-long')
 ];
 
 function getChartData(i) {
-    var defaultData = {
+    const defaultData = {
         comment: "Intra-day chart",
         footnote: "this is just for testing!",
         source: "Sauce",
@@ -34,7 +34,7 @@ function getChartData(i) {
 module.exports = {
     getChartData: getChartData,
     init: function () {
-        for (var i = 0; i < data.length; i++) {
+        for (let i = 0; i < data.length; i++) {
             d3.select('body')
                 .append('div')
                 .attr('id', 'line-chart' + (i + 1));

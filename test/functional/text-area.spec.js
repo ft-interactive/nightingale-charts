@@ -1,8 +1,8 @@
-var d3 = require('d3');
-
 describe('Text Area displays', function () {
 
-    var ftText, videoText, alignText;
+    let ftText;
+    let videoText;
+    let alignText;
 
     beforeEach(function(){
         require('../helper').loadAssets('text-area');
@@ -16,7 +16,7 @@ describe('Text Area displays', function () {
     describe('correct look + feel', function () {
 
         it('wrapped text to fit set width', function(){
-            var textArea = ftText.querySelectorAll('text')[0];
+            const textArea = ftText.querySelectorAll('text')[0];
             expect(textArea.querySelectorAll('tspan').length).toBe(3);
             expect(textArea.querySelectorAll('tspan')[0].getAttribute('y')).toBe('0');
             expect(textArea.querySelectorAll('tspan')[1].getAttribute('y')).toBe('16px');
@@ -24,7 +24,7 @@ describe('Text Area displays', function () {
         });
 
         it('aligns text right', function(){
-            var textArea = alignText.querySelectorAll('text')[0];
+            const textArea = alignText.querySelectorAll('text')[0];
             expect(textArea.querySelectorAll('tspan').length).toBe(2);
             expect(textArea.querySelectorAll('tspan')[0].getAttribute('x')).toBe('73');
             expect(textArea.querySelectorAll('tspan')[1].getAttribute('x')).toBe('120');

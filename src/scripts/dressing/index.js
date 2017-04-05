@@ -1,8 +1,8 @@
-var textArea = require('./text-area.js');
-var seriesKey = require('./series-key.js');
-var ftLogo = require('./logo.js');
-var themes = require('../themes');
-var PADDING = 8;
+const textArea = require('./text-area.js');
+const seriesKey = require('./series-key.js');
+const ftLogo = require('./logo.js');
+const themes = require('../themes');
+const PADDING = 8;
 
 function getHeight(selection) {
     return Math.ceil(selection.node().getBoundingClientRect().height);
@@ -42,7 +42,7 @@ Dressing.prototype.addBackground = function (g, viewBox){
 };
 
 Dressing.prototype.addHorizontalLine = function (g, id, viewBox){
-    var strokeWidth = this.getAttr('svg-borders')['stroke-width'] || 1;
+    const strokeWidth = this.getAttr('svg-borders')['stroke-width'] || 1;
     return g.append('line')
         .attr({
             'id': id,
@@ -58,7 +58,7 @@ Dressing.prototype.addHorizontalLine = function (g, id, viewBox){
 };
 
 Dressing.prototype.addVerticalLine = function (g, id, viewBox){
-    var strokeWidth = this.getAttr('svg-borders')['stroke-width'] || 1;
+    const strokeWidth = this.getAttr('svg-borders')['stroke-width'] || 1;
     return g.append('line')
         .attr({
             'id': id,
@@ -74,8 +74,8 @@ Dressing.prototype.addVerticalLine = function (g, id, viewBox){
 };
 
 Dressing.prototype.addBorders = function () {
-  var borderConfig = this.getAttr('svg-borders');
-  var maxWidth =  borderConfig['max-width'] || 1000;
+  const borderConfig = this.getAttr('svg-borders');
+  const maxWidth = borderConfig['max-width'] || 1000;
 
   borderConfig.top && this.model.width <= maxWidth ? this.addHorizontalLine(this.svg, 'line-horizontal-header', [0,0, this.model.width, 0]) : null;
   borderConfig.bottom && this.model.width <= maxWidth ? this.addHorizontalLine(this.svg, 'line-horizontal-footer', [0,0, this.model.width, this.model.height - 0]) : null;
@@ -90,8 +90,8 @@ Dressing.prototype.addHeader = function () {
 };
 
 Dressing.prototype.addFooter = function () {
-    var footerText = this.addFooterItem('footnote');
-    var sourceText = this.addFooterItem('source', this.model.sourcePrefix);
+    const footerText = this.addFooterItem('footnote');
+    const sourceText = this.addFooterItem('source', this.model.sourcePrefix);
     this.setHeight();
     this.addLogo();
     this.positionFooterItem(footerText);
@@ -100,9 +100,9 @@ Dressing.prototype.addFooter = function () {
 };
 
 Dressing.prototype.addLogo = function () {
-    var model = this.model;
+    const model = this.model;
     if (!model.logoSize) return;
-    var logo = this.svg.append('g').attr('class', 'chart-logo').call(ftLogo, model.logoSize);
+    const logo = this.svg.append('g').attr('class', 'chart-logo').call(ftLogo, model.logoSize);
     logo.attr('transform', model.translate({
         left: model.width - model.logoSize - 3,
         top: model.height - getHeight(logo) - 3
@@ -110,7 +110,7 @@ Dressing.prototype.addLogo = function () {
 };
 
 Dressing.prototype.addItem = function(item, widthRestrict, prefix){
-    var text = textArea()
+    const text = textArea()
         .width(this.model.width - widthRestrict - this.model.paddingX * 2)
         .attrs(this.getAttr('chart-' + item));
 
@@ -122,10 +122,10 @@ Dressing.prototype.addItem = function(item, widthRestrict, prefix){
 
 Dressing.prototype.addHeaderItem = function(item){
     if (!this.model[item]) return;
-    var gText = this.addItem(item, 0);
-    var fontSize = Math.round(this.getAttr('chart-' + item)['font-size']);
+    const gText = this.addItem(item, 0);
+    const fontSize = Math.round(this.getAttr('chart-' + item)['font-size']);
 
-    var currentPosition = {
+    const currentPosition = {
         top: this.headerHeight + fontSize + this.model.paddingY,
         left: this.model.paddingX
     };
@@ -140,7 +140,7 @@ Dressing.prototype.addHeaderItem = function(item){
 
 Dressing.prototype.addFooterItem = function(item, prefix){
     if (!this.model[item]) return;
-    var gText = this.addItem(item, this.model.logoSize, prefix);
+    const gText = this.addItem(item, this.model.logoSize, prefix);
     if (this.getAttr('chart-' + item).position!=='absolute' &&
         this.getAttr('chart-' + item).float!=='right'
     ){
@@ -151,13 +151,13 @@ Dressing.prototype.addFooterItem = function(item, prefix){
 };
 
 Dressing.prototype.positionSeriesKey = function (g) {
-    var model = this.model;
-    var labelWidth = model.yLabelWidth + PADDING;
-    var labelHeight = model.xLabelHeight + PADDING;
-    var hasTopAxis = [model.dependentAxisOrient,model.independentAxisOrient].indexOf('top')>-1;
-    var hasLeftAxis = [model.dependentAxisOrient,model.independentAxisOrient].indexOf('left')>-1;
-    var left = this.halfLineStrokeWidth;
-    var top = this.headerHeight ;
+    const model = this.model;
+    const labelWidth = model.yLabelWidth + PADDING;
+    const labelHeight = model.xLabelHeight + PADDING;
+    const hasTopAxis = [model.dependentAxisOrient,model.independentAxisOrient].indexOf('top')>-1;
+    const hasLeftAxis = [model.dependentAxisOrient,model.independentAxisOrient].indexOf('left')>-1;
+    let left = this.halfLineStrokeWidth;
+    let top = this.headerHeight ;
     if (model.keyHover){
         left = (hasLeftAxis && left < labelWidth) ? labelWidth : left;
         top = (hasTopAxis && top < labelHeight) ? labelHeight : top;
@@ -170,17 +170,17 @@ Dressing.prototype.positionSeriesKey = function (g) {
 
 
 Dressing.prototype.addSeriesKey = function () {
-    if (!this.model.key) {        return;    }
-    var model = this.model;
+    if (!this.model.key) { return; }
+    const model = this.model;
 
-    var chartKey = seriesKey(model)
-        .style(function (d) {  return d.value; })
-        .label(function (d) {  return d.key;  })
+    const chartKey = seriesKey(model)
+        .style(function (d) { return d.value; })
+        .label(function (d) { return d.key; })
         .width(model.keyWidth || model.contentWidth)
         .colours(model.gradients || model.colours)
         .attrs(this.getAttr('key'));
 
-    var gText = this.svg.append('g')
+    const gText = this.svg.append('g')
         .attr('class', 'chart__key')
         .datum(this.entries)
         .call(chartKey);
@@ -191,14 +191,14 @@ Dressing.prototype.addSeriesKey = function () {
 
 Dressing.prototype.positionFooterItem = function(gText) {
     if (!gText) return;
-    var model = this.model;
+    const model = this.model;
     this.footerItemCount++;
     // when tspans have been wrapped, we have to move the
     // group up by the height of every nth-child(1+n);
-    var spans = gText.selectAll('tspan').size();
-    var gHeight = (gText.node().getBBox().height / (spans)) * (spans - 1);
-    var yTrans = model.chartPosition.top + model.chartHeight + gText.currentPosition - gHeight;
-    if (this.footerItemCount==1 && gText.select('text').attr('float')){
+    const spans = gText.selectAll('tspan').size();
+    const gHeight = (gText.node().getBBox().height / (spans)) * (spans - 1);
+    const yTrans = model.chartPosition.top + model.chartHeight + gText.currentPosition - gHeight;
+    if (this.footerItemCount === 1 && gText.select('text').attr('float')){
         this.footerHeight += getHeight(gText) + PADDING;
         this.setHeight();
     }
@@ -213,8 +213,8 @@ Dressing.prototype.positionFooterItem = function(gText) {
 };
 
 Dressing.prototype.setHeight = function () {
-    var model = this.model;
-    var footerHeight = Math.max(this.footerHeight + PADDING * 2, model.logoSize);
+    const model = this.model;
+    const footerHeight = Math.max(this.footerHeight + PADDING * 2, model.logoSize);
     if (model.height) {
         model.chartHeight = model.height - this.headerHeight - footerHeight - model.paddingY*2;
         if (model.chartHeight < 0) {

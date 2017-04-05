@@ -1,17 +1,17 @@
-var oCharts = require('../../../main');
-var d3 = require('d3');
+const oCharts = require('../../../main');
+const d3 = require('d3');
 
 (() => {
-    var margin = {
+    const margin = {
         top:20, left:50, bottom:40, right:75
     };
 
-    var nesting = function(d) {
-        var str = d3.time.format('%e %b %Y')(d.date);
+    const nesting = function(d) {
+        let str = d3.time.format('%e %b %Y')(d.date);
         if (str[0] === ' ') str = str.substring(1);
         return str;
     };
-    var data = [
+    const data = [
         { date: new Date('5/07/2014'), value:      0.368069},
         { date: new Date('5/08/2014'), value: 0.472146},
         { date: new Date('5/09/2014'), value: 0.743529},
@@ -22,11 +22,11 @@ var d3 = require('d3');
         { date: new Date('5/14/2014'), value:     0.619157},
         { date: new Date('5/15/2014'), value:     0.090189}
     ];
-    var nestedData = d3.nest()
+    const nestedData = d3.nest()
     .key(nesting)
     .entries(data);
 
-    var d3Data = {
+    const d3Data = {
         data: data,
         scale: d3.scale
         .ordinal()
@@ -56,23 +56,23 @@ var d3 = require('d3');
     .append('svg').attr('id','#categories-axes')
     .data([d3Data])
     .attr('width', function (d) {
-        var width = margin.left + margin.right;
-        if (d.orient =='bottom') {
-            var r = d.scale.range();
+        let width = margin.left + margin.right;
+        if (d.orient === 'bottom') {
+            const r = d.scale.range();
             width += (r[r.length-1] - r[0]);
         }
         return width;
     })
     .attr('height', function (d) {
-        var height = margin.top + margin.bottom;
-        if (d.orient == 'left') {
-            var r = d.scale.range();
+        let height = margin.top + margin.bottom;
+        if (d.orient === 'left') {
+            const r = d.scale.range();
             height += r[0] + r[r.length-1];
         }
-        return height
+        return height;
     })
-    .each(function (d, i) {
-        var axis = oCharts.axis.category({
+    .each(function (d) {
+        const axis = oCharts.axis.category({
             theme: 'ft-web'
         })
         .dataType(d.dataType)
@@ -89,11 +89,11 @@ var d3 = require('d3');
 })();
 
 (() => {
-    var margin = {
+    const margin = {
         top:20, left:100, bottom:40, right:75
     };
 
-    var dataVert = [
+    const dataVert = [
         { key: 'Red', value:      0.368069},
         { key: 'Blue', value: 0.472146},
         { key: 'Green', value: 0.743529},
@@ -105,7 +105,7 @@ var d3 = require('d3');
         { key: 'Sunset Red', value:     0.090189}
     ];
 
-    var d3DataVert = {
+    const d3DataVert = {
         data: dataVert,
         scale: d3.scale
         .ordinal()
@@ -124,23 +124,23 @@ var d3 = require('d3');
     .append('svg').attr('id','#vertical-axes')
     .data([d3DataVert])
     .attr('width', function (d) {
-        var width = margin.left + margin.right;
-        if (d.orient =='bottom') {
-            var r = d.scale.range();
+        let width = margin.left + margin.right;
+        if (d.orient ==='bottom') {
+            const r = d.scale.range();
             width += (r[r.length-1] - r[0]);
         }
         return width;
     })
     .attr('height', function (d) {
-        var height = margin.top + margin.bottom;
-        if (d.orient == 'left') {
-            var r = d.scale.range();
+        let height = margin.top + margin.bottom;
+        if (d.orient === 'left') {
+            const r = d.scale.range();
             height += r[0] + r[r.length-1];
         }
-        return height
+        return height;
     })
-    .each(function (d, i) {
-        var axis = oCharts.axis.category({
+    .each(function (d) {
+        const axis = oCharts.axis.category({
             theme: 'ft-nar'
         })
         .dataType(d.dataType)

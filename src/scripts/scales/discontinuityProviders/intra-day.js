@@ -1,6 +1,6 @@
-var d3 = require('d3');
+const d3 = require('d3');
 
-var createIntraDay = function(openTime, closeTime) {
+const createIntraDay = function(openTime, closeTime) {
 
     if (!openTime) {
         throw new Error("You need to provide an opening time as 24H time, i.e. 08:30");
@@ -10,25 +10,25 @@ var createIntraDay = function(openTime, closeTime) {
         throw new Error("You need to provide a closing time as 24H time, i.e. 16:30");
     }
 
-    var open = openTime;
-    var close = closeTime;
+    const open = openTime;
+    const close = closeTime;
 
 
-    var millisPerDay = 864e5;
-    var millisPerWorkDay = calculateMillis();
-    var millisPerWorkWeek = millisPerWorkDay * 5;
-    var millisPerWeek = millisPerDay * 7;
+    const millisPerDay = 864e5;
+    const millisPerWorkDay = calculateMillis();
+    const millisPerWorkWeek = millisPerWorkDay * 5; // eslint-disable-line no-unused-vars
+    const millisPerWeek = millisPerDay * 7; // eslint-disable-line no-unused-vars
 
-    var intraDay = {};
+    const intraDay = {};
 
 
     function calculateMillis() {
-        var openHour = +open.split(':')[0];
-        var openMinute = +open.split(':')[1];
-        var closeHour = +close.split(':')[0];
-        var closeMinute = +close.split(':')[1];
-        var openDate = new Date(1970, 0, 0, openHour, openMinute);
-        var closeDate = new Date(1970, 0, 0, closeHour, closeMinute);
+        const openHour = +open.split(':')[0];
+        const openMinute = +open.split(':')[1];
+        const closeHour = +close.split(':')[0];
+        const closeMinute = +close.split(':')[1];
+        const openDate = new Date(1970, 0, 0, openHour, openMinute);
+        const closeDate = new Date(1970, 0, 0, closeHour, closeMinute);
         return closeDate.getTime() - openDate.getTime();
     }
 
@@ -42,8 +42,8 @@ var createIntraDay = function(openTime, closeTime) {
             return false;
         }
 
-        var openDate = dateFromTime(date, open);
-        var closeDate = dateFromTime(date, close);
+        const openDate = dateFromTime(date, open);
+        const closeDate = dateFromTime(date, close);
 
         return (openDate <= date) && (date <= closeDate);
     }
@@ -52,8 +52,8 @@ var createIntraDay = function(openTime, closeTime) {
     // create a new date with the time
     // specified
     function dateFromTime(date, time) {
-        var hour = +time.split(':')[0];
-        var minute = +time.split(':')[1];
+        const hour = +time.split(':')[0];
+        const minute = +time.split(':')[1];
         return new Date(
             date.getFullYear(),
             date.getMonth(),
@@ -72,8 +72,8 @@ var createIntraDay = function(openTime, closeTime) {
     }
 
     function moveToNextBoundary(date) {
-        var openTimeToday = calculateOpenTimeFor(date);
-        var closeTimeToday = calculateCloseTimeFor(date);
+        const openTimeToday = calculateOpenTimeFor(date); // eslint-disable-line no-unused-vars
+        const closeTimeToday = calculateCloseTimeFor(date);
 
         if (date.getTime() === closeTimeToday.getTime()) {
             // add a second and clamp, you'll get tomorrow
@@ -86,8 +86,8 @@ var createIntraDay = function(openTime, closeTime) {
     }
 
     function moveToPrevBoundary(date) {
-        var openTimeToday = calculateOpenTimeFor(date);
-        var closeTimeToday = calculateCloseTimeFor(date);
+        const openTimeToday = calculateOpenTimeFor(date);
+        const closeTimeToday = calculateCloseTimeFor(date); // eslint-disable-line no-unused-vars
 
         if (date.getTime() === openTimeToday.getTime()) {
             // add a second and clamp, you'll get tomorrow
@@ -99,8 +99,8 @@ var createIntraDay = function(openTime, closeTime) {
     }
 
     function findWeekends(startDate, endDate) {
-        var counter = new Date(startDate.getTime());
-        var weekendDays = 0;
+        let counter = new Date(startDate.getTime());
+        let weekendDays = 0;
 
         while (counter < endDate) {
             if (isWeekend(counter)) {
@@ -118,8 +118,8 @@ var createIntraDay = function(openTime, closeTime) {
         // first move the date back into the week
         // if it's in the weekend
         if (isWeekend(date)) {
-            var daysToSubtract = date.getDay() === 0 ? 2 : 1;
-            var newDate = d3.time.day.ceil(date);
+            const daysToSubtract = date.getDay() === 0 ? 2 : 1;
+            const newDate = d3.time.day.ceil(date);
             date = d3.time.day.offset(newDate, -daysToSubtract);
         }
         // and now check if it's working hours
@@ -129,15 +129,15 @@ var createIntraDay = function(openTime, closeTime) {
 
         // when we get here, we know it's not a weekend or working hours, so
         // we have to find the closest date
-        var openTimeToday = calculateOpenTimeFor(date);
-        var closeTimeToday = calculateCloseTimeFor(date);
+        const openTimeToday = calculateOpenTimeFor(date);
+        const closeTimeToday = calculateCloseTimeFor(date);
 
         // date is before open time
         if (date < openTimeToday) {
             // we gotta return yesterday's close time, if it is
             // monday, then it's 3 days back, otherwise it is just one
-            var prevWorkDays = date.getDay() === 1 ? 3 : 1;
-            var yesterdayClose = d3.time.day.offset(closeTimeToday, -prevWorkDays);
+            const prevWorkDays = date.getDay() === 1 ? 3 : 1;
+            const yesterdayClose = d3.time.day.offset(closeTimeToday, -prevWorkDays);
             return yesterdayClose;
         }
 
@@ -154,8 +154,8 @@ var createIntraDay = function(openTime, closeTime) {
         // first move the date forward into the week
         // if it's in the weekend
         if (isWeekend(date)) {
-            var daysToAdd = date.getDay() === 0 ? 2 : 1;
-            var newDate = d3.time.day.ceil(date);
+            const daysToAdd = date.getDay() === 0 ? 2 : 1;
+            const newDate = d3.time.day.ceil(date);
             date = d3.time.day.offset(newDate, daysToAdd);
         }
 
@@ -165,8 +165,8 @@ var createIntraDay = function(openTime, closeTime) {
             return date;
         }
 
-        var openTimeToday = calculateOpenTimeFor(date);
-        var closeTimeToday = calculateCloseTimeFor(date);
+        const openTimeToday = calculateOpenTimeFor(date);
+        const closeTimeToday = calculateCloseTimeFor(date);
 
         // date is before open time
         if (date < openTimeToday) {
@@ -174,8 +174,8 @@ var createIntraDay = function(openTime, closeTime) {
         }
 
         if (date > closeTimeToday) {
-            var nextWorkDays = (date.getDay() === 5) ? 3 : 1;
-            var tomorrowOpen = d3.time.day.offset(openTimeToday, nextWorkDays);
+            const nextWorkDays = (date.getDay() === 5) ? 3 : 1;
+            const tomorrowOpen = d3.time.day.offset(openTimeToday, nextWorkDays);
             return tomorrowOpen;
         }
 
@@ -186,36 +186,36 @@ var createIntraDay = function(openTime, closeTime) {
         startDate = intraDay.clampUp(startDate);
         endDate = intraDay.clampDown(endDate);
 
-        var openTimeStart = calculateOpenTimeFor(startDate);
-        var closeTimeStart = calculateCloseTimeFor(startDate);
-        var openTimeEnd = calculateOpenTimeFor(endDate);
-        var closeTimeEnd = calculateCloseTimeFor(endDate);
+        const openTimeStart = calculateOpenTimeFor(startDate); // eslint-disable-line no-unused-vars
+        const closeTimeStart = calculateCloseTimeFor(startDate);
+        const openTimeEnd = calculateOpenTimeFor(endDate);
+        const closeTimeEnd = calculateCloseTimeFor(endDate); // eslint-disable-line no-unused-vars
 
         if (endDate < closeTimeStart) {
             return endDate.getTime() - startDate.getTime();
         }
 
-        var msStartDayAdded = closeTimeStart.getTime() - startDate.getTime();
-        var msEndDayRemoved = openTimeEnd.getTime() - endDate.getTime();
+        const msStartDayAdded = closeTimeStart.getTime() - startDate.getTime();
+        const msEndDayRemoved = openTimeEnd.getTime() - endDate.getTime();
 
-        var offsetDayStart = d3.time.day.ceil(startDate);
-        var offsetDayEnd = d3.time.day.floor(endDate);
-        var days = (offsetDayEnd.getTime() - offsetDayStart.getTime()) / millisPerDay;
+        const offsetDayStart = d3.time.day.ceil(startDate);
+        const offsetDayEnd = d3.time.day.floor(endDate);
+        const days = (offsetDayEnd.getTime() - offsetDayStart.getTime()) / millisPerDay;
 
-        var weekendTime = findWeekends(startDate, endDate);
+        const weekendTime = findWeekends(startDate, endDate);
 
         return days * millisPerWorkDay + msStartDayAdded - msEndDayRemoved - weekendTime;
 
     };
 
     intraDay.offset = function(startDate, ms) {
-        var date = isTradingHours(startDate) ? startDate : intraDay.clampUp(startDate);
-        var remainingms = Math.abs(ms);
-        var diff;
+        let date = isTradingHours(startDate) ? startDate : intraDay.clampUp(startDate);
+        let remainingms = Math.abs(ms);
+        let diff;
 
         if (ms >= 0) {
             while (remainingms > 0) {
-                var closeTimeStart = calculateCloseTimeFor(date);
+                const closeTimeStart = calculateCloseTimeFor(date);
                 diff = closeTimeStart.getTime() - date.getTime();
                 if (diff < remainingms) {
                     date = new Date(date.getTime() + diff);
@@ -231,7 +231,7 @@ var createIntraDay = function(openTime, closeTime) {
         } else {
             // we're going backwards!
             while (remainingms > 0) {
-                var openTimeStart = calculateOpenTimeFor(date);
+                const openTimeStart = calculateOpenTimeFor(date);
                 diff = date.getTime() - openTimeStart.getTime();
                 if (diff < remainingms) {
                     date = new Date(date.getTime() - diff);

@@ -1,11 +1,11 @@
-var oCharts = require('../../../main');
-var d3 = require('d3');
+const oCharts = require('../../../main');
+const d3 = require('d3');
 
 (() => {
-    var margin = {
+    const margin = {
         top: 20, left: 50, bottom: 70, right: 50
-    }
-    var data = {
+    };
+    const data = {
         orient: "left",
         simple: false,
         scale: d3.scale.linear()
@@ -13,7 +13,7 @@ var d3 = require('d3');
         .domain([11.2, 7])
     };
 
-    var divs = d3.select('#views');
+    const divs = d3.select('#views');
 
     divs.append('h2')
     .text("Number Axis");
@@ -21,22 +21,22 @@ var d3 = require('d3');
     divs.append('svg')
     .data([data])
     .attr('width', function (d) {
-        if (d.orient == "bottom") {
-            var r = d.scale.range();
-            return r[0] + r[1] + margin.bottom
+        if (d.orient === "bottom") {
+            const r = d.scale.range();
+            return r[0] + r[1] + margin.bottom;
         }
-        return margin.left + margin.right
+        return margin.left + margin.right;
     })
     .attr('class', 'ft-chart')
     .attr('height', function (d) {
-        if (d.orient == "bottom") {
-            return margin.bottom
+        if (d.orient === "bottom") {
+            return margin.bottom;
         }
-        var r = d.scale.range();
-        return r[0] + r[1] + margin.bottom
+        const r = d.scale.range();
+        return r[0] + r[1] + margin.bottom;
     })
-    .each(function (d, i) {
-        var axis = oCharts.axis.number()
+    .each(function (d) {
+        const axis = oCharts.axis.number()
         .simple(d.simple)
         .scale(d.scale)
         .orient(d.orient);
@@ -49,10 +49,10 @@ var d3 = require('d3');
 })();
 
 (() => {
-    var margin = {
+    const margin = {
         top: 20, left: 50, bottom: 70, right: 50
-    }
-    var data = {
+    };
+    const data = {
         orient: "bottom",
         simple: false,
         scale: d3.scale.linear()
@@ -60,7 +60,7 @@ var d3 = require('d3');
         .domain([11.2, 7])
     };
 
-    var divs = d3.select('#horizontal');
+    const divs = d3.select('#horizontal');
 
     divs.append('h2')
     .text("Number Axis");
@@ -68,22 +68,22 @@ var d3 = require('d3');
     divs.append('svg')
     .data([data])
     .attr('width', function (d) {
-        if (d.orient == "bottom") {
-            var r = d.scale.range();
-            return r[0] + r[1] + margin.bottom
+        if (d.orient === "bottom") {
+            const r = d.scale.range();
+            return r[0] + r[1] + margin.bottom;
         }
-        return margin.left + margin.right
+        return margin.left + margin.right;
     })
     .attr('class', 'ft-chart')
     .attr('height', function (d) {
-        if (d.orient == "bottom") {
-            return margin.bottom
+        if (d.orient === "bottom") {
+            return margin.bottom;
         }
-        var r = d.scale.range();
-        return r[0] + r[1] + margin.bottom
+        const r = d.scale.range();
+        return r[0] + r[1] + margin.bottom;
     })
-    .each(function (d, i) {
-        var axis = oCharts.axis.number()
+    .each(function (d) {
+        const axis = oCharts.axis.number()
         .simple(d.simple)
         .scale(d.scale)
         .orient(d.orient);

@@ -1,31 +1,31 @@
-var axes = require('../axis');
-var DataModel = require('../util/data.model.js');
-var metadata = require('../util/metadata.js');
-var Dressing = require('../dressing');
-var themes = require('../themes');
+const axes = require('../axis');
+const DataModel = require('../util/data.model.js');
+const metadata = require('../util/metadata.js');
+const Dressing = require('../dressing');
+const themes = require('../themes');
 
 function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
 
-	var data = formatData(model, series);
-    var plot = new axes.Plot(model, createdAxes);
-    var s = plotSVG.append('g').attr('class', 'series');
-    var attr = themes.check(model.theme, 'columns').attributes;
+	const data = formatData(model, series);
+    const plot = new axes.Plot(model, createdAxes);
+    const s = plotSVG.append('g').attr('class', 'series');
+    const attr = themes.check(model.theme, 'columns').attributes;
     attr.fill = model.gradients[series.index] || model.colours[series.index];
 
     s.selectAll('rect')
         .data(data)
         .enter()
         .append('rect')
-        .attr('class', function (d){return 'column '  + series.className + (d.value < 0 ? ' negative' : ' positive');})
+        .attr('class', function (d){return 'column ' + series.className + (d.value < 0 ? ' negative' : ' positive');})
         .attr('data-value', function (d){return d.value;})
-        .attr('x', function (d, i){ return plot.x(d.key, seriesNumber); })
+        .attr('x', function (d){ return plot.x(d.key, seriesNumber); })
         .attr('y', function (d, i){
 					if (model.stack) {
 						return plot.y(d.value, i, getStackedHeight(model.data, model.stacks, d.key, d.value, model.x.series.key));
 					}
 					return plot.y(d.value, i);
 				})
-        .attr('height', function (d, i){
+        .attr('height', function (d){
 					if (model.stack) {
 						return plot.columnHeight(getStackedHeight(model.data, model.stacks, d.key, d.value, model.x.series.key));
 					}
@@ -42,8 +42,8 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
             .enter()
             .append('text')
             .attr('class', 'null-label')
-            .attr('x',  function (d, i) { return plot.x(d.key, seriesNumber); })
-            .attr('y',  function (d, i) { return plot.y(d.value, i); })
+            .attr('x', function (d) { return plot.x(d.key, seriesNumber); })
+            .attr('y', function (d, i) { return plot.y(d.value, i); })
             .attr('dy', '-0.5em')
             .attr('dx', function (d, i) { return plot.columnWidth(d, i) / 4; })
             .attr('font-family', "BentonSans, sans-serif")
@@ -56,7 +56,7 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
         // make those labels who don't fit smaller
         s.selectAll('text.null-label')
             .each(function(d, i) {
-                var w = this.getBoundingClientRect();
+                const w = this.getBoundingClientRect();
                 if ((w.width + 2) >= plot.columnWidth(d, i)) {
                     this.innerHTML = '–';
                 }
@@ -66,15 +66,15 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
 
 function formatData(model, series) {
 
-    var nulls = [];
+    const nulls = [];
 
-    var data = model.data.map(function (d){
+    const data = model.data.map(function (d){
         return{
             key:d[model.x.series.key],
             value: (Array.isArray(d.values)) ? d.values[0][series.key] : d[series.key]
         };
     }).filter(function (d) {
-        var isNull = !(d.value !== null && !isNaN(d.value));
+        const isNull = !(d.value !== null && !isNaN(d.value));
         if (isNull) nulls.push(d);
         // if we're stacking - we transform nulls
         // into zeros to avoid problems
@@ -91,9 +91,9 @@ function formatData(model, series) {
 }
 
 function getStackedHeight(data, stacks, key, val, xKey) {
-	var value = isNaN(val) ? 0 : val;
-	var height;
-	var seriesKey;
+	const value = isNaN(val) ? 0 : val;
+	let height;
+	let seriesKey;
 	function calculateHeight(val, nextVal, previousVal) {
 		if (val < 0 && previousVal >= 0) {
 			return val;
@@ -112,8 +112,8 @@ function getStackedHeight(data, stacks, key, val, xKey) {
 	stacks[seriesKey].sort(function(a, b) {
 		return b-a;
 	}).map(function(data, i) {
-		var isValuePositive = data < 0 ? false : true;
-		var previousVal = stacks[seriesKey][i-1];
+		const isValuePositive = data < 0 ? false : true;
+		const previousVal = stacks[seriesKey][i-1];
 		if (data === value) {
 			if (isValuePositive && stacks[seriesKey][i+1] !== undefined) {
 				height = calculateHeight(value, stacks[seriesKey][i+1], previousVal);
@@ -130,8 +130,8 @@ function getStackedHeight(data, stacks, key, val, xKey) {
 }
 
 function columnChart(g){
-    var model = new DataModel('column', Object.create(g.data()[0]));
-    var svg = g.append('svg')
+    const model = new DataModel('column', Object.create(g.data()[0]));
+    const svg = g.append('svg')
         .attr({
             'id': model.id,
             'class': 'graphic column-chart',
@@ -143,26 +143,26 @@ function columnChart(g){
     metadata.create(svg, model);
     themes.createDefinitions(svg, model);
 
-    var dressing = new Dressing(svg, model);
+    const dressing = new Dressing(svg, model);
     dressing.addHeaderItem('title');
     dressing.addHeaderItem('subtitle');
     !model.keyHover && dressing.addSeriesKey();
     dressing.addFooter();
 		dressing.addBorders();
 
-    var chartSVG = svg.append('g').attr('class', 'chart');
+    const chartSVG = svg.append('g').attr('class', 'chart');
     chartSVG.attr('transform', model.translate(model.chartPosition));
 
-    var independent = (model.groupData || model.dataType === 'categorical') ? 'ordinal' : 'time';
-    var creator = new axes.Create(chartSVG, model);
+    const independent = (model.groupData || model.dataType === 'categorical') ? 'ordinal' : 'time';
+    const creator = new axes.Create(chartSVG, model);
     creator.createAxes({dependent:'number', independent: independent});
 
     model.keyHover && dressing.addSeriesKey();
 
-		var axisLayer = themes.check(model.theme, 'axis-layer').attributes.position || 'back';
-    var plotSVG = axisLayer === 'front' ? chartSVG.insert('g', '.x.axis').attr('class', 'plot') : chartSVG.append('g').attr('class', 'plot');
+		const axisLayer = themes.check(model.theme, 'axis-layer').attributes.position || 'back';
+    const plotSVG = axisLayer === 'front' ? chartSVG.insert('g', '.x.axis').attr('class', 'plot') : chartSVG.append('g').attr('class', 'plot');
 
-    var i = 0;
+    let i = 0;
 
     for(i; i < model.y.series.length; i++){
         plotSeries(plotSVG, model, creator, model.y.series[i], i);

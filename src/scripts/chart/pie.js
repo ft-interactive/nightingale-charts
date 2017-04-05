@@ -1,10 +1,6 @@
-//var d3 = require('d3');
-
 function pieChart() {
-    'use strict';
-
     function buildModel(opts) {
-        var m = {
+        const m = {
             //layout stuff
             title: 'chart title',
             height: undefined,
@@ -20,8 +16,8 @@ function pieChart() {
             }
         };
 
-        for (var key in opts) {
-            m[key] = opts[key];
+        for (const key in opts) {
+            if (opts.hasOwnProperty(key)) m[key] = opts[key];
         }
 
         return m;
@@ -31,7 +27,8 @@ function pieChart() {
         return Math.ceil(selection.node().getBoundingClientRect().height);
     }
 
-    function getWidth(selection) {
+    // @TODO is this used? It's not ever called in this file or exported.
+    function getWidth(selection) {  // eslint-disable-line no-unused-vars
         return Math.ceil(selection.node().getBoundingClientRect().width);
     }
 
@@ -40,30 +37,30 @@ function pieChart() {
     }
 
     function chart(g) {
-        var model = buildModel(g.data()[0]);
+        const model = buildModel(g.data()[0]);
         if (!model.height) {
             model.height = model.width;
         }
-        var svg = g.append('svg')
+        const svg = g.append('svg')
             .attr({
                 'class': 'null-chart',
                 'height': model.height,
                 'width': model.width
             });
 
-        var title = svg.append('text').text(model.title + " - PLACE HOLDER CHART");
+        const title = svg.append('text').text(model.title + " - PLACE HOLDER CHART");
         title.attr('transform', translate({top: getHeight(title), left: 0}));
 
-        var subtitle = svg.append('text').text(model.subtitle);
+        const subtitle = svg.append('text').text(model.subtitle);
         subtitle.attr('transform', translate({top: getHeight(title) + getHeight(subtitle), left: 0}));
 
-        var chartSvg = svg.append('g').attr('class', 'chart');
+        const chartSvg = svg.append('g').attr('class', 'chart');
 
         if (model.data.length > 3) {
             model.error('PIE warning: too many segments!');
         }
 
-        var outerRadius = model.width / 2;
+        const outerRadius = model.width / 2;  // eslint-disable-line no-unused-vars
 
         chartSvg.selectAll('.slice')
             .data(model.data)

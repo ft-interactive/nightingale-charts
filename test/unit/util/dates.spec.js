@@ -1,5 +1,5 @@
-var utils = require('../../../src/scripts/util/dates');
-var d3 = require('d3');
+const utils = require('../../../src/scripts/util/dates');
+const d3 = require('d3');
 
 /* Start Test */
 describe('date.utils  ', function () {
@@ -11,7 +11,7 @@ describe('date.utils  ', function () {
         });
 
         it('less than 2 days', function(){
-            var d;
+            let d;
             d = d3.time.scale()
                 .range([0,400])
                 .domain([new Date("October 14, 1975 11:13:00"), new Date("October 14, 1975 22:00:00")]);
@@ -39,7 +39,7 @@ describe('date.utils  ', function () {
         });
 
         it('less than 2 months (60 days)', function(){
-            var d;
+            let d;
             d = d3.time.scale()
                 .range([0,400])
                 .domain([new Date("April 14, 1975 11:13:00"), new Date("May 14, 1975 22:00:00")]);
@@ -62,7 +62,7 @@ describe('date.utils  ', function () {
         });
 
         it('less than 1 year (365.25 days)', function(){
-            var d;
+            let d;
             d = d3.time.scale()
                 .range([0,400])
                 .domain([new Date("October 14, 1975 11:13:00"), new Date("February 14, 1976 00:00:00")]);
@@ -85,7 +85,7 @@ describe('date.utils  ', function () {
         });
 
         it('less than 15 years (365.25 days * 15)', function(){
-            var d;
+            let d;
             d = d3.time.scale()
                 .range([0,400])
                 .domain([new Date("October 14, 1975 11:13:00"), new Date("February 14, 1985 00:00:00")]);
@@ -105,7 +105,7 @@ describe('date.utils  ', function () {
         });
 
         it('less than 150 years (365.25 days * 150)', function(){
-            var d;
+            let d;
             d = d3.time.scale()
                 .range([0,400])
                 .domain([new Date("October 14, 1875 11:13:00"), new Date("February 14, 1985 00:00:00")]);
@@ -125,7 +125,7 @@ describe('date.utils  ', function () {
         });
 
         it('less than 1000 years (365.25 days * 1000)', function(){
-            var d;
+            let d;
             d = d3.time.scale()
                 .range([0,400])
                 .domain([new Date("October 14, 1775 11:13:00"), new Date("February 14, 1985 00:00:00")]);
@@ -145,8 +145,7 @@ describe('date.utils  ', function () {
         });
 
         it('anything more', function(){
-            var d;
-            d = d3.time.scale()
+            const d = d3.time.scale()
                 .range([0,400])
                 .domain([new Date("October 14, 1005 11:13:00"), new Date("October 21, 2005 11:13:00")]);
             expect(utils.unitGenerator(d.domain()).length).toBe(1);

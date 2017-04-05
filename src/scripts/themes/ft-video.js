@@ -1,5 +1,5 @@
-var PADDING = 8;
-var colours = {
+const PADDING = 8;
+const colours = {
     line: [
         'rgb(180,63,51)', 'rgb(92,141,179)', 'rgb(165,174,103)', 'rgb(238,168,88)', 'rgb(163,91,133)', 'rgb(157,153,151)'
     ],
@@ -12,7 +12,7 @@ var colours = {
     accent: '#9e2f50',
     border: 'rgb(243, 236, 228)'
 };
-var gradients = {
+const gradients = {
     bar: [
         'url(#hgradient--series1)', 'url(#hgradient--series2)', 'url(#hgradient--series3)', 'url(#hgradient--series4)', 'url(#hgradient--series5)', 'url(#hgradient--series6)'
     ],
@@ -22,10 +22,10 @@ var gradients = {
 };
 
 function linearGradient(id, start, stop, positions){
-    var x1 = positions.x1 || 0;
-    var x2 = positions.x2 || 0;
-    var y1 = positions.y1 || 0;
-    var y2 = positions.y2 || 0;
+    const x1 = positions.x1 || 0;
+    const x2 = positions.x2 || 0;
+    const y1 = positions.y1 || 0;
+    const y2 = positions.y2 || 0;
     return ['<linearGradient id="' + id + '" x1="' + x1 + '" x2="' + x2 + '" y1="' + y1 + '" y2="' + y2 + '">',
         '<stop offset="0%" stop-color="' + start + '"/>',
         '<stop offset="100%" stop-color="' + stop + '"/>',
@@ -33,8 +33,8 @@ function linearGradient(id, start, stop, positions){
 }
 
 function seriesGradient(chart, idPrefix, series, positions){
-    var start = colours[chart][series-1];
-    var stop = colours[chart][series-1].replace('rgb','rgba').replace(')',',0.5)');
+    const start = colours[chart][series-1];
+    const stop = colours[chart][series-1].replace('rgb','rgba').replace(')',',0.5)');
     return linearGradient(idPrefix + series, start, stop, positions);
 }
 
@@ -78,12 +78,12 @@ module.exports.theme = [
             'background': 'rgb(229,216,196)'
         }
     },
-    {   'id': 'chart',
+    { 'id': 'chart',
         'attributes': {
             'padding': PADDING
         }
     },
-    {   'id': 'chart-logo',
+    { 'id': 'chart-logo',
         'attributes': {
             'display': 'none'
         }
@@ -100,14 +100,14 @@ module.exports.theme = [
         }
     },
     //Columns
-    {   'id': 'columns',
+    { 'id': 'columns',
         'attributes': {
             stroke: 'rgb(243, 236, 228)',
             'stroke-width': 2
         }
     },
     //bars
-    {   'id': 'bars',
+    { 'id': 'bars',
         'attributes': {
             stroke: 'rgb(243, 236, 228)',
             'stroke-width': 2
@@ -123,7 +123,7 @@ module.exports.theme = [
     },
 
     //text
-    {   'id': 'chart-title',
+    { 'id': 'chart-title',
         'attributes': {
             'font-family': 'MetricWebSemiBold, sans-serif',
             'font-size': 20,
@@ -133,7 +133,7 @@ module.exports.theme = [
             'background': 'rgb(124,120,119)'
         }
     },
-    {   'id': 'chart-subtitle',
+    { 'id': 'chart-subtitle',
         'attributes': {
             'font-family': 'MetricWebSemiBold, sans-serif',
             'font-size': 14,
@@ -142,7 +142,7 @@ module.exports.theme = [
             'padding': PADDING
         }
     },
-    {   'id': 'key',
+    { 'id': 'key',
         'attributes': {
             'font-family': 'MetricWebSemiBold, sans-serif',
             'font-size': 14,
@@ -152,7 +152,7 @@ module.exports.theme = [
             'padding': PADDING
         }
     },
-    {   'id': 'chart-source',
+    { 'id': 'chart-source',
         'attributes': {
             'font-family': 'MetricWebSemiBold, sans-serif',
             'font-size': 12,
@@ -162,7 +162,7 @@ module.exports.theme = [
             'padding-x': PADDING
         }
     },
-    {   'id': 'chart-footnote',
+    { 'id': 'chart-footnote',
         'attributes': {
             'font-family': 'MetricWebSemiBold, sans-serif',
             'font-size': 12,
@@ -172,21 +172,21 @@ module.exports.theme = [
             'padding-x': PADDING
         }
     },
-    {   'id': 'dependent-ticks',
+    { 'id': 'dependent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
             'stroke': '#ffffff',
             'stroke-width': 2
         }
     },
-    {   'id': 'independent-ticks',
+    { 'id': 'independent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
             'stroke': '#ffffff',
             'stroke-width': 2
         }
     },
-    {   'id': 'origin-ticks',
+    { 'id': 'origin-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
             'stroke': '#ffffff',
@@ -194,7 +194,7 @@ module.exports.theme = [
         }
     },
     // position plot lines, options: 'front', 'back'
-    {   'id': 'axis-layer',
+    { 'id': 'axis-layer',
         'attributes': {
             'position': 'back'
         }

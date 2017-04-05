@@ -1,12 +1,12 @@
-var oCharts = require('../../../src/scripts/nightingale-charts');
-var d3 = require('d3');
-var slug = require('slug');
+const oCharts = require('../../../main');
+const d3 = require('d3');
+const slug = require('slug');
 
-var margin = {
+const margin = {
     top: 20, left: 50, bottom: 70, right: 50
 };
 
-var axesDefinitions = [
+const axesDefinitions = [
     {
         title: 'A day or less',
         simple: false,
@@ -71,9 +71,9 @@ var axesDefinitions = [
 
 function createAxesDefArrayOfWidth(axisWidth) {
 
-    var sizedAxesDefinitions = [];
+    const sizedAxesDefinitions = [];
     axesDefinitions.forEach(function (axis){
-        var scale = d3.time.scale();
+        let scale = d3.time.scale();
 
         if (axis.intraDay) {
             scale = oCharts.scale
@@ -84,7 +84,7 @@ function createAxesDefArrayOfWidth(axisWidth) {
             .range([0, axisWidth])
             .domain([axis.dateStart, axis.dateEnd]);
 
-        var sizedAxis = {
+        const sizedAxis = {
             title: axis.title,
             simple: axis.simple,
             scale: scale
@@ -96,7 +96,7 @@ function createAxesDefArrayOfWidth(axisWidth) {
 }
 
 function renderAxesArrayIntoDiv(div, axesDefinitionArray, theme) {
-    var divs = d3.select(div)
+    const divs = d3.select(div)
         .selectAll('div')
         .data(axesDefinitionArray)
         .enter().append('div')
@@ -112,15 +112,15 @@ function renderAxesArrayIntoDiv(div, axesDefinitionArray, theme) {
             return slug(d.title).toLowerCase();
         })
         .attr('width', function (d) {
-            var r = d.scale.range();
+            const r = d.scale.range();
             return (r[1] - r[0]) + margin.left + margin.right;
         })
         .attr('class', 'ft-chart')
         .attr('height', margin.top + margin.bottom)
-        .each(function (d, i) {
+        .each(function (d) {
 
             //create the axis, giving it a scale
-            var axis = oCharts.axis.date({
+            const axis = oCharts.axis.date({
               theme: theme
             })
                 .simple(d.simple)
@@ -137,8 +137,8 @@ function renderAxesArrayIntoDiv(div, axesDefinitionArray, theme) {
 
 module.exports = {
     init: function(){
-        var viewData = createAxesDefArrayOfWidth(400);
-        var viewSmallData = createAxesDefArrayOfWidth(200);
+        const viewData = createAxesDefArrayOfWidth(400);
+        const viewSmallData = createAxesDefArrayOfWidth(200);
         renderAxesArrayIntoDiv('#views', viewData, 'ft-web');
         renderAxesArrayIntoDiv('#viewsSmall', viewSmallData, 'ft-web');
         renderAxesArrayIntoDiv('#viewsCircle', viewData, 'ft-nar');

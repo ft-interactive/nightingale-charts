@@ -1,4 +1,4 @@
-var utils = require('./utils');
+const utils = require('./utils');
 
 module.exports = {
   barChart : [
@@ -89,4 +89,4 @@ module.exports = {
      ]
    },
  ]
-}
+};

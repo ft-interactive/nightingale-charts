@@ -1,9 +1,8 @@
+const oCharts = require('../../../main');
+const d3 = require('d3');
 
-var oCharts = require('../../../src/scripts/nightingale-charts');
-var d3 = require('d3');
 
-
-var data = [
+const data = [
     {label:"Family in feud with Zuckerbergs"},
     {label:"Committed 671 birthdays to memory"},
     {label:"Ex is doing too well"},
@@ -15,7 +14,7 @@ var data = [
 module.exports = {
     init: function(){
 
-        var text = oCharts.dressing.textArea()
+        const text = oCharts.dressing.textArea()
             .width(100)
             .attrs({
                 'font-size': 16,
@@ -30,9 +29,9 @@ module.exports = {
             .data(data)
             .enter()
             .append('g').attr('transform',function (d,i) { return 'translate(10,'+ (30 + i*70)+')'; })
-            .call(text, function (d) { return d.label });
+            .call(text, function (d) { return d.label; });
 
-        var textVideo = oCharts.dressing.textArea()
+        const textVideo = oCharts.dressing.textArea()
             .width(200)
             .attrs({
                 padding:20,
@@ -50,9 +49,9 @@ module.exports = {
             .data(data)
             .enter()
             .append('g').attr('transform',function (d,i) { return 'translate(0,'+ (30 + i*100)+')'; })
-            .call(textVideo, function (d) { return d.label });
+            .call(textVideo, function (d) { return d.label; });
 
-        var textAlign = oCharts.dressing.textArea()
+        const textAlign = oCharts.dressing.textArea()
             .width(200)
             .attrs({
                 align:'right',
@@ -66,6 +65,6 @@ module.exports = {
             .data(data)
             .enter()
             .append('g').attr('transform',function (d,i) { return 'translate(0,'+ (30 + i*36)+')'; })
-            .call(textAlign, function (d) { return d.label });
+            .call(textAlign, function (d) { return d.label; });
     }
 };

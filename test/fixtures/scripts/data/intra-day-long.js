@@ -1,4 +1,4 @@
-var arr = [
+const arr = [
     { date: new Date("2015-08-25T15:30:00.000Z"), value: 0.7188},
     { date: new Date("2015-08-25T15:00:00.000Z"), value: 0.7224},
     { date: new Date("2015-08-25T14:30:00.000Z"), value: 0.7157},

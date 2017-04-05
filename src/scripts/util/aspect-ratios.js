@@ -1,7 +1,7 @@
 // More info:
 // http://en.wikipedia.org/wiki/Aspect_ratio_%28image%29
 
-var commonRatios = {
+const commonRatios = {
     square: {width: 1, height: 1},
     standard: {width: 4, height: 3},
     golden: {width: 1.618, height: 1},
@@ -18,7 +18,7 @@ function getRatio(name) {
     }
 
     if (typeof name === 'string') {
-        var p = name.split(':');
+        const p = name.split(':');
         return {width: p[0], height: p[1]};
     }
 
