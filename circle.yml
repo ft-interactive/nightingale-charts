@@ -1,6 +1,7 @@
-test:
+dependencies:
   pre:
-    - bower i
+    - echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > ${HOME}/.npmrc
+test:
   post:
     - git config --global user.name "circleci"
     - git config --global user.email "jonathan.best@ft.com"
@@ -8,12 +9,14 @@ general:
   artifacts:
     - test/coverage
 deployment:
-  production:
-    branch: master
+  release:
+    tag: /v.*/
+    owner: ft-interactive
     commands:
-      - ./node_modules/web-caddy/bin/caddy release
+      - npm-prepublish --verbose
+      - npm publish --access public
 machine:
   timezone:
     Europe/London
   node:
-    version: v0.10.33
+    version: v6.10.2

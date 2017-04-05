@@ -3,7 +3,8 @@
     "support": "tom.pearson@ft.com",
     "browserFeatures": {
         "required": [
-            "svg"
+            "svg",
+            "Object.assign"
         ]
     },
     "description": "FT style charts, axes, scales etc",
@@ -12,6 +13,38 @@
     "ci": {
         "travis": "https://api.travis-ci.org/repos/ft-interactive/nightingale-charts/builds.json"
     },
+    "demosDefaults": {
+        "sass": "demos/src/styles/demo.scss"
+    },
     "demos": [
+        {
+            "name": "Bar chart examples",
+            "template": "demos/src/bar-chart-examples.html",
+            "js": "demos/src/scripts/bar-chart-examples.js"
+        },
+        {
+            "name": "Column chart examples",
+            "template": "demos/src/column-chart-examples.html",
+            "js": "demos/src/scripts/column-chart-examples.js"
+        },
+        {
+            "name": "Line chart examples",
+            "template": "demos/src/line-chart-examples.html",
+            "js": "demos/src/scripts/line-chart-examples.js"
+        },
+        {
+            "name": "Date axes examples",
+            "template": "demos/src/date-axes-examples.html"
+        },
+        {
+            "name": "Category axes examples",
+            "template": "demos/src/category-axes-examples.html",
+            "js": "demos/src/scripts/category-axes-examples.js"
+        },
+        {
+            "name": "Number axes examples",
+            "template": "demos/src/number-axes-examples.html",
+            "js": "demos/src/scripts/line-chart-examples.js"
+        }
     ]
 }

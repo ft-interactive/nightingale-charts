@@ -10,3 +10,5 @@ dist
 test/coverage
 npm-debug.log
 test/regression/**/*.png
+build/
+demos/local
