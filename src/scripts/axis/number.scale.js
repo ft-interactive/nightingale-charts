@@ -69,7 +69,7 @@ module.exports = {
         var negativeStack = [];
         var positiveStack = [];
         stack.map(function(data, i) {
-          data < 0 ? negativeStack.push(data) : positiveStack.push(data)
+          data < 0 ? negativeStack.push(data) : positiveStack.push(data);
         });
         var tempMaximum = positiveStack.length > 0 ? positiveStack.reduce(function (a, b) {
             return a + b;
@@ -78,13 +78,13 @@ module.exports = {
             return a + b;
         }) : 0;
         if (tempMaximum > maximum) {
-          maximum = tempMaximum
+          maximum = tempMaximum;
         }
         if (tempMinimum < minimum) {
-          minimum = tempMinimum
+          minimum = tempMinimum;
         }
-      })
-      return {maximum, minimum};
+      });
+      return {'maximum': maximum, 'minimum': minimum};
     },
     customTicks: function (config, model){
         var customTicks = [];
@@ -93,7 +93,7 @@ module.exports = {
             customTicks = this.simpleTicks(scale);
         } else {
           if(model.stack) {
-            var stackedDomain = this.stackedDomain(model)
+            var stackedDomain = this.stackedDomain(model);
             if (model.chartType === 'bar') {
               // Reverse the scale for a bar chart
               scale.domain()[1] = stackedDomain.maximum;

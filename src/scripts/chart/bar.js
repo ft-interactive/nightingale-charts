@@ -87,11 +87,11 @@ function formatStackedData (model, series) {
 
 	var myData = model.data.map(function (d){
 			if (Array.isArray(d.values)) {
-				var values = {}
+				var values = {};
 
 				for (var key in d.values[0]) {
 		       if (d.values[0].hasOwnProperty(key)) {
-							values[key] = isNaN(d.values[0][key]) || d.values[0][key] === null ? 0 : d.values[0][key]
+							values[key] = isNaN(d.values[0][key]) || d.values[0][key] === null ? 0 : d.values[0][key];
 		       }
 		    }
 
@@ -99,11 +99,11 @@ function formatStackedData (model, series) {
 				delete values.date;
 				return values;
 			} else {
-				return d
+				return d;
 			}
-	})
+	});
 
-	return myData
+	return myData;
 }
 
 function getXPosition(data, stacks, key, val, xKey, series) {
@@ -117,9 +117,9 @@ function getXPosition(data, stacks, key, val, xKey, series) {
 		// Use the key not the value to identify the index of the plot item
 		dataArray.map(function (item, i) {
 			if ( Object.keys(item)[0] == series ) {
-				valueIndex = i
+				valueIndex = i;
 			}
-		})
+		});
 
 		var sumPrev;
 		if (valueIndex === 0) {
@@ -152,7 +152,7 @@ function getXPosition(data, stacks, key, val, xKey, series) {
 	for (var prop in data[seriesKey]) {
 		if (i === 1) { i++; continue; } // Skip the key value from the data series
 		// Seperate each value in the stack into positive and negative arrays to allow the height of the previous values to be calculated
-		data[seriesKey][prop] < 0 ? negativeStack.push({[prop]: data[seriesKey][prop]}) : positiveStack.push({[prop]: data[seriesKey][prop]})
+		data[seriesKey][prop] < 0 ? negativeStack.push({[prop]: data[seriesKey][prop]}) : positiveStack.push({[prop]: data[seriesKey][prop]});
 	}
 
 	return value < 0 ? mapStacks(negativeStack) : mapStacks(positiveStack);
