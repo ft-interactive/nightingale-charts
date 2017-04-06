@@ -10,10 +10,7 @@ module.exports = {
        { key: 'purple', value: 1.348, value2: 1.9},
        { key: 'orange', value: 1.0, value2: 0.21},
        { key: 'yellow', value: 2.2, value2: 0.98},
-       { key: 'pink', value: 1.41, value2: 1.12},
-       { key: 'blue', value: -0.12, value2: 2},
-       { key: 'green', value: -1.03, value2: 1.4},
-       { key: 'purple', value: 1.348, value2: -1.9}
+       { key: 'pink', value: 1.41, value2: 1.12}
      ],
      x : { series: 'key' },
      y : { series: ['value', 'value2'] }

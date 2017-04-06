@@ -149,9 +149,16 @@ function getYPosition(data, stacks, key, val, xKey, series) {
 
 	var i = 1;
 	for (var prop in data[seriesKey]) {
+		var obj = {};
 		if (i === 1) { i++; continue; } // Skip the key value from the data series
 		// Seperate each value in the stack into positive and negative arrays to allow the height of the previous values to be calculated
-		data[seriesKey][prop] < 0 ? negativeStack.push({[prop]: data[seriesKey][prop]}) : positiveStack.push({[prop]: data[seriesKey][prop]});
+		var objValue = Object.defineProperty(obj, prop, {
+			value:data[seriesKey][prop],
+			writable: true,
+			enumerable: true,
+			configurable: true
+		});
+		data[seriesKey][prop] < 0 ? negativeStack.push(objValue) : positiveStack.push(objValue);
 	}
 
 	return value < 0 ? mapStacks(negativeStack) : mapStacks(positiveStack);
