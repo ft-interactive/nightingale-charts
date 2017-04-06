@@ -73,9 +73,6 @@ Plot.prototype.yDependent = function(value, stack, height) {
     if (this.model.stack && height !== undefined) {
       maxValue = value < 0 ? Math.min(0, height) : Math.max(0, value + height);
     }
-    console.log('value: ',value, ' height: ',height)
-    console.log('maxValue: ',maxValue)
-    console.log('----------')
     return this.axes.dependentAxisScale(maxValue);
 };
 

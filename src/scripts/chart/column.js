@@ -78,12 +78,6 @@ function formatData(model, series) {
     }).filter(function (d) {
         var isNull = !(d.value !== null && !isNaN(d.value));
         if (isNull) nulls.push(d);
-        // if we're stacking - we transform nulls
-        // into zeros to avoid problems
-        if (model.stack && isNull) {
-            d.value = 0;
-            return true;
-        }
         return !isNull;
     });
 
@@ -93,20 +87,26 @@ function formatData(model, series) {
 }
 
 function formatStackedData (model, series) {
-	var data = model.data.map(function (d){
+
+	var myData = model.data.map(function (d){
 			if (Array.isArray(d.values)) {
-				var values = {};
-				for (var prop in d.values) {
-					console.log('if loop', prop, d.values[prop])
-					values[prop] = d.values[prop]
-				}
+				var values = {}
+
+				for (var key in d.values[0]) {
+		       if (d.values[0].hasOwnProperty(key)) {
+							values[key] = isNaN(d.values[0][key]) || d.values[0][key] === null ? 0 : d.values[0][key]
+		       }
+		    }
+
+				values = Object.assign({key: d.key}, values);
+				delete values.date;
 				return values;
 			} else {
-				console.log('else', d, d[series.key])
 				return d
 			}
 	})
-	return data
+
+	return myData
 }
 
 function getYPosition(data, stacks, key, val, xKey, series) {
@@ -151,8 +151,6 @@ function getYPosition(data, stacks, key, val, xKey, series) {
 			seriesKey = i;
 		}
 	});
-
-	console.log('data[seriesKey]',data[seriesKey])
 
 	var i = 1;
 	for (var prop in data[seriesKey]) {

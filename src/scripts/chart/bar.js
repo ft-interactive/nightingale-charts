@@ -20,7 +20,7 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
         .attr('data-value', function (d){return d.value;})
         .attr('x', function (d, i){
 					if (model.stack) {
-						return plot.x(d.value, i, getXPosition(model.data, model.stacks, d.key, d.value, model.x.series.key, series.key));
+						return plot.x(d.value, i, getXPosition(formatStackedData (model, series), model.stacks, d.key, d.value, model.x.series.key, series.key));
 					}
 					return plot.x(d.value, i);
 				})
@@ -74,18 +74,36 @@ function formatData(model, series) {
     }).filter(function (d) {
         var isNull = !(d.value !== null && !isNaN(d.value));
         if (isNull) nulls.push(d);
-        // if we're stacking - we transform nulls
-        // into zeros to avoid problems
-        if (model.stack && isNull) {
-            d.value = 0;
-            return true;
-        }
+
         return !isNull;
     });
 
     data._nulls = nulls;
 
     return data;
+}
+
+function formatStackedData (model, series) {
+
+	var myData = model.data.map(function (d){
+			if (Array.isArray(d.values)) {
+				var values = {}
+
+				for (var key in d.values[0]) {
+		       if (d.values[0].hasOwnProperty(key)) {
+							values[key] = isNaN(d.values[0][key]) || d.values[0][key] === null ? 0 : d.values[0][key]
+		       }
+		    }
+
+				values = Object.assign({key: d.key}, values);
+				delete values.date;
+				return values;
+			} else {
+				return d
+			}
+	})
+
+	return myData
 }
 
 function getXPosition(data, stacks, key, val, xKey, series) {
@@ -130,8 +148,9 @@ function getXPosition(data, stacks, key, val, xKey, series) {
 		}
 	});
 
+	var i = 1;
 	for (var prop in data[seriesKey]) {
-		if (prop === 'key') continue; // Skip the key value from the data series
+		if (i === 1) { i++; continue; } // Skip the key value from the data series
 		// Seperate each value in the stack into positive and negative arrays to allow the height of the previous values to be calculated
 		data[seriesKey][prop] < 0 ? negativeStack.push({[prop]: data[seriesKey][prop]}) : positiveStack.push({[prop]: data[seriesKey][prop]})
 	}
