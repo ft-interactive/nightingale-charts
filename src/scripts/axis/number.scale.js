@@ -23,7 +23,7 @@ module.exports = {
         });
         return interval;
     },
-    detailedTicks: function (scale, pixelsPerTick, model) {
+    detailedTicks: function (scale, pixelsPerTick) {
         var count = this.tickCount(scale, pixelsPerTick);
         var ticks = scale.ticks(count);
         var interval = this.tickIntervalBoundaries(ticks);

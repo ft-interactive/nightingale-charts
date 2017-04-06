@@ -31,7 +31,8 @@ describe('data model', function () {
                 {date: new Date('2011'), value: 13, value2: 1}
             ],
             x: { series: ['date']},
-            y: { series: ['value', 'value2']}
+            y: { series: ['value', 'value2']},
+            stack: false
         });
         expect(model.groupData).toBe(true);
         expect(model.data[0].key).toBe('2008');
@@ -47,6 +48,7 @@ describe('data model', function () {
             key: true,
             falseOrigin: false,
             lineThickness: 10,
+            stack: false,
             data: [
                 {date: new Date('2000-01-01T00:00:00.000Z'), value: 10.23, value2: 12},
                 {date: new Date('2001-01-01T00:00:00.000Z'), value: 29.23, value2: 29},
@@ -80,6 +82,7 @@ describe('data model', function () {
             key: true,
             falseOrigin: false,
             lineThickness: 10,
+            stack: false,
             data: [
                 {quartersCol: new Date('2000-01-01T00:00:00.000Z'), qValue: 10.23, value2: 12},
                 {quartersCol: new Date('2001-01-01T00:00:00.000Z'), qValue: 29.23, value2: 29},
@@ -109,6 +112,7 @@ describe('data model', function () {
             key: false,
             falseOrigin: false,
             lineThickness: 10,
+            stack: false,
             data: [
                 {date: '2000-01-01T00:00:00.000Z', value: 10.23, value2: 12},
                 {date: '2001-01-01T00:00:00.000Z', value: 't', value2: 29},
@@ -172,6 +176,7 @@ describe('data model', function () {
             key: false,
             falseOrigin: false,
             lineThickness: 10,
+            stack: false,
             data: [
                 {date: '2000-01-01T00:00:00.000Z', value: 10.23, value2: 12},
                 {date: '2001-01-01T00:00:00.000Z', value: 't', value2: 29},
@@ -226,6 +231,7 @@ describe('data model', function () {
             key: true,
             falseOrigin: false,
             lineThickness: 10,
+            stack: false,
             data: [
                 {quartersCol: new Date('2000-01-01T00:00:00.000Z'), qValue: -10.23, value2: -12},
                 {quartersCol: new Date('2001-01-01T00:00:00.000Z'), qValue: -29.23, value2: -29},
@@ -243,6 +249,7 @@ describe('data model', function () {
             key: true,
             falseOrigin: false,
             lineThickness: 10,
+            stack: false,
             data: [
                 {quartersCol: new Date('2000-01-01T00:00:00.000Z'), qValue: -10.23, value2: -12},
                 {quartersCol: new Date('2001-01-01T00:00:00.000Z'), qValue: -29.23, value2: -29},
