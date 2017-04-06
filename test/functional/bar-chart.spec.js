@@ -83,9 +83,9 @@ describe('bar-chart.js', function(){
         it('correctly stacks negative numbers', function(){
             var chart = document.querySelector('#bar-chart__stackWithNegatives .width600 svg');
             var rect = chart.querySelectorAll('.plot g.series rect');
-            expect(parseInt(rect[0].getAttribute('x'),10)).toBeLessThan(parseInt(rect[5].getAttribute('x'),10));
-            expect(parseInt(rect[4].getAttribute('x'),10)).toBeGreaterThan(parseInt(rect[9].getAttribute('x'),10));
-            expect(parseInt(rect[10].getAttribute('x'),10)).toBeGreaterThan(parseInt(rect[20].getAttribute('x'),10));
+            expect(parseInt(rect[0].getAttribute('x'),10)).toBe(parseInt(rect[5].getAttribute('x'),10));
+            expect(parseInt(rect[4].getAttribute('x'),10)).toBe(parseInt(rect[9].getAttribute('x'),10));
+            expect(parseInt(rect[10].getAttribute('x'),10)).toBe(parseInt(rect[20].getAttribute('x'),10));
         });
 
         it('correctly converts NaN values to 0', function(){

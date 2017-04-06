@@ -108,7 +108,7 @@ function renderAxesArrayIntoDiv(div, axesDefinitionArray) {
             return r[0] + r[1] + margin.bottom
         })
         .each(function (d, i) {
-            var axis = oCharts.axis.number()
+            var axis = oCharts.axis.number({ stack: false })
                 .simple(d.simple)
                 .orient(d.orient)
                 .reverse(d.reverse)
