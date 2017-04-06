@@ -12,11 +12,6 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
     var attr = themes.check(model.theme, 'columns').attributes;
     attr.fill = model.gradients[series.index] || model.colours[series.index];
 
-		console.log('Model data', model.data)
-		console.log('data', data)
-		console.log('Format Stacked', formatStackedData(model, series))
-		console.log('-------')
-
     s.selectAll('rect')
         .data(data)
         .enter()

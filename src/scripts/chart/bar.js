@@ -136,9 +136,6 @@ function getXPosition(data, stacks, key, val, xKey, series) {
 				return {value: a1 + b1};
 			}) : {value: slicedArray[0][Object.keys(slicedArray[0])[0]]};
 
-			console.log('value', value);
-			console.log('sumPrev.value', sumPrev.value);
-
 			// This is the hight of all previous plots from the same stack
 			return sumPrev.value;
 		}

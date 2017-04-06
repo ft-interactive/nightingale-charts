@@ -25,7 +25,7 @@ var baseConfig = objectAssign({}, chartConfig, {
 
 // Web Theme
 d3.select('#views').append('div').data([baseConfig]).call(oCharts.chart.bar);
-/*
+
 // Video Theme
 var videoConfig = objectAssign({}, baseConfig, {
   height: 338,
@@ -60,4 +60,3 @@ oCharts.addFont(['AvenirLight', 'AvenirLightOblique', 'AvenirHeavy'])
 .then(function () {
   narChart.call(oCharts.chart.bar)
 });
-*/
