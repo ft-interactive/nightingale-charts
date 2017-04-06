@@ -7,9 +7,7 @@ module.exports = {
       dependentAxisOrient: 'bottom',
       independentAxisOrient: 'left',
       stack: false,
-      dataType : 'categorical',
-      stack: true,
-      stacked: true
+      dataType : 'categorical'
     },
     columnChart : {
       theme: 'ft-web',
@@ -20,9 +18,7 @@ module.exports = {
       footnote: 'my footnote',
       dependentAxisOrient: 'right',
       independentAxisOrient: 'bottom',
-      dataType : 'categorical',
-      stack: true,
-      stacked: true
+      dataType : 'categorical'
     },
     lineChart : {
       comment: 'Line chart',
