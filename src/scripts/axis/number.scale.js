@@ -94,13 +94,19 @@ module.exports = {
         } else {
           if(model.stack) {
             var stackedDomain = this.stackedDomain(model)
-            scale.domain()[0] = stackedDomain.maximum;
-            scale.domain()[1] = stackedDomain.minimum;
+            if (model.chartType === 'bar') {
+              // Reverse the scale for a bar chart
+              scale.domain()[1] = stackedDomain.maximum;
+              scale.domain()[0] = stackedDomain.minimum;
+            } else {
+              scale.domain()[0] = stackedDomain.maximum;
+              scale.domain()[1] = stackedDomain.minimum;
+            }
           }
-            customTicks = this.detailedTicks(scale, config.pixelsPerTick, model);
-            var pos = scale.domain()[0] > scale.domain()[1] ? 1 : 0;
-            if (config.reverse) pos = 1 - pos;
-            config.hardRules.push(scale.domain()[pos]);
+          customTicks = this.detailedTicks(scale, config.pixelsPerTick, model);
+          var pos = scale.domain()[0] > scale.domain()[1] ? 1 : 0;
+          if (config.reverse) pos = 1 - pos;
+          config.hardRules.push(scale.domain()[pos]);
         }
         customTicks = this.removeDuplicateTicks(scale, customTicks);
         return customTicks;
