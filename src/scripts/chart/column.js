@@ -12,6 +12,11 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
     var attr = themes.check(model.theme, 'columns').attributes;
     attr.fill = model.gradients[series.index] || model.colours[series.index];
 
+		console.log('Model data', model.data)
+		console.log('data', data)
+		console.log('Format Stacked', formatStackedData(model, series))
+		console.log('-------')
+
     s.selectAll('rect')
         .data(data)
         .enter()
@@ -21,7 +26,7 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
         .attr('x', function (d, i){ return plot.x(d.key, seriesNumber); })
         .attr('y', function (d, i){
 					if (model.stack) {
-						return plot.y(d.value, i, getYPosition(model.data, model.stacks, d.key, d.value, model.x.series.key, series.key));
+						return plot.y(d.value, i, getYPosition(formatStackedData(model, series), model.stacks, d.key, d.value, model.x.series.key, series.key));
 					}
 					return plot.y(d.value, i);
 				})
@@ -87,6 +92,23 @@ function formatData(model, series) {
     return data;
 }
 
+function formatStackedData (model, series) {
+	var data = model.data.map(function (d){
+			if (Array.isArray(d.values)) {
+				var values = {};
+				for (var prop in d.values) {
+					console.log('if loop', prop, d.values[prop])
+					values[prop] = d.values[prop]
+				}
+				return values;
+			} else {
+				console.log('else', d, d[series.key])
+				return d
+			}
+	})
+	return data
+}
+
 function getYPosition(data, stacks, key, val, xKey, series) {
 	var value = isNaN(val) ? 0 : val;
 	var seriesKey;
@@ -130,8 +152,11 @@ function getYPosition(data, stacks, key, val, xKey, series) {
 		}
 	});
 
+	console.log('data[seriesKey]',data[seriesKey])
+
+	var i = 1;
 	for (var prop in data[seriesKey]) {
-		if (prop === 'key') continue; // Skip the key value from the data series
+		if (i === 1) { i++; continue; } // Skip the key value from the data series
 		// Seperate each value in the stack into positive and negative arrays to allow the height of the previous values to be calculated
 		data[seriesKey][prop] < 0 ? negativeStack.push({[prop]: data[seriesKey][prop]}) : positiveStack.push({[prop]: data[seriesKey][prop]})
 	}
