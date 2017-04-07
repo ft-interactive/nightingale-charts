@@ -1,0 +1,156 @@
+var oCharts = require('../../../main');
+var d3 = require('d3');
+
+(() => {
+    var margin = {
+        top:20, left:50, bottom:40, right:75
+    };
+
+    var nesting = function(d) {
+        var str = d3.time.format('%e %b %Y')(d.date);
+        if (str[0] === ' ') str = str.substring(1);
+        return str;
+    };
+    var data = [
+        { date: new Date('5/07/2014'), value:      0.368069},
+        { date: new Date('5/08/2014'), value: 0.472146},
+        { date: new Date('5/09/2014'), value: 0.743529},
+        { date: new Date('5/10/2014'), value:     0.600043},
+        { date: new Date('5/11/2014'), value:     0.301624},
+        { date: new Date('5/12/2014'), value:     0.277067},
+        { date: new Date('5/13/2014'), value:     -0.239283},
+        { date: new Date('5/14/2014'), value:     0.619157},
+        { date: new Date('5/15/2014'), value:     0.090189}
+    ];
+    var nestedData = d3.nest()
+    .key(nesting)
+    .entries(data);
+
+    var d3Data = {
+        data: data,
+        scale: d3.scale
+        .ordinal()
+        .rangeRoundBands([0, 400], 0, 0)
+        .domain(nestedData.map(function (d){return d.key;})),
+        units: ['daily', 'monthly', 'yearly'],
+        orient : 'bottom'
+    };
+
+    // Other Possible Orient:
+    //         * top
+    //         * bottom
+    //         * left
+    //         * right
+    // Other Possible Units:
+    //         * ['daily', 'monthly', 'yearly'],
+    //         * ['weekly', 'monthly', 'yearly'],
+    //         * ['monthly', 'yearly'],
+    //         * ['quarterly', 'yearly'],
+    //         * ['years'],
+
+    d3.select('#views')
+    .append('h2')
+    .text('Grouped Date Series: ');
+
+    d3.select('#views')
+    .append('svg').attr('id','#categories-axes')
+    .data([d3Data])
+    .attr('width', function (d) {
+        var width = margin.left + margin.right;
+        if (d.orient =='bottom') {
+            var r = d.scale.range();
+            width += (r[r.length-1] - r[0]);
+        }
+        return width;
+    })
+    .attr('height', function (d) {
+        var height = margin.top + margin.bottom;
+        if (d.orient == 'left') {
+            var r = d.scale.range();
+            height += r[0] + r[r.length-1];
+        }
+        return height
+    })
+    .each(function (d, i) {
+        var axis = oCharts.axis.category({
+            theme: 'ft-web'
+        })
+        .dataType(d.dataType)
+        .orient(d.orient)
+        .scale(d.scale, d.units)
+        .attrs({fill:'rgb(100,100,220)', 'font-size': '14', 'font-family':'arial'})
+        .attrs({fill:'rgba(100,100,220,0.8)','font-size': '12'}, 'secondary');
+
+        d3.select(this)
+        .append('g')
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+        .call(axis);
+    });
+})();
+
+(() => {
+    var margin = {
+        top:20, left:100, bottom:40, right:75
+    };
+
+    var dataVert = [
+        { key: 'Red', value:      0.368069},
+        { key: 'Blue', value: 0.472146},
+        { key: 'Green', value: 0.743529},
+        { key: 'Orange', value:     0.600043},
+        { key: 'Purple', value:     0.301624},
+        { key: 'Yellow', value:     0.277067},
+        { key: 'Pink', value:     -0.239283},
+        { key: 'Navy Blue', value:     0.619157},
+        { key: 'Sunset Red', value:     0.090189}
+    ];
+
+    var d3DataVert = {
+        data: dataVert,
+        scale: d3.scale
+        .ordinal()
+        .rangeRoundBands([0, 400], 0, 0)
+        .domain(dataVert.map(function (d){return d.key;})),
+        units: ['categories'],
+        orient : 'left',
+        dataType: 'categorical'
+    };
+
+    d3.select('#vertical')
+    .append('h2')
+    .text('Categories: ');
+
+    d3.select('#vertical')
+    .append('svg').attr('id','#vertical-axes')
+    .data([d3DataVert])
+    .attr('width', function (d) {
+        var width = margin.left + margin.right;
+        if (d.orient =='bottom') {
+            var r = d.scale.range();
+            width += (r[r.length-1] - r[0]);
+        }
+        return width;
+    })
+    .attr('height', function (d) {
+        var height = margin.top + margin.bottom;
+        if (d.orient == 'left') {
+            var r = d.scale.range();
+            height += r[0] + r[r.length-1];
+        }
+        return height
+    })
+    .each(function (d, i) {
+        var axis = oCharts.axis.category({
+            theme: 'ft-nar'
+        })
+        .dataType(d.dataType)
+        .orient(d.orient)
+        .scale(d.scale, d.units)
+        .attrs({fill:'grey', 'font-size': '12', 'font-family':'arial'});
+
+        d3.select(this)
+        .append('g')
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+        .call(axis);
+    });
+})();
