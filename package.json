@@ -5,6 +5,7 @@
   "main": "main.js",
   "scripts": {
     "build": "obt build && obt demo",
+    "verify": "obt verify --esLintPath=./.eslintrc.js",
     "bump": "git tag v$(semver -i $(git describe --abbrev=0 --tags))",
     "release": "npm test && npm run build && npm run bump",
     "start": "obt build --runServer --watch",
