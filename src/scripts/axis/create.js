@@ -192,7 +192,7 @@ Create.prototype.independentScale = function (scale) {
 Create.prototype.dependentScale = function (scale) {
     var model = this.model;
     this.dependentAxisScale = linearScale(model, this, model.dependentAxisOrient);
-    this.dependentAxis = axis.number();
+    this.dependentAxis = axis.number(model);
     if (model.niceValue) {
         this.dependentAxisScale.nice();
     }

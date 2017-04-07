@@ -165,7 +165,7 @@ describe('column-chart.js', function(){
 
         xit('to display empty month columns even if date is missing', function(){
             var txt = document.querySelectorAll('.width600 svg')[2].querySelectorAll('g.x.axis .primary text');
-//todo: Months card is later!
+            //todo: Months card is later!
             expect(txt[0].textContent).toBe('Mar');
             expect(txt[1].textContent).toBe('Apr');
             expect(txt[2].textContent).toBe('May');
@@ -211,9 +211,9 @@ describe('column-chart.js', function(){
         it('correctly stacks negative numbers', function(){
             var chart = document.querySelectorAll('.width600 svg')[11];
             var rect = chart.querySelectorAll('.plot rect');
-            expect(parseInt(rect[0].getAttribute('y'),10)).toBeLessThan(parseInt(rect[4].getAttribute('y'),10));
-            expect(parseInt(rect[4].getAttribute('y'),10)).toBeGreaterThan(parseInt(rect[8].getAttribute('y'),10));
-            expect(parseInt(rect[8].getAttribute('y'),10)).toBeLessThan(parseInt(rect[12].getAttribute('y'),10));
+            expect(parseInt(rect[0].getAttribute('y'),10)).toBe(parseInt(rect[4].getAttribute('y'),10));
+            expect(parseInt(rect[4].getAttribute('y'),10)).toBe(parseInt(rect[8].getAttribute('y'),10));
+            expect(parseInt(rect[8].getAttribute('y'),10)).toBe(parseInt(rect[12].getAttribute('y'),10));
         });
 
         it('correctly stacks categories', function(){
@@ -221,7 +221,6 @@ describe('column-chart.js', function(){
             var rect = chart.querySelectorAll('.plot rect');
             expect(rect.length).toBe(10);
             expect(parseInt(rect[0].getAttribute('y'),10)).toBeGreaterThan(0);
-            expect(parseInt(rect[0].getAttribute('x'),10)).toBe(parseInt(rect[5].getAttribute('x'),10));
             expect(parseInt(rect[0].getAttribute('y'),10)).toBeGreaterThan(parseInt(rect[5].getAttribute('y'),10));
         });
 

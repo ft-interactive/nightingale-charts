@@ -395,7 +395,7 @@ function getChartData(timeFrame){
         y: { series: ySeries },
         units: units[timeFrame],
         data: fixtures[timeFrame],
-        stack: ['stack', 'nullStack','stackMonthly', 'stackWithAllNegatives', 'categoriesStack', 'stackWithValuesMissing'].indexOf(timeFrame)>-1,
+        stack: false,// ['stack', 'nullStack','stackMonthly', 'stackWithAllNegatives', 'categoriesStack', 'stackWithValuesMissing'].indexOf(timeFrame)>-1,
         dataType: ['categories','categoriesStack','dateCategories', 'quarterCategories', 'stackWithValuesMissing'].indexOf(timeFrame)>-1 ? 'categorical' : 'time'
     };
 }

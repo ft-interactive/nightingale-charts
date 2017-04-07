@@ -28,8 +28,10 @@ module.exports = {
         var ticks = scale.ticks(count);
         var interval = this.tickIntervalBoundaries(ticks);
         var pos = scale.domain()[0] > scale.domain()[1] ? 0 : 1;
+
         var d1 = Math.ceil(scale.domain()[pos] / interval) * interval;
         var d2 = Math.floor(scale.domain()[1-pos] / interval) * interval;
+
         ticks[d1<=0 ? 'unshift' : 'push'](d1);
         ticks[d2<=0 ? 'unshift' : 'push'](d2);
         scale.domain()[pos] = d1;
@@ -59,16 +61,52 @@ module.exports = {
         }
         return count;
     },
-    customTicks: function (config){
+    stackedDomain: function (model) {
+      // Find the stacks highest and lowest points and update the domain range
+      var maximum = 0;
+      var minimum = 0;
+      model.stacks.map(function (stack, i) {
+        var negativeStack = [];
+        var positiveStack = [];
+        stack.map(function(data, i) {
+          data < 0 ? negativeStack.push(data) : positiveStack.push(data);
+        });
+        var tempMaximum = positiveStack.length > 0 ? positiveStack.reduce(function (a, b) {
+            return a + b;
+        }) : 0;
+        var tempMinimum = negativeStack.length > 0 ? negativeStack.reduce(function (a, b) {
+            return a + b;
+        }) : 0;
+        if (tempMaximum > maximum) {
+          maximum = tempMaximum;
+        }
+        if (tempMinimum < minimum) {
+          minimum = tempMinimum;
+        }
+      });
+      return {'maximum': maximum, 'minimum': minimum};
+    },
+    customTicks: function (config, model){
         var customTicks = [];
         var scale = config.axes.scale();
         if (config.simple) {
             customTicks = this.simpleTicks(scale);
         } else {
-            customTicks = this.detailedTicks(scale, config.pixelsPerTick);
-            var pos = scale.domain()[0] > scale.domain()[1] ? 1 : 0;
-            if (config.reverse) pos = 1 - pos;
-            config.hardRules.push(scale.domain()[pos]);
+          if(model.stack) {
+            var stackedDomain = this.stackedDomain(model);
+            if (model.chartType === 'bar') {
+              // Reverse the scale for a bar chart
+              scale.domain()[1] = stackedDomain.maximum;
+              scale.domain()[0] = stackedDomain.minimum;
+            } else {
+              scale.domain()[0] = stackedDomain.maximum;
+              scale.domain()[1] = stackedDomain.minimum;
+            }
+          }
+          customTicks = this.detailedTicks(scale, config.pixelsPerTick, model);
+          var pos = scale.domain()[0] > scale.domain()[1] ? 1 : 0;
+          if (config.reverse) pos = 1 - pos;
+          config.hardRules.push(scale.domain()[pos]);
         }
         customTicks = this.removeDuplicateTicks(scale, customTicks);
         return customTicks;

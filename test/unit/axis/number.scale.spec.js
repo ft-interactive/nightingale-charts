@@ -1,4 +1,5 @@
 var numberScale = require('../../../src/scripts/axis/number.scale');
+var DataModel = require('../../../src/scripts/util/data.model');
 var d3 = require('d3');
 
 describe('number scale', function () {
@@ -51,7 +52,7 @@ describe('number scale', function () {
             }
         };
         var config = {axes:{scale:scale}, pixelsPerTick: 100, hardRules: [0], simple:false};
-        numberScale.customTicks(config);
+        numberScale.customTicks(config, DataModel);
         expect(config.hardRules[0]).toBe(0);
         expect(config.hardRules[1]).toBe(0);
     });
@@ -67,7 +68,7 @@ describe('number scale', function () {
             }
         };
         var config = {axes:{scale:scale}, pixelsPerTick: 100, hardRules: [0], simple:false};
-        numberScale.customTicks(config);
+        numberScale.customTicks(config, DataModel);
         expect(config.hardRules[0]).toBe(0);
         expect(config.hardRules[1]).toBe(-3.5);
     });

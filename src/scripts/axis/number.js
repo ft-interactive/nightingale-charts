@@ -6,7 +6,7 @@ var d3 = require('d3');
 var numberLabels = require('./number.labels');
 var numberScales = require('./number.scale');
 
-function numericAxis() {
+function numericAxis(model) {
     'use strict';
 
     var config = {
@@ -123,7 +123,7 @@ function numericAxis() {
         if (config.userTicks.length > 0) {
             config.axes.tickValues(config.userTicks);
         } else {
-            var customTicks = numberScales.customTicks(config);
+            var customTicks = numberScales.customTicks(config,model);
             config.axes.tickValues(customTicks);
         }
         config.reverse = false; //only reverse once, even if scale is called twice i.e. in redraw

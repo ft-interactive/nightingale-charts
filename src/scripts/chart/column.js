@@ -21,14 +21,11 @@ function plotSeries(plotSVG, model, createdAxes, series, seriesNumber){
         .attr('x', function (d, i){ return plot.x(d.key, seriesNumber); })
         .attr('y', function (d, i){
 					if (model.stack) {
-						return plot.y(d.value, i, getStackedHeight(model.data, model.stacks, d.key, d.value, model.x.series.key));
+						return plot.y(d.value, i, getYPosition(formatStackedData(model, series), model.stacks, d.key, d.value, model.x.series.key, series.key));
 					}
 					return plot.y(d.value, i);
 				})
         .attr('height', function (d, i){
-					if (model.stack) {
-						return plot.columnHeight(getStackedHeight(model.data, model.stacks, d.key, d.value, model.x.series.key));
-					}
 					return plot.columnHeight(d.value);
 				})
         .attr('width', function (d, i){ return plot.columnWidth(d, i); })
@@ -76,12 +73,6 @@ function formatData(model, series) {
     }).filter(function (d) {
         var isNull = !(d.value !== null && !isNaN(d.value));
         if (isNull) nulls.push(d);
-        // if we're stacking - we transform nulls
-        // into zeros to avoid problems
-        if (model.stack && isNull) {
-            d.value = 0;
-            return true;
-        }
         return !isNull;
     });
 
@@ -90,43 +81,87 @@ function formatData(model, series) {
     return data;
 }
 
-function getStackedHeight(data, stacks, key, val, xKey) {
+function formatStackedData (model, series) {
+
+	var myData = model.data.map(function (d){
+			if (Array.isArray(d.values)) {
+				var values = {};
+
+				for (var key in d.values[0]) {
+		       if (d.values[0].hasOwnProperty(key)) {
+							values[key] = isNaN(d.values[0][key]) || d.values[0][key] === null ? 0 : d.values[0][key];
+		       }
+		    }
+
+				values = Object.assign({key: d.key}, values);
+				delete values.date;
+				return values;
+			} else {
+				return d;
+			}
+	});
+
+	return myData;
+}
+
+function getYPosition(data, stacks, key, val, xKey, series) {
 	var value = isNaN(val) ? 0 : val;
-	var height;
 	var seriesKey;
-	function calculateHeight(val, nextVal, previousVal) {
-		if (val < 0 && previousVal >= 0) {
-			return val;
-		} else if (val >= 0 && nextVal < 0) {
-			return val;
-		} else if (val < 0 && nextVal < 0) {
-			return val - nextVal;
+	var positiveStack = [];
+	var negativeStack = [];
+
+	function mapStacks (dataArray) {
+
+		var valueIndex;
+		// Use the key not the value to identify the index of the plot item
+		dataArray.map(function (item, i) {
+			if ( Object.keys(item)[0] == series ) {
+				valueIndex = i;
+			}
+		});
+
+		var sumPrev;
+		if (valueIndex === 0) {
+			// Do and return nothing we want this to be undefined in
+			// plot.js - Plot.prototype.yDependent()
+		} else {
+			// Using the index of the current item remove all the next values, leaving only those already plot
+			var slicedArray = dataArray.slice(0, valueIndex);
+
+			// If theres one item in the array take the first value, else reduce the array to one single value
+			sumPrev = slicedArray.length > 1 ? slicedArray.reduce(function (a, b) {
+				var a1 = a[Object.keys(a)[0]] ? a[Object.keys(a)[0]] : 0;
+				var b1 = b[Object.keys(b)[0]] ? b[Object.keys(b)[0]] : 0;
+				return {value: a1 + b1};
+			}) : {value: slicedArray[0][Object.keys(slicedArray[0])[0]]};
+
+			// This is the hight of all previous plots from the same stack
+			return sumPrev.value;
 		}
-		return val - nextVal;
 	}
+
+	// Find the current series
 	data.map(function(d, i) {
 		if (d[xKey] === key) {
 			seriesKey = i;
 		}
 	});
-	stacks[seriesKey].sort(function(a, b) {
-		return b-a;
-	}).map(function(data, i) {
-		var isValuePositive = data < 0 ? false : true;
-		var previousVal = stacks[seriesKey][i-1];
-		if (data === value) {
-			if (isValuePositive && stacks[seriesKey][i+1] !== undefined) {
-				height = calculateHeight(value, stacks[seriesKey][i+1], previousVal);
-			} else if (isValuePositive && stacks[seriesKey][i+1] === undefined) {
-				height = calculateHeight(value, 0, previousVal);
-			} else if (!isValuePositive && stacks[seriesKey][i-1] !== undefined) {
-				height = calculateHeight(value, stacks[seriesKey][i-1], previousVal);
-			} else if (!isValuePositive && stacks[seriesKey][i-1] === undefined) {
-				height = calculateHeight(value, 0, previousVal);
-			}
-		}
-	});
-	return isNaN(height) ? 0 : height;
+
+	var i = 1;
+	for (var prop in data[seriesKey]) {
+		var obj = {};
+		if (i === 1) { i++; continue; } // Skip the key value from the data series
+		// Seperate each value in the stack into positive and negative arrays to allow the height of the previous values to be calculated
+		var objValue = Object.defineProperty(obj, prop, {
+			value:data[seriesKey][prop],
+			writable: true,
+			enumerable: true,
+			configurable: true
+		});
+		data[seriesKey][prop] < 0 ? negativeStack.push(objValue) : positiveStack.push(objValue);
+	}
+
+	return value < 0 ? mapStacks(negativeStack) : mapStacks(positiveStack);
 }
 
 function columnChart(g){
