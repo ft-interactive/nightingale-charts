@@ -98,14 +98,11 @@ describe('When Number axis data is', function () {
         var labels = y.querySelectorAll('.primary .tick text');
 
         it('should always display 0.0 as 0', function () {
-            expect(labels.length).toBe(7);
+            expect(labels.length).toBe(4);
             expect(labels[0].textContent).toBe('0');
-            expect(labels[1].textContent).toBe('0.5');
-            expect(labels[2].textContent).toBe('1.0');
-            expect(labels[3].textContent).toBe('1.5');
-            expect(labels[4].textContent).toBe('2.0');
-            expect(labels[5].textContent).toBe('2.5');
-            expect(labels[6].textContent).toBe('3.0');
+            expect(labels[1].textContent).toBe('1');
+            expect(labels[2].textContent).toBe('2');
+            expect(labels[3].textContent).toBe('3');
         });
     })
 
