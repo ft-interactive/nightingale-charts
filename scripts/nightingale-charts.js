@@ -1590,6 +1590,9 @@ module.exports = {
         if (count < 2) {
             count = 3;
         }
+        else if (count < 4) {
+            count = 4;
+        }
         else if (count < 5) {
             count = 5;
         }
