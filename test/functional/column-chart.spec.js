@@ -141,7 +141,7 @@ describe('column-chart.js', function(){
         it('can positive only numbers', function(){
             var values = document.querySelectorAll('.width600 svg')[0].querySelectorAll('.y.axis text');
             expect(values[0].textContent).toBe('0');
-            expect(values[7].textContent).toBe('1.4');
+            expect(values[3].textContent).toBe('1.5');
         });
 
         it('can handle negative numbers', function(){

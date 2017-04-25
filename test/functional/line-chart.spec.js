@@ -117,17 +117,17 @@ describe('line-chart  ', function () {
         it('with a reversed scale', function () {
             var yAxis = lineChart4.querySelectorAll('.y.axis g[transform="translate(0,0)"]');
             var yOrigin = lineChart4.querySelectorAll('.y.axis .origin');
-            expect(yAxis[0].textContent).toBe('2.0');
+            expect(yAxis[0].textContent).toBe('2');
             expect(yAxis[0].classList.contains('origin')).toBe(false);
-            expect(yOrigin[0].textContent).toBe('-1.0');
+            expect(yOrigin[0].textContent).toBe('-1');
             expect(yOrigin[1].textContent).toBe('0');
 
             var yAxisReversed = lineChart5.querySelectorAll('.y.axis g[transform="translate(0,0)"]');
             var yOriginReversed = lineChart5.querySelectorAll('.y.axis .origin');
-            expect(yAxisReversed[0].textContent).toBe('-1.0');
+            expect(yAxisReversed[0].textContent).toBe('-1');
             expect(yAxisReversed[0].classList.contains('origin')).toBe(false);
             expect(yOriginReversed[0].textContent).toBe('0');
-            expect(yOriginReversed[1].textContent).toBe('2.0');
+            expect(yOriginReversed[1].textContent).toBe('2');
         });
 
     });
