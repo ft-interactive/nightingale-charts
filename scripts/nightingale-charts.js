@@ -1560,7 +1560,8 @@ module.exports = {
         });
         return interval;
     },
-    detailedTicks: function (scale, pixelsPerTick) {
+    detailedTicks: function (scale, pixelsPerTick, model) {
+        var range = scale.range();
         var count = this.tickCount(scale, pixelsPerTick);
         var ticks = scale.ticks(count);
         var interval = this.tickIntervalBoundaries(ticks);
@@ -1569,11 +1570,25 @@ module.exports = {
         var d1 = Math.ceil(scale.domain()[pos] / interval) * interval;
         var d2 = Math.floor(scale.domain()[1-pos] / interval) * interval;
 
-        ticks[d1<=0 ? 'unshift' : 'push'](d1);
-        ticks[d2<=0 ? 'unshift' : 'push'](d2);
+        var slicedTicks = ticks.slice();
+
+        if (d1 <= 0) {
+          slicedTicks.unshift(d1);
+        } else {
+          slicedTicks.push(d1);
+        }
+
+        if (d2 <= 0) {
+          slicedTicks.unshift(d2);
+        } else {
+          slicedTicks.push(d2);
+        }
+
         scale.domain()[pos] = d1;
         scale.domain()[1-pos] = d2;
-        return ticks;
+        scale.range(range);
+
+        return slicedTicks;
     },
     simpleTicks: function (scale) {
         var customTicks = [];
