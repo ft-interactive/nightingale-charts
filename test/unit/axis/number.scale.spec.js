@@ -14,7 +14,8 @@ describe('number scale', function () {
         spyOn(numberScale, 'tickIntervalBoundaries').and.callFake(function(){return 1;});
         var scale = {
             ticks: function(){ return [-3, -2, -1, 0, 1, 2, 3]; },
-            domain: function() { return [-3.5,3.5]; }
+            domain: function() { return [-3.5,3.5]; },
+            range: function() { return [0,300]; }
         };
         var result = numberScale.detailedTicks(scale, 100);
         expect(result.length).toBe(9);
@@ -30,7 +31,8 @@ describe('number scale', function () {
         spyOn(numberScale, 'tickIntervalBoundaries').and.callFake(function(){return 20;});
         var scale = {
             ticks: function(){ return [0, 20, 40, 60]; },
-            domain: function() { return [70, 0]; }
+            domain: function() { return [70, 0]; },
+            range: function() { return [0,300]; }
         };
         var result = numberScale.detailedTicks(scale, 100);
         expect(result.length).toBe(6);
