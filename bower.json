@@ -1,9 +1,5 @@
 {
     "name": "nightingale-charts",
-    "authors": [
-        "tomgp <tom.g.pearson@gmail.com>",
-        "kavanagh <ltkavanagh@gmail.com>"
-    ],
     "description": "FT style charts, axes, scales etc",
     "main": "src/scripts/nightingale-charts.js",
     "moduleType": [

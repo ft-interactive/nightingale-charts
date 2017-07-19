@@ -21,17 +21,20 @@
     "regression": "npm run clean-regression && casperjs test test/regression/",
     "clean-regression": "rm -rf test/regression/failures & rm -rf test/regression/new & rm -rf test/regression/reference/*diff.png & rm -rf test/regression/reference/*fail.png",
     "sort-regression": "mkdir -p test/regression/new && mv test/regression/reference/*diff.png test/regression/new & rm -rf test/regression/reference/*.fail.png && npm run rename-regression",
-    "rename-regression": "for fname in test/regression/new/*.diff.png ; do mv \"$fname\" \"$(echo \"$fname\" | sed 's/\\.diff//')\" ; done; for fname in test/regression/failures/*.fail.png ; do mv \"$fname\" \"$(echo \"$fname\" | sed 's/\\.fail//')\" ; done;"
+    "rename-regression": "for fname in test/regression/new/*.diff.png ; do mv \"$fname\" \"$(echo \"$fname\" | sed 's/\\.diff//')\" ; done; for fname in test/regression/failures/*.fail.png ; do mv \"$fname\" \"$(echo \"$fname\" | sed 's/\\.fail//')\" ; done;",
+    "precommit": "node_modules/.bin/secret-squirrel",
+    "commitmsg": "node_modules/.bin/secret-squirrel-commitmsg"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/ft-interactive/nightingale-charts.git"
   },
-  "author": "tom pearson",
   "license": "ISC",
   "devDependencies": {
+    "@financial-times/secret-squirrel": "^2.5.10",
     "brfs": "^1.4.0",
     "browserify-istanbul": "^0.2.1",
+    "husky": "^0.14.3",
     "jshint": "^2.6.3",
     "karma": "^0.13.1",
     "karma-browserify": "^4.2.1",
