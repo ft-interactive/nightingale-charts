@@ -69,7 +69,7 @@ function dateAxis(model) {
         g = g.append('g')
           .attr('transform', 'translate(' + config.xOffset + ',' + config.yOffset + ')')
           .attr('class', 'x axis axis--independent axis--date').each(function () {
-             labels.add(d3.select(this), config);
+             labels.add(d3.select(this), config, model);
          });
 
         if (!config.showDomain) {

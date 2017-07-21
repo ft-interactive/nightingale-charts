@@ -60,14 +60,14 @@ function categoryAxis(model) {
         var chartType = config.attr['chart-type'];
         var orientOffset = (isVertical()) ? -config.axes[0].tickSize() : 0;
         var className = isVertical() ? 'y' : 'x';
-        
+
         config.attr.primary['text-anchor'] = isVertical() ? 'end' : 'middle';
         config.attr.secondary['text-anchor'] = isVertical() ? 'end' : 'middle';
 
         g = g.append('g')
             .attr('transform', 'translate(' + (config.xOffset + orientOffset) + ',' + config.yOffset + ')')
             .attr('class', className + ' axis axis--independent axis--category').each(function () {
-                labels.add(d3.select(this), config);
+                labels.add(d3.select(this), config, model);
             });
 
         var customTick = themes.check(model.theme, 'ticks').attributes.customTickShape || false;
