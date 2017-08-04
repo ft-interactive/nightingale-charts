@@ -958,14 +958,14 @@ function categoryAxis(model) {
         var chartType = config.attr['chart-type'];
         var orientOffset = (isVertical()) ? -config.axes[0].tickSize() : 0;
         var className = isVertical() ? 'y' : 'x';
-        
+
         config.attr.primary['text-anchor'] = isVertical() ? 'end' : 'middle';
         config.attr.secondary['text-anchor'] = isVertical() ? 'end' : 'middle';
 
         g = g.append('g')
             .attr('transform', 'translate(' + (config.xOffset + orientOffset) + ',' + config.yOffset + ')')
             .attr('class', className + ' axis axis--independent axis--category').each(function () {
-                labels.add(d3.select(this), config);
+                labels.add(d3.select(this), config, model);
             });
 
         var customTick = themes.check(model.theme, 'ticks').attributes.customTickShape || false;
@@ -1375,7 +1375,7 @@ function dateAxis(model) {
         g = g.append('g')
           .attr('transform', 'translate(' + config.xOffset + ',' + config.yOffset + ')')
           .attr('class', 'x axis axis--independent axis--date').each(function () {
-             labels.add(d3.select(this), config);
+             labels.add(d3.select(this), config, model);
          });
 
         if (!config.showDomain) {
@@ -4210,6 +4210,12 @@ module.exports.theme = [
         }
     },
     {
+        'id': 'x-axis-secondary-text',
+        'attributes': {
+            'text-anchor': 'middle'
+        }
+    },
+    {
         'id': 'x-axis-text',
         'attributes': {
             'text-anchor': 'middle'
@@ -4424,6 +4430,12 @@ module.exports.theme = [
             'font-family': 'MetricWeb, sans-serif',
             'font-weight': 400,
             'fill': 'rgba(0, 0, 0, 0.8)'
+        }
+    },
+    {
+        'id': 'x-axis-secondary-text',
+        'attributes': {
+            'text-anchor': 'start'
         }
     },
     {
@@ -4667,6 +4679,12 @@ module.exports.theme = [
         }
     },
     {
+        'id': 'x-axis-secondary-text',
+        'attributes': {
+            'text-anchor': 'start'
+        }
+    },
+    {
         'id': 'x-axis-text',
         'attributes': {
             'text-anchor': 'start'
@@ -4833,6 +4851,12 @@ module.exports.theme = [
         'attributes': {
             'font-size': 10,
             'fill': '#757470'
+        }
+    },
+    {
+        'id': 'x-axis-secondary-text',
+        'attributes': {
+            'text-anchor': 'middle'
         }
     },
     {
@@ -5469,6 +5493,7 @@ module.exports = {
 
 },{"../themes":40,"d3":"d3"}],44:[function(require,module,exports){
 var d3 = require('d3');
+var themes = require('../themes');
 var dates = require('../util/dates');
 var dateFormatter = dates.formatter;
 
@@ -5491,9 +5516,10 @@ module.exports = {
             g.selectAll(extendedTicks_selector).attr("y2", config.tickSize);
         }
     },
-    add: function(g, config){
+    add: function(g, config, model) {
         var self = this;
         var options = { row: 0 };
+        var xAxisSecondaryTextAnchorOverride = themes.check(model.theme, 'x-axis-secondary-text').attributes['text-anchor'];
 
         config.axes.forEach(function (axis, i) {
             self.addRow(g, axis, options, config);
@@ -5509,9 +5535,20 @@ module.exports = {
                 dy: 15 + config.tickSize
             });
 
+        if (config.attr['chart-type'] === 'line' && xAxisSecondaryTextAnchorOverride) {
+          g.selectAll('.x.axis .secondary .tick text')
+              .attr({
+                'text-anchor': xAxisSecondaryTextAnchorOverride
+              });
+        }
+
         //if xAxisLabel is centre-aligned, and chart yAxis is right-aligned, make first xAxisLabel left-aligned
-        if(config.attr['chart-type'] === 'line' && config.attr['chart-alignment'] === 'right' && config.attr.primary['text-anchor'] === 'middle') {
+        if (config.attr['chart-type'] === 'line' && config.attr['chart-alignment'] === 'right' && config.attr.primary['text-anchor'] === 'middle') {
           g.selectAll('.x.axis .primary .tick:first-child text')
+              .attr({
+                'text-anchor': 'start'
+              });
+          g.selectAll('.x.axis .secondary .tick:first-child text')
               .attr({
                 'text-anchor': 'start'
               });
@@ -5707,7 +5744,7 @@ module.exports = {
     }
 };
 
-},{"../util/dates":43,"d3":"d3"}],45:[function(require,module,exports){
+},{"../themes":40,"../util/dates":43,"d3":"d3"}],45:[function(require,module,exports){
 //a place to define custom line interpolators
 
 var d3 = require('d3');
