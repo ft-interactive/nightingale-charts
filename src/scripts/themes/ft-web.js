@@ -150,6 +150,12 @@ module.exports.theme = [
         }
     },
     {
+        'id': 'x-axis-secondary-text',
+        'attributes': {
+            'text-anchor': 'middle'
+        }
+    },
+    {
         'id': 'x-axis-text',
         'attributes': {
             'text-anchor': 'middle'

@@ -1,4 +1,5 @@
 var d3 = require('d3');
+var themes = require('../themes');
 var dates = require('../util/dates');
 var dateFormatter = dates.formatter;
 
@@ -21,9 +22,10 @@ module.exports = {
             g.selectAll(extendedTicks_selector).attr("y2", config.tickSize);
         }
     },
-    add: function(g, config){
+    add: function(g, config, model) {
         var self = this;
         var options = { row: 0 };
+        var xAxisSecondaryTextAnchorOverride = themes.check(model.theme, 'x-axis-secondary-text').attributes['text-anchor'];
 
         config.axes.forEach(function (axis, i) {
             self.addRow(g, axis, options, config);
@@ -39,9 +41,20 @@ module.exports = {
                 dy: 15 + config.tickSize
             });
 
+        if (config.attr['chart-type'] === 'line' && xAxisSecondaryTextAnchorOverride) {
+          g.selectAll('.x.axis .secondary .tick text')
+              .attr({
+                'text-anchor': xAxisSecondaryTextAnchorOverride
+              });
+        }
+
         //if xAxisLabel is centre-aligned, and chart yAxis is right-aligned, make first xAxisLabel left-aligned
-        if(config.attr['chart-type'] === 'line' && config.attr['chart-alignment'] === 'right' && config.attr.primary['text-anchor'] === 'middle') {
+        if (config.attr['chart-type'] === 'line' && config.attr['chart-alignment'] === 'right' && config.attr.primary['text-anchor'] === 'middle') {
           g.selectAll('.x.axis .primary .tick:first-child text')
+              .attr({
+                'text-anchor': 'start'
+              });
+          g.selectAll('.x.axis .secondary .tick:first-child text')
               .attr({
                 'text-anchor': 'start'
               });
