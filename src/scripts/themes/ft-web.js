@@ -1,12 +1,12 @@
 var colours = {
     line: [
-        '#af516c', '#ecafaf', '#d7706c', '#76acb8', '#7fd8f5', '#3d7ab3', '#b8b1a9'
+        '#0f5499', '#EB5E8D', '#70DCE6', '#9dbf57', '#7f062e', '#c2b7af', '#ce3140'
     ],
     column: [
-        '#bb6d82', '#ecafaf', '#d7706c', '#cb9f8c', '#b07979', '#ccc2c2', '#8f7d95', '#b8b1a9'
+        '#1E558C', '#9EE5F3', '#1E8FCC', '#B3325D', '#FF75A3', '#D9CCC3', '#AECC70', '#F34D5B'
     ],
     bar: [
-        '#bb6d82', '#ecafaf', '#d7706c', '#cb9f8c', '#b07979', '#ccc2c2', '#8f7d95', '#b8b1a9'
+        '#1E558C', '#9EE5F3', '#1E8FCC', '#B3325D', '#FF75A3', '#D9CCC3', '#AECC70', '#F34D5B'
     ],
     accent: '#9e2f50'
 };
@@ -30,7 +30,27 @@ module.exports.theme = [
         'id': 'svg',
         'selector': 'svg',
         'attributes': {
-            'background': '#fff1e0'
+            'background': '#fff1e0',
+            'padding-y': 10,
+            'padding-x': 0
+        }
+    },
+    {
+        'id': 'chart',
+        'attributes': {
+            'padding-left': 40,
+            'padding-right': 10
+        }
+    },
+    {
+        'id': 'svg-borders',
+        'attributes': {
+          'width': 60,
+          'stroke-width': '4',
+          'top': true,
+          'bottom': false,
+          'left': false,
+          'right': false
         }
     },
     //lines
@@ -67,37 +87,43 @@ module.exports.theme = [
     //text
     {   'id': 'chart-title',
         'attributes': {
-            'font-family': 'BentonSans, sans-serif',
-            'font-size': 18,
-            'fill': 'rgba(0, 0, 0, 0.8)'
+            'font-family': 'MetricWeb, sans-serif',
+            'font-size': 20,
+            'font-weight': 400,
+            'fill': 'rgba(0, 0, 0, 1)'
         }
     },
     {   'id': 'chart-subtitle',
         'attributes': {
-            'font-family': 'BentonSans, sans-serif',
-            'font-size': 12,
-            'fill': 'rgba(0, 0, 0, 0.5)'
+            'font-family': 'MetricWeb, sans-serif',
+            'font-size': 18,
+            'fill': 'rgba(102, 96, 92, 1)'
         }
     },
     {   'id': 'chart-source',
         'attributes': {
-            'font-family': 'BentonSans, sans-serif',
-            'font-size': 10,
-            'line-height': 12,
-            'fill': 'rgba(0, 0, 0, 0.5)'
+            'font-family': 'MetricWeb, sans-serif',
+            'font-size': 14,
+            'fill': 'rgba(102, 96, 92, 1)'
         }
     },
     {   'id': 'chart-footnote',
         'attributes': {
-            'font-family': 'BentonSans, sans-serif',
-            'font-size': 12,
-            'line-height': 15,
-            'fill': 'rgba(0, 0, 0, 0.5)'
+            'font-family': 'MetricWeb, sans-serif',
+            'font-size': 14,
+            'fill': 'rgba(102, 96, 92, 1)'
+        }
+    },
+    {   'id': 'chart-logo',
+        'attributes': {
+            'font-family': 'MetricWeb, sans-serif',
+            'font-size': 14,
+            'fill': 'rgba(102, 96, 92, 1)'
         }
     },
     {   'id': 'key',
         'attributes': {
-            'font-family': 'BentonSans, sans-serif',
+            'font-family': 'MetricWeb, sans-serif',
             'font-size': 12,
             'line-height': 16,
             'fill': 'rgba(0, 0, 0, 0.5)',
@@ -107,24 +133,24 @@ module.exports.theme = [
     {   'id': 'independent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': '#000000',
-            'stroke-opacity':'0.3',
+            'stroke': '#e6d9ce',
+            'stroke-opacity':'1',
             'stroke-dasharray': 'none'
         }
     },
     {   'id': 'dependent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': '#000000',
-            'stroke-opacity':'0.1',
+            'stroke': '#e6d9ce',
+            'stroke-opacity':'1',
             'stroke-dasharray': '2 2'
         }
     },
     {   'id': 'origin-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': '#000000',
-            'stroke-opacity':'0.3',
+            'stroke': '#e6d9ce',
+            'stroke-opacity':'1',
             'stroke-dasharray': 'none'
         }
     },
@@ -136,17 +162,18 @@ module.exports.theme = [
     },
     {   'id': 'axis-text',
         'attributes': {
-            'font-size': 12,
-            'font-family': 'BentonSans, sans-serif',
+            'font-size': 14,
+            'font-family': 'MetricWeb, sans-serif',
             'stroke': 'none',
-            'fill': '#757470'
+            'fill': '#66605C'
         }
     },
     {   'id': 'axis-secondary-text',
         'selector': '.axis .secondary text',
         'attributes': {
-            'font-size': 10,
-            'fill': '#757470'
+            'font-size': 12,
+            'font-family': 'MetricWeb, sans-serif',
+            'fill': '#66605C'
         }
     },
     {

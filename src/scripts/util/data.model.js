@@ -22,7 +22,9 @@ function chartWidth(model) {
         return model.chartWidth;
     }
 
-    var rightGutter = model.contentWidth < 260 ? 16 : 26;
+    var leftGutter = model.chartPaddingLeft || 0;
+    var paddingRight = model.chartPaddingRight || 26;
+    var rightGutter = model.contentWidth < 260 ? 16 : paddingRight;
 
     var fullWidthChart = themes.check(model.theme, 'chart-plot').attributes['full-width'] || false;
     if (fullWidthChart) {
@@ -31,7 +33,7 @@ function chartWidth(model) {
 
     if (model.paddingX) rightGutter = 0;
 
-    return model.contentWidth - rightGutter - model.chartPadding * 2;
+    return model.contentWidth - leftGutter - rightGutter - model.chartPadding * 2;
 }
 
 function setExtents(model){
@@ -257,6 +259,8 @@ function Model(chartType, opts) {
         width: 300,
         chartHeight: undefined,
         chartWidth: undefined,
+        chartPaddingLeft: undefined,
+        chartPaddingRight: undefined,
         simpleDate: false,
         simpleValue: false,
         logoSize: 28,
@@ -291,6 +295,8 @@ function Model(chartType, opts) {
     m.paddingX = themes.check(m.theme, 'svg').attributes['padding-x'] || 0;
     m.paddingY = themes.check(m.theme, 'svg').attributes['padding-y'] || 0;
     m.chartPadding = themes.check(m.theme, 'chart').attributes.padding || 0;
+    m.chartPaddingLeft = themes.check(m.theme, 'chart').attributes['padding-left'];
+    m.chartPaddingRight = themes.check(m.theme, 'chart').attributes['padding-right'];
     m.x.series = seriesOptions.normalise(m.x.series);
     m.y.series = seriesOptions.normaliseY(m.y.series)
         .filter(function (d) {
