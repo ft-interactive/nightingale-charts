@@ -30,16 +30,9 @@ module.exports.theme = [
         'id': 'svg',
         'selector': 'svg',
         'attributes': {
-            'background': '#fff1e0',
-            'padding-y': 10,
+            'background': '#fff7ef',
+            'padding-y': 14,
             'padding-x': 0
-        }
-    },
-    {
-        'id': 'chart',
-        'attributes': {
-            'padding-left': 40,
-            'padding-right': 10
         }
     },
     {
@@ -60,7 +53,7 @@ module.exports.theme = [
         'attributes': {
             'fill': 'none',
             'stroke-linejoin': 'round',
-            'stroke-linecap': 'round'
+            'stroke-linecap': 'square'
         }
     },
     ////Columns
@@ -79,7 +72,7 @@ module.exports.theme = [
         'id': 'null-label',
         'attributes': {
             'text-anchor': 'middle',
-            'font-size': 10,
+            'font-size': 16,
             'fill': 'rgba(0, 0, 0, 0.4)'
         }
     },
@@ -97,34 +90,45 @@ module.exports.theme = [
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
             'font-size': 18,
-            'fill': 'rgba(102, 96, 92, 1)'
+            'fill': 'rgba(102, 96, 92, 1)',
+            'padding-y': 5
         }
     },
     {   'id': 'chart-source',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
-            'font-size': 14,
-            'fill': 'rgba(102, 96, 92, 1)'
+            'font-size': 16,
+            'fill': 'rgba(102, 96, 92, 1)',
+            'line-height': 14,
+            'padding-y': -4
         }
     },
     {   'id': 'chart-footnote',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
-            'font-size': 14,
-            'fill': 'rgba(102, 96, 92, 1)'
+            'font-size': 16,
+            'fill': 'rgba(102, 96, 92, 1)',
+            'line-height': 14
+        }
+    },
+    {   'id': 'chart-plot',
+        'attributes': {
+            'full-width': true,
+            'padding-x': 0.05
         }
     },
     {   'id': 'chart-logo',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
-            'font-size': 14,
+            'font-size': 16,
+            'font-style': 'italic',
             'fill': 'rgba(102, 96, 92, 1)'
         }
     },
     {   'id': 'key',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
-            'font-size': 12,
+            'font-size': 16,
             'line-height': 16,
             'fill': 'rgba(0, 0, 0, 0.5)',
             'padding-y': 8
@@ -143,7 +147,7 @@ module.exports.theme = [
             'shape-rendering': 'crispEdges',
             'stroke': '#e6d9ce',
             'stroke-opacity':'1',
-            'stroke-dasharray': '2 2'
+            'stroke-dasharray': 'none'
         }
     },
     {   'id': 'origin-ticks',
@@ -162,7 +166,7 @@ module.exports.theme = [
     },
     {   'id': 'axis-text',
         'attributes': {
-            'font-size': 14,
+            'font-size': 16,
             'font-family': 'MetricWeb, sans-serif',
             'stroke': 'none',
             'fill': '#66605C'
@@ -171,7 +175,7 @@ module.exports.theme = [
     {   'id': 'axis-secondary-text',
         'selector': '.axis .secondary text',
         'attributes': {
-            'font-size': 12,
+            'font-size': 16,
             'font-family': 'MetricWeb, sans-serif',
             'fill': '#66605C'
         }
@@ -189,9 +193,16 @@ module.exports.theme = [
         }
     },
     {
+        'id': 'y-axis-line',
+        'attributes': {
+            'x1': 0
+        }
+    },
+    {
         'id': 'y-axis-text',
         'attributes': {
-            'text-anchor': 'end'
+            'text-anchor': 'end',
+            'transform': 'translate( 0, 0 )'
         }
     }
 ];

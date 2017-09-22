@@ -104,11 +104,18 @@ Dressing.prototype.addFooter = function () {
 Dressing.prototype.addLogo = function () {
     var model = this.model;
     if (!model.logoSize) return;
-    var logo = this.svg.append('g').attr('class', 'chart-logo').call(ftLogo, model.logoSize);
-    logo.attr('transform', model.translate({
-        left: model.width - model.logoSize - 3,
-        top: model.height - getHeight(logo) - 3
-    }));
+
+    var logo = this.svg.append('g').attr('class', 'chart-logo').append('text').text('FT ©'); //.call(ftLogo, model.logoSize);
+
+    logo
+      .attr('transform', model.translate({
+          left: 0,
+          top: model.height - 3
+      }))
+      .attr('font-family', 'MetricWeb, sans-serif')
+      .attr('font-size', 16)
+      .attr('font-style', 'italic')
+      .attr('fill', 'rgba(102, 96, 92, 1)');
 };
 
 Dressing.prototype.addItem = function(item, widthRestrict, prefix){
