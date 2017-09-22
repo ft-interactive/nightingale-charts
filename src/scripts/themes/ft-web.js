@@ -54,7 +54,7 @@ module.exports.theme = [
             'fill': 'none',
             'stroke-linejoin': 'round',
             'stroke-linecap': 'square',
-            'stroke-width': 1.5
+            'stroke-width': 3
         }
     },
     ////Columns
