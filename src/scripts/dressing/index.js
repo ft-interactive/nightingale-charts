@@ -76,8 +76,8 @@ Dressing.prototype.addVerticalLine = function (g, id, viewBox){
 Dressing.prototype.addBorders = function () {
   var borderConfig = this.getAttr('svg-borders');
   var maxWidth = borderConfig['max-width'] || 1000;
-  var width = borderConfig['width'] || this.model.width;
-  var top = borderConfig['width'] ? (borderConfig['stroke-width']/2) : 0;
+  var width = borderConfig.width || this.model.width;
+  var top = borderConfig.width ? (borderConfig['stroke-width']/2) : 0;
 
   borderConfig.top && this.model.width <= maxWidth ? this.addHorizontalLine(this.svg, 'line-horizontal-header', [0,0, width, top]) : null;
   borderConfig.bottom && this.model.width <= maxWidth ? this.addHorizontalLine(this.svg, 'line-horizontal-footer', [0,0, this.model.width, this.model.height - 0]) : null;
