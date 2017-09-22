@@ -17,7 +17,7 @@ describe('data model', function () {
         expect(model.dependentDomain[0]).toBe(undefined);
         expect(model.dependentDomain[1]).toBe(undefined);
         expect(model.key).toBe(false);
-        expect(model.lineStrokeWidth).toBe(4);
+        expect(model.lineStrokeWidth).toBe(3);
 
     });
 
