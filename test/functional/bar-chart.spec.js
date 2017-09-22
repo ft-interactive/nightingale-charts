@@ -27,7 +27,7 @@ describe('bar-chart.js', function(){
             var nullLabels = chart.querySelectorAll('text.null-label');
             expect(nullLabels.length).toBe(1);
             for (var i = 0; i < nullLabels.length; i++) {
-                expect(nullLabels[i].innerHTML).toBe('n/a');
+                expect(nullLabels[i].innerHTML).toBe('–');
             }
         });
 
@@ -49,7 +49,7 @@ describe('bar-chart.js', function(){
         it('dependent axis at the bottom of the chart', function() {
             var chart = document.querySelector('#bar-chart__categories .width600 svg');
             var axis = chart.querySelector('.axis--dependent').parentNode;
-            expect(axis.getAttribute('transform')).toBe('translate(0,306)');
+            expect(axis.getAttribute('transform')).toBe('translate(0,275)');
         });
 
         it('no primary ticks', function() {
