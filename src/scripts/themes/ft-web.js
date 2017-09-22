@@ -81,7 +81,7 @@ module.exports.theme = [
     {   'id': 'chart-title',
         'attributes': {
             'font-family': 'MetricWeb, sans-serif',
-            'font-size': 20,
+            'font-size': 22,
             'font-weight': 400,
             'fill': 'rgba(0, 0, 0, 1)'
         }
