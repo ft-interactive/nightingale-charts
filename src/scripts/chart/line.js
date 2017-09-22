@@ -81,10 +81,9 @@ function lineChart(g) {
 
 
     var i = model.y.series.length;
-    var lineStrokeWidth = themes.check(model.theme, 'lines').attributes['stroke-width'];
     var lineAttr = extend(
         themes.check(model.theme, 'lines').attributes,
-        {'stroke-width': lineStrokeWidth || model.lineStrokeWidth});
+        {'stroke-width': model.lineStrokeWidth});
     var borderAttrs = extend({}, lineAttr);
     borderAttrs.class = 'line line__border';
     borderAttrs['stroke-width'] =  lineAttr['stroke-width'] * 2;

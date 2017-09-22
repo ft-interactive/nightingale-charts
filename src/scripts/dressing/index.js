@@ -105,7 +105,7 @@ Dressing.prototype.addLogo = function () {
     var model = this.model;
     if (!model.logoSize) return;
 
-    var logo = this.svg.append('g').attr('class', 'chart-logo').append('text').text('FT ©'); //.call(ftLogo, model.logoSize);
+    var logo = this.svg.append('g').attr('class', 'chart-logo').append('text').text('© FT'); //.call(ftLogo, model.logoSize);
 
     logo
       .attr('transform', model.translate({

@@ -4,9 +4,8 @@ var thicknesses = {
     large: 6
 };
 
-var defaultThickness = thicknesses.medium;
-
-module.exports = function (value) {
+module.exports = function (value, theme) {
+    var defaultThickness = theme === 'ft-web' ? 3 : thicknesses.medium;
 
     // fail fast
     if (!value) {
