@@ -16,4 +16,4 @@ machine:
   timezone:
     Europe/London
   node:
-    version: v0.10.33
+    version: v6.1.0
