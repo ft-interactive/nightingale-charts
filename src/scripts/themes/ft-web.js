@@ -130,7 +130,7 @@ module.exports.theme = [
             'font-family': 'MetricWeb, sans-serif',
             'font-size': 16,
             'line-height': 16,
-            'fill': 'rgba(0, 0, 0, 0.5)',
+            'fill': '#66605C',
             'padding-y': 8
         }
     },
