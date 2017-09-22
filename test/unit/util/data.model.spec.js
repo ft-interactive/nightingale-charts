@@ -63,7 +63,7 @@ describe('data model', function () {
         expect(model.height).toBe(100);
         expect(model.width).toBe(100);
         expect(model.chartHeight).toBe(77.60000000000001);
-        expect(model.chartWidth).toBe(80);
+        expect(model.chartWidth).toBe(96);
         expect(model.independentDomain.length).toBe(2);
         expect(model.independentDomain[0].toString()).toBe(new Date('2000-01-01T00:00:00.000Z').toString());
         expect(model.independentDomain[1].toString()).toBe(new Date('2003-01-01T00:00:00.000Z').toString());
