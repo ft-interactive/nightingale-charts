@@ -30,7 +30,7 @@ module.exports.theme = [
         'id': 'svg',
         'selector': 'svg',
         'attributes': {
-            'background': '#fff7ef',
+            'background': 'transparent',
             'padding-y': 14,
             'padding-x': 0
         }
