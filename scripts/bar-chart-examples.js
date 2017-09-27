@@ -2811,9 +2811,11 @@ Dressing.prototype.addVerticalLine = function (g, id, viewBox){
 
 Dressing.prototype.addBorders = function () {
   var borderConfig = this.getAttr('svg-borders');
-  var maxWidth =  borderConfig['max-width'] || 1000;
+  var maxWidth = borderConfig['max-width'] || 1000;
+  var width = borderConfig.width || this.model.width;
+  var top = borderConfig.width ? (borderConfig['stroke-width']/2) : 0;
 
-  borderConfig.top && this.model.width <= maxWidth ? this.addHorizontalLine(this.svg, 'line-horizontal-header', [0,0, this.model.width, 0]) : null;
+  borderConfig.top && this.model.width <= maxWidth ? this.addHorizontalLine(this.svg, 'line-horizontal-header', [0,0, width, top]) : null;
   borderConfig.bottom && this.model.width <= maxWidth ? this.addHorizontalLine(this.svg, 'line-horizontal-footer', [0,0, this.model.width, this.model.height - 0]) : null;
   borderConfig.left && this.model.width <= maxWidth ? this.addVerticalLine(this.svg, 'line-vertical-left', [0,0, 0, 20]) : null;
   borderConfig.right && this.model.width <= maxWidth ? this.addVerticalLine(this.svg, 'line-vertical-right', [0,0, this.model.width, 20]) : null;
@@ -2838,11 +2840,18 @@ Dressing.prototype.addFooter = function () {
 Dressing.prototype.addLogo = function () {
     var model = this.model;
     if (!model.logoSize) return;
-    var logo = this.svg.append('g').attr('class', 'chart-logo').call(ftLogo, model.logoSize);
-    logo.attr('transform', model.translate({
-        left: model.width - model.logoSize - 3,
-        top: model.height - getHeight(logo) - 3
-    }));
+
+    var logo = this.svg.append('g').attr('class', 'chart-logo').append('text').text('© FT'); //.call(ftLogo, model.logoSize);
+
+    logo
+      .attr('transform', model.translate({
+          left: 0,
+          top: model.height - 3
+      }))
+      .attr('font-family', 'MetricWeb, sans-serif')
+      .attr('font-size', 16)
+      .attr('font-style', 'italic')
+      .attr('fill', 'rgba(102, 96, 92, 1)');
 };
 
 Dressing.prototype.addItem = function(item, widthRestrict, prefix){
@@ -4704,13 +4713,13 @@ module.exports.theme.gradients = gradients;
 },{}],39:[function(require,module,exports){
 var colours = {
     line: [
-        '#af516c', '#ecafaf', '#d7706c', '#76acb8', '#7fd8f5', '#3d7ab3', '#b8b1a9'
+        '#0f5499', '#EB5E8D', '#70DCE6', '#9dbf57', '#7f062e', '#c2b7af', '#ce3140'
     ],
     column: [
-        '#bb6d82', '#ecafaf', '#d7706c', '#cb9f8c', '#b07979', '#ccc2c2', '#8f7d95', '#b8b1a9'
+        '#1E558C', '#9EE5F3', '#1E8FCC', '#B3325D', '#FF75A3', '#D9CCC3', '#AECC70', '#F34D5B'
     ],
     bar: [
-        '#bb6d82', '#ecafaf', '#d7706c', '#cb9f8c', '#b07979', '#ccc2c2', '#8f7d95', '#b8b1a9'
+        '#1E558C', '#9EE5F3', '#1E8FCC', '#B3325D', '#FF75A3', '#D9CCC3', '#AECC70', '#F34D5B'
     ],
     accent: '#9e2f50'
 };
@@ -4734,7 +4743,20 @@ module.exports.theme = [
         'id': 'svg',
         'selector': 'svg',
         'attributes': {
-            'background': '#fff1e0'
+            'background': 'transparent',
+            'padding-y': 14,
+            'padding-x': 0
+        }
+    },
+    {
+        'id': 'svg-borders',
+        'attributes': {
+          'width': 60,
+          'stroke-width': '4',
+          'top': true,
+          'bottom': false,
+          'left': false,
+          'right': false
         }
     },
     //lines
@@ -4744,7 +4766,7 @@ module.exports.theme = [
         'attributes': {
             'fill': 'none',
             'stroke-linejoin': 'round',
-            'stroke-linecap': 'round'
+            'stroke-linecap': 'square'
         }
     },
     ////Columns
@@ -4763,7 +4785,7 @@ module.exports.theme = [
         'id': 'null-label',
         'attributes': {
             'text-anchor': 'middle',
-            'font-size': 10,
+            'font-size': 16,
             'fill': 'rgba(0, 0, 0, 0.4)'
         }
     },
@@ -4771,64 +4793,81 @@ module.exports.theme = [
     //text
     {   'id': 'chart-title',
         'attributes': {
-            'font-family': 'BentonSans, sans-serif',
-            'font-size': 18,
-            'fill': 'rgba(0, 0, 0, 0.8)'
+            'font-family': 'MetricWeb, sans-serif',
+            'font-size': 22,
+            'font-weight': 400,
+            'fill': 'rgba(0, 0, 0, 1)'
         }
     },
     {   'id': 'chart-subtitle',
         'attributes': {
-            'font-family': 'BentonSans, sans-serif',
-            'font-size': 12,
-            'fill': 'rgba(0, 0, 0, 0.5)'
+            'font-family': 'MetricWeb, sans-serif',
+            'font-size': 18,
+            'fill': 'rgba(102, 96, 92, 1)',
+            'padding-y': 5
         }
     },
     {   'id': 'chart-source',
         'attributes': {
-            'font-family': 'BentonSans, sans-serif',
-            'font-size': 10,
-            'line-height': 12,
-            'fill': 'rgba(0, 0, 0, 0.5)'
+            'font-family': 'MetricWeb, sans-serif',
+            'font-size': 16,
+            'fill': 'rgba(102, 96, 92, 1)',
+            'line-height': 14,
+            'padding-y': -4
         }
     },
     {   'id': 'chart-footnote',
         'attributes': {
-            'font-family': 'BentonSans, sans-serif',
-            'font-size': 12,
-            'line-height': 15,
-            'fill': 'rgba(0, 0, 0, 0.5)'
+            'font-family': 'MetricWeb, sans-serif',
+            'font-size': 16,
+            'fill': 'rgba(102, 96, 92, 1)',
+            'line-height': 14
+        }
+    },
+    {   'id': 'chart-plot',
+        'attributes': {
+            'full-width': true,
+            'padding-x': 0.05
+        }
+    },
+    {   'id': 'chart-logo',
+        'attributes': {
+            'font-family': 'MetricWeb, sans-serif',
+            'font-size': 16,
+            'font-style': 'italic',
+            'fill': 'rgba(102, 96, 92, 1)'
         }
     },
     {   'id': 'key',
         'attributes': {
-            'font-family': 'BentonSans, sans-serif',
-            'font-size': 12,
+            'font-family': 'MetricWeb, sans-serif',
+            'font-size': 16,
             'line-height': 16,
-            'fill': 'rgba(0, 0, 0, 0.5)',
+            'fill': '#66605C',
             'padding-y': 8
         }
     },
     {   'id': 'independent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': '#000000',
-            'stroke-opacity':'0.3',
+            'stroke': '#e6d9ce',
+            'stroke-opacity':'1',
             'stroke-dasharray': 'none'
         }
     },
     {   'id': 'dependent-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': '#000000',
-            'stroke-opacity':'0.1',
-            'stroke-dasharray': '2 2'
+            'stroke': '#e6d9ce',
+            'stroke-opacity':'1',
+            'stroke-dasharray': 'none'
         }
     },
     {   'id': 'origin-ticks',
         'attributes': {
             'shape-rendering': 'crispEdges',
-            'stroke': '#000000',
-            'stroke-opacity':'0.3',
+            'stroke': '#e6d9ce',
+            'stroke-opacity':'1',
             'stroke-dasharray': 'none'
         }
     },
@@ -4840,17 +4879,18 @@ module.exports.theme = [
     },
     {   'id': 'axis-text',
         'attributes': {
-            'font-size': 12,
-            'font-family': 'BentonSans, sans-serif',
+            'font-size': 16,
+            'font-family': 'MetricWeb, sans-serif',
             'stroke': 'none',
-            'fill': '#757470'
+            'fill': '#66605C'
         }
     },
     {   'id': 'axis-secondary-text',
         'selector': '.axis .secondary text',
         'attributes': {
-            'font-size': 10,
-            'fill': '#757470'
+            'font-size': 16,
+            'font-family': 'MetricWeb, sans-serif',
+            'fill': '#66605C'
         }
     },
     {
@@ -4866,9 +4906,16 @@ module.exports.theme = [
         }
     },
     {
+        'id': 'y-axis-line',
+        'attributes': {
+            'x1': 0
+        }
+    },
+    {
         'id': 'y-axis-text',
         'attributes': {
-            'text-anchor': 'end'
+            'text-anchor': 'end',
+            'transform': 'translate( 0, 0 )'
         }
     }
 ];
@@ -5779,31 +5826,30 @@ module.exports = {
 };
 
 },{"d3":"d3"}],46:[function(require,module,exports){
-var thicknesses = {
-    small: 2,
-    medium: 4,
-    large: 6
-};
+module.exports = function (value, theme) {
+  var thicknesses = {
+      small: 2,
+      medium: theme === 'ft-web' ? 3 : 4,
+      large: 6
+  };
 
-var defaultThickness = thicknesses.medium;
+  var defaultThickness = theme === 'ft-web' ? 3 : thicknesses.medium;
 
-module.exports = function (value) {
+  // fail fast
+  if (!value) {
+    return defaultThickness;
+  }
 
-    // fail fast
-    if (!value) {
-        return defaultThickness;
-    }
+  var lineThicknessIsNumber = value &&
+      typeof value === 'number' && !isNaN(value);
 
-    var lineThicknessIsNumber = value &&
-        typeof value === 'number' && !isNaN(value);
-
-    if (lineThicknessIsNumber) {
-        return value;
-    } else if (typeof value === 'string' && value.toLowerCase() in thicknesses) {
-        return thicknesses[value];
-    } else {
-        return defaultThickness;
-    }
+  if (lineThicknessIsNumber) {
+    return value;
+  } else if (typeof value === 'string' && value.toLowerCase() in thicknesses) {
+    return thicknesses[value];
+  } else {
+    return defaultThickness;
+  }
 };
 
 },{}],47:[function(require,module,exports){
