@@ -23,9 +23,9 @@ describe('column-chart.js', function(){
             expect(stackedColumnsS.length).toBe(5);
             expect(stackedColumnsS[0].getAttribute('transform')).toContain(',24)');
             expect(stackedColumnsS[1].getAttribute('transform')).toContain(',24)');
-            expect(stackedColumnsS[2].getAttribute('transform')).toContain(',24)');
+            expect(stackedColumnsS[2].getAttribute('transform')).toContain(',40)');
             expect(stackedColumnsS[3].getAttribute('transform')).toContain(',40)');
-            expect(stackedColumnsS[4].getAttribute('transform')).toContain(',40)');
+            expect(stackedColumnsS[4].getAttribute('transform')).toContain(',56)');
         });
 
         it('vertical when not all items fit', function(){

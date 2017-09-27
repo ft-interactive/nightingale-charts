@@ -8,8 +8,8 @@ describe('data model', function () {
         expect(model.chartType).toBe('line');
         expect(model.height).toBe(undefined);
         expect(model.width).toBe(300);
-        expect(model.chartHeight).toBe(203);
-        expect(model.chartWidth).toBe(270);
+        expect(model.chartHeight).toBe(194);
+        expect(model.chartWidth).toBe(296);
         expect(model.independentDomain.length).toBe(2);
         expect(model.independentDomain[0]).toBe(undefined);
         expect(model.independentDomain[1]).toBe(undefined);
@@ -17,7 +17,7 @@ describe('data model', function () {
         expect(model.dependentDomain[0]).toBe(undefined);
         expect(model.dependentDomain[1]).toBe(undefined);
         expect(model.key).toBe(false);
-        expect(model.lineStrokeWidth).toBe(4);
+        expect(model.lineStrokeWidth).toBe(3);
 
     });
 
@@ -62,8 +62,8 @@ describe('data model', function () {
 
         expect(model.height).toBe(100);
         expect(model.width).toBe(100);
-        expect(model.chartHeight).toBe(88);
-        expect(model.chartWidth).toBe(80);
+        expect(model.chartHeight).toBe(77.60000000000001);
+        expect(model.chartWidth).toBe(96);
         expect(model.independentDomain.length).toBe(2);
         expect(model.independentDomain[0].toString()).toBe(new Date('2000-01-01T00:00:00.000Z').toString());
         expect(model.independentDomain[1].toString()).toBe(new Date('2003-01-01T00:00:00.000Z').toString());
@@ -153,7 +153,7 @@ describe('data model', function () {
         }));
         expect(model.height).toBe(undefined);
         expect(model.width).toBe(300);
-        expect(model.chartHeight).toBe(100);
+        expect(model.chartHeight).toBe(72);
         expect(model.chartWidth).toBe(100);
         expect(model.independentDomain.length).toBe(2);
         expect(model.independentDomain[0]).toBe(undefined);
@@ -211,7 +211,7 @@ describe('data model', function () {
         }));
         expect(model.height).toBe(undefined);
         expect(model.width).toBe(300);
-        expect(model.chartHeight).toBe(100);
+        expect(model.chartHeight).toBe(72);
         expect(model.chartWidth).toBe(100);
         expect(model.independentDomain.length).toBe(4);
         expect(model.independentDomain[0]).toBe('2000-01-01T00:00:00.000Z');

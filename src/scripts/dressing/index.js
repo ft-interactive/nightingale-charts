@@ -75,9 +75,11 @@ Dressing.prototype.addVerticalLine = function (g, id, viewBox){
 
 Dressing.prototype.addBorders = function () {
   var borderConfig = this.getAttr('svg-borders');
-  var maxWidth =  borderConfig['max-width'] || 1000;
+  var maxWidth = borderConfig['max-width'] || 1000;
+  var width = borderConfig.width || this.model.width;
+  var top = borderConfig.width ? (borderConfig['stroke-width']/2) : 0;
 
-  borderConfig.top && this.model.width <= maxWidth ? this.addHorizontalLine(this.svg, 'line-horizontal-header', [0,0, this.model.width, 0]) : null;
+  borderConfig.top && this.model.width <= maxWidth ? this.addHorizontalLine(this.svg, 'line-horizontal-header', [0,0, width, top]) : null;
   borderConfig.bottom && this.model.width <= maxWidth ? this.addHorizontalLine(this.svg, 'line-horizontal-footer', [0,0, this.model.width, this.model.height - 0]) : null;
   borderConfig.left && this.model.width <= maxWidth ? this.addVerticalLine(this.svg, 'line-vertical-left', [0,0, 0, 20]) : null;
   borderConfig.right && this.model.width <= maxWidth ? this.addVerticalLine(this.svg, 'line-vertical-right', [0,0, this.model.width, 20]) : null;
@@ -102,11 +104,18 @@ Dressing.prototype.addFooter = function () {
 Dressing.prototype.addLogo = function () {
     var model = this.model;
     if (!model.logoSize) return;
-    var logo = this.svg.append('g').attr('class', 'chart-logo').call(ftLogo, model.logoSize);
-    logo.attr('transform', model.translate({
-        left: model.width - model.logoSize - 3,
-        top: model.height - getHeight(logo) - 3
-    }));
+
+    var logo = this.svg.append('g').attr('class', 'chart-logo').append('text').text('© FT'); //.call(ftLogo, model.logoSize);
+
+    logo
+      .attr('transform', model.translate({
+          left: 0,
+          top: model.height - 3
+      }))
+      .attr('font-family', 'MetricWeb, sans-serif')
+      .attr('font-size', 16)
+      .attr('font-style', 'italic')
+      .attr('fill', 'rgba(102, 96, 92, 1)');
 };
 
 Dressing.prototype.addItem = function(item, widthRestrict, prefix){

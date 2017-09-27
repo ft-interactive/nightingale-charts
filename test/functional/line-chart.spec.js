@@ -154,9 +154,9 @@ describe('line-chart  ', function () {
         it('keeps correct positioning with custom height', function(){
             var lines = lineChart11.querySelector('.line.line--series2');
             var footer = lineChart11.querySelector('.chart-footnote');
-            expect(lines.getBoundingClientRect().width).toBeGreaterThan(550);
+            expect(lines.getBoundingClientRect().width).toBeLessThan(550);
             expect(lines.getBoundingClientRect().width).toBeLessThan(553);
-            expect(footer.getAttribute('transform')).toBe('translate(0,394)');
+            expect(footer.getAttribute('transform')).toBe('translate(0,380)');
         });
 
     });
