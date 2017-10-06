@@ -1,17 +1,10 @@
 test:
-  pre:
-    - bower i
   post:
     - git config --global user.name "circleci"
     - git config --global user.email "jonathan.best@ft.com"
 general:
   artifacts:
     - test/coverage
-deployment:
-  production:
-    branch: master
-    commands:
-      - ./node_modules/web-caddy/bin/caddy release
 machine:
   timezone:
     Europe/London

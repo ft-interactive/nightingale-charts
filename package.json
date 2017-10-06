@@ -1,23 +1,18 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "nightingale-charts",
   "description": "FT style charts, axes, scales etc",
-  "main": "src/scripts/nightingale-charts.js",
-  "bin": {
-    "casperjs": "node_modules/phantomcss/node_modules/.bin/casperjs"
-  },
+  "main": "main.js",
   "scripts": {
-    "postinstall": "bower install",
-    "build": "caddy build",
-    "bump": "caddy bump",
-    "release": "npm test && caddy release",
-    "report": "caddy serve test/coverage/chrome/",
-    "start": "caddy build -dev && caddy serve",
-    "start-test": "caddy serve ./_test",
+    "build": "obt build && obt demo",
+    "bump": "git tag v$(semver -i $(git describe --abbrev=0 --tags))",
+    "release": "npm test && npm run build && npm run bump",
+    "start": "obt build --runServer --watch",
+    "start-test": "obt test --runServer --watch",
     "unit": "karma start test/karma.unit.js",
     "functional": "karma start test/karma.functional.js",
-    "test": "jshint src && caddy build && karma start test/karma.unit.js --single-run && karma start test/karma.functional.js --single-run",
-    "test-regression": "caddy serve & sleep 4 && npm run regression",
+    "test": "obt verify && obt build && karma start test/karma.unit.js --single-run && karma start test/karma.functional.js --single-run",
+    "test-regression": "python -M SimpleHTTPServer & npm run regression",
     "regression": "npm run clean-regression && casperjs test test/regression/",
     "clean-regression": "rm -rf test/regression/failures & rm -rf test/regression/new & rm -rf test/regression/reference/*diff.png & rm -rf test/regression/reference/*fail.png",
     "sort-regression": "mkdir -p test/regression/new && mv test/regression/reference/*diff.png test/regression/new & rm -rf test/regression/reference/*.fail.png && npm run rename-regression",
@@ -27,34 +22,22 @@
     "type": "git",
     "url": "https://github.com/ft-interactive/nightingale-charts.git"
   },
-  "author": "tom pearson",
+  "author": "Tom Pearson",
   "license": "ISC",
   "devDependencies": {
-    "brfs": "^1.4.0",
-    "browserify-istanbul": "^0.2.1",
     "jshint": "^2.6.3",
     "karma": "^0.13.1",
-    "karma-browserify": "^4.2.1",
     "karma-chrome-launcher": "^0.2.0",
     "karma-coverage": "^0.4.2",
     "karma-html2js-preprocessor": "^0.1.0",
     "karma-jasmine": "^0.3.3",
     "karma-mocha-reporter": "^1.0.2",
     "karma-phantomjs-launcher": "^0.2.0",
+    "origami-build-tools": "^6.2.1",
     "phantomcss": "^0.10.2",
-    "slug": "^0.9.1",
-    "web-caddy": "^2.1.1"
+    "slug": "^0.9.1"
   },
-  "browser": {
-    "d3": "./bower_components/d3/d3.js"
-  },
-  "browserify": {
-    "transform": [
-      "brfs"
-    ]
-  },
-  "browserify-shim": {},
   "dependencies": {
-    "object-assign": "^4.1.1"
+    "d3": "^3.5.17"
   }
 }

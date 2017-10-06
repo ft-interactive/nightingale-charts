@@ -1,12 +1,11 @@
 /* globals __dirname, Promise */
-var fs = require('fs');
 var dataURI = {
-    BentonSans: fs.readFileSync(__dirname + '/BentonSans.txt', 'utf8').trim(),
-    MetricWeb: fs.readFileSync(__dirname + '/MetricWeb.txt', 'utf8').trim(),
-    MetricWebSemiBold: fs.readFileSync(__dirname + '/MetricWebSemiBold.txt', 'utf8').trim(),
-    AvenirLight: fs.readFileSync(__dirname + '/Avenir-Light.txt', 'utf8').trim(),
-    AvenirLightOblique: fs.readFileSync(__dirname + '/Avenir-LightOblique.txt', 'utf8').trim(),
-    AvenirHeavy: fs.readFileSync(__dirname + '/Avenir-Heavy.txt', 'utf8').trim()
+    BentonSans: require('text!./BentonSans.txt').trim(),
+    MetricWeb: require('text!./MetricWeb.txt').trim(),
+    MetricWebSemiBold: require('text!./MetricWebSemiBold.txt').trim(),
+    AvenirLight: require('text!./Avenir-Light.txt').trim(),
+    AvenirLightOblique: require('text!./Avenir-LightOblique.txt').trim(),
+    AvenirHeavy: require('text!./Avenir-Heavy.txt').trim()
 };
 
 function svgStyleElement(stylesheet) {
